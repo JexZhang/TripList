@@ -103,6 +103,8 @@ export function TripProvider({
       }
       dispatch({ type: 'SET_TRIP', trip })
       lastSavedRef.current = JSON.stringify(trip)
+    }).catch(() => {
+      dispatch({ type: 'ERROR', error: '加载失败，请重试' })
     })
 
     // @ts-ignore Taro.cloud.database watch
@@ -111,10 +113,13 @@ export function TripProvider({
         const doc = snapshot.docs && snapshot.docs[0]
         if (!doc) return
         if (pendingRef.current) return  // 本地有未保存编辑，忽略远端推送
-        if (doc.updatedBy === openid) return  // 自己刚保存的，避免循环
+        const incoming = JSON.stringify(doc)
+        if (incoming === lastSavedRef.current) return  // 自己刚保存的回声
         dispatch({ type: 'SET_TRIP', trip: doc })
-        lastSavedRef.current = JSON.stringify(doc)
-        Taro.showToast({ title: '已同步协作者改动', icon: 'none', duration: 1500 })
+        lastSavedRef.current = incoming
+        if (doc.updatedBy !== openid) {
+          Taro.showToast({ title: '已同步协作者改动', icon: 'none', duration: 1500 })
+        }
       },
       onError: (e: unknown) => console.error('[trip watch]', e),
     })

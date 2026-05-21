@@ -28,12 +28,21 @@ export async function listMyTrips(openid: string): Promise<Trip[]> {
 }
 
 /**
- * 获取一条 trip
+ * 获取一条 trip。返回 null 仅代表文档不存在；其它错误(网络/权限)抛出。
  */
 export async function getTrip(tripId: string): Promise<Trip | null> {
-  const res = await db().collection(TRIPS).doc(tripId).get({}).catch(() => null)
-  if (!res || !res.data) return null
-  return res.data as Trip
+  try {
+    const res = await db().collection(TRIPS).doc(tripId).get({})
+    if (!res || !res.data) return null
+    return res.data as Trip
+  } catch (e: any) {
+    // 微信云数据库 "document not found" 的 errCode 为 -502005
+    if (e && (e.errCode === -502005 || /not.*exist|not.*found/i.test(e.errMsg || ''))) {
+      return null
+    }
+    console.error('[getTrip]', tripId, e)
+    throw e
+  }
 }
 
 /**

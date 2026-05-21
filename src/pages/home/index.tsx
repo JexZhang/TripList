@@ -55,7 +55,11 @@ export default function Home() {
 
   // 从 new-trip 返回时刷新一次
   useDidShow(() => {
-    if (openid) listMyTrips(openid).then(setTrips)
+    if (!openid) return
+    Taro.showNavigationBarLoading()
+    listMyTrips(openid)
+      .then(setTrips)
+      .finally(() => Taro.hideNavigationBarLoading())
   })
 
   const handleAction = async (action: TripAction) => {
@@ -170,8 +174,8 @@ export default function Home() {
               {fmtDateShort(t.startDate)} → {fmtDateShort(t.endDate)} · {tripSummary(t.startDate, t.endDate, t.pax)}
             </Text>
             <View className='tc-dest'>
-              {t.destinations.map(d => (
-                <Text key={d.adcode} className='tc-dest-chip'>{d.name}</Text>
+              {t.destinations.map((d, i) => (
+                <Text key={`${d.adcode || 'na'}-${i}`} className='tc-dest-chip'>{d.name}</Text>
               ))}
             </View>
           </View>
