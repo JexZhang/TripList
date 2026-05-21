@@ -1,0 +1,54 @@
+.packing {
+  padding: 16rpx 32rpx 32rpx;
+}
+
+.pk-head {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-bottom: 24rpx;
+}
+.pk-summary { font-size: 24rpx; opacity: 0.65; }
+.pk-tpl-btn {
+  padding: 10rpx 20rpx;
+  border: 2rpx solid currentColor;
+  border-radius: 999rpx;
+  font-size: 22rpx;
+}
+
+.pk-group {
+  margin-bottom: 32rpx;
+  padding: 20rpx;
+  border: 2rpx solid currentColor;
+  border-radius: 12rpx;
+}
+.pk-group-title {
+  display: block;
+  font-size: 26rpx;
+  font-weight: 600;
+  margin-bottom: 12rpx;
+  letter-spacing: 2rpx;
+}
+
+.pk-item {
+  display: flex; align-items: center;
+  padding: 12rpx 0;
+}
+.pk-check {
+  width: 32rpx; height: 32rpx;
+  margin-right: 16rpx;
+  border: 2rpx solid currentColor;
+  border-radius: 6rpx;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 22rpx;
+}
+.pk-check.on { background: var(--ink); color: var(--bg); }
+.pk-label { flex: 1; font-size: 26rpx; }
+.pk-label.done { opacity: 0.45; text-decoration: line-through; }
+.pk-x { padding: 4rpx 16rpx; font-size: 32rpx; opacity: 0.5; }
+
+.pk-add-input {
+  margin-top: 12rpx;
+  padding: 10rpx 0;
+  font-size: 24rpx;
+  opacity: 0.75;
+  border-bottom: 2rpx dashed currentColor;
+}
