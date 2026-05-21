@@ -1,17 +1,22 @@
 import { useEffect, useState } from 'react'
 import { View, Text, Button } from '@tarojs/components'
-import Taro, { useDidShow } from '@tarojs/taro'
+import Taro, { useDidShow, useShareAppMessage } from '@tarojs/taro'
 import type { Trip } from '../../types/trip'
-import { listMyTrips, watchMyTrips, renameTrip, deleteTrip, copyTripLocally } from '../../utils/db'
+import { listMyTrips, watchMyTrips, renameTrip, copyTripLocally, smartDeleteTrip } from '../../utils/db'
 import { fmtDateShort, fmtCurrency } from '../../utils/format'
 import { destinationLabel, tripSummary } from '../../utils/trip-helpers'
 import TripActionSheet, { type TripAction } from '../../components/TripActionSheet'
+import ShareTypeSheet from '../../components/ShareTypeSheet'
+import { buildShareMessage, promptUserToShare } from '../../utils/share'
+import type { ShareKind } from '../../utils/cloud'
 import './index.scss'
 
 export default function Home() {
   const [trips, setTrips] = useState<Trip[]>([])
   const [loading, setLoading] = useState(true)
   const [actionTrip, setActionTrip] = useState<Trip | null>(null)
+  const [shareTrip, setShareTrip] = useState<Trip | null>(null)
+  const [sharePayload, setSharePayload] = useState<{ title: string; path: string } | null>(null)
   const [openid, setOpenid] = useState<string>('')
 
   // 获取当前用户 openid（通过 ensure-user 同步）
@@ -79,25 +84,55 @@ export default function Home() {
       return
     }
 
-    if (action === 'delete') {
-      const res = await Taro.showModal({
-        title: '删除攻略？',
-        content: `「${t.name}」将被永久删除，无法恢复`,
-        confirmText: '删除',
-        confirmColor: '#c43d3d',
-      })
-      if (res.confirm) {
-        await deleteTrip(t._id)
-        Taro.showToast({ title: '已删除', icon: 'success' })
-      }
+    if (action === 'share') {
+      setShareTrip(t)
       return
     }
 
-    if (action === 'share') {
-      Taro.showToast({ title: '分享待 Phase 5', icon: 'none' })
+    if (action === 'delete') {
+      const isOwner = t._openid === openid
+      const collabCount = (t.collaborators || []).length
+      const title = isOwner ? (collabCount > 0 ? '删除攻略？' : '删除攻略？') : '退出协作？'
+      const content = isOwner
+        ? collabCount > 0
+          ? `还有 ${collabCount} 位协作者将失去访问，确认删除？`
+          : `「${t.name}」将被永久删除`
+        : `退出后，「${t.name}」不再出现在你的攻略册中（原作者仍可见）`
+      const confirmText = isOwner ? '删除' : '退出'
+      const res = await Taro.showModal({ title, content, confirmText, confirmColor: '#c43d3d' })
+      if (res.confirm) {
+        const action = await smartDeleteTrip(t, openid)
+        Taro.showToast({ title: action === 'delete' ? '已删除' : '已退出', icon: 'success' })
+      }
       return
     }
   }
+
+  const onSelectShareKind = async (kind: ShareKind) => {
+    if (!shareTrip) return
+    try {
+      const payload = await buildShareMessage(shareTrip._id, shareTrip.name, kind)
+      setSharePayload({ title: payload.title, path: payload.path })
+      setShareTrip(null)
+      promptUserToShare()
+    } catch (e) {
+      console.error('[share]', e)
+      Taro.showToast({ title: '生成分享失败', icon: 'error' })
+    }
+  }
+
+  useShareAppMessage(() => {
+    if (sharePayload) {
+      return {
+        title: sharePayload.title,
+        path: sharePayload.path,
+      }
+    }
+    return {
+      title: '行册 · 旅行攻略册',
+      path: '/pages/home/index',
+    }
+  })
 
   return (
     <View className='home theme-tegami'>
@@ -150,6 +185,12 @@ export default function Home() {
         tripName={actionTrip?.name || ''}
         onSelect={handleAction}
         onClose={() => setActionTrip(null)}
+      />
+
+      <ShareTypeSheet
+        open={!!shareTrip}
+        onClose={() => setShareTrip(null)}
+        onSelect={onSelectShareKind}
       />
     </View>
   )
