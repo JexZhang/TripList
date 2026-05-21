@@ -1,0 +1,58 @@
+.trip {
+  min-height: 100vh;
+  padding: 0 0 32rpx;
+  box-sizing: border-box;
+}
+
+.trip.theme-tegami {
+  --bg: #f7f1e3;
+  --ink: #2a2522;
+  background: var(--bg);
+  color: var(--ink);
+}
+
+.trip-empty {
+  padding: 80rpx 32rpx;
+  text-align: center;
+  opacity: 0.55;
+  font-size: 26rpx;
+}
+
+.trip-head {
+  padding: 24rpx 32rpx 16rpx;
+}
+.th-name {
+  font-size: 40rpx;
+  font-weight: 600;
+}
+.th-meta {
+  display: block;
+  margin-top: 8rpx;
+  font-size: 22rpx;
+  opacity: 0.6;
+}
+
+.trip-tabs {
+  display: flex;
+  padding: 0 32rpx;
+  margin: 16rpx 0 8rpx;
+  border-bottom: 2rpx solid rgba(0,0,0,0.1);
+}
+.tt-item {
+  padding: 16rpx 24rpx;
+  font-size: 28rpx;
+  opacity: 0.55;
+  position: relative;
+}
+.tt-item.on {
+  opacity: 1; font-weight: 600;
+}
+.tt-item.on::after {
+  content: '';
+  position: absolute;
+  left: 24rpx; right: 24rpx; bottom: -2rpx;
+  height: 4rpx;
+  background: currentColor;
+}
+
+.trip-content {}
