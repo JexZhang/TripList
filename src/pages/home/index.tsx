@@ -62,11 +62,19 @@ export default function Home() {
     if (action === 'rename') {
       const res = await Taro.showModal({
         title: '重命名',
+        editable: true,
+        placeholderText: '请输入新的攻略名称',
         content: t.name,
       })
       if (res.confirm) {
-        // 简化版：先用固定名称，后续加 editable
-        await renameTrip(t._id, t.name, openid)
+        const newName = (res.content || '').trim()
+        if (!newName) {
+          Taro.showToast({ title: '名称不能为空', icon: 'none' })
+          return
+        }
+        if (newName === t.name) return
+        await renameTrip(t._id, newName, openid)
+        Taro.showToast({ title: '已重命名', icon: 'success' })
       }
       return
     }
