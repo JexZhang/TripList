@@ -1,5 +1,5 @@
 import Taro from '@tarojs/taro'
-import type { Trip, NewTripInput } from '../types/trip'
+import type { Trip, NewTripInput, Collaborator } from '../types/trip'
 
 // @ts-ignore Taro.cloud 在 weapp 端可用
 const db = () => Taro.cloud.database()
@@ -12,12 +12,16 @@ export interface ListTripsResult {
 
 /**
  * 获取当前用户拥有的所有 trips（按 updatedAt 倒序）
- * Phase 5 起会扩展为 owner ∪ collaborator
+ * Phase 5 起扩展为 owner ∪ collaborator
  */
 export async function listMyTrips(openid: string): Promise<Trip[]> {
+  const _ = (Taro as any).cloud.database().command
   const res = await db()
     .collection(TRIPS)
-    .where({ _openid: openid })
+    .where(_.or([
+      { _openid: openid },
+      { 'collaborators.openid': openid },
+    ]))
     .orderBy('updatedAt', 'desc')
     .get()
   return (res.data || []) as Trip[]
@@ -96,14 +100,41 @@ export async function copyTripLocally(sourceTripId: string, openid: string): Pro
 }
 
 /**
+ * 删除一条 trip，按身份分支：
+ * - 非 owner：从 collaborators 数组移除自己（退出协作）
+ * - owner：真删（前提：已确认）
+ */
+export async function smartDeleteTrip(trip: Trip, openid: string): Promise<'leave' | 'delete'> {
+  if (trip._openid === openid) {
+    await db().collection(TRIPS).doc(trip._id).remove({})
+    return 'delete'
+  }
+  // 非 owner：退出协作
+  const _ = (Taro as any).cloud.database().command
+  await db().collection(TRIPS).doc(trip._id).update({
+    data: {
+      collaborators: _.pull({ openid }),
+      updatedAt: Date.now(),
+      updatedBy: openid,
+    }
+  })
+  return 'leave'
+}
+
+/**
  * 监听当前用户的 trips 列表实时变化
  * 返回一个 watcher，调用 .close() 取消监听
+ * Phase 5 起扩展为 owner ∪ collaborator
  */
 export function watchMyTrips(openid: string, onChange: (trips: Trip[]) => void) {
-  // @ts-ignore Taro.cloud.database watch 在 weapp 可用
+  const _ = (Taro as any).cloud.database().command
+  // @ts-ignore
   return db()
     .collection(TRIPS)
-    .where({ _openid: openid })
+    .where(_.or([
+      { _openid: openid },
+      { 'collaborators.openid': openid },
+    ]))
     .orderBy('updatedAt', 'desc')
     .watch({
       onChange: (snapshot: any) => {
