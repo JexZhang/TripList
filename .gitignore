@@ -7,3 +7,7 @@ node_modules/
 .swc
 *.local
 .superpowers
+
+# Cloud functions
+cloudfunctions/**/node_modules/
+cloudfunctions/**/package-lock.json

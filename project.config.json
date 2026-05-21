@@ -1,5 +1,6 @@
 {
   "miniprogramRoot": "./dist",
+  "cloudfunctionRoot": "./cloudfunctions/",
   "projectname": "行册",
   "description": "旅行攻略+清单+地图+天气",
   "appid": "wx833348388eb83bc1",
