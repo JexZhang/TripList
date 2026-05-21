@@ -1,0 +1,10 @@
+{
+  "name": "amap-weather",
+  "version": "1.0.0",
+  "description": "Amap real-time weather proxy",
+  "main": "index.js",
+  "dependencies": {
+    "wx-server-sdk": "~3.0.0",
+    "axios": "^1.7.0"
+  }
+}
