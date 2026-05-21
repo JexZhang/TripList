@@ -1,0 +1,81 @@
+.share {
+  min-height: 100vh;
+  padding: 48rpx 32rpx;
+  box-sizing: border-box;
+}
+
+.share.theme-tegami {
+  --bg: #f7f1e3;
+  --ink: #2a2522;
+  background: var(--bg);
+  color: var(--ink);
+}
+
+.share-empty {
+  padding: 80rpx 32rpx;
+  text-align: center;
+  opacity: 0.6;
+  font-size: 26rpx;
+}
+
+.share-head {
+  margin-bottom: 32rpx;
+  text-align: center;
+}
+.sh-label {
+  font-size: 28rpx;
+  letter-spacing: 2rpx;
+  opacity: 0.75;
+}
+
+.share-card {
+  padding: 32rpx;
+  border: 2rpx solid currentColor;
+  border-radius: 16rpx;
+  margin-bottom: 56rpx;
+}
+.sc-name {
+  display: block;
+  font-size: 40rpx;
+  font-weight: 600;
+}
+.sc-meta {
+  display: block;
+  margin-top: 12rpx;
+  font-size: 24rpx;
+  opacity: 0.6;
+}
+.sc-dest {
+  display: flex; gap: 12rpx;
+  margin-top: 16rpx;
+  flex-wrap: wrap;
+}
+.sc-dest-chip {
+  padding: 4rpx 14rpx;
+  border: 2rpx solid currentColor;
+  border-radius: 999rpx;
+  font-size: 22rpx;
+  opacity: 0.75;
+}
+
+.share-foot {
+  display: flex; flex-direction: column;
+  align-items: center;
+  gap: 16rpx;
+}
+.share-btn {
+  width: 100%;
+  background: var(--ink);
+  color: var(--bg);
+  text-align: center;
+  padding: 28rpx 0;
+  border-radius: 16rpx;
+  font-size: 30rpx;
+  font-weight: 500;
+}
+.share-btn.disabled { opacity: 0.5; }
+.share-back {
+  margin-top: 8rpx;
+  font-size: 24rpx;
+  opacity: 0.55;
+}
