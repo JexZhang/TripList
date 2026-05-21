@@ -1,0 +1,231 @@
+{
+  "generated_at": "2026-05-21T17:11:04",
+  "generated_by": "init-project-scan",
+  "project_root": "/Users/jinchi/Documents/行册",
+  "project_name": "行册",
+  "modules": [
+    {
+      "name": "package.json",
+      "label": "项目清单",
+      "primary_role": "manifest",
+      "confidence": "中",
+      "file_count": 1,
+      "total_lines": 90,
+      "files": [
+        "package.json"
+      ]
+    },
+    {
+      "name": "src/app.ts",
+      "label": "入口",
+      "primary_role": "entry",
+      "confidence": "中",
+      "file_count": 1,
+      "total_lines": 17,
+      "files": [
+        "src/app.ts"
+      ]
+    },
+    {
+      "name": "src/pages",
+      "label": "API/CLI/adapter",
+      "primary_role": "adapter",
+      "confidence": "高",
+      "file_count": 3,
+      "total_lines": 1254,
+      "files": [
+        "src/pages/index/index.config.ts",
+        "src/pages/index/index.scss",
+        "src/pages/index/index.tsx"
+      ]
+    },
+    {
+      "name": "src/types",
+      "label": "模型/schema",
+      "primary_role": "model",
+      "confidence": "中",
+      "file_count": 1,
+      "total_lines": 75,
+      "files": [
+        "src/types/trip.ts"
+      ]
+    },
+    {
+      "name": "types",
+      "label": "模型/schema",
+      "primary_role": "model",
+      "confidence": "中",
+      "file_count": 1,
+      "total_lines": 29,
+      "files": [
+        "types/global.d.ts"
+      ]
+    },
+    {
+      "name": ".husky",
+      "label": "脚本/工具",
+      "primary_role": "script",
+      "confidence": "中",
+      "file_count": 1,
+      "total_lines": 9,
+      "files": [
+        ".husky/_/husky.sh"
+      ]
+    },
+    {
+      "name": "babel.config.js",
+      "label": "其他",
+      "primary_role": "other",
+      "confidence": "中",
+      "file_count": 1,
+      "total_lines": 15,
+      "files": [
+        "babel.config.js"
+      ]
+    },
+    {
+      "name": "commitlint.config.mjs",
+      "label": "其他",
+      "primary_role": "other",
+      "confidence": "中",
+      "file_count": 1,
+      "total_lines": 1,
+      "files": [
+        "commitlint.config.mjs"
+      ]
+    },
+    {
+      "name": "config",
+      "label": "其他",
+      "primary_role": "other",
+      "confidence": "高",
+      "file_count": 3,
+      "total_lines": 145,
+      "files": [
+        "config/dev.ts",
+        "config/index.ts",
+        "config/prod.ts"
+      ]
+    },
+    {
+      "name": "package-lock.json",
+      "label": "其他",
+      "primary_role": "other",
+      "confidence": "中",
+      "file_count": 1,
+      "total_lines": 3227,
+      "files": [
+        "package-lock.json"
+      ]
+    },
+    {
+      "name": "project.config.json",
+      "label": "其他",
+      "primary_role": "other",
+      "confidence": "中",
+      "file_count": 1,
+      "total_lines": 15,
+      "files": [
+        "project.config.json"
+      ]
+    },
+    {
+      "name": "src/app.config.ts",
+      "label": "其他",
+      "primary_role": "other",
+      "confidence": "中",
+      "file_count": 1,
+      "total_lines": 12,
+      "files": [
+        "src/app.config.ts"
+      ]
+    },
+    {
+      "name": "src/app.scss",
+      "label": "其他",
+      "primary_role": "other",
+      "confidence": "中",
+      "file_count": 1,
+      "total_lines": 1,
+      "files": [
+        "src/app.scss"
+      ]
+    },
+    {
+      "name": "src/data",
+      "label": "其他",
+      "primary_role": "other",
+      "confidence": "高",
+      "file_count": 2,
+      "total_lines": 1871,
+      "files": [
+        "src/data/packing.ts",
+        "src/data/trips.json"
+      ]
+    },
+    {
+      "name": "src/index.html",
+      "label": "其他",
+      "primary_role": "other",
+      "confidence": "中",
+      "file_count": 1,
+      "total_lines": 17,
+      "files": [
+        "src/index.html"
+      ]
+    },
+    {
+      "name": "src/utils",
+      "label": "其他",
+      "primary_role": "other",
+      "confidence": "中",
+      "file_count": 1,
+      "total_lines": 42,
+      "files": [
+        "src/utils/override.ts"
+      ]
+    },
+    {
+      "name": "stylelint.config.mjs",
+      "label": "其他",
+      "primary_role": "other",
+      "confidence": "中",
+      "file_count": 1,
+      "total_lines": 4,
+      "files": [
+        "stylelint.config.mjs"
+      ]
+    },
+    {
+      "name": "tsconfig.json",
+      "label": "其他",
+      "primary_role": "other",
+      "confidence": "中",
+      "file_count": 1,
+      "total_lines": 30,
+      "files": [
+        "tsconfig.json"
+      ]
+    }
+  ],
+  "module_dependencies": {
+    "babel.config.js": [],
+    "commitlint.config.mjs": [],
+    "config": [],
+    "src/app.config.ts": [],
+    "src/app.ts": [],
+    "src/data": [],
+    "src/pages": [
+      "src/data",
+      "src/utils"
+    ],
+    "src/types": [],
+    "src/utils": [],
+    "stylelint.config.mjs": []
+  },
+  "entry_files": [
+    "config/index.ts",
+    "src/app.ts",
+    "src/pages/index/index.tsx"
+  ]
+}

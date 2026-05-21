@@ -1,0 +1,34 @@
+{
+  "generated_at": "2026-05-21T17:11:04",
+  "generated_by": "init-project-scan",
+  "project_root": "/Users/jinchi/Documents/行册",
+  "project_name": "行册",
+  "dependency_graph": {
+    "babel.config.js": [],
+    "commitlint.config.mjs": [],
+    "config/dev.ts": [],
+    "config/index.ts": [
+      "config/dev.ts",
+      "config/prod.ts"
+    ],
+    "config/prod.ts": [],
+    "src/app.config.ts": [],
+    "src/app.ts": [],
+    "src/data/packing.ts": [],
+    "src/pages/index/index.config.ts": [],
+    "src/pages/index/index.tsx": [
+      "src/data/packing.ts",
+      "src/data/packing.ts",
+      "src/data/packing.ts",
+      "src/utils/override.ts",
+      "src/utils/override.ts",
+      "src/utils/override.ts"
+    ],
+    "src/types/trip.ts": [],
+    "src/utils/override.ts": [],
+    "stylelint.config.mjs": []
+  },
+  "mermaid_by_module": {
+    "config": "graph TD\n    config_index[config index] -->|calls| config_dev[config dev]\n    config_index[config index] -->|calls| config_prod[config prod]"
+  }
+}

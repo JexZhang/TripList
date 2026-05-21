@@ -1,0 +1,1785 @@
+{
+  "version": 1,
+  "savedAt": "2026-05-19T07:18:45.798Z",
+  "store": {
+    "currentId": "trip-nj",
+    "trips": [
+      {
+        "id": "trip-nj",
+        "name": "南京 · 金陵四日",
+        "data": {
+          "pax": 4,
+          "currency": "¥",
+          "meta": {
+            "title": "南京 · 金陵四日",
+            "dateRange": "5月29日 → 6月1日",
+            "edition": "Travel Journal · 六朝烟雨"
+          },
+          "days": [
+            {
+              "id": 1,
+              "date": "05.29 FRI",
+              "title": "三批抵宁 · 新街口集结",
+              "city": "nanjing",
+              "cityLabel": "南京 · 新街口",
+              "weather": {
+                "temp": 28,
+                "low": 20,
+                "desc": "多云",
+                "icon": "sun-cloud"
+              },
+              "hotel": {
+                "name": "美豪丽致酒店（新街口地铁站店）",
+                "price": 500,
+                "nights": 1,
+                "note": "近新街口地铁站 5 号出口；老张主入住"
+              },
+              "meals": 200,
+              "tickets": 0,
+              "spots": [
+                {
+                  "id": "n1s1",
+                  "name": "南京南站",
+                  "time": "14:31",
+                  "lat": 31.9683,
+                  "lng": 118.7972,
+                  "type": "arrive",
+                  "note": "二姐抵达：北京南 G23 次（11:00–14:31，¥533）。3 号线直达新街口约 18 分钟。",
+                  "photos": []
+                },
+                {
+                  "id": "n1s2",
+                  "name": "美豪丽致酒店 · 新街口",
+                  "time": "15:30",
+                  "lat": 32.041,
+                  "lng": 118.782,
+                  "type": "hotel",
+                  "note": "张燚湄先 check-in 放行李。1 晚 ¥500。新街口地铁 5 号口出步行 200 米。",
+                  "photos": []
+                },
+                {
+                  "id": "n1s3",
+                  "name": "德基广场（一人逛街+晚餐）",
+                  "time": "16:30",
+                  "lat": 32.0408,
+                  "lng": 118.7822,
+                  "type": "spot",
+                  "note": "新街口最强商场，B1 美食广场到 8 楼餐厅都能逛，进可日料寿喜烧、退可一兰拉面/海底捞。一个人逛街+解决晚饭最舒服的选择。",
+                  "photos": []
+                },
+                {
+                  "id": "n1s4",
+                  "name": "1912 街区 · 与张金池汇合",
+                  "time": "20:00",
+                  "lat": 32.049,
+                  "lng": 118.7965,
+                  "type": "spot",
+                  "note": "总统府旁的民国风酒吧街，灯笼+老洋楼，金池下班直接过来。两人压马路、找家小酒馆喝点儿。",
+                  "photos": []
+                },
+                {
+                  "id": "n1s5",
+                  "name": "南京禄口机场 T2 · 接机",
+                  "time": "24:00",
+                  "lat": 31.742,
+                  "lng": 118.862,
+                  "type": "arrive",
+                  "note": "张丽 + 张森源 抵达：运城关公机场 → 南京 深圳航空 ZH8159，¥370/人（共 ¥740）。打车回酒店约 50 分钟。",
+                  "photos": []
+                }
+              ]
+            },
+            {
+              "id": 2,
+              "date": "05.30 SAT",
+              "title": "凌晨夜宵 · 换店 · 钟山 · 酒鬼巡游",
+              "city": "nanjing",
+              "cityLabel": "南京 · 玄武 / 1912",
+              "weather": {
+                "temp": 29,
+                "low": 21,
+                "desc": "多云",
+                "icon": "sun-cloud"
+              },
+              "hotel": {
+                "name": "金鹰国际酒店",
+                "price": 500,
+                "nights": 1,
+                "note": "5.30 – 6.1 共两晚 ¥1000；新街口金鹰购物中心顶楼，看城景"
+              },
+              "meals": 600,
+              "tickets": 320,
+              "spots": [
+                {
+                  "id": "n2s1",
+                  "name": "蓝老大鸭血粉丝汤 / 夜宵",
+                  "time": "01:00",
+                  "lat": 32.022,
+                  "lng": 118.79,
+                  "type": "spot",
+                  "note": "老门东方向 24h 夜宵：鸭血粉丝汤、小郑酥烧饼、烤串。四人吃到 03:00 收工。",
+                  "photos": []
+                },
+                {
+                  "id": "n2s2",
+                  "name": "回美豪丽致 · 补眠",
+                  "time": "03:30",
+                  "lat": 32.041,
+                  "lng": 118.782,
+                  "type": "hotel",
+                  "note": "回酒店倒头就睡，闹钟 11:00。门把手挂「请勿打扰」。",
+                  "photos": []
+                },
+                {
+                  "id": "n2s3",
+                  "name": "换酒店 → 金鹰国际",
+                  "time": "11:30",
+                  "lat": 32.042,
+                  "lng": 118.777,
+                  "type": "hotel",
+                  "note": "退房 → 步行 5 分钟到金鹰国际酒店办入住（5.30 – 6.1 两晚 ¥1000）。行李寄前台先出门。",
+                  "photos": []
+                },
+                {
+                  "id": "n2s4",
+                  "name": "中山陵 · 美龄宫",
+                  "time": "13:30",
+                  "lat": 32.059,
+                  "lng": 118.855,
+                  "type": "spot",
+                  "note": "钟山风景区核心：392 级台阶通往孙中山陵墓，免费但需预约。下来逛美龄宫，秋季「项链」最有名，初夏也好看。",
+                  "photos": []
+                },
+                {
+                  "id": "n2s5",
+                  "name": "总统府",
+                  "time": "16:30",
+                  "lat": 32.044,
+                  "lng": 118.792,
+                  "type": "spot",
+                  "note": "明清两代的两江总督署 + 民国总统府，门票 ¥40/人（共 ¥160）。后花园拍照，闭馆前 1 小时停止入场。",
+                  "photos": []
+                },
+                {
+                  "id": "n2s6",
+                  "name": "酒鬼巡游 · 1912 / 新街口酒吧",
+                  "time": "20:30",
+                  "lat": 32.049,
+                  "lng": 118.7965,
+                  "type": "spot",
+                  "note": "今晚的主线：1912 街区 + 新街口酒吧串场。Mahalo、Pipe House、Wine Universe 都在附近，喝到 24:00。打车 5 分钟回酒店。",
+                  "photos": []
+                }
+              ]
+            },
+            {
+              "id": 3,
+              "date": "05.31 SUN",
+              "title": "秦淮烟雨 · 博物院 · 老门东",
+              "city": "nanjing",
+              "cityLabel": "南京 · 秦淮 / 朝天宫",
+              "weather": {
+                "temp": 27,
+                "low": 20,
+                "desc": "晴时多云",
+                "icon": "sun-cloud"
+              },
+              "hotel": {
+                "name": "金鹰国际酒店",
+                "price": 500,
+                "nights": 1,
+                "note": "续住第 2 晚（已含在 ¥1000 两晚费用中）"
+              },
+              "meals": 700,
+              "tickets": 0,
+              "spots": [
+                {
+                  "id": "n3s1",
+                  "name": "鸡鸣汤包 / 早午餐",
+                  "time": "10:30",
+                  "lat": 32.044,
+                  "lng": 118.79,
+                  "type": "spot",
+                  "note": "金鹰下楼附近随便挑一家鸡鸣汤包 / 蒋有记锅贴，¥30/人吃饱。",
+                  "photos": []
+                },
+                {
+                  "id": "n3s2",
+                  "name": "南京博物院",
+                  "time": "12:00",
+                  "lat": 32.041,
+                  "lng": 118.84,
+                  "type": "spot",
+                  "note": "中国三大博物馆之一，免费但需提前预约（小程序「南京博物院」）。「民国馆」一条街最出片，历史馆青瓷镇馆。逛 3 小时刚好。",
+                  "photos": []
+                },
+                {
+                  "id": "n3s3",
+                  "name": "夫子庙 · 秦淮河",
+                  "time": "16:00",
+                  "lat": 32.022,
+                  "lng": 118.786,
+                  "type": "spot",
+                  "note": "贡院街—大成殿—文德桥一线。乌衣巷王导谢安故居、李香君故居。可坐画舫游秦淮河（白天 ¥80，夜场 ¥100）。",
+                  "photos": []
+                },
+                {
+                  "id": "n3s4",
+                  "name": "老门东历史街区",
+                  "time": "18:30",
+                  "lat": 32.022,
+                  "lng": 118.79,
+                  "type": "spot",
+                  "note": "牌坊—蒋友记—小郑酥烧饼—先锋书店（骏惠书屋分店）。晚饭推荐「南京大牌档」，全家福套餐 4 人 ¥500 上下。",
+                  "photos": []
+                },
+                {
+                  "id": "n3s5",
+                  "name": "回金鹰国际",
+                  "time": "22:30",
+                  "lat": 32.042,
+                  "lng": 118.777,
+                  "type": "hotel",
+                  "note": "夫子庙打车 15 分钟回酒店。",
+                  "photos": []
+                }
+              ]
+            },
+            {
+              "id": 4,
+              "date": "06.01 MON",
+              "title": "鸡鸣寺 · 玄武湖 · 三批离宁",
+              "city": "nanjing",
+              "cityLabel": "南京 · 玄武 · 返程",
+              "weather": {
+                "temp": 28,
+                "low": 21,
+                "desc": "晴",
+                "icon": "sun"
+              },
+              "hotel": null,
+              "meals": 400,
+              "tickets": 30,
+              "spots": [
+                {
+                  "id": "n4s1",
+                  "name": "鸡鸣寺",
+                  "time": "09:30",
+                  "lat": 32.056,
+                  "lng": 118.794,
+                  "type": "spot",
+                  "note": "金陵第一古刹，门票 ¥10/人。樱花季已过，但鸡鸣寺-台城-玄武湖一线走完很完整。",
+                  "photos": []
+                },
+                {
+                  "id": "n4s2",
+                  "name": "玄武湖 · 环洲",
+                  "time": "11:00",
+                  "lat": 32.067,
+                  "lng": 118.792,
+                  "type": "spot",
+                  "note": "城内最大皇家湖泊，免费。环洲樱花已落叶，初夏荷花初开。租自行车 / 电瓶车环湖一圈 ¥20–40。",
+                  "photos": []
+                },
+                {
+                  "id": "n4s3",
+                  "name": "颐和路民国公馆区",
+                  "time": "13:30",
+                  "lat": 32.056,
+                  "lng": 118.772,
+                  "type": "spot",
+                  "note": "南京最美街区之一：法国梧桐 + 民国小洋楼，第十一片区已对外开放（咖啡馆、小展览）。",
+                  "photos": []
+                },
+                {
+                  "id": "n4s4",
+                  "name": "晚餐 · 集合点散场",
+                  "time": "18:00",
+                  "lat": 32.041,
+                  "lng": 118.782,
+                  "type": "spot",
+                  "note": "新街口附近随便挑一家，最后一顿。19:00 各自打车出发，金池前一晚就先散了（周一上班）。",
+                  "photos": []
+                },
+                {
+                  "id": "n4s5",
+                  "name": "南京禄口机场 T2 · ZH8160",
+                  "time": "19:05",
+                  "lat": 31.742,
+                  "lng": 118.862,
+                  "type": "arrive",
+                  "note": "张丽 + 张森源 返程运城：深圳航空 ZH8160，¥370/人（共 ¥740）。提前 1.5 小时到。",
+                  "photos": []
+                },
+                {
+                  "id": "n4s6",
+                  "name": "南京南站 · 返京",
+                  "time": "20:00",
+                  "lat": 31.9683,
+                  "lng": 118.7972,
+                  "type": "arrive",
+                  "note": "张燚湄 高铁返北京（车次/时间待定），暂记 ¥530。",
+                  "photos": []
+                }
+              ]
+            }
+          ],
+          "transport": [
+            {
+              "id": "njt1",
+              "from": "北京南",
+              "to": "南京南",
+              "mode": "G23 高铁 · 二姐",
+              "price": 533,
+              "duration": "3h31m",
+              "icon": "shinkansen",
+              "category": "transport"
+            },
+            {
+              "id": "njt2",
+              "from": "运城",
+              "to": "南京 T2",
+              "mode": "ZH8159 · 张丽+张森源",
+              "price": 740,
+              "duration": "约 2h30m",
+              "icon": "plane",
+              "category": "transport"
+            },
+            {
+              "id": "njt3",
+              "from": "机场",
+              "to": "新街口",
+              "mode": "深夜打车 · 接机",
+              "price": 180,
+              "duration": "50min",
+              "icon": "car",
+              "category": "transport"
+            },
+            {
+              "id": "njt4",
+              "from": "市区",
+              "to": "钟山 / 总统府",
+              "mode": "地铁 2 号线 / 打车",
+              "price": 80,
+              "duration": "全天",
+              "icon": "metro",
+              "category": "transport"
+            },
+            {
+              "id": "njt5",
+              "from": "市区",
+              "to": "南博 / 夫子庙",
+              "mode": "地铁 3 号线 + 步行",
+              "price": 60,
+              "duration": "全天",
+              "icon": "metro",
+              "category": "transport"
+            },
+            {
+              "id": "njt6",
+              "from": "市区",
+              "to": "玄武 / 颐和路",
+              "mode": "地铁 3 号线 + 步行",
+              "price": 60,
+              "duration": "全天",
+              "icon": "metro",
+              "category": "transport"
+            },
+            {
+              "id": "njt7",
+              "from": "南京 T2",
+              "to": "运城",
+              "mode": "ZH8160 · 张丽+张森源",
+              "price": 740,
+              "duration": "约 2h30m",
+              "icon": "plane",
+              "category": "transport"
+            },
+            {
+              "id": "njt8",
+              "from": "南京南",
+              "to": "北京南",
+              "mode": "高铁返京 · 张燚湄",
+              "price": 530,
+              "duration": "约 3h30m",
+              "icon": "shinkansen",
+              "category": "transport"
+            }
+          ]
+        },
+        "state": {
+          "notes": {},
+          "photos": {},
+          "prices": {
+            "transport": {},
+            "hotel": {},
+            "meals": {},
+            "tickets": {}
+          },
+          "dayItems": {},
+          "accent": "#c2412e",
+          "mapStyle": "voyager",
+          "pax": 4,
+          "hidePhotos": true,
+          "spotOverrides": {
+            "n1s2": {
+              "name": "美豪丽致酒店 · 新街口"
+            },
+            "n1s3": {
+              "name": "德基广场附近（逛街+小池）"
+            },
+            "n1s4": {
+              "name": "1912 街区 · 与张金池汇合"
+            }
+          },
+          "customSpots": [],
+          "deletedSpots": {},
+          "customTransport": [],
+          "deletedTransport": {},
+          "transportOverrides": {},
+          "dayOverrides": {
+            "1": {
+              "title": "分批抵宁 · 新街口集结"
+            },
+            "4": {
+              "title": "鸡鸣寺 · 玄武湖 · 离宁"
+            }
+          },
+          "dayOrder": {},
+          "packing": [
+            {
+              "id": "pgvy1vko",
+              "category": "doc",
+              "label": "身份证",
+              "checked": false
+            },
+            {
+              "id": "p8c2fyfw",
+              "category": "doc",
+              "label": "现金 + 银行卡",
+              "checked": false
+            },
+            {
+              "id": "pkuj2ef8",
+              "category": "doc",
+              "label": "酒店预订单 / 机票 / 车票",
+              "checked": false
+            },
+            {
+              "id": "pzn3wh7t",
+              "category": "wear",
+              "label": "换洗衣物",
+              "checked": false
+            },
+            {
+              "id": "p9263eh2",
+              "category": "wear",
+              "label": "睡衣",
+              "checked": false
+            },
+            {
+              "id": "p4khdusu",
+              "category": "wear",
+              "label": "袜子内衣",
+              "checked": false
+            },
+            {
+              "id": "phh7n7ra",
+              "category": "tech",
+              "label": "手机 + 充电器",
+              "checked": false
+            },
+            {
+              "id": "pdyi8fn8",
+              "category": "tech",
+              "label": "充电宝",
+              "checked": false
+            },
+            {
+              "id": "p5752wfr",
+              "category": "tech",
+              "label": "数据线",
+              "checked": false
+            },
+            {
+              "id": "pfqo9wiu",
+              "category": "wash",
+              "label": "牙刷牙膏",
+              "checked": false
+            },
+            {
+              "id": "p8b9fts5",
+              "category": "wash",
+              "label": "洗面奶",
+              "checked": false
+            },
+            {
+              "id": "pjk2uisw",
+              "category": "wash",
+              "label": "护肤品 / 防晒",
+              "checked": false
+            },
+            {
+              "id": "p9dag1id",
+              "category": "med",
+              "label": "创可贴",
+              "checked": false
+            },
+            {
+              "id": "p218ba3a",
+              "category": "med",
+              "label": "肠胃药",
+              "checked": false
+            },
+            {
+              "id": "ptteftbc",
+              "category": "med",
+              "label": "感冒药",
+              "checked": false
+            },
+            {
+              "id": "prvb0cyo",
+              "category": "etc",
+              "label": "雨伞 / 雨衣",
+              "checked": false
+            },
+            {
+              "id": "pmvbpn1r",
+              "category": "etc",
+              "label": "墨镜",
+              "checked": false
+            },
+            {
+              "id": "p4my3o7n",
+              "category": "etc",
+              "label": "购物袋",
+              "checked": false
+            },
+            {
+              "id": "puy1xsgv",
+              "category": "wear",
+              "label": "短袖 T 恤 ×4",
+              "checked": false
+            },
+            {
+              "id": "plnc8nnw",
+              "category": "wear",
+              "label": "短裤 / 裙 ×2",
+              "checked": false
+            },
+            {
+              "id": "pxe3529d",
+              "category": "wear",
+              "label": "一件薄外套（冷气房）",
+              "checked": false
+            },
+            {
+              "id": "p0jkxbyr",
+              "category": "wear",
+              "label": "凉鞋 + 运动鞋",
+              "checked": false
+            },
+            {
+              "id": "p4ww2rh0",
+              "category": "wear",
+              "label": "泳衣（如下水）",
+              "checked": false
+            },
+            {
+              "id": "prhlr261",
+              "category": "wash",
+              "label": "高倍数防晒（SPF50+）",
+              "checked": false
+            },
+            {
+              "id": "pdgq2vua",
+              "category": "wash",
+              "label": "晒后修复",
+              "checked": false
+            },
+            {
+              "id": "pf20mgvc",
+              "category": "med",
+              "label": "藿香正气液（中暑）",
+              "checked": false
+            },
+            {
+              "id": "pcak2gxz",
+              "category": "med",
+              "label": "蚊虫叮咬膏",
+              "checked": false
+            },
+            {
+              "id": "pms5uq5o",
+              "category": "etc",
+              "label": "折叠伞 / 防晒帽",
+              "checked": false
+            },
+            {
+              "id": "pzihpz0e",
+              "category": "etc",
+              "label": "保温水杯",
+              "checked": false
+            }
+          ],
+          "weatherCache": {
+            "32.02,118.79,2026-05-30": {
+              "temp": 32,
+              "low": 20,
+              "code": 1,
+              "icon": "sun",
+              "desc": "晴时少云"
+            },
+            "31.97,118.80,2026-05-29": {
+              "temp": 30,
+              "low": 16,
+              "code": 1,
+              "icon": "sun",
+              "desc": "晴时少云"
+            },
+            "32.04,118.79,2026-05-31": {
+              "temp": 33,
+              "low": 21,
+              "code": 51,
+              "icon": "rain",
+              "desc": "毛毛雨"
+            },
+            "32.06,118.79,2026-06-01": {
+              "temp": 27,
+              "low": 21,
+              "code": 53,
+              "icon": "rain",
+              "desc": "细雨"
+            }
+          },
+          "tripStartISO": "2026-05-29",
+          "tripDateText": "5月29日 → 6月1日"
+        }
+      },
+      {
+        "id": "trip-mohe",
+        "name": "南京 → 大兴安岭 · 寻北",
+        "data": {
+          "pax": 2,
+          "currency": "¥",
+          "meta": {
+            "title": "南京 → 大兴安岭 · 寻北",
+            "dateRange": "11月5日 → 11月11日",
+            "edition": "Travel Journal · 北纬53°"
+          },
+          "days": [
+            {
+              "id": 1,
+              "date": "11.05 THU",
+              "title": "南下转北上 · 抵达冰城",
+              "city": "harbin",
+              "cityLabel": "哈尔滨 · HARBIN",
+              "weather": {
+                "temp": -4,
+                "low": -12,
+                "desc": "晴 / 小雪",
+                "icon": "snow"
+              },
+              "hotel": {
+                "name": "中央大街 · 老街公馆",
+                "price": 460,
+                "nights": 2,
+                "note": "近圣索菲亚教堂步行5分钟"
+              },
+              "meals": 180,
+              "tickets": 0,
+              "spots": [
+                {
+                  "id": "d1s1",
+                  "name": "南京禄口国际机场",
+                  "time": "08:30",
+                  "lat": 31.742,
+                  "lng": 118.862,
+                  "type": "arrive",
+                  "note": "T2 航站楼出发，建议提前2小时。东航 MU2811 直飞，约 3 小时。",
+                  "photos": []
+                },
+                {
+                  "id": "d1s2",
+                  "name": "哈尔滨太平国际机场",
+                  "time": "12:00",
+                  "lat": 45.6234,
+                  "lng": 126.2503,
+                  "type": "arrive",
+                  "note": "落地温差近 30°C，先在机场穿好羽绒服再出门。机场大巴到中央大街约 50 分钟。",
+                  "photos": []
+                },
+                {
+                  "id": "d1s3",
+                  "name": "圣索菲亚大教堂",
+                  "time": "15:30",
+                  "lat": 45.7717,
+                  "lng": 126.6184,
+                  "type": "spot",
+                  "note": "拜占庭穹顶，傍晚打灯最美。门票 20 元含内部展览。",
+                  "photos": []
+                },
+                {
+                  "id": "d1s4",
+                  "name": "中央大街",
+                  "time": "18:00",
+                  "lat": 45.777,
+                  "lng": 126.6193,
+                  "type": "spot",
+                  "note": "面包石路面，马迭尔冰棍冬天反而更出片。华梅西餐厅吃红菜汤。",
+                  "photos": []
+                }
+              ]
+            },
+            {
+              "id": 2,
+              "date": "11.06 FRI",
+              "title": "哈尔滨 · 江畔与老道外",
+              "city": "harbin",
+              "cityLabel": "哈尔滨 · HARBIN",
+              "weather": {
+                "temp": -3,
+                "low": -10,
+                "desc": "多云",
+                "icon": "cloud"
+              },
+              "hotel": {
+                "name": "中央大街 · 老街公馆",
+                "price": 0,
+                "nights": 0,
+                "note": "续住"
+              },
+              "meals": 260,
+              "tickets": 330,
+              "spots": [
+                {
+                  "id": "d2s1",
+                  "name": "中华巴洛克 · 老道外",
+                  "time": "09:30",
+                  "lat": 45.7821,
+                  "lng": 126.645,
+                  "type": "spot",
+                  "note": "百年商铺街区，张包铺锅包肉、张飞扒肉一定要吃。",
+                  "photos": []
+                },
+                {
+                  "id": "d2s2",
+                  "name": "松花江畔 · 防洪纪念塔",
+                  "time": "12:30",
+                  "lat": 45.7821,
+                  "lng": 126.6188,
+                  "type": "spot",
+                  "note": "冬天江面冻实可以走上去；注意冰窟窿警示牌。",
+                  "photos": []
+                },
+                {
+                  "id": "d2s3",
+                  "name": "太阳岛雪博会",
+                  "time": "14:30",
+                  "lat": 45.79,
+                  "lng": 126.6072,
+                  "type": "spot",
+                  "note": "雪雕主场地，门票 240 元。下午光线斜，雪雕轮廓最立体。",
+                  "photos": []
+                },
+                {
+                  "id": "d2s4",
+                  "name": "冰雪大世界",
+                  "time": "18:00",
+                  "lat": 45.8047,
+                  "lng": 126.5775,
+                  "type": "spot",
+                  "note": "夜场最佳，建议待到 21:00 后人少。穿到极限保暖，手机怕冻。",
+                  "photos": []
+                }
+              ]
+            },
+            {
+              "id": 3,
+              "date": "11.07 SAT",
+              "title": "K7039 · 夜行向北",
+              "city": "transit",
+              "cityLabel": "途中 · IN TRANSIT",
+              "weather": {
+                "temp": -8,
+                "low": -18,
+                "desc": "小雪",
+                "icon": "snow"
+              },
+              "hotel": {
+                "name": "K7039 硬卧 · 哈尔滨→漠河",
+                "price": 326,
+                "nights": 1,
+                "note": "20:15 发车，次日 12:30 到漠河，下铺更好"
+              },
+              "meals": 120,
+              "tickets": 0,
+              "spots": [
+                {
+                  "id": "d3s1",
+                  "name": "哈尔滨火车站",
+                  "time": "19:30",
+                  "lat": 45.756,
+                  "lng": 126.6228,
+                  "type": "arrive",
+                  "note": "提前 1 小时取票进站；备好零食热水。",
+                  "photos": []
+                },
+                {
+                  "id": "d3s2",
+                  "name": "加格达奇站 · 经停",
+                  "time": "06:40",
+                  "lat": 50.4147,
+                  "lng": 124.1167,
+                  "type": "spot",
+                  "note": "凌晨经停大兴安岭门户，可下车透气 15 分钟。",
+                  "photos": []
+                }
+              ]
+            },
+            {
+              "id": 4,
+              "date": "11.08 SUN",
+              "title": "抵达漠河 · 五六纪念馆",
+              "city": "mohe",
+              "cityLabel": "漠河 · MOHE",
+              "weather": {
+                "temp": -14,
+                "low": -24,
+                "desc": "晴",
+                "icon": "sun"
+              },
+              "hotel": {
+                "name": "北极村 · 东北人家民宿",
+                "price": 280,
+                "nights": 2,
+                "note": "火炕标间，含早含晚"
+              },
+              "meals": 160,
+              "tickets": 60,
+              "spots": [
+                {
+                  "id": "d4s1",
+                  "name": "漠河火车站",
+                  "time": "12:30",
+                  "lat": 53.1714,
+                  "lng": 122.5391,
+                  "type": "arrive",
+                  "note": "中国最北火车站。出站可包车直奔北极村，约 80 公里。",
+                  "photos": []
+                },
+                {
+                  "id": "d4s2",
+                  "name": "五六火灾纪念馆",
+                  "time": "14:00",
+                  "lat": 53.009,
+                  "lng": 122.553,
+                  "type": "spot",
+                  "note": "1987 年大火纪念，记录大兴安岭浩劫；门票 60 元，约 1 小时。",
+                  "photos": []
+                },
+                {
+                  "id": "d4s3",
+                  "name": "北极村",
+                  "time": "17:30",
+                  "lat": 53.4773,
+                  "lng": 122.355,
+                  "type": "arrive",
+                  "note": "中国最北村落，到达即看落日。民宿 18:00 开晚饭。",
+                  "photos": []
+                }
+              ]
+            },
+            {
+              "id": 5,
+              "date": "11.09 MON",
+              "title": "北极村 · 最北的一切",
+              "city": "mohe",
+              "cityLabel": "北极村 · ARCTIC VILLAGE",
+              "weather": {
+                "temp": -16,
+                "low": -28,
+                "desc": "晴",
+                "icon": "sun"
+              },
+              "hotel": {
+                "name": "北极村 · 东北人家民宿",
+                "price": 0,
+                "nights": 0,
+                "note": "续住"
+              },
+              "meals": 200,
+              "tickets": 120,
+              "spots": [
+                {
+                  "id": "d5s1",
+                  "name": "最北邮局",
+                  "time": "09:00",
+                  "lat": 53.481,
+                  "lng": 122.358,
+                  "type": "spot",
+                  "note": "寄一张明信片回家，邮戳上有「最北」字样。",
+                  "photos": []
+                },
+                {
+                  "id": "d5s2",
+                  "name": "最北点广场 · 神州北极",
+                  "time": "10:30",
+                  "lat": 53.556,
+                  "lng": 122.33,
+                  "type": "spot",
+                  "note": "地标石碑打卡。零下 30°C，泼水成冰试试看。",
+                  "photos": []
+                },
+                {
+                  "id": "d5s3",
+                  "name": "北极沙洲 · 中俄分界",
+                  "time": "13:00",
+                  "lat": 53.557,
+                  "lng": 122.35,
+                  "type": "spot",
+                  "note": "黑龙江对岸即俄罗斯。冬季江面封冻可走上去；切勿越界。",
+                  "photos": []
+                },
+                {
+                  "id": "d5s4",
+                  "name": "圣诞滑雪场",
+                  "time": "15:30",
+                  "lat": 53.478,
+                  "lng": 122.369,
+                  "type": "spot",
+                  "note": "中国最北滑雪场，价格亲民；夜场可看极光（运气好）。",
+                  "photos": []
+                }
+              ]
+            },
+            {
+              "id": 6,
+              "date": "11.10 TUE",
+              "title": "北红村 · 龙江第一湾",
+              "city": "mohe",
+              "cityLabel": "漠河 · MOHE",
+              "weather": {
+                "temp": -15,
+                "low": -26,
+                "desc": "晴时多云",
+                "icon": "sun-cloud"
+              },
+              "hotel": {
+                "name": "漠河市区 · 北极星酒店",
+                "price": 320,
+                "nights": 1,
+                "note": "市区方便次日早班机"
+              },
+              "meals": 220,
+              "tickets": 100,
+              "spots": [
+                {
+                  "id": "d6s1",
+                  "name": "北红村",
+                  "time": "10:00",
+                  "lat": 53.486,
+                  "lng": 123.254,
+                  "type": "spot",
+                  "note": "比北极村更原生态，木刻楞老屋。东北饺子管够。",
+                  "photos": []
+                },
+                {
+                  "id": "d6s2",
+                  "name": "龙江第一湾",
+                  "time": "14:00",
+                  "lat": 53.3447,
+                  "lng": 121.079,
+                  "type": "spot",
+                  "note": "登 999 级阶梯到观景台，黑龙江 Ω 型大转弯，绝景。",
+                  "photos": []
+                },
+                {
+                  "id": "d6s3",
+                  "name": "乌苏里浅滩 · 中国最北点",
+                  "time": "16:30",
+                  "lat": 53.5644,
+                  "lng": 122.5104,
+                  "type": "spot",
+                  "note": "真正的北纬 53°33' 中国最北端纪念碑。",
+                  "photos": []
+                },
+                {
+                  "id": "d6s4",
+                  "name": "漠河市区",
+                  "time": "20:00",
+                  "lat": 52.97,
+                  "lng": 122.54,
+                  "type": "hotel",
+                  "note": "晚饭推荐「北极人家」铁锅炖。",
+                  "photos": []
+                }
+              ]
+            },
+            {
+              "id": 7,
+              "date": "11.11 WED",
+              "title": "古莲机场 · 返程南京",
+              "city": "harbin",
+              "cityLabel": "返程 · RETURN",
+              "weather": {
+                "temp": -10,
+                "low": -20,
+                "desc": "晴",
+                "icon": "sun"
+              },
+              "hotel": null,
+              "meals": 90,
+              "tickets": 0,
+              "spots": [
+                {
+                  "id": "d7s1",
+                  "name": "漠河古莲机场",
+                  "time": "10:00",
+                  "lat": 52.9133,
+                  "lng": 122.4302,
+                  "type": "arrive",
+                  "note": "中国最北机场，候机楼很小。CZ6298 经停哈尔滨回南京。",
+                  "photos": []
+                },
+                {
+                  "id": "d7s2",
+                  "name": "南京禄口国际机场",
+                  "time": "17:30",
+                  "lat": 31.742,
+                  "lng": 118.862,
+                  "type": "arrive",
+                  "note": "落地南京，温度回升 25°C 注意减衣。",
+                  "photos": []
+                }
+              ]
+            }
+          ],
+          "transport": [
+            {
+              "id": "t1",
+              "from": "南京",
+              "to": "哈尔滨",
+              "mode": "MU2811 直飞",
+              "price": 1280,
+              "duration": "3h05m",
+              "icon": "plane",
+              "category": "transport"
+            },
+            {
+              "id": "t2",
+              "from": "中央大街",
+              "to": "冰雪大世界",
+              "mode": "出租车 + 地铁",
+              "price": 80,
+              "duration": "40min",
+              "icon": "metro",
+              "category": "transport"
+            },
+            {
+              "id": "t3",
+              "from": "哈尔滨",
+              "to": "漠河",
+              "mode": "K7039 硬卧（已含住宿）",
+              "price": 0,
+              "duration": "16h15m",
+              "icon": "train",
+              "category": "transport"
+            },
+            {
+              "id": "t4",
+              "from": "漠河站",
+              "to": "北极村",
+              "mode": "拼车 / 4人",
+              "price": 100,
+              "duration": "1h30m",
+              "icon": "car",
+              "category": "transport"
+            },
+            {
+              "id": "t5",
+              "from": "北极村",
+              "to": "北红村",
+              "mode": "包车一日游",
+              "price": 450,
+              "duration": "全天",
+              "icon": "car",
+              "category": "transport"
+            },
+            {
+              "id": "t6",
+              "from": "漠河市区",
+              "to": "古莲机场",
+              "mode": "出租车",
+              "price": 30,
+              "duration": "20min",
+              "icon": "car",
+              "category": "transport"
+            },
+            {
+              "id": "t7",
+              "from": "漠河",
+              "to": "南京",
+              "mode": "CZ6298 经停哈尔滨",
+              "price": 1620,
+              "duration": "6h30m",
+              "icon": "plane",
+              "category": "transport"
+            }
+          ]
+        },
+        "state": {
+          "selectedSpotId": null,
+          "selectedDayId": null,
+          "filter": "all",
+          "accent": "#c2412e",
+          "mapStyle": "voyager",
+          "pax": 2,
+          "editMode": false,
+          "hidePhotos": true,
+          "notes": {},
+          "photos": {},
+          "prices": {
+            "transport": {},
+            "hotel": {},
+            "meals": {
+              "2": 30
+            },
+            "tickets": {}
+          },
+          "dayItems": {},
+          "spotOverrides": {},
+          "customSpots": [],
+          "deletedSpots": {
+            "d2s4": true,
+            "d2s3": true,
+            "d3s1": true
+          },
+          "customTransport": [],
+          "deletedTransport": {},
+          "transportOverrides": {},
+          "dayOverrides": {},
+          "weatherCache": {},
+          "dayOrder": {},
+          "packing": [],
+          "tripStartISO": "2026-11-05",
+          "tripDateText": "11月5日 → 11月11日"
+        }
+      },
+      {
+        "id": "trip-jzg",
+        "name": "九寨沟 · 童话之旅",
+        "data": {
+          "pax": 4,
+          "currency": "¥",
+          "meta": {
+            "title": "九寨沟 · 童话之旅",
+            "dateRange": "9月28日 → 10月7日",
+            "edition": "Travel Journal · 川西高原"
+          },
+          "days": [
+            {
+              "id": 1,
+              "date": "09.28 MON",
+              "title": "南下入蜀 · 抵达成都",
+              "city": "chengdu",
+              "cityLabel": "成都 · CHENGDU",
+              "weather": {
+                "temp": 28,
+                "low": 21,
+                "desc": "多云",
+                "icon": "sun-cloud"
+              },
+              "hotel": {
+                "name": "成都春熙路 · 雅诗阁酒店",
+                "price": 1100,
+                "nights": 1,
+                "note": "2 间标间 / 近春熙路太古里"
+              },
+              "meals": 600,
+              "tickets": 0,
+              "spots": [
+                {
+                  "id": "j1s1",
+                  "name": "南京禄口国际机场",
+                  "time": "10:00",
+                  "lat": 31.742,
+                  "lng": 118.862,
+                  "type": "arrive",
+                  "note": "T2 航站楼，提前 2 小时。东航直飞成都天府，约 2h45m。",
+                  "photos": []
+                },
+                {
+                  "id": "j1s2",
+                  "name": "成都天府国际机场",
+                  "time": "13:30",
+                  "lat": 30.314,
+                  "lng": 104.4421,
+                  "type": "arrive",
+                  "note": "T1 落地。机场快线 / 地铁 18 号线进市区约 1 小时。",
+                  "photos": []
+                },
+                {
+                  "id": "j1s3",
+                  "name": "宽窄巷子",
+                  "time": "17:00",
+                  "lat": 30.6743,
+                  "lng": 104.0617,
+                  "type": "spot",
+                  "note": "傍晚最有烟火气，三联里小吃逛一圈。掏耳朵 50/人。",
+                  "photos": []
+                },
+                {
+                  "id": "j1s4",
+                  "name": "锦里 + 武侯祠",
+                  "time": "19:30",
+                  "lat": 30.6444,
+                  "lng": 104.0467,
+                  "type": "spot",
+                  "note": "夜景灯笼超出片，吃三大炮、糖油果子。",
+                  "photos": []
+                }
+              ]
+            },
+            {
+              "id": 2,
+              "date": "09.29 TUE",
+              "title": "高铁入山 · 黄龙瑶池",
+              "city": "huanglong",
+              "cityLabel": "黄龙 · HUANGLONG",
+              "weather": {
+                "temp": 18,
+                "low": 9,
+                "desc": "晴",
+                "icon": "sun"
+              },
+              "hotel": {
+                "name": "九寨沟口 · 沟口大酒店",
+                "price": 1400,
+                "nights": 1,
+                "note": "2 间标间 / 近沟口售票处步行 5 分钟"
+              },
+              "meals": 520,
+              "tickets": 680,
+              "spots": [
+                {
+                  "id": "j2s1",
+                  "name": "成都东站",
+                  "time": "07:30",
+                  "lat": 30.626,
+                  "lng": 104.1567,
+                  "type": "arrive",
+                  "note": "C6701 次成兰高铁到黄龙九寨站，约 2h15m。",
+                  "photos": []
+                },
+                {
+                  "id": "j2s2",
+                  "name": "黄龙九寨站",
+                  "time": "09:50",
+                  "lat": 32.7833,
+                  "lng": 103.7167,
+                  "type": "arrive",
+                  "note": "出站打车 / 拼车前往黄龙景区约 1 小时。海拔近 3000m，注意慢行。",
+                  "photos": []
+                },
+                {
+                  "id": "j2s3",
+                  "name": "黄龙风景区",
+                  "time": "11:30",
+                  "lat": 32.7547,
+                  "lng": 103.8243,
+                  "type": "spot",
+                  "note": "五彩池、争艳池为最佳观赏点。索道上 + 步行下，约 4 小时。备红景天预防高反。门票 170×4 = 680。",
+                  "photos": []
+                },
+                {
+                  "id": "j2s4",
+                  "name": "九寨沟口 · 沟口大酒店",
+                  "time": "18:30",
+                  "lat": 33.185,
+                  "lng": 103.921,
+                  "type": "hotel",
+                  "note": "海拔约 1900m，回到舒适区。晚餐藏式火锅。",
+                  "photos": []
+                }
+              ]
+            },
+            {
+              "id": 3,
+              "date": "09.30 WED",
+              "title": "九寨沟 · 童话世界",
+              "city": "jiuzhaigou",
+              "cityLabel": "九寨沟 · JIUZHAIGOU",
+              "weather": {
+                "temp": 20,
+                "low": 11,
+                "desc": "多云",
+                "icon": "sun-cloud"
+              },
+              "hotel": {
+                "name": "成都春熙路 · 雅诗阁酒店",
+                "price": 2200,
+                "nights": 2,
+                "note": "返回成都续住 2 晚 / 2 间"
+              },
+              "meals": 480,
+              "tickets": 1036,
+              "spots": [
+                {
+                  "id": "j3s1",
+                  "name": "九寨沟景区 · 沟口",
+                  "time": "07:30",
+                  "lat": 33.1856,
+                  "lng": 103.9213,
+                  "type": "arrive",
+                  "note": "建议早高峰入场，先坐观光车直奔最深处「长海 / 五彩池」。门票 169 + 观光车 90 = 259/人。",
+                  "photos": []
+                },
+                {
+                  "id": "j3s2",
+                  "name": "五花海 · 树正沟",
+                  "time": "10:30",
+                  "lat": 33.228,
+                  "lng": 103.905,
+                  "type": "spot",
+                  "note": "Y 字型沟口三条沟最经典段；五花海色彩最浓。",
+                  "photos": []
+                },
+                {
+                  "id": "j3s3",
+                  "name": "诺日朗瀑布",
+                  "time": "13:00",
+                  "lat": 33.231,
+                  "lng": 103.918,
+                  "type": "spot",
+                  "note": "国内最宽钙华瀑布；中央换乘点，可吃自带午餐。",
+                  "photos": []
+                },
+                {
+                  "id": "j3s4",
+                  "name": "长海 + 五彩池",
+                  "time": "14:30",
+                  "lat": 33.05,
+                  "lng": 103.927,
+                  "type": "spot",
+                  "note": "沟内最高海拔湖泊（约 3100m），水色翡翠绿。",
+                  "photos": []
+                },
+                {
+                  "id": "j3s5",
+                  "name": "黄龙九寨站",
+                  "time": "18:30",
+                  "lat": 32.7833,
+                  "lng": 103.7167,
+                  "type": "arrive",
+                  "note": "C6712 次高铁返成都约 2h15m。",
+                  "photos": []
+                },
+                {
+                  "id": "j3s6",
+                  "name": "成都东站",
+                  "time": "21:00",
+                  "lat": 30.626,
+                  "lng": 104.1567,
+                  "type": "arrive",
+                  "note": "回市区入住春熙路。夜宵冷淡杯 + 烤兔头。",
+                  "photos": []
+                }
+              ]
+            },
+            {
+              "id": 4,
+              "date": "10.01 THU",
+              "title": "成都 · 萌兽与古镇",
+              "city": "chengdu",
+              "cityLabel": "成都 · CHENGDU",
+              "weather": {
+                "temp": 29,
+                "low": 22,
+                "desc": "晴时多云",
+                "icon": "sun-cloud"
+              },
+              "hotel": {
+                "name": "成都春熙路 · 雅诗阁酒店",
+                "price": 0,
+                "nights": 0,
+                "note": "续住（已在第 3 天计费）"
+              },
+              "meals": 700,
+              "tickets": 220,
+              "spots": [
+                {
+                  "id": "j4s1",
+                  "name": "大熊猫繁育研究基地",
+                  "time": "08:30",
+                  "lat": 30.735,
+                  "lng": 104.1483,
+                  "type": "spot",
+                  "note": "越早越好，9 点前熊猫最活跃。门票 55×4 = 220。",
+                  "photos": []
+                },
+                {
+                  "id": "j4s2",
+                  "name": "杜甫草堂",
+                  "time": "13:00",
+                  "lat": 30.662,
+                  "lng": 104.026,
+                  "type": "spot",
+                  "note": "园林清幽，避开正午烈日；茶馆喝盖碗茶。",
+                  "photos": []
+                },
+                {
+                  "id": "j4s3",
+                  "name": "春熙路 · 太古里",
+                  "time": "17:00",
+                  "lat": 30.6529,
+                  "lng": 104.0808,
+                  "type": "spot",
+                  "note": "购物 + 拍照，IFS 大熊猫地标必打卡。",
+                  "photos": []
+                },
+                {
+                  "id": "j4s4",
+                  "name": "钢管厂五区小郡肝串串",
+                  "time": "19:30",
+                  "lat": 30.666,
+                  "lng": 104.075,
+                  "type": "spot",
+                  "note": "地道串串，蒜蓉酱 + 干碟蘸料。4 人约 ¥400。",
+                  "photos": []
+                }
+              ]
+            },
+            {
+              "id": 5,
+              "date": "10.02 FRI",
+              "title": "第 5 天",
+              "city": "transit",
+              "cityLabel": "未定 · TBD",
+              "weather": {
+                "temp": 20,
+                "low": 12,
+                "desc": "—",
+                "icon": "cloud"
+              },
+              "hotel": null,
+              "meals": 0,
+              "tickets": 0,
+              "spots": []
+            },
+            {
+              "id": 6,
+              "date": "10.03 SAT",
+              "title": "第 6 天",
+              "city": "transit",
+              "cityLabel": "未定 · TBD",
+              "weather": {
+                "temp": 20,
+                "low": 12,
+                "desc": "—",
+                "icon": "cloud"
+              },
+              "hotel": null,
+              "meals": 0,
+              "tickets": 0,
+              "spots": []
+            },
+            {
+              "id": 7,
+              "date": "10.04 SUN",
+              "title": "第 7 天",
+              "city": "transit",
+              "cityLabel": "未定 · TBD",
+              "weather": {
+                "temp": 20,
+                "low": 12,
+                "desc": "—",
+                "icon": "cloud"
+              },
+              "hotel": null,
+              "meals": 0,
+              "tickets": 0,
+              "spots": []
+            },
+            {
+              "id": 8,
+              "date": "10.05 MON",
+              "title": "第 8 天",
+              "city": "transit",
+              "cityLabel": "未定 · TBD",
+              "weather": {
+                "temp": 20,
+                "low": 12,
+                "desc": "—",
+                "icon": "cloud"
+              },
+              "hotel": null,
+              "meals": 0,
+              "tickets": 0,
+              "spots": []
+            },
+            {
+              "id": 9,
+              "date": "10.06 TUE",
+              "title": "第 9 天",
+              "city": "transit",
+              "cityLabel": "未定 · TBD",
+              "weather": {
+                "temp": 20,
+                "low": 12,
+                "desc": "—",
+                "icon": "cloud"
+              },
+              "hotel": null,
+              "meals": 0,
+              "tickets": 0,
+              "spots": []
+            },
+            {
+              "id": 10,
+              "date": "10.07 WED",
+              "title": "第 10 天",
+              "city": "transit",
+              "cityLabel": "未定 · TBD",
+              "weather": {
+                "temp": 20,
+                "low": 12,
+                "desc": "—",
+                "icon": "cloud"
+              },
+              "hotel": null,
+              "meals": 0,
+              "tickets": 0,
+              "spots": []
+            }
+          ],
+          "transport": [
+            {
+              "id": "jt1",
+              "from": "南京",
+              "to": "成都",
+              "mode": "东航直飞 / 4人",
+              "price": 3600,
+              "duration": "2h45m",
+              "icon": "plane",
+              "category": "transport"
+            },
+            {
+              "id": "jt2",
+              "from": "成都东",
+              "to": "黄龙九寨",
+              "mode": "C6701 高铁 / 4人",
+              "price": 980,
+              "duration": "2h15m",
+              "icon": "shinkansen",
+              "category": "transport"
+            },
+            {
+              "id": "jt3",
+              "from": "黄龙九寨站",
+              "to": "九寨沟口",
+              "mode": "包车 · 全程",
+              "price": 280,
+              "duration": "1h",
+              "icon": "car",
+              "category": "transport"
+            },
+            {
+              "id": "jt4",
+              "from": "黄龙九寨",
+              "to": "成都东",
+              "mode": "C6712 高铁 / 4人",
+              "price": 980,
+              "duration": "2h15m",
+              "icon": "shinkansen",
+              "category": "transport"
+            },
+            {
+              "id": "jt5",
+              "from": "市区",
+              "to": "天府机场",
+              "mode": "地铁 18 号线 / 4人",
+              "price": 128,
+              "duration": "1h",
+              "icon": "metro",
+              "category": "transport"
+            },
+            {
+              "id": "jt6",
+              "from": "成都",
+              "to": "南京",
+              "mode": "东航返程 / 4人",
+              "price": 4320,
+              "duration": "2h45m",
+              "icon": "plane",
+              "category": "transport"
+            }
+          ]
+        },
+        "state": {
+          "notes": {
+            "j1s3": "傍晚最有烟火气，三联里小吃逛一圈。掏耳朵 50/人。"
+          },
+          "photos": {},
+          "prices": {
+            "transport": {},
+            "hotel": {},
+            "meals": {},
+            "tickets": {}
+          },
+          "dayItems": {
+            "1": {
+              "hotel": [
+                {
+                  "id": "h_1",
+                  "label": "成都春熙路 · 雅诗阁酒店 × 1晚",
+                  "amount": 1100
+                }
+              ]
+            }
+          },
+          "accent": "#c2412e",
+          "mapStyle": "voyager",
+          "pax": 4,
+          "hidePhotos": true,
+          "spotOverrides": {
+            "j1s1": {
+              "time": "10:00",
+              "name": "南京禄口国际机场"
+            },
+            "j1s2": {
+              "name": "成都天府国际机场"
+            },
+            "j1s3": {
+              "name": "宽窄巷子"
+            }
+          },
+          "customSpots": [],
+          "deletedSpots": {},
+          "customTransport": [],
+          "deletedTransport": {},
+          "transportOverrides": {},
+          "dayOverrides": {
+            "4": {
+              "title": "成都 · 萌兽与古镇"
+            }
+          },
+          "dayOrder": {},
+          "packing": [
+            {
+              "id": "p3aceogt",
+              "category": "doc",
+              "label": "身份证",
+              "checked": false
+            },
+            {
+              "id": "pctd46un",
+              "category": "doc",
+              "label": "现金 + 银行卡",
+              "checked": false
+            },
+            {
+              "id": "pc3fzexz",
+              "category": "doc",
+              "label": "酒店预订单 / 机票 / 车票",
+              "checked": false
+            },
+            {
+              "id": "pgpqvhix",
+              "category": "wear",
+              "label": "换洗衣物",
+              "checked": false
+            },
+            {
+              "id": "pruv2lk3",
+              "category": "wear",
+              "label": "睡衣",
+              "checked": false
+            },
+            {
+              "id": "pt2o21mh",
+              "category": "wear",
+              "label": "袜子内衣",
+              "checked": false
+            },
+            {
+              "id": "pqooo6u1",
+              "category": "tech",
+              "label": "手机 + 充电器",
+              "checked": false
+            },
+            {
+              "id": "pfx8vfb8",
+              "category": "tech",
+              "label": "充电宝",
+              "checked": false
+            },
+            {
+              "id": "p5vyuxku",
+              "category": "tech",
+              "label": "数据线",
+              "checked": false
+            },
+            {
+              "id": "phuu0sgj",
+              "category": "wash",
+              "label": "牙刷牙膏",
+              "checked": false
+            },
+            {
+              "id": "pcrftyv5",
+              "category": "wash",
+              "label": "洗面奶",
+              "checked": false
+            },
+            {
+              "id": "pm767rw8",
+              "category": "wash",
+              "label": "护肤品 / 防晒",
+              "checked": false
+            },
+            {
+              "id": "pr14ub5r",
+              "category": "med",
+              "label": "创可贴",
+              "checked": false
+            },
+            {
+              "id": "p5gj0v7j",
+              "category": "med",
+              "label": "肠胃药",
+              "checked": false
+            },
+            {
+              "id": "pqwoalxl",
+              "category": "med",
+              "label": "感冒药",
+              "checked": false
+            },
+            {
+              "id": "ppoy1lh5",
+              "category": "etc",
+              "label": "雨伞 / 雨衣",
+              "checked": false
+            },
+            {
+              "id": "pzi5hwre",
+              "category": "etc",
+              "label": "墨镜",
+              "checked": false
+            },
+            {
+              "id": "pkp0zzpn",
+              "category": "etc",
+              "label": "购物袋",
+              "checked": false
+            }
+          ],
+          "weatherCache": {},
+          "tripStartISO": "2026-09-28",
+          "tripDateText": "9月28日 → 10月7日"
+        }
+      }
+    ]
+  }
+}
