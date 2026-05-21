@@ -1,0 +1,9 @@
+{
+  "name": "clone-trip",
+  "version": "1.0.0",
+  "description": "Clone a trip from share token (readonly kind)",
+  "main": "index.js",
+  "dependencies": {
+    "wx-server-sdk": "~3.0.0"
+  }
+}
