@@ -1,0 +1,98 @@
+import { useState } from 'react'
+import { View, Text, Input, ScrollView } from '@tarojs/components'
+import { cloud, type PoiResult } from '../../utils/cloud'
+import type { Destination } from '../../types/trip'
+import './index.scss'
+
+interface Props {
+  value: Destination[]
+  onChange: (v: Destination[]) => void
+}
+
+export default function DestinationPicker({ value, onChange }: Props) {
+  const [keyword, setKeyword] = useState('')
+  const [results, setResults] = useState<PoiResult[]>([])
+  const [loading, setLoading] = useState(false)
+  const [open, setOpen] = useState(false)
+
+  const search = async (kw: string) => {
+    if (!kw.trim()) {
+      setResults([])
+      return
+    }
+    setLoading(true)
+    try {
+      const res = await cloud.searchPoi({ keyword: kw })
+      // 只保留城市级 POI（adcode 末 4 位为 0000 通常是省/市级），简单粗筛
+      const cities = res.results.filter(r => r.adcode && r.adcode.endsWith('00'))
+      setResults(cities.length > 0 ? cities.slice(0, 10) : res.results.slice(0, 10))
+    } catch (e) {
+      console.error('searchPoi failed', e)
+      setResults([])
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const add = (poi: PoiResult) => {
+    if (value.find(v => v.adcode === poi.adcode)) return  // 去重
+    onChange([
+      ...value,
+      { name: poi.name, adcode: poi.adcode, lat: poi.lat, lng: poi.lng }
+    ])
+    setKeyword('')
+    setResults([])
+    setOpen(false)
+  }
+
+  const remove = (adcode: string) => {
+    onChange(value.filter(v => v.adcode !== adcode))
+  }
+
+  return (
+    <View className='dest-picker'>
+      <View className='dp-chips'>
+        {value.map(d => (
+          <View key={d.adcode} className='dp-chip' onClick={() => remove(d.adcode)}>
+            <Text className='dp-chip-text'>{d.name}</Text>
+            <Text className='dp-chip-x'>×</Text>
+          </View>
+        ))}
+        <View className='dp-add' onClick={() => setOpen(true)}>+ 添加</View>
+      </View>
+
+      {open && (
+        <View className='dp-modal-mask' onClick={() => setOpen(false)}>
+          <View className='dp-modal' onClick={e => e.stopPropagation()}>
+            <View className='dp-modal-head'>
+              <Text className='dp-modal-title'>添加目的地</Text>
+              <Text className='dp-modal-close' onClick={() => setOpen(false)}>×</Text>
+            </View>
+            <Input
+              className='dp-search'
+              placeholder='搜索城市，例：南京 / 苏州'
+              value={keyword}
+              onInput={e => {
+                setKeyword(e.detail.value)
+                search(e.detail.value)
+              }}
+              focus
+            />
+            <ScrollView className='dp-results' scrollY>
+              {loading && <View className='dp-hint'>搜索中...</View>}
+              {!loading && results.length === 0 && keyword && (
+                <View className='dp-hint'>未找到，换个关键词</View>
+              )}
+              {results.map(r => (
+                <View key={r.adcode || r.name} className='dp-result' onClick={() => add(r)}>
+                  <Text className='dp-result-name'>{r.name}</Text>
+                  <Text className='dp-result-addr'>{r.city || r.address}</Text>
+                </View>
+              ))}
+            </ScrollView>
+          </View>
+        </View>
+      )}
+    </View>
+  )
+}
