@@ -1,0 +1,35 @@
+.sts-mask {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.4);
+  display: flex; align-items: flex-end;
+  z-index: 100;
+}
+
+.sts-sheet {
+  width: 100%;
+  background: var(--bg, #f7f1e3);
+  color: var(--ink, #2a2522);
+  border-radius: 24rpx 24rpx 0 0;
+  padding: 24rpx 0 32rpx;
+}
+
+.sts-item {
+  display: flex; flex-direction: column;
+  padding: 28rpx 32rpx;
+  border-bottom: 1rpx solid rgba(0,0,0,0.06);
+}
+.sts-item-title { font-size: 30rpx; font-weight: 600; }
+.sts-item-desc {
+  display: block;
+  margin-top: 6rpx;
+  font-size: 22rpx;
+  opacity: 0.6;
+}
+
+.sts-cancel {
+  margin-top: 16rpx;
+  padding: 24rpx 0;
+  text-align: center;
+  font-size: 30rpx;
+  border-top: 12rpx solid rgba(0,0,0,0.04);
+}
