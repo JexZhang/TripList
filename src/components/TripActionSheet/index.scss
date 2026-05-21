@@ -1,0 +1,42 @@
+.trip-action-mask {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.4);
+  display: flex; align-items: flex-end;
+  z-index: 100;
+}
+
+.trip-action-sheet {
+  width: 100%;
+  background: var(--bg, #f7f1e3);
+  color: var(--ink, #2a2522);
+  border-radius: 24rpx 24rpx 0 0;
+  padding: 16rpx 0 32rpx;
+}
+
+.tas-head {
+  padding: 24rpx 32rpx 16rpx;
+  border-bottom: 2rpx solid rgba(0,0,0,0.06);
+}
+.tas-title {
+  font-size: 24rpx;
+  opacity: 0.6;
+  letter-spacing: 1rpx;
+}
+
+.tas-items {}
+
+.tas-item {
+  padding: 28rpx 32rpx;
+  font-size: 30rpx;
+  border-bottom: 1rpx solid rgba(0,0,0,0.06);
+}
+.tas-item.danger { color: #c43d3d; }
+
+.tas-cancel {
+  margin-top: 16rpx;
+  padding: 28rpx 0;
+  text-align: center;
+  font-size: 30rpx;
+  font-weight: 500;
+  border-top: 12rpx solid rgba(0,0,0,0.04);
+}
