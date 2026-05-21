@@ -152,6 +152,13 @@ export function TripProvider({
     }, 500)
   }, [state.trip, state.loading, openid])
 
+  // 卸载时清除未触发的 debounce 保存
+  useEffect(() => {
+    return () => {
+      if (timerRef.current) clearTimeout(timerRef.current)
+    }
+  }, [])
+
   return (
     <Ctx.Provider value={{ state, dispatch, openid }}>
       {children}

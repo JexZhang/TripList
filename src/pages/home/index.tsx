@@ -36,16 +36,21 @@ export default function Home() {
   // 初次拉 + watch
   useEffect(() => {
     if (!openid) return
-    let watcher: { close: () => void } | null = null
+    let cancelled = false
     listMyTrips(openid).then(list => {
+      if (cancelled) return
       setTrips(list)
       setLoading(false)
     })
-    watcher = watchMyTrips(openid, list => {
+    const watcher = watchMyTrips(openid, list => {
+      if (cancelled) return
       setTrips(list)
       setLoading(false)
     })
-    return () => { watcher?.close() }
+    return () => {
+      cancelled = true
+      watcher.close()
+    }
   }, [openid])
 
   // 从 new-trip 返回时刷新一次
@@ -79,6 +84,7 @@ export default function Home() {
         }
         if (newName === t.name) return
         await renameTrip(t._id, newName, openid)
+        setTrips(prev => prev.map(x => x._id === t._id ? { ...x, name: newName } : x))
         Taro.showToast({ title: '已重命名', icon: 'success' })
       }
       return
@@ -102,6 +108,7 @@ export default function Home() {
       const res = await Taro.showModal({ title, content, confirmText, confirmColor: '#c43d3d' })
       if (res.confirm) {
         const action = await smartDeleteTrip(t, openid)
+        setTrips(prev => prev.filter(x => x._id !== t._id))
         Taro.showToast({ title: action === 'delete' ? '已删除' : '已退出', icon: 'success' })
       }
       return

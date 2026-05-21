@@ -15,7 +15,7 @@ exports.main = async (event, context) => {
   }
 
   const res = await axios.get('https://restapi.amap.com/v3/weather/weatherInfo', {
-    params: { key, city: adcode, extensions: 'base' },
+    params: { key, city: adcode, extensions: 'all' },
     timeout: 8000,
   })
 
@@ -23,18 +23,20 @@ exports.main = async (event, context) => {
     throw new Error(`amap weather error: ${res.data.info || 'unknown'}`)
   }
 
-  const live = (res.data.lives || [])[0]
-  if (!live) return { weather: null }
+  const forecast = (res.data.forecasts || [])[0]
+  const today = forecast && (forecast.casts || [])[0]
+  if (!forecast || !today) return { weather: null }
 
-  const temp = parseInt(live.temperature, 10)
+  const high = parseInt(today.daytemp, 10)
+  const low = parseInt(today.nighttemp, 10)
   return {
     weather: {
-      city: live.city || '',
-      cityAdcode: live.adcode || '',
-      temp: Number.isFinite(temp) ? temp : 0,
-      low: Number.isFinite(temp) ? temp : 0,  // 实况无 low；后续 forecast 改进
-      desc: live.weather || '',
-      icon: live.weather || '',                // 客户端按 desc 映射图标
+      city: forecast.city || '',
+      cityAdcode: forecast.adcode || '',
+      high: Number.isFinite(high) ? high : 0,
+      low: Number.isFinite(low) ? low : 0,
+      desc: today.dayweather || '',
+      icon: today.dayweather || '',
       fetchedAt: Date.now(),
     }
   }
