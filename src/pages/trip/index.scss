@@ -24,6 +24,14 @@
 .th-name {
   font-size: 40rpx;
   font-weight: 600;
+  flex: 1;
+}
+.th-row { display: flex; align-items: center; justify-content: space-between; }
+.th-menu {
+  width: 60rpx; height: 60rpx;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 40rpx;
+  opacity: 0.6;
 }
 .th-meta {
   display: block;
