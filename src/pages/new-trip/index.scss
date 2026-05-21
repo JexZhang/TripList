@@ -1,0 +1,84 @@
+.new-trip {
+  min-height: 100vh;
+  padding: 32rpx 32rpx 200rpx;
+  box-sizing: border-box;
+}
+
+.new-trip.theme-tegami {
+  --bg: #f7f1e3;
+  --ink: #2a2522;
+  background: var(--bg);
+  color: var(--ink);
+}
+
+.nt-field {
+  margin-bottom: 36rpx;
+}
+
+.nt-label {
+  display: block;
+  margin-bottom: 14rpx;
+  font-size: 22rpx;
+  letter-spacing: 4rpx;
+  font-weight: 700;
+  opacity: 0.55;
+  text-transform: uppercase;
+}
+
+.nt-input {
+  padding: 16rpx 20rpx;
+  border: 2rpx solid currentColor;
+  border-radius: 12rpx;
+  font-size: 28rpx;
+}
+
+.nt-pax {
+  display: flex;
+  align-items: center;
+  gap: 32rpx;
+}
+.nt-pax-btn {
+  width: 64rpx; height: 64rpx;
+  border: 2rpx solid currentColor;
+  border-radius: 999rpx;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 36rpx;
+  font-weight: 500;
+}
+.nt-pax-value {
+  font-size: 36rpx;
+  font-weight: 600;
+  min-width: 48rpx;
+  text-align: center;
+}
+
+.nt-foot {
+  position: fixed;
+  left: 32rpx; right: 32rpx;
+  bottom: 40rpx;
+  display: flex;
+  gap: 16rpx;
+}
+
+.nt-cancel, .nt-submit {
+  flex: 1;
+  border-radius: 16rpx;
+  font-size: 30rpx;
+  font-weight: 500;
+  padding: 24rpx 0;
+}
+
+.nt-cancel {
+  background: transparent;
+  border: 2rpx solid currentColor;
+  color: var(--ink);
+}
+
+.nt-submit {
+  background: var(--ink);
+  color: var(--bg);
+}
+
+.nt-submit[disabled] {
+  opacity: 0.5;
+}
