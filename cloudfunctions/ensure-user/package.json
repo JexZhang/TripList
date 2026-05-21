@@ -1,0 +1,9 @@
+{
+  "name": "ensure-user",
+  "version": "1.0.0",
+  "description": "upsert current user profile to users collection",
+  "main": "index.js",
+  "dependencies": {
+    "wx-server-sdk": "~3.0.0"
+  }
+}
