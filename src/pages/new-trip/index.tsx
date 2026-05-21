@@ -42,9 +42,9 @@ export default function NewTrip() {
         destinations,
       })
       input.ownerOpenid = openid
-      await createTrip(input)
+      const tripId = await createTrip(input)
       Taro.showToast({ title: '已创建', icon: 'success' })
-      setTimeout(() => Taro.navigateBack(), 600)
+      setTimeout(() => Taro.redirectTo({ url: `/pages/trip/index?id=${tripId}` }), 600)
     } catch (e) {
       console.error('createTrip failed', e)
       Taro.showToast({ title: '创建失败', icon: 'error' })

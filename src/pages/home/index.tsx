@@ -120,7 +120,7 @@ export default function Home() {
           <View
             key={t._id}
             className='trip-card'
-            onClick={() => Taro.showToast({ title: '详情页待 Phase 3', icon: 'none' })}
+            onClick={() => Taro.navigateTo({ url: `/pages/trip/index?id=${t._id}` })}
             onLongPress={() => setActionTrip(t)}
           >
             <Text className='tc-name'>{t.name}</Text>
