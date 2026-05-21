@@ -6,8 +6,8 @@ import ItineraryView from '../../views/ItineraryView'
 import BudgetView from '../../views/BudgetView'
 import PackingView from '../../views/PackingView'
 import CollaboratorsBar from '../../components/CollaboratorsBar'
-import ShareTypeSheet from '../../components/ShareTypeSheet'
 import TripActionSheet, { type TripAction } from '../../components/TripActionSheet'
+import ShareTypeSheet from '../../components/ShareTypeSheet'
 import { buildShareMessage, promptUserToShare } from '../../utils/share'
 import { smartDeleteTrip, renameTrip, copyTripLocally } from '../../utils/db'
 import type { ShareKind } from '../../utils/cloud'
@@ -28,13 +28,18 @@ function TripBody() {
   const [actionOpen, setActionOpen] = useState(false)
   const [shareOpen, setShareOpen] = useState(false)
   const [sharePayload, setSharePayload] = useState<{ title: string; path: string } | null>(null)
-  const isOwner = state.trip ? state.trip._openid === openid : false
+
+  const t = state.trip
+  const isOwner = t ? t._openid === openid : false
+
+  useShareAppMessage(() => {
+    if (sharePayload) return sharePayload
+    return { title: t ? `行册 · ${t.name}` : '行册', path: '/pages/home/index' }
+  })
 
   if (state.loading) return <View className='trip-empty'>加载中...</View>
   if (state.error) return <View className='trip-empty'>{state.error}</View>
-  if (!state.trip) return <View className='trip-empty'>未找到攻略</View>
-
-  const t = state.trip
+  if (!t) return <View className='trip-empty'>未找到攻略</View>
 
   const handleAction = async (action: TripAction) => {
     if (!t) return
@@ -53,8 +58,11 @@ function TripBody() {
     }
     if (action === 'copy') {
       const newId = await copyTripLocally(t._id, openid)
-      Taro.showToast({ title: '已复制', icon: 'success' })
-      setTimeout(() => Taro.redirectTo({ url: `/pages/trip/index?id=${newId}` }), 800)
+      Taro.showToast({ title: '已复制', icon: 'success', duration: 600 })
+      setTimeout(() => {
+        Taro.hideToast()
+        Taro.redirectTo({ url: `/pages/trip/index?id=${newId}` })
+      }, 650)
       return
     }
     if (action === 'delete') {
@@ -69,8 +77,11 @@ function TripBody() {
       const res = await Taro.showModal({ title, content, confirmText, confirmColor: '#c43d3d' })
       if (res.confirm) {
         await smartDeleteTrip(t, openid)
-        Taro.showToast({ title: isOwner ? '已删除' : '已退出', icon: 'success' })
-        setTimeout(() => Taro.reLaunch({ url: '/pages/home/index' }), 600)
+        Taro.showToast({ title: isOwner ? '已删除' : '已退出', icon: 'success', duration: 500 })
+        setTimeout(() => {
+          Taro.hideToast()
+          Taro.reLaunch({ url: '/pages/home/index' })
+        }, 550)
       }
       return
     }
@@ -96,11 +107,6 @@ function TripBody() {
       Taro.showToast({ title: '生成分享失败', icon: 'error' })
     }
   }
-
-  useShareAppMessage(() => {
-    if (sharePayload) return sharePayload
-    return { title: t ? `行册 · ${t.name}` : '行册', path: '/pages/home/index' }
-  })
 
   return (
     <View className='trip theme-tegami'>
