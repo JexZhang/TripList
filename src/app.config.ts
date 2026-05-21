@@ -1,6 +1,7 @@
 export default defineAppConfig({
   pages: [
-    'pages/index/index'
+    'pages/home/index',
+    'pages/new-trip/index',
   ],
   window: {
     backgroundTextStyle: 'light',
