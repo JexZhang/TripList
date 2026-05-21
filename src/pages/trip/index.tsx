@@ -3,6 +3,8 @@ import { View, Text } from '@tarojs/components'
 import Taro, { useRouter } from '@tarojs/taro'
 import { TripProvider, useTripStore } from '../../store/trip-store'
 import ItineraryView from '../../views/ItineraryView'
+import BudgetView from '../../views/BudgetView'
+import PackingView from '../../views/PackingView'
 import './index.scss'
 
 type ViewKey = 'itinerary' | 'budget' | 'packing'
@@ -43,8 +45,8 @@ function TripBody() {
 
       <View className='trip-content'>
         {view === 'itinerary' && <ItineraryView />}
-        {view === 'budget' && <View className='trip-empty'>开销 view 待 Phase 4</View>}
-        {view === 'packing' && <View className='trip-empty'>清单 view 待 Phase 4</View>}
+        {view === 'budget' && <BudgetView />}
+        {view === 'packing' && <PackingView />}
       </View>
     </View>
   )
