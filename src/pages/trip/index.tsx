@@ -7,6 +7,7 @@ import BudgetView from '../../views/BudgetView'
 import PackingView from '../../views/PackingView'
 import MapView from '../../views/MapView'
 import CollaboratorsBar from '../../components/CollaboratorsBar'
+import CollaboratorsSheet from '../../components/CollaboratorsSheet'
 import TripActionSheet, { type TripAction } from '../../components/TripActionSheet'
 import ShareTypeSheet from '../../components/ShareTypeSheet'
 import { buildShareMessage, promptUserToShare } from '../../utils/share'
@@ -30,6 +31,7 @@ function TripBody() {
   const [actionOpen, setActionOpen] = useState(false)
   const [shareOpen, setShareOpen] = useState(false)
   const [sharePayload, setSharePayload] = useState<{ title: string; path: string } | null>(null)
+  const [collabSheetOpen, setCollabSheetOpen] = useState(false)
 
   const t = state.trip
   const isOwner = t ? t._openid === openid : false
@@ -122,7 +124,9 @@ function TripBody() {
         </Text>
         <CollaboratorsBar
           collaborators={t.collaborators || []}
+          ownerNickname={t.ownerNickname}
           isOwner={isOwner}
+          onTap={() => setCollabSheetOpen(true)}
         />
       </View>
 
@@ -154,6 +158,14 @@ function TripBody() {
         open={shareOpen}
         onClose={() => setShareOpen(false)}
         onSelect={onSelectShareKind}
+      />
+
+      <CollaboratorsSheet
+        open={collabSheetOpen}
+        collaborators={t.collaborators || []}
+        ownerNickname={t.ownerNickname}
+        ownerAvatarUrl={t.ownerAvatarUrl}
+        onClose={() => setCollabSheetOpen(false)}
       />
     </View>
   )
