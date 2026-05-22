@@ -84,6 +84,7 @@ export default function ItineraryView() {
       {/* 当日 */}
       <DayHeader
         day={activeDay}
+        fallbackDestination={trip.destinations?.[0] || null}
         onWeatherUpdate={w => dispatch({ type: 'UPDATE_DAY', dayId: activeDay.id, patch: { weather: w } })}
       />
 
@@ -101,7 +102,7 @@ export default function ItineraryView() {
 
       <SpotSearch
         open={searchOpen}
-        defaultCity={activeDay.spots[0]?.city}
+        defaultCity={activeDay.spots[0]?.city || trip.destinations?.[0]?.name}
         onClose={() => setSearchOpen(false)}
         onSelect={handleAddSpot}
       />
@@ -109,7 +110,7 @@ export default function ItineraryView() {
       <EditSpotSheet
         open={!!editSpot}
         spot={editSpot?.spot || null}
-        defaultCity={activeDay.spots[0]?.city}
+        defaultCity={activeDay.spots[0]?.city || trip.destinations?.[0]?.name}
         onClose={() => setEditSpot(null)}
         onSave={patch => {
           if (!editSpot) return

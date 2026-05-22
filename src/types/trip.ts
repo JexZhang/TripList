@@ -24,7 +24,7 @@ export interface Spot {
 export interface DayWeather {
   city: string
   cityAdcode: string
-  temp: number
+  high: number
   low: number
   desc: string
   icon: string

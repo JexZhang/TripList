@@ -12,7 +12,7 @@ export interface PoiResult {
 export interface WeatherInfo {
   city: string
   cityAdcode: string
-  temp: number
+  high: number
   low: number
   desc: string
   icon: string

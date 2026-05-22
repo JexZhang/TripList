@@ -28,7 +28,7 @@ export default function NewTrip() {
     }).then((r: any) => setOpenid(r.result.openid))
   }, [])
 
-  const canSubmit = !!name.trim() && !!openid && pax >= 1 && dayjs(dates.end).isAfter(dayjs(dates.start).subtract(1, 'day'))
+  const canSubmit = !!name.trim() && !!openid && pax >= 1 && !dayjs(dates.end).isBefore(dates.start)
 
   const submit = async () => {
     if (!canSubmit || submitting) return
