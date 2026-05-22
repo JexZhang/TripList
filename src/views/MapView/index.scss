@@ -1,0 +1,73 @@
+.mv {
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - 88px); // 减去顶部 view 切换条高度(参考 ItineraryView 实际可调)
+}
+
+.mv-modebar {
+  white-space: nowrap;
+  padding: 12rpx 24rpx;
+  flex-shrink: 0;
+}
+.mv-mode-item {
+  display: inline-block;
+  margin-right: 16rpx;
+  padding: 10rpx 24rpx;
+  font-size: 26rpx;
+  border: 2rpx solid currentColor;
+  border-radius: 24rpx;
+  opacity: 0.55;
+}
+.mv-mode-item.on {
+  opacity: 1;
+  background: var(--ink);
+  color: var(--bg);
+}
+
+.mv-map-wrap {
+  flex: 1;
+  position: relative;
+}
+.mv-map {
+  width: 100%;
+  height: 100%;
+}
+
+.mv-sheet-mask {
+  position: fixed;
+  left: 0; right: 0; top: 0; bottom: 0;
+  background: rgba(0,0,0,0.32);
+  z-index: 1000;
+  display: flex;
+  align-items: flex-end;
+}
+.mv-sheet {
+  width: 100%;
+  background: var(--bg, #f7f1e3);
+  border-radius: 24rpx 24rpx 0 0;
+  padding: 32rpx 32rpx 48rpx;
+  box-sizing: border-box;
+}
+.mv-sheet-tag {
+  display: inline-block;
+  font-size: 22rpx;
+  padding: 4rpx 12rpx;
+  border-radius: 8rpx;
+  background: var(--ink, #2c2c2c);
+  color: var(--bg, #f7f1e3);
+  margin-bottom: 12rpx;
+}
+.mv-sheet-name { font-size: 34rpx; font-weight: 700; }
+.mv-sheet-sub { font-size: 24rpx; opacity: 0.7; margin-top: 6rpx; }
+.mv-sheet-note { font-size: 26rpx; margin-top: 12rpx; line-height: 1.5; }
+.mv-sheet-price { font-size: 26rpx; margin-top: 12rpx; }
+.mv-sheet-btn {
+  margin-top: 28rpx;
+  text-align: center;
+  padding: 22rpx 0;
+  font-size: 30rpx;
+  font-weight: 700;
+  border-radius: 16rpx;
+  background: var(--ink, #2c2c2c);
+  color: var(--bg, #f7f1e3);
+}
