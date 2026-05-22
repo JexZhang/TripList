@@ -1,10 +1,11 @@
 import { useEffect, useState } from 'react'
-import { View, Text, Button } from '@tarojs/components'
+import { View, Text, Button, Image } from '@tarojs/components'
 import Taro, { useDidShow, useShareAppMessage } from '@tarojs/taro'
 import type { Trip } from '../../types/trip'
-import { listMyTrips, watchMyTrips, renameTrip, copyTripLocally, smartDeleteTrip } from '../../utils/db'
-import { fmtDateShort, fmtCurrency } from '../../utils/format'
-import { destinationLabel, tripSummary } from '../../utils/trip-helpers'
+import { listMyTrips, renameTrip, copyTripLocally, smartDeleteTrip } from '../../utils/db'
+import { useMe } from '../../store/me-store'
+import { fmtDateShort } from '../../utils/format'
+import { tripSummary } from '../../utils/trip-helpers'
 import TripActionSheet, { type TripAction } from '../../components/TripActionSheet'
 import ShareTypeSheet from '../../components/ShareTypeSheet'
 import { buildShareMessage, promptUserToShare } from '../../utils/share'
@@ -14,43 +15,24 @@ import './index.scss'
 export default function Home() {
   const [trips, setTrips] = useState<Trip[]>([])
   const [loading, setLoading] = useState(true)
+  const { me } = useMe()
+  const openid = me?.openid || ''
   const [actionTrip, setActionTrip] = useState<Trip | null>(null)
   const [shareTrip, setShareTrip] = useState<Trip | null>(null)
   const [sharePayload, setSharePayload] = useState<{ title: string; path: string } | null>(null)
-  const [openid, setOpenid] = useState<string>('')
 
-  // 获取当前用户 openid（通过 ensure-user 同步）
-  useEffect(() => {
-    // 调用 ensure-user 拿 openid
-    // @ts-ignore Taro.cloud
-    Taro.cloud.callFunction({
-      name: 'ensure-user',
-      data: { nickname: '行册旅人', avatarUrl: '' }
-    }).then((r: any) => {
-      setOpenid(r.result.openid)
-    }).catch(e => {
-      console.error('ensure-user failed', e)
-    })
-  }, [])
-
-  // 初次拉 + watch
+  // 初次拉取
   useEffect(() => {
     if (!openid) return
     let cancelled = false
-    listMyTrips(openid).then(list => {
-      if (cancelled) return
-      setTrips(list)
-      setLoading(false)
-    })
-    const watcher = watchMyTrips(openid, list => {
-      if (cancelled) return
-      setTrips(list)
-      setLoading(false)
-    })
-    return () => {
-      cancelled = true
-      watcher.close()
-    }
+    listMyTrips(openid)
+      .then(list => { if (!cancelled) { setTrips(list); setLoading(false) } })
+      .catch(e => {
+        console.error('[home] listMyTrips failed', e)
+        Taro.showToast({ title: '加载失败', icon: 'none' })
+        if (!cancelled) setLoading(false)
+      })
+    return () => { cancelled = true }
   }, [openid])
 
   // 从 new-trip 返回时刷新一次
@@ -162,24 +144,39 @@ export default function Home() {
       )}
 
       <View className='home-list'>
-        {trips.map(t => (
-          <View
-            key={t._id}
-            className='trip-card'
-            onClick={() => Taro.navigateTo({ url: `/pages/trip/index?id=${t._id}` })}
-            onLongPress={() => setActionTrip(t)}
-          >
-            <Text className='tc-name'>{t.name}</Text>
-            <Text className='tc-meta'>
-              {fmtDateShort(t.startDate)} → {fmtDateShort(t.endDate)} · {tripSummary(t.startDate, t.endDate, t.pax)}
-            </Text>
-            <View className='tc-dest'>
-              {t.destinations.map((d, i) => (
-                <Text key={`${d.adcode || 'na'}-${i}`} className='tc-dest-chip'>{d.name}</Text>
-              ))}
+        {trips.map(t => {
+          const isCollab = t._openid !== openid
+          return (
+            <View
+              key={t._id}
+              className='trip-card'
+              onClick={() => Taro.navigateTo({ url: `/pages/trip/index?id=${t._id}` })}
+              onLongPress={() => setActionTrip(t)}
+            >
+              {isCollab && <View className='tc-badge'>协作</View>}
+              <Text className='tc-name'>{t.name}</Text>
+              <Text className='tc-meta'>
+                {fmtDateShort(t.startDate)} → {fmtDateShort(t.endDate)} · {tripSummary(t.startDate, t.endDate, t.pax)}
+              </Text>
+              <View className='tc-dest'>
+                {t.destinations.map((d, i) => (
+                  <Text key={`${d.adcode || 'na'}-${i}`} className='tc-dest-chip'>{d.name}</Text>
+                ))}
+              </View>
+              {isCollab && (
+                <View className='tc-owner'>
+                  {t.ownerAvatarUrl
+                    ? <Image className='tc-owner-avatar' src={t.ownerAvatarUrl} mode='aspectFill' />
+                    : <View className='tc-owner-avatar tc-owner-avatar-fallback'>
+                        <Text>{(t.ownerNickname || '?').slice(0, 1)}</Text>
+                      </View>
+                  }
+                  <Text className='tc-owner-name'>来自 {t.ownerNickname || '未知'}</Text>
+                </View>
+              )}
             </View>
-          </View>
-        ))}
+          )
+        })}
       </View>
 
       <View className='home-foot'>
