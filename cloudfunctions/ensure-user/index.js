@@ -33,5 +33,12 @@ exports.main = async (event, context) => {
     })
   }
 
-  return { openid: OPENID }
+  // 重新拉一次以拿到最新合并后的 user doc
+  const fresh = await db.collection('users').doc(OPENID).get().catch(() => null)
+  const u = (fresh && fresh.data) || {}
+  return {
+    openid: OPENID,
+    nickname: u.nickname || nickname || '行册旅人',
+    avatarUrl: u.avatarUrl || avatarUrl || '',
+  }
 }
