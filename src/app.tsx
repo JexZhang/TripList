@@ -1,6 +1,7 @@
 import { PropsWithChildren } from 'react'
 import Taro, { useLaunch } from '@tarojs/taro'
 
+import { MeProvider } from './store/me-store'
 import './app.scss'
 
 // 初始化微信云开发（小程序端）
@@ -38,7 +39,7 @@ function App({ children }: PropsWithChildren<any>) {
   })
 
   // children 是将要会渲染的页面
-  return children
+  return <MeProvider>{children}</MeProvider>
 }
   
 
