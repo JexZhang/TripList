@@ -1,42 +1,62 @@
 .trip-action-mask {
   position: fixed; inset: 0;
-  background: rgba(0,0,0,0.4);
+  background: rgba(43, 26, 16, 0.45);
   display: flex; align-items: flex-end;
   z-index: 100;
+  animation: fade-in 0.22s var(--ease-out) both;
 }
+.trip-action-sheet { animation: sheet-up 0.36s var(--ease-spring) both; }
+.tas-item { transition: background 0.22s var(--ease-out); }
+.tas-item:active { background: var(--accent-bg); }
+.tas-item.danger:active { background: rgba(255, 91, 91, 0.10); }
 
 .trip-action-sheet {
   width: 100%;
-  background: var(--bg, #f7f1e3);
-  color: var(--ink, #2a2522);
-  border-radius: 24rpx 24rpx 0 0;
-  padding: 16rpx 0 32rpx;
+  background: var(--surface);
+  color: var(--ink);
+  border-radius: var(--r-xl) var(--r-xl) 0 0;
+  padding: 24rpx 0 40rpx;
+  position: relative;
+  box-shadow: 0 -16rpx 48rpx rgba(43, 26, 16, 0.15);
+}
+.trip-action-sheet::before {
+  content: '';
+  position: absolute;
+  top: 16rpx; left: 50%;
+  transform: translateX(-50%);
+  width: 72rpx; height: 8rpx;
+  background: var(--line-2);
+  border-radius: 999rpx;
 }
 
 .tas-head {
-  padding: 24rpx 32rpx 16rpx;
-  border-bottom: 2rpx solid rgba(0,0,0,0.06);
+  padding: 32rpx 36rpx 20rpx;
+  border-bottom: 1rpx solid var(--line);
 }
 .tas-title {
   font-size: 24rpx;
-  opacity: 0.6;
+  color: var(--ink-3);
   letter-spacing: 1rpx;
+  font-weight: 600;
 }
 
 .tas-items {}
 
 .tas-item {
-  padding: 28rpx 32rpx;
+  padding: 32rpx 36rpx;
   font-size: 30rpx;
-  border-bottom: 1rpx solid rgba(0,0,0,0.06);
+  font-weight: 600;
+  color: var(--ink);
+  border-bottom: 1rpx solid var(--line);
 }
-.tas-item.danger { color: #c43d3d; }
+.tas-item.danger { color: var(--coral); }
 
 .tas-cancel {
-  margin-top: 16rpx;
-  padding: 28rpx 0;
+  margin-top: 12rpx;
+  padding: 32rpx 0;
   text-align: center;
   font-size: 30rpx;
-  font-weight: 500;
-  border-top: 12rpx solid rgba(0,0,0,0.04);
+  font-weight: 700;
+  color: var(--ink-2);
+  border-top: 12rpx solid var(--bg-soft);
 }

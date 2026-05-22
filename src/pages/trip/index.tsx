@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { View, Text } from '@tarojs/components'
+import { View, Text, Picker } from '@tarojs/components'
 import Taro, { useRouter, useShareAppMessage } from '@tarojs/taro'
 import { TripProvider, useTripStore } from '../../store/trip-store'
 import ItineraryView from '../../views/ItineraryView'
@@ -12,6 +12,7 @@ import TripActionSheet, { type TripAction } from '../../components/TripActionShe
 import ShareTypeSheet from '../../components/ShareTypeSheet'
 import { buildShareMessage, shareRef, resetShareRef } from '../../utils/share'
 import { smartDeleteTrip, renameTrip, copyTripLocally } from '../../utils/db'
+import { isSeedTripId } from '../../data/seed-trips'
 import type { ShareKind } from '../../utils/cloud'
 import './index.scss'
 
@@ -24,8 +25,10 @@ const VIEWS: { key: ViewKey; label: string }[] = [
   { key: 'map', label: '地图' },
 ]
 
+const PAX_OPTIONS = Array.from({ length: 99 }, (_, i) => `${i + 1} 人`)
+
 function TripBody() {
-  const { state } = useTripStore()
+  const { state, dispatch } = useTripStore()
   const { openid } = useTripStore()
   const [view, setView] = useState<ViewKey>('itinerary')
   const [actionOpen, setActionOpen] = useState(false)
@@ -64,6 +67,10 @@ function TripBody() {
         Taro.hideToast()
         Taro.redirectTo({ url: `/pages/trip/index?id=${newId}` })
       }, 650)
+      return
+    }
+    if (isSeedTripId(t._id)) {
+      Taro.showToast({ title: '示例攻略仅支持复制', icon: 'none' })
       return
     }
     if (action === 'delete') {
@@ -117,9 +124,22 @@ function TripBody() {
           <Text className='th-name'>{t.name}</Text>
           <View className='th-menu' onClick={() => setActionOpen(true)}>⋯</View>
         </View>
-        <Text className='th-meta'>
-          {t.startDate} → {t.endDate} · {t.pax} 人
-        </Text>
+        <View className='th-meta'>
+          <Text>
+            {t.days[0]?.date || t.startDate} → {t.days[t.days.length - 1]?.date || t.endDate} · {t.days.length || 0} 天 ·{' '}
+          </Text>
+          <Picker
+            mode='selector'
+            range={PAX_OPTIONS}
+            value={Math.max(0, Math.min(98, (t.pax || 1) - 1))}
+            onChange={e => {
+              const next = Number(e.detail.value) + 1
+              if (next !== t.pax) dispatch({ type: 'UPDATE_TRIP', patch: { pax: next } })
+            }}
+          >
+            <Text className='th-pax-edit'>{t.pax} 人 ▾</Text>
+          </Picker>
+        </View>
         <CollaboratorsBar
           collaborators={t.collaborators || []}
           ownerNickname={t.ownerNickname}
@@ -148,6 +168,7 @@ function TripBody() {
       <TripActionSheet
         open={actionOpen}
         tripName={t.name}
+        actions={isSeedTripId(t._id) ? ['copy'] : undefined}
         onSelect={handleAction}
         onClose={() => setActionOpen(false)}
       />

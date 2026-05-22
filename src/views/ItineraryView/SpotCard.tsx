@@ -7,7 +7,6 @@ const ICON: Record<string, string> = {
   hotel: '🛏',
   meal: '🍜',
   transport: '🚄',
-  arrive: '✈',
 }
 
 interface Props {

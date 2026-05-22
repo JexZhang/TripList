@@ -1,35 +1,57 @@
 .new-trip {
   min-height: 100vh;
-  padding: 32rpx 32rpx 200rpx;
+  padding: 40rpx 32rpx 220rpx;
   box-sizing: border-box;
+  animation: page-in 0.42s var(--ease-out) both;
+  background:
+    radial-gradient(80% 40% at 100% 0%, rgba(255, 154, 77, 0.20) 0%, transparent 60%),
+    var(--bg);
 }
 
 .new-trip.theme-tegami {
-  --bg: #f7f1e3;
-  --ink: #2a2522;
-  background: var(--bg);
+  background:
+    radial-gradient(80% 40% at 100% 0%, rgba(255, 154, 77, 0.20) 0%, transparent 60%),
+    var(--bg);
   color: var(--ink);
 }
 
 .nt-field {
   margin-bottom: 36rpx;
+  padding: 28rpx 28rpx 32rpx;
+  background: var(--surface);
+  border-radius: var(--r-lg);
+  box-shadow: var(--shadow-sm);
+  animation: slide-up 0.46s var(--ease-out) both;
 }
+.nt-field:nth-of-type(1) { animation-delay: 0.06s; }
+.nt-field:nth-of-type(2) { animation-delay: 0.14s; }
+.nt-field:nth-of-type(3) { animation-delay: 0.22s; }
+.nt-field:nth-of-type(4) { animation-delay: 0.30s; }
+.nt-field:nth-of-type(n+5) { animation-delay: 0.36s; }
 
 .nt-label {
   display: block;
-  margin-bottom: 14rpx;
+  margin-bottom: 18rpx;
   font-size: 22rpx;
   letter-spacing: 4rpx;
   font-weight: 700;
-  opacity: 0.55;
+  color: var(--accent);
   text-transform: uppercase;
 }
 
 .nt-input {
-  padding: 16rpx 20rpx;
-  border: 2rpx solid currentColor;
-  border-radius: 12rpx;
-  font-size: 28rpx;
+  padding: 18rpx 22rpx;
+  background: var(--bg);
+  border: 2rpx solid transparent;
+  border-radius: var(--r-sm);
+  font-size: 30rpx;
+  font-weight: 500;
+  color: var(--ink);
+  transition: all 0.2s;
+}
+.nt-input:focus {
+  border-color: var(--accent);
+  background: #FFF;
 }
 
 .nt-pax {
@@ -38,47 +60,72 @@
   gap: 32rpx;
 }
 .nt-pax-btn {
-  width: 64rpx; height: 64rpx;
-  border: 2rpx solid currentColor;
+  width: 72rpx; height: 72rpx;
+  background: var(--accent-bg);
+  color: var(--accent);
+  border: none;
   border-radius: 999rpx;
   display: flex; align-items: center; justify-content: center;
-  font-size: 36rpx;
-  font-weight: 500;
+  font-size: 40rpx;
+  font-weight: 700;
+  transition: transform 0.22s var(--ease-out), background 0.22s var(--ease-out);
 }
+.nt-pax-btn:active { transform: scale(0.86); background: var(--accent-soft); }
+.nt-pax-value { transition: transform 0.32s var(--ease-spring); }
 .nt-pax-value {
-  font-size: 36rpx;
-  font-weight: 600;
-  min-width: 48rpx;
-  text-align: center;
+  font-size: 48rpx;
+  font-weight: 800;
+  min-width: 64rpx;
+  color: var(--ink);
+}
+
+.nt-pax-picker {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18rpx 24rpx;
+  background: var(--bg);
+  border-radius: var(--r-sm);
+}
+.nt-pax-arrow {
+  font-size: 32rpx;
+  color: var(--accent);
+  font-weight: 700;
 }
 
 .nt-foot {
   position: fixed;
   left: 32rpx; right: 32rpx;
-  bottom: 40rpx;
+  bottom: 48rpx;
   display: flex;
   gap: 16rpx;
+  z-index: 10;
 }
 
 .nt-cancel, .nt-submit {
   flex: 1;
-  border-radius: 16rpx;
+  border-radius: var(--r-md);
   font-size: 30rpx;
-  font-weight: 500;
-  padding: 24rpx 0;
+  font-weight: 700;
+  padding: 28rpx 0;
+  border: none;
+  letter-spacing: 2rpx;
 }
+.nt-cancel::after, .nt-submit::after { border: none; }
 
 .nt-cancel {
-  background: transparent;
-  border: 2rpx solid currentColor;
-  color: var(--ink);
+  background: var(--surface);
+  color: var(--ink-2);
+  box-shadow: var(--shadow-sm);
 }
 
 .nt-submit {
-  background: var(--ink);
-  color: var(--bg);
+  background: linear-gradient(135deg, var(--accent) 0%, var(--accent-2) 100%);
+  color: #FFF;
+  box-shadow: 0 16rpx 36rpx rgba(255, 122, 46, 0.40);
 }
 
 .nt-submit[disabled] {
-  opacity: 0.5;
+  opacity: 0.45;
+  box-shadow: none;
 }

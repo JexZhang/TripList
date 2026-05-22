@@ -3,6 +3,7 @@ import { View, Text, Button, Image } from '@tarojs/components'
 import Taro, { useDidShow, useShareAppMessage } from '@tarojs/taro'
 import type { Trip } from '../../types/trip'
 import { listMyTrips, renameTrip, copyTripLocally, smartDeleteTrip } from '../../utils/db'
+import { SEED_TRIPS, isSeedTripId } from '../../data/seed-trips'
 import { useMe } from '../../store/me-store'
 import { fmtDateShort } from '../../utils/format'
 import { tripSummary } from '../../utils/trip-helpers'
@@ -26,11 +27,11 @@ export default function Home() {
     if (!openid) return
     let cancelled = false
     listMyTrips(openid)
-      .then(list => { if (!cancelled) { setTrips(list); setLoading(false) } })
+      .then(list => { if (!cancelled) { setTrips([...SEED_TRIPS, ...list]); setLoading(false) } })
       .catch(e => {
         console.error('[home] listMyTrips failed', e)
         Taro.showToast({ title: '加载失败', icon: 'none' })
-        if (!cancelled) setLoading(false)
+        if (!cancelled) { setTrips([...SEED_TRIPS]); setLoading(false) }
       })
     return () => { cancelled = true }
   }, [openid])
@@ -40,7 +41,7 @@ export default function Home() {
     if (!openid) return
     Taro.showNavigationBarLoading()
     listMyTrips(openid)
-      .then(setTrips)
+      .then(list => setTrips([...SEED_TRIPS, ...list]))
       .finally(() => Taro.hideNavigationBarLoading())
   })
 
@@ -50,8 +51,12 @@ export default function Home() {
     setActionTrip(null)
 
     if (action === 'copy') {
-      await copyTripLocally(t._id, openid)
-      Taro.showToast({ title: '已复制', icon: 'success' })
+      const newId = await copyTripLocally(t._id, openid)
+      Taro.showToast({ title: '已复制', icon: 'success', duration: 600 })
+      setTimeout(() => {
+        Taro.hideToast()
+        Taro.navigateTo({ url: `/pages/trip/index?id=${newId}` })
+      }, 650)
       return
     }
 
@@ -144,7 +149,8 @@ export default function Home() {
 
       <View className='home-list'>
         {trips.map(t => {
-          const isCollab = t._openid !== openid
+          const isSeed = isSeedTripId(t._id)
+          const isCollab = !isSeed && t._openid !== openid
           return (
             <View
               key={t._id}
@@ -152,6 +158,7 @@ export default function Home() {
               onClick={() => Taro.navigateTo({ url: `/pages/trip/index?id=${t._id}` })}
               onLongPress={() => setActionTrip(t)}
             >
+              {isSeed && <View className='tc-badge tc-badge-seed'>示例</View>}
               {isCollab && <View className='tc-badge'>协作</View>}
               <Text className='tc-name'>{t.name}</Text>
               <Text className='tc-meta'>
@@ -190,6 +197,7 @@ export default function Home() {
       <TripActionSheet
         open={!!actionTrip}
         tripName={actionTrip?.name || ''}
+        actions={actionTrip && isSeedTripId(actionTrip._id) ? ['copy'] : undefined}
         onSelect={handleAction}
         onClose={() => setActionTrip(null)}
       />

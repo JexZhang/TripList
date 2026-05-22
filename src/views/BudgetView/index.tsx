@@ -16,7 +16,7 @@ const CATEGORIES: { type: SpotType; label: string; seg: string }[] = [
   { type: 'hotel', label: '住宿', seg: 'seg-hotel' },
   { type: 'transport', label: '交通', seg: 'seg-transport' },
   { type: 'meal', label: '餐饮', seg: 'seg-meal' },
-  { type: 'spot', label: '门票', seg: 'seg-ticket' },
+  { type: 'spot', label: '杂项', seg: 'seg-ticket' },
 ]
 
 export default function BudgetView() {
@@ -25,7 +25,7 @@ export default function BudgetView() {
   const [editSpot, setEditSpot] = useState<{ dayId: string; spot: Spot } | null>(null)
 
   // 聚合 4 类
-  const totals: Record<SpotType, number> = { spot: 0, hotel: 0, meal: 0, transport: 0, arrive: 0 }
+  const totals: Record<SpotType, number> = { spot: 0, hotel: 0, meal: 0, transport: 0 }
   for (const d of trip.days) {
     for (const s of d.spots) {
       totals[s.type] = (totals[s.type] || 0) + (s.price || 0)

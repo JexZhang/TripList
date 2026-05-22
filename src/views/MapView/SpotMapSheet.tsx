@@ -5,11 +5,10 @@ import type { Spot } from '../../types/trip'
 import { fmtCurrency } from '../../utils/format'
 
 const TYPE_LABEL: Record<string, string> = {
-  spot: '景点',
+  spot: '其他',
   hotel: '住宿',
   meal: '餐饮',
   transport: '交通',
-  arrive: '抵达',
 }
 
 interface Props {
@@ -57,7 +56,7 @@ export default function SpotMapSheet({ spot, onClose }: Props) {
               <Text>{fmtCurrency(display.price)}</Text>
             </View>
           )}
-          <View className='mv-sheet-btn' onClick={navigate}>拉起地图导航</View>
+          <View className='mv-sheet-btn' onClick={navigate}>导航</View>
         </View>
       )}
     </View>

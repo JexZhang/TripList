@@ -2,65 +2,98 @@
   min-height: 100vh;
   padding: 0 0 32rpx;
   box-sizing: border-box;
+  animation: page-in 0.4s var(--ease-out) both;
+  background:
+    radial-gradient(100% 50% at 100% 0%, rgba(255, 154, 77, 0.18) 0%, transparent 60%),
+    var(--bg);
 }
 
 .trip.theme-tegami {
-  --bg: #f7f1e3;
-  --ink: #2a2522;
-  background: var(--bg);
+  background:
+    radial-gradient(100% 50% at 100% 0%, rgba(255, 154, 77, 0.18) 0%, transparent 60%),
+    var(--bg);
   color: var(--ink);
 }
 
 .trip-empty {
-  padding: 80rpx 32rpx;
+  padding: 120rpx 32rpx;
   text-align: center;
-  opacity: 0.55;
+  color: var(--ink-3);
   font-size: 26rpx;
 }
 
+/* ===== 顶部 ===== */
 .trip-head {
-  padding: 24rpx 32rpx 16rpx;
+  padding: 32rpx 32rpx 24rpx;
 }
 .th-name {
-  font-size: 40rpx;
-  font-weight: 600;
+  font-size: 44rpx;
+  font-weight: 800;
   flex: 1;
+  letter-spacing: 1rpx;
+  background: linear-gradient(135deg, var(--ink) 0%, var(--accent) 130%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
 }
 .th-row { display: flex; align-items: center; justify-content: space-between; }
 .th-menu {
-  width: 60rpx; height: 60rpx;
+  width: 64rpx; height: 64rpx;
   display: flex; align-items: center; justify-content: center;
-  font-size: 40rpx;
-  opacity: 0.6;
+  font-size: 36rpx;
+  color: var(--ink-2);
+  background: var(--surface);
+  border-radius: 999rpx;
+  box-shadow: var(--shadow-sm);
 }
 .th-meta {
-  display: block;
-  margin-top: 8rpx;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  margin-top: 12rpx;
   font-size: 22rpx;
-  opacity: 0.6;
+  color: var(--ink-3);
+  font-weight: 500;
+  letter-spacing: 1rpx;
+}
+.th-pax-edit {
+  color: var(--accent);
+  font-weight: 700;
 }
 
+/* ===== Tabs ===== */
 .trip-tabs {
   display: flex;
-  padding: 0 32rpx;
-  margin: 16rpx 0 8rpx;
-  border-bottom: 2rpx solid rgba(0,0,0,0.1);
+  padding: 8rpx;
+  margin: 24rpx 32rpx 16rpx;
+  background: var(--surface);
+  border-radius: var(--r-pill);
+  box-shadow: var(--shadow-sm);
+  border: none;
+  gap: 4rpx;
 }
 .tt-item {
-  padding: 16rpx 24rpx;
-  font-size: 28rpx;
-  opacity: 0.55;
+  flex: 1;
+  padding: 16rpx 16rpx;
+  font-size: 26rpx;
+  color: var(--ink-3);
+  text-align: center;
+  border-radius: var(--r-pill);
+  transition: color 0.28s var(--ease-out), transform 0.28s var(--ease-out), background 0.32s var(--ease-out), box-shadow 0.32s var(--ease-out);
+  font-weight: 500;
   position: relative;
+  z-index: 1;
 }
+.tt-item:active { transform: scale(0.94); }
 .tt-item.on {
-  opacity: 1; font-weight: 600;
+  color: #FFF;
+  font-weight: 700;
+  background: linear-gradient(135deg, var(--accent) 0%, var(--accent-2) 100%);
+  box-shadow: 0 6rpx 16rpx rgba(255, 122, 46, 0.35);
 }
-.tt-item.on::after {
-  content: '';
-  position: absolute;
-  left: 24rpx; right: 24rpx; bottom: -2rpx;
-  height: 4rpx;
-  background: currentColor;
-}
+.tt-item.on::after { content: none; }
 
-.trip-content {}
+.trip-content {
+  padding-top: 8rpx;
+  animation: fade-in 0.32s var(--ease-out) both;
+}

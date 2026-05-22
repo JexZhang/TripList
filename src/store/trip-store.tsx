@@ -1,7 +1,28 @@
 import { createContext, useContext, useEffect, useReducer, useRef, ReactNode } from 'react'
 import Taro from '@tarojs/taro'
+import dayjs from 'dayjs'
 import type { Trip, Day, Spot } from '../types/trip'
 import { getTrip, updateTrip } from '../utils/db'
+import { isSeedTripId, getSeedTrip } from '../data/seed-trips'
+
+function resyncDays(days: Day[]): Day[] {
+  if (days.length === 0) return days
+  const base = days[0].date
+  return days.map((d, i) => ({
+    ...d,
+    date: dayjs(base).add(i, 'day').format('YYYY-MM-DD'),
+  }))
+}
+
+function withSyncedDays(trip: Trip, days: Day[]): Trip {
+  const synced = resyncDays(days)
+  return {
+    ...trip,
+    days: synced,
+    startDate: synced[0]?.date || trip.startDate,
+    endDate: synced[synced.length - 1]?.date || trip.endDate,
+  }
+}
 
 type Action =
   | { type: 'SET_TRIP'; trip: Trip }
@@ -38,9 +59,9 @@ function reducer(state: State, a: Action): State {
         trip: { ...trip, days: trip.days.map(d => d.id === a.dayId ? { ...d, ...a.patch } : d) }
       }
     case 'ADD_DAY':
-      return { ...state, trip: { ...trip, days: [...trip.days, a.day] } }
+      return { ...state, trip: withSyncedDays(trip, [...trip.days, a.day]) }
     case 'DELETE_DAY':
-      return { ...state, trip: { ...trip, days: trip.days.filter(d => d.id !== a.dayId) } }
+      return { ...state, trip: withSyncedDays(trip, trip.days.filter(d => d.id !== a.dayId)) }
     case 'ADD_SPOT':
       return {
         ...state,
@@ -95,6 +116,18 @@ export function TripProvider({
 
   // 初次拉 + watch 订阅
   useEffect(() => {
+    // 种子示例攻略：直接从本地静态数据加载，不连云端，不订阅 watch
+    if (isSeedTripId(tripId)) {
+      const seed = getSeedTrip(tripId)
+      if (seed) {
+        dispatch({ type: 'SET_TRIP', trip: seed })
+        lastSavedRef.current = JSON.stringify(seed)
+      } else {
+        dispatch({ type: 'ERROR', error: 'Trip not found' })
+      }
+      return
+    }
+
     let watcher: { close: () => void } | null = null
     getTrip(tripId).then(trip => {
       if (!trip) {
@@ -130,6 +163,7 @@ export function TripProvider({
   // 编辑 → 500ms debounce 保存
   useEffect(() => {
     if (!state.trip || state.loading) return
+    if (isSeedTripId(tripId)) return  // 种子示例只读，不写云端
     const snapshot = JSON.stringify(state.trip)
     if (snapshot === lastSavedRef.current) return  // 没有真实变化
 

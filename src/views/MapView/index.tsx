@@ -45,17 +45,22 @@ export default function MapView() {
         id: encodeMarkerId(p.dayIdx, p.spotIdx),
         latitude: p.lat,
         longitude: p.lng,
-        width: 28,
-        height: 28,
+        width: 1,
+        height: 1,
+        anchor: { x: 0.5, y: 1 },
         callout: {
           content: String(label),
-          color: '#ffffff',
-          fontSize: 12,
+          color: '#FFFFFF',
+          fontSize: 14,
           bgColor: color,
-          padding: 6,
-          borderRadius: 14,
+          padding: 10,
+          borderRadius: 999,
+          borderWidth: 3,
+          borderColor: '#FFFFFF',
           display: 'ALWAYS' as const,
           textAlign: 'center' as const,
+          anchorX: 0,
+          anchorY: -4,
         },
         iconPath: '',
       }
@@ -67,8 +72,11 @@ export default function MapView() {
     return [{
       points: located.map((p) => ({ latitude: p.lat, longitude: p.lng })),
       color: dayColor(typeof mode === 'number' ? mode : 0),
-      width: 3,
+      width: 10,
+      borderColor: '#FFFFFF',
+      borderWidth: 2,
       arrowLine: true,
+      dottedLine: false,
     }]
   }, [located, mode])
 
@@ -101,7 +109,8 @@ export default function MapView() {
 
   // 点 marker 时不在 MapView 里 setState,而是直接命令式调 SheetContainer。
   // 关键:MapView 不再随 sheet 开关 re-render -> <Map> 不会被覆盖。
-  const onMarkerTap = useCallback((e: any) => {
+  // marker icon 是 1x1 透明,所以同时处理 onCalloutTap (用户实际点的是气泡)。
+  const handleTap = useCallback((e: any) => {
     const id: number = e.detail?.markerId ?? e.markerId
     if (typeof id !== 'number') return
     const { dayIdx, spotIdx } = decodeMarkerId(id)
@@ -121,7 +130,8 @@ export default function MapView() {
           scale={scale}
           markers={markers as any}
           polyline={polyline as any}
-          onMarkerTap={onMarkerTap}
+          onMarkerTap={handleTap}
+          onCalloutTap={handleTap}
           onError={() => {}}
           showLocation={false}
           enableTraffic={false}

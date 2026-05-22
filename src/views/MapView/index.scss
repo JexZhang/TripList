@@ -1,32 +1,41 @@
 .mv {
   display: flex;
   flex-direction: column;
-  height: calc(100vh - 88px); // 减去顶部 view 切换条高度(参考 ItineraryView 实际可调)
+  height: calc(100vh - 88px);
+  animation: fade-in 0.36s var(--ease-out) both;
 }
 
 .mv-modebar {
   white-space: nowrap;
-  padding: 12rpx 24rpx;
+  padding: 16rpx 24rpx;
   flex-shrink: 0;
 }
 .mv-mode-item {
   display: inline-block;
-  margin-right: 16rpx;
-  padding: 10rpx 24rpx;
+  margin-right: 14rpx;
+  padding: 12rpx 28rpx;
   font-size: 26rpx;
-  border: 2rpx solid currentColor;
-  border-radius: 24rpx;
-  opacity: 0.55;
+  background: var(--surface);
+  color: var(--ink-2);
+  border: none;
+  border-radius: 999rpx;
+  box-shadow: var(--shadow-sm);
+  font-weight: 600;
+  transition: transform 0.22s var(--ease-out), background 0.32s var(--ease-out), color 0.28s var(--ease-out), box-shadow 0.32s var(--ease-out);
 }
+.mv-mode-item:active { transform: scale(0.94); }
 .mv-mode-item.on {
-  opacity: 1;
-  background: var(--ink);
-  color: var(--bg);
+  background: linear-gradient(135deg, var(--accent) 0%, var(--accent-2) 100%);
+  color: #FFF;
+  box-shadow: 0 8rpx 20rpx rgba(255, 122, 46, 0.40);
+  transform: translateY(-2rpx);
 }
 
 .mv-map-wrap {
   flex: 1;
   position: relative;
+  border-radius: var(--r-lg) var(--r-lg) 0 0;
+  overflow: hidden;
 }
 .mv-map {
   width: 100%;
@@ -36,13 +45,13 @@
 .mv-sheet-mask {
   position: fixed;
   left: 0; right: 0; top: 0; bottom: 0;
-  background: rgba(0,0,0,0.32);
+  background: rgba(43, 26, 16, 0.45);
   z-index: 1000;
   display: flex;
   align-items: flex-end;
   opacity: 0;
   pointer-events: none;
-  transition: opacity 0.18s ease;
+  transition: opacity 0.22s ease;
 }
 .mv-sheet-mask.visible {
   opacity: 1;
@@ -50,31 +59,48 @@
 }
 .mv-sheet {
   width: 100%;
-  background: var(--bg, #f7f1e3);
-  border-radius: 24rpx 24rpx 0 0;
-  padding: 32rpx 32rpx 48rpx;
+  background: var(--surface);
+  border-radius: var(--r-xl) var(--r-xl) 0 0;
+  padding: 40rpx 32rpx 56rpx;
   box-sizing: border-box;
+  box-shadow: 0 -16rpx 48rpx rgba(43, 26, 16, 0.15);
+  position: relative;
+  transform: translateY(100%);
+  transition: transform 0.36s var(--ease-spring);
+}
+.mv-sheet-mask.visible .mv-sheet { transform: translateY(0); }
+.mv-sheet::before {
+  content: '';
+  position: absolute;
+  top: 16rpx; left: 50%;
+  transform: translateX(-50%);
+  width: 72rpx; height: 8rpx;
+  background: var(--line-2);
+  border-radius: 999rpx;
 }
 .mv-sheet-tag {
   display: inline-block;
   font-size: 22rpx;
-  padding: 4rpx 12rpx;
-  border-radius: 8rpx;
-  background: var(--ink, #2c2c2c);
-  color: var(--bg, #f7f1e3);
-  margin-bottom: 12rpx;
+  padding: 6rpx 16rpx;
+  border-radius: 999rpx;
+  background: var(--accent-bg);
+  color: var(--accent);
+  margin-bottom: 16rpx;
+  font-weight: 700;
 }
-.mv-sheet-name { font-size: 34rpx; font-weight: 700; }
-.mv-sheet-sub { font-size: 24rpx; opacity: 0.7; margin-top: 6rpx; }
-.mv-sheet-note { font-size: 26rpx; margin-top: 12rpx; line-height: 1.5; }
-.mv-sheet-price { font-size: 26rpx; margin-top: 12rpx; }
+.mv-sheet-name { font-size: 38rpx; font-weight: 800; color: var(--ink); }
+.mv-sheet-sub { font-size: 24rpx; color: var(--ink-3); margin-top: 8rpx; font-weight: 500; }
+.mv-sheet-note { font-size: 26rpx; margin-top: 16rpx; line-height: 1.6; color: var(--ink-2); }
+.mv-sheet-price { font-size: 28rpx; margin-top: 16rpx; color: var(--coral); font-weight: 700; }
 .mv-sheet-btn {
-  margin-top: 28rpx;
+  margin-top: 32rpx;
   text-align: center;
-  padding: 22rpx 0;
+  padding: 28rpx 0;
   font-size: 30rpx;
   font-weight: 700;
-  border-radius: 16rpx;
-  background: var(--ink, #2c2c2c);
-  color: var(--bg, #f7f1e3);
+  letter-spacing: 2rpx;
+  border-radius: var(--r-md);
+  background: linear-gradient(135deg, var(--accent) 0%, var(--accent-2) 100%);
+  color: #FFF;
+  box-shadow: 0 12rpx 28rpx rgba(255, 122, 46, 0.40);
 }

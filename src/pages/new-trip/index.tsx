@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { View, Text, Input, Button } from '@tarojs/components'
+import { View, Text, Input, Button, Picker } from '@tarojs/components'
 import Taro from '@tarojs/taro'
 import dayjs from 'dayjs'
 import DatePicker from '../../components/DatePicker'
@@ -18,6 +18,7 @@ export default function NewTrip() {
     end: dayjs().add(2, 'day').format('YYYY-MM-DD'),
   })
   const [destinations, setDestinations] = useState<Destination[]>([])
+  const PAX_OPTIONS = Array.from({ length: 99 }, (_, i) => `${i + 1} 人`)
   const { me } = useMe()
   const openid = me?.openid || ''
   const [submitting, setSubmitting] = useState(false)
@@ -73,17 +74,17 @@ export default function NewTrip() {
 
       <View className='nt-field'>
         <Text className='nt-label'>人数</Text>
-        <View className='nt-pax'>
-          <View
-            className='nt-pax-btn'
-            onClick={() => setPax(Math.max(1, pax - 1))}
-          >−</View>
-          <Text className='nt-pax-value'>{pax}</Text>
-          <View
-            className='nt-pax-btn'
-            onClick={() => setPax(pax + 1)}
-          >+</View>
-        </View>
+        <Picker
+          mode='selector'
+          range={PAX_OPTIONS}
+          value={Math.max(0, Math.min(98, pax - 1))}
+          onChange={e => setPax(Number(e.detail.value) + 1)}
+        >
+          <View className='nt-pax-picker'>
+            <Text className='nt-pax-value'>{pax} 人</Text>
+            <Text className='nt-pax-arrow'>▾</Text>
+          </View>
+        </Picker>
       </View>
 
       <View className='nt-foot'>

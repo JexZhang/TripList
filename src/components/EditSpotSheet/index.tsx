@@ -5,11 +5,10 @@ import SpotSearch, { type SelectedSpotInfo } from '../SpotSearch'
 import './index.scss'
 
 const TYPES: { key: SpotType; label: string }[] = [
-  { key: 'spot', label: '景点 / 其它' },
+  { key: 'spot', label: '其他' },
   { key: 'hotel', label: '住宿' },
   { key: 'meal', label: '餐饮' },
   { key: 'transport', label: '交通' },
-  { key: 'arrive', label: '抵达 / 出发' },
 ]
 
 interface Props {
@@ -67,14 +66,13 @@ export default function EditSpotSheet({ open, spot, defaultCity, onClose, onSave
             <Text className='es-label'>地点</Text>
             <View className='es-name-row' onClick={() => setSearchOpen(true)}>
               <Text className='es-name'>{draft.name || '(未填)'}</Text>
-              <Text className='es-name-edit'>改…</Text>
             </View>
             {draft.city && <Text className='es-name-city'>{draft.city}</Text>}
           </View>
 
           {/* 时间 */}
           <View className='es-field'>
-            <Text className='es-label'>时间(可空)</Text>
+            <Text className='es-label'>时间</Text>
             <Picker
               mode='time'
               value={draft.time || '12:00'}
@@ -100,7 +98,7 @@ export default function EditSpotSheet({ open, spot, defaultCity, onClose, onSave
 
           {/* 价格 */}
           <View className='es-field'>
-            <Text className='es-label'>价格(可空)</Text>
+            <Text className='es-label'>价格</Text>
             <Input
               className='es-input'
               type='digit'
@@ -115,7 +113,7 @@ export default function EditSpotSheet({ open, spot, defaultCity, onClose, onSave
 
           {/* 备注 */}
           <View className='es-field'>
-            <Text className='es-label'>备注(可空)</Text>
+            <Text className='es-label'>备注</Text>
             <Textarea
               className='es-textarea'
               placeholder='交通方式 / 注意事项 / 等等...'

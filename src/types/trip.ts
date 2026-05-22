@@ -1,4 +1,4 @@
-export type SpotType = 'spot' | 'hotel' | 'meal' | 'transport' | 'arrive'
+export type SpotType = 'spot' | 'hotel' | 'meal' | 'transport'
 
 export interface Spot {
   id: string

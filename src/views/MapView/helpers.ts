@@ -2,8 +2,8 @@ import type { Day, Spot } from '../../types/trip'
 
 // 按 day 索引循环取色;同一天的 marker 用同一色
 const DAY_COLORS = [
-  '#c43d3d', '#d98c2a', '#3a7d4f', '#2a6b9e',
-  '#7a4ca0', '#a85a8e', '#5c5c5c',
+  '#FF7A2E', '#FF5B5B', '#FFC247', '#4FB286',
+  '#2A9DF4', '#A06CD5', '#FF8FAB',
 ]
 
 export function dayColor(dayIndex: number): string {

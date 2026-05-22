@@ -1,22 +1,37 @@
 .sts-mask {
   position: fixed; inset: 0;
-  background: rgba(0,0,0,0.4);
+  background: rgba(43, 26, 16, 0.45);
   display: flex; align-items: flex-end;
   z-index: 100;
+  animation: fade-in 0.22s var(--ease-out) both;
 }
+.sts-sheet { animation: sheet-up 0.36s var(--ease-spring) both; }
+.sts-item { transition: background 0.22s var(--ease-out); }
+.sts-item:active:not([disabled]) { background: var(--accent-bg); }
 
 .sts-sheet {
   width: 100%;
-  background: var(--bg, #f7f1e3);
-  color: var(--ink, #2a2522);
-  border-radius: 24rpx 24rpx 0 0;
-  padding: 24rpx 0 32rpx;
+  background: var(--surface);
+  color: var(--ink);
+  border-radius: var(--r-xl) var(--r-xl) 0 0;
+  padding: 32rpx 0 40rpx;
+  position: relative;
+  box-shadow: 0 -16rpx 48rpx rgba(43, 26, 16, 0.15);
+}
+.sts-sheet::before {
+  content: '';
+  position: absolute;
+  top: 16rpx; left: 50%;
+  transform: translateX(-50%);
+  width: 72rpx; height: 8rpx;
+  background: var(--line-2);
+  border-radius: 999rpx;
 }
 
 .sts-item {
   display: flex; flex-direction: column;
-  padding: 28rpx 32rpx;
-  border-bottom: 1rpx solid rgba(0,0,0,0.06);
+  padding: 28rpx 36rpx;
+  border-bottom: 1rpx solid var(--line);
   border-radius: 0;
   background: transparent;
   color: inherit;
@@ -28,24 +43,31 @@
 }
 .sts-item::after { border: none; }
 .sts-item[disabled] { opacity: 0.5; }
-.sts-item-title { font-size: 30rpx; font-weight: 600; }
+.sts-item-title {
+  font-size: 32rpx;
+  font-weight: 700;
+  color: var(--ink);
+}
 .sts-item-desc {
   display: block;
-  margin-top: 6rpx;
+  margin-top: 8rpx;
   font-size: 22rpx;
-  opacity: 0.6;
+  color: var(--ink-3);
 }
 .sts-item-loading {
   display: block;
-  margin-top: 6rpx;
+  margin-top: 8rpx;
   font-size: 20rpx;
-  opacity: 0.5;
+  color: var(--accent);
+  font-weight: 600;
 }
 
 .sts-cancel {
-  margin-top: 16rpx;
-  padding: 24rpx 0;
+  margin-top: 12rpx;
+  padding: 28rpx 0;
   text-align: center;
   font-size: 30rpx;
-  border-top: 12rpx solid rgba(0,0,0,0.04);
+  font-weight: 700;
+  color: var(--ink-2);
+  border-top: 12rpx solid var(--bg-soft);
 }

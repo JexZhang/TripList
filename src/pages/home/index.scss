@@ -1,138 +1,224 @@
 .home {
   min-height: 100vh;
-  padding: 32rpx 32rpx 200rpx;
+  padding: 32rpx 32rpx 220rpx;
   box-sizing: border-box;
+  position: relative;
+  animation: page-in 0.42s var(--ease-out) both;
+  background:
+    radial-gradient(120% 60% at 100% 0%, rgba(255, 154, 77, 0.22) 0%, transparent 55%),
+    radial-gradient(80% 40% at 0% 10%, rgba(255, 194, 71, 0.18) 0%, transparent 60%),
+    var(--bg);
 }
 
 .home.theme-tegami {
-  --bg: #f7f1e3;
-  --ink: #2a2522;
-  background: var(--bg);
+  background:
+    radial-gradient(120% 60% at 100% 0%, rgba(255, 154, 77, 0.22) 0%, transparent 55%),
+    radial-gradient(80% 40% at 0% 10%, rgba(255, 194, 71, 0.18) 0%, transparent 60%),
+    var(--bg);
   color: var(--ink);
 }
 
+/* ===== 顶部 ===== */
 .home-head {
-  padding: 24rpx 0 40rpx;
+  padding: 40rpx 8rpx 48rpx;
+  position: relative;
+  animation: slide-up 0.5s var(--ease-out) both;
 }
 .home-brand {
-  font-size: 64rpx;
-  font-weight: 700;
-  letter-spacing: 8rpx;
+  font-size: 72rpx;
+  font-weight: 800;
+  letter-spacing: 6rpx;
+  background: linear-gradient(135deg, var(--ink) 0%, var(--accent) 120%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
 }
 .home-sub {
   display: block;
-  margin-top: 12rpx;
+  margin-top: 14rpx;
   font-size: 24rpx;
-  opacity: 0.55;
-  letter-spacing: 2rpx;
+  color: var(--ink-3);
+  letter-spacing: 3rpx;
+  font-weight: 500;
 }
 
+/* 装饰小阳光点 */
+.home-head::after {
+  content: '';
+  position: absolute;
+  top: 50rpx;
+  right: 24rpx;
+  width: 96rpx;
+  height: 96rpx;
+  border-radius: 999rpx;
+  background: radial-gradient(circle at 30% 30%, #FFD78A 0%, #FF8A3A 70%);
+  box-shadow: 0 12rpx 32rpx rgba(255, 138, 58, 0.45);
+  opacity: 0.9;
+}
+
+/* ===== 空状态 ===== */
 .home-empty {
-  margin: 80rpx 0;
+  margin: 120rpx 0;
   text-align: center;
+  padding: 64rpx 32rpx;
+  background: var(--surface);
+  border-radius: var(--r-lg);
+  box-shadow: var(--shadow-md);
 }
 .home-empty-text {
   display: block;
-  font-size: 30rpx;
-  font-weight: 600;
-  margin-bottom: 12rpx;
+  font-size: 32rpx;
+  font-weight: 700;
+  margin-bottom: 14rpx;
+  color: var(--ink);
 }
 .home-empty-hint {
   display: block;
   font-size: 24rpx;
-  opacity: 0.55;
+  color: var(--ink-3);
 }
 
+/* ===== 行程卡片 ===== */
 .home-list {
   display: flex;
   flex-direction: column;
-  gap: 0;
+  gap: 24rpx;
 }
 
 .trip-card {
-  padding: 32rpx 0;
-  border-bottom: 2rpx solid rgba(0,0,0,0.08);
+  padding: 32rpx 28rpx 28rpx;
+  background: var(--surface);
+  border-radius: var(--r-lg);
+  box-shadow: var(--shadow-sm);
+  border: none;
   position: relative;
+  overflow: hidden;
+  animation: slide-up 0.5s var(--ease-out) both;
+  transition: transform 0.22s var(--ease-out), box-shadow 0.22s var(--ease-out);
+}
+.trip-card:active {
+  transform: scale(0.98);
+  box-shadow: var(--shadow-md);
+}
+.home-list .trip-card:nth-child(1) { animation-delay: 0.04s; }
+.home-list .trip-card:nth-child(2) { animation-delay: 0.10s; }
+.home-list .trip-card:nth-child(3) { animation-delay: 0.16s; }
+.home-list .trip-card:nth-child(4) { animation-delay: 0.22s; }
+.home-list .trip-card:nth-child(5) { animation-delay: 0.28s; }
+.home-list .trip-card:nth-child(n+6) { animation-delay: 0.34s; }
+
+.trip-card::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 8rpx;
+  background: linear-gradient(180deg, var(--accent) 0%, var(--accent-2) 100%);
+  border-radius: 0 6rpx 6rpx 0;
 }
 
 .tc-name {
   display: block;
-  font-size: 36rpx;
-  font-weight: 600;
+  font-size: 38rpx;
+  font-weight: 700;
   letter-spacing: 1rpx;
+  color: var(--ink);
+  padding-right: 120rpx;
 }
 .tc-meta {
   display: block;
-  margin-top: 10rpx;
+  margin-top: 12rpx;
   font-size: 24rpx;
-  opacity: 0.6;
+  color: var(--ink-3);
+  font-weight: 500;
 }
 .tc-dest {
   display: flex;
   gap: 12rpx;
-  margin-top: 14rpx;
+  margin-top: 20rpx;
   flex-wrap: wrap;
 }
 .tc-dest-chip {
-  padding: 4rpx 14rpx;
-  border: 2rpx solid currentColor;
-  border-radius: 999rpx;
-  font-size: 20rpx;
+  padding: 6rpx 18rpx;
+  background: var(--accent-bg);
+  color: var(--accent);
+  border-radius: var(--r-pill);
+  font-size: 22rpx;
+  font-weight: 600;
   letter-spacing: 1rpx;
-  opacity: 0.75;
 }
 
+/* ===== 底部 CTA ===== */
 .home-foot {
   position: fixed;
   left: 32rpx; right: 32rpx;
-  bottom: 40rpx;
+  bottom: 48rpx;
+  z-index: 10;
 }
 .home-new-btn {
   width: 100%;
-  background: var(--ink);
-  color: var(--bg);
-  border-radius: 16rpx;
-  font-size: 30rpx;
-  font-weight: 500;
-  padding: 24rpx 0;
+  background: linear-gradient(135deg, var(--accent) 0%, var(--accent-2) 100%);
+  color: #FFF;
+  border-radius: var(--r-md);
+  font-size: 32rpx;
+  font-weight: 700;
+  padding: 28rpx 0;
+  letter-spacing: 4rpx;
+  box-shadow: 0 16rpx 36rpx rgba(255, 122, 46, 0.40);
+  border: none;
+  animation: pop-in 0.5s var(--ease-spring) 0.18s both, pulse-glow 3.2s ease-in-out 1.2s infinite;
+}
+.home-new-btn:active { transform: scale(0.97); }
+.home-new-btn::after { border: none; }
+
+/* ===== 示例徽章 ===== */
+.tc-badge.tc-badge-seed {
+  background: linear-gradient(135deg, var(--sun) 0%, var(--accent) 100%);
+  box-shadow: 0 4rpx 12rpx rgba(255, 194, 71, 0.45);
 }
 
+/* ===== 协作徽章 ===== */
 .tc-badge {
   position: absolute;
-  top: 16rpx;
-  right: 16rpx;
+  top: 24rpx;
+  right: 24rpx;
   font-size: 20rpx;
-  font-weight: 600;
-  padding: 4rpx 12rpx;
-  background: var(--ink, #2c2c2c);
-  color: var(--bg, #f7f1e3);
-  border-radius: 8rpx;
+  font-weight: 700;
+  padding: 6rpx 14rpx;
+  background: linear-gradient(135deg, var(--accent) 0%, var(--coral) 100%);
+  color: #FFF;
+  border-radius: var(--r-pill);
   letter-spacing: 2rpx;
+  box-shadow: 0 4rpx 12rpx rgba(255, 91, 91, 0.35);
 }
 
+/* ===== 拥有者行 ===== */
 .tc-owner {
   display: flex;
   align-items: center;
-  margin-top: 12rpx;
+  margin-top: 16rpx;
+  padding-top: 16rpx;
+  border-top: 1rpx dashed var(--line);
   font-size: 22rpx;
-  opacity: 0.65;
+  color: var(--ink-3);
 }
 .tc-owner-avatar {
-  width: 32rpx;
-  height: 32rpx;
+  width: 36rpx;
+  height: 36rpx;
   border-radius: 999rpx;
-  margin-right: 8rpx;
-  background: rgba(0,0,0,0.1);
+  margin-right: 10rpx;
+  background: linear-gradient(135deg, var(--accent-soft) 0%, var(--accent) 100%);
+  color: #FFF;
   display: flex;
   align-items: center;
   justify-content: center;
   overflow: hidden;
   font-size: 18rpx;
-  font-weight: 600;
+  font-weight: 700;
 }
 .tc-owner-avatar-fallback {
-  background: rgba(0,0,0,0.15);
+  background: linear-gradient(135deg, var(--accent-soft) 0%, var(--accent) 100%);
 }
 .tc-owner-name {
   font-size: 22rpx;
+  font-weight: 500;
 }
