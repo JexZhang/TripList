@@ -30,7 +30,7 @@
   margin-bottom: 16rpx;
 }
 
-.ss-results { flex: 1; }
+.ss-results { flex: 1; min-height: 0; height: 0; }
 
 .ss-hint {
   padding: 32rpx;

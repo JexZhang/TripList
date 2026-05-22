@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { forwardRef, useCallback, useEffect, useImperativeHandle, useMemo, useRef, useState } from 'react'
 import { Map, View } from '@tarojs/components'
 import Taro from '@tarojs/taro'
 import { useTripStore } from '../../store/trip-store'
@@ -10,23 +10,35 @@ import './index.scss'
 
 const MAP_ID = 'trip-map'
 
+interface SheetHandle {
+  show: (spot: Spot) => void
+}
+
+// 把底部 sheet 的 picked 状态封装在独立子组件里。
+// 这样开/关 sheet 只会触发它自己 re-render,不会牵动 MapView 和 <Map>,
+// 也就不会被 weapp 重新下发 setData 而把 includePoints 设好的视野盖掉。
+const SheetContainer = forwardRef<SheetHandle, {}>(function SheetContainer(_props, ref) {
+  const [picked, setPicked] = useState<Spot | null>(null)
+  useImperativeHandle(ref, () => ({
+    show: (spot: Spot) => setPicked(spot),
+  }))
+  return <SpotMapSheet spot={picked} onClose={() => setPicked(null)} />
+})
+
 export default function MapView() {
   const { state } = useTripStore()
   const trip = state.trip!
   const [mode, setMode] = useState<MapMode>('all')
-  const [picked, setPicked] = useState<Spot | null>(null)
   const ctxRef = useRef<ReturnType<typeof Taro.createMapContext> | null>(null)
+  const sheetRef = useRef<SheetHandle | null>(null)
 
   const located = useMemo(() => {
     if (mode === 'all') return collectLocated(trip.days)
     return collectLocated(trip.days, mode)
   }, [trip.days, mode])
 
-  // weapp 要求 markers 的 id 为整数,callout 显示数字
   const markers = useMemo(() => {
     return located.map((p) => {
-      // 单日模式:数字 = 当日序号(spotIdx+1,从 1 起)
-      // 全部模式:数字 = day 序号(dayIdx+1)
       const label = mode === 'all' ? p.dayIdx + 1 : p.spotIdx + 1
       const color = dayColor(p.dayIdx)
       return {
@@ -45,12 +57,11 @@ export default function MapView() {
           display: 'ALWAYS' as const,
           textAlign: 'center' as const,
         },
-        iconPath: '', // 我们只用 callout 显示气泡,iconPath 空字符串让 weapp 用默认 marker;视觉重点在 callout
+        iconPath: '',
       }
     })
   }, [located, mode])
 
-  // 单日模式画一条按顺序的连线
   const polyline = useMemo(() => {
     if (mode === 'all' || located.length < 2) return []
     return [{
@@ -61,9 +72,6 @@ export default function MapView() {
     }]
   }, [located, mode])
 
-  // 切换 mode / 数据变化时 fitBounds
-  // 注:weapp MapContext 没有 setScale 方法,scale 只能通过 <Map> 的 scale prop 设置;
-  // 这里用一个 manualScale state 在 1-point 时强制一个合理 zoom。
   const [manualScale, setManualScale] = useState<number | undefined>(undefined)
   useEffect(() => {
     if (!ctxRef.current) ctxRef.current = Taro.createMapContext(MAP_ID)
@@ -74,7 +82,6 @@ export default function MapView() {
     }
     if (located.length === 1) {
       setManualScale(14)
-      // 一点时不调 includePoints(可能 zoom 过远),改用 <Map> 的 latitude/longitude + scale
       return
     }
     setManualScale(undefined)
@@ -84,18 +91,23 @@ export default function MapView() {
     })
   }, [located])
 
-  // 一点时让 <Map> 直接居中到该点
-  const center = located.length === 1
-    ? { latitude: located[0].lat, longitude: located[0].lng }
-    : { latitude: trip.destinations?.[0]?.lat ?? 30.27, longitude: trip.destinations?.[0]?.lng ?? 120.15 }
+  const latitude = located.length === 1
+    ? located[0].lat
+    : (trip.destinations?.[0]?.lat ?? 30.27)
+  const longitude = located.length === 1
+    ? located[0].lng
+    : (trip.destinations?.[0]?.lng ?? 120.15)
+  const scale = manualScale ?? 10
 
-  const onMarkerTap = (e: any) => {
+  // 点 marker 时不在 MapView 里 setState,而是直接命令式调 SheetContainer。
+  // 关键:MapView 不再随 sheet 开关 re-render -> <Map> 不会被覆盖。
+  const onMarkerTap = useCallback((e: any) => {
     const id: number = e.detail?.markerId ?? e.markerId
     if (typeof id !== 'number') return
     const { dayIdx, spotIdx } = decodeMarkerId(id)
     const spot = trip.days[dayIdx]?.spots[spotIdx]
-    if (spot) setPicked(spot)
-  }
+    if (spot) sheetRef.current?.show(spot)
+  }, [trip.days])
 
   return (
     <View className='mv'>
@@ -104,9 +116,9 @@ export default function MapView() {
         <Map
           id={MAP_ID}
           className='mv-map'
-          longitude={center.longitude}
-          latitude={center.latitude}
-          scale={manualScale ?? 10}
+          latitude={latitude}
+          longitude={longitude}
+          scale={scale}
           markers={markers as any}
           polyline={polyline as any}
           onMarkerTap={onMarkerTap}
@@ -115,7 +127,7 @@ export default function MapView() {
           enableTraffic={false}
         />
       </View>
-      <SpotMapSheet spot={picked} onClose={() => setPicked(null)} />
+      <SheetContainer ref={sheetRef} />
     </View>
   )
 }
