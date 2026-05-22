@@ -8,7 +8,7 @@ import { fmtDateShort } from '../../utils/format'
 import { tripSummary } from '../../utils/trip-helpers'
 import TripActionSheet, { type TripAction } from '../../components/TripActionSheet'
 import ShareTypeSheet from '../../components/ShareTypeSheet'
-import { buildShareMessage, promptUserToShare } from '../../utils/share'
+import { buildShareMessage, shareRef, resetShareRef } from '../../utils/share'
 import type { ShareKind } from '../../utils/cloud'
 import './index.scss'
 
@@ -19,7 +19,7 @@ export default function Home() {
   const openid = me?.openid || ''
   const [actionTrip, setActionTrip] = useState<Trip | null>(null)
   const [shareTrip, setShareTrip] = useState<Trip | null>(null)
-  const [sharePayload, setSharePayload] = useState<{ title: string; path: string } | null>(null)
+  const [shareReady, setShareReady] = useState({ readonly: false, collab: false })
 
   // 初次拉取
   useEffect(() => {
@@ -77,7 +77,7 @@ export default function Home() {
     }
 
     if (action === 'share') {
-      setShareTrip(t)
+      openShareFor(t)
       return
     }
 
@@ -101,30 +101,29 @@ export default function Home() {
     }
   }
 
-  const onSelectShareKind = async (kind: ShareKind) => {
+  const prepareShare = async (kind: ShareKind) => {
     if (!shareTrip) return
     try {
       const payload = await buildShareMessage(shareTrip._id, shareTrip.name, kind)
-      setSharePayload({ title: payload.title, path: payload.path })
-      setShareTrip(null)
-      promptUserToShare()
+      shareRef.byKind[kind] = { title: payload.title, path: payload.path }
+      setShareReady(prev => ({ ...prev, [kind]: true }))
     } catch (e) {
       console.error('[share]', e)
       Taro.showToast({ title: '生成分享失败', icon: 'error' })
     }
   }
 
-  useShareAppMessage(() => {
-    if (sharePayload) {
-      return {
-        title: sharePayload.title,
-        path: sharePayload.path,
-      }
-    }
-    return {
-      title: '行册 · 旅行攻略册',
-      path: '/pages/home/index',
-    }
+  // 打开 sheet 时重置(切换不同 trip 时,避免上次的 payload 残留)
+  const openShareFor = (trip: Trip) => {
+    resetShareRef(trip.name)
+    setShareReady({ readonly: false, collab: false })
+    setShareTrip(trip)
+  }
+
+  useShareAppMessage((options) => {
+    const kind = (options as { target?: { dataset?: { kind?: ShareKind } } })?.target?.dataset?.kind
+    const picked = kind ? shareRef.byKind[kind] : null
+    return picked || { title: '行册 · 旅行攻略册', path: '/pages/home/index' }
   })
 
   return (
@@ -198,7 +197,8 @@ export default function Home() {
       <ShareTypeSheet
         open={!!shareTrip}
         onClose={() => setShareTrip(null)}
-        onSelect={onSelectShareKind}
+        prepare={prepareShare}
+        ready={shareReady}
       />
     </View>
   )

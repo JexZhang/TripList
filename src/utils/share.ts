@@ -1,4 +1,3 @@
-import Taro from '@tarojs/taro'
 import { cloud, type ShareKind } from './cloud'
 
 interface SharePayload {
@@ -10,7 +9,11 @@ interface SharePayload {
 /**
  * 调云函数生成 token,构造分享卡片参数
  */
-export async function buildShareMessage(tripId: string, tripName: string, kind: ShareKind): Promise<SharePayload> {
+export async function buildShareMessage(
+  tripId: string,
+  tripName: string,
+  kind: ShareKind,
+): Promise<SharePayload> {
   const { token } = await cloud.createShareToken({ tripId, kind })
   const prefix = kind === 'readonly' ? '只读分享' : '邀请协作'
   return {
@@ -21,17 +24,21 @@ export async function buildShareMessage(tripId: string, tripName: string, kind: 
 }
 
 /**
- * 让用户唤起原生分享(实际由 onShareAppMessage 返回 payload)。
- * 调用方先用 buildShareMessage 拿到 payload,再 setSharePayload 给页面,
- * 然后调用 wx.showShareMenu 引导用户点右上角"..."分享。
- *
- * 由于微信不允许从代码主动弹分享菜单,这里 toast 提示用户操作。
+ * 模块级 share state,用于 useShareAppMessage 回调读取。
+ * 流程: ShareTypeSheet 打开时为两个 kind 各预生成 token, 写入 byKind;
+ * 用户点 <Button open-type="share" data-kind=...> 时, WeChat 触发 onShareAppMessage,
+ * 页面用 options.target.dataset.kind 从 byKind 取对应 payload 返回.
  */
-export function promptUserToShare() {
-  Taro.showModal({
-    title: '点击右上角 "..." → 转发',
-    content: '将分享卡片发送给微信好友',
-    confirmText: '我知道了',
-    showCancel: false,
-  })
+export const shareRef: {
+  byKind: { readonly: { title: string; path: string } | null; collab: { title: string; path: string } | null }
+  tripName: string
+} = {
+  byKind: { readonly: null, collab: null },
+  tripName: '',
+}
+
+export function resetShareRef(tripName = '') {
+  shareRef.byKind.readonly = null
+  shareRef.byKind.collab = null
+  shareRef.tripName = tripName
 }

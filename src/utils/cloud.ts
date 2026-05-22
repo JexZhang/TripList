@@ -57,4 +57,7 @@ export const cloud = {
       'join-collab',
       data,
     ),
+
+  updateTrip: (data: { tripId: string; patch: Record<string, unknown> }) =>
+    call<typeof data, { ok: boolean }>('update-trip', data),
 }

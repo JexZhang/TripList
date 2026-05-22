@@ -59,7 +59,11 @@
   margin-bottom: 16rpx;
 }
 
-.dp-results { flex: 1; }
+.dp-results {
+  flex: 1;
+  height: 50vh;
+  max-height: 50vh;
+}
 
 .dp-hint {
   padding: 24rpx;

@@ -10,7 +10,7 @@ import CollaboratorsBar from '../../components/CollaboratorsBar'
 import CollaboratorsSheet from '../../components/CollaboratorsSheet'
 import TripActionSheet, { type TripAction } from '../../components/TripActionSheet'
 import ShareTypeSheet from '../../components/ShareTypeSheet'
-import { buildShareMessage, promptUserToShare } from '../../utils/share'
+import { buildShareMessage, shareRef, resetShareRef } from '../../utils/share'
 import { smartDeleteTrip, renameTrip, copyTripLocally } from '../../utils/db'
 import type { ShareKind } from '../../utils/cloud'
 import './index.scss'
@@ -30,16 +30,13 @@ function TripBody() {
   const [view, setView] = useState<ViewKey>('itinerary')
   const [actionOpen, setActionOpen] = useState(false)
   const [shareOpen, setShareOpen] = useState(false)
-  const [sharePayload, setSharePayload] = useState<{ title: string; path: string } | null>(null)
+  const [shareReady, setShareReady] = useState({ readonly: false, collab: false })
   const [collabSheetOpen, setCollabSheetOpen] = useState(false)
 
   const t = state.trip
   const isOwner = t ? t._openid === openid : false
 
-  useShareAppMessage(() => {
-    if (sharePayload) return sharePayload
-    return { title: t ? `行册 · ${t.name}` : '行册', path: '/pages/home/index' }
-  })
+  shareRef.tripName = t?.name || ''
 
   if (state.loading) return <View className='trip-empty'>加载中...</View>
   if (state.error) return <View className='trip-empty'>{state.error}</View>
@@ -90,12 +87,14 @@ function TripBody() {
       return
     }
     if (action === 'share') {
+      resetShareRef(t.name)
+      setShareReady({ readonly: false, collab: false })
       setShareOpen(true)
       return
     }
   }
 
-  const onSelectShareKind = async (kind: ShareKind) => {
+  const prepareShare = async (kind: ShareKind) => {
     if (!t) return
     if (!isOwner) {
       Taro.showToast({ title: '仅 owner 可分享', icon: 'none' })
@@ -103,11 +102,10 @@ function TripBody() {
     }
     try {
       const payload = await buildShareMessage(t._id, t.name, kind)
-      setSharePayload({ title: payload.title, path: payload.path })
-      setShareOpen(false)
-      promptUserToShare()
+      shareRef.byKind[kind] = { title: payload.title, path: payload.path }
+      setShareReady(prev => ({ ...prev, [kind]: true }))
     } catch (e) {
-      console.error(e)
+      console.error('[buildShareMessage failed]', kind, e)
       Taro.showToast({ title: '生成分享失败', icon: 'error' })
     }
   }
@@ -157,7 +155,8 @@ function TripBody() {
       <ShareTypeSheet
         open={shareOpen}
         onClose={() => setShareOpen(false)}
-        onSelect={onSelectShareKind}
+        prepare={prepareShare}
+        ready={shareReady}
       />
 
       <CollaboratorsSheet
@@ -175,6 +174,16 @@ export default function TripPage() {
   const router = useRouter()
   const tripId = router.params.id || ''
   const [openid, setOpenid] = useState('')
+
+  // 用户点 <Button open-type="share"> 时 WeChat 触发,根据 button dataset.kind 选 payload
+  useShareAppMessage((options) => {
+    const kind = (options as { target?: { dataset?: { kind?: ShareKind } } })?.target?.dataset?.kind
+    const picked = kind ? shareRef.byKind[kind] : null
+    return picked || {
+      title: shareRef.tripName ? `行册 · ${shareRef.tripName}` : '行册',
+      path: '/pages/home/index',
+    }
+  })
 
   useEffect(() => {
     // @ts-ignore Taro.cloud

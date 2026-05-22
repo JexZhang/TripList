@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import { View, Text, Input, ScrollView } from '@tarojs/components'
 import { cloud, type PoiResult } from '../../utils/cloud'
 import type { Destination } from '../../types/trip'
@@ -14,23 +14,27 @@ export default function DestinationPicker({ value, onChange }: Props) {
   const [results, setResults] = useState<PoiResult[]>([])
   const [loading, setLoading] = useState(false)
   const [open, setOpen] = useState(false)
+  const reqIdRef = useRef(0)
 
   const search = async (kw: string) => {
+    const myId = ++reqIdRef.current
     if (!kw.trim()) {
       setResults([])
+      setLoading(false)
       return
     }
     setLoading(true)
     try {
       const res = await cloud.searchPoi({ keyword: kw })
-      // 只保留城市级 POI（adcode 末 4 位为 0000 通常是省/市级），简单粗筛
+      if (myId !== reqIdRef.current) return  // 已有更新的请求,丢弃过期响应
       const cities = res.results.filter(r => r.adcode && r.adcode.endsWith('00'))
       setResults(cities.length > 0 ? cities.slice(0, 10) : res.results.slice(0, 10))
     } catch (e) {
+      if (myId !== reqIdRef.current) return
       console.error('searchPoi failed', e)
       setResults([])
     } finally {
-      setLoading(false)
+      if (myId === reqIdRef.current) setLoading(false)
     }
   }
 

@@ -1,5 +1,6 @@
 import Taro from '@tarojs/taro'
 import type { Trip, NewTripInput } from '../types/trip'
+import { cloud } from './cloud'
 
 // @ts-ignore Taro.cloud 在 weapp 端可用
 const db = () => Taro.cloud.database()
@@ -46,6 +47,7 @@ export async function createTrip(input: NewTripInput): Promise<string> {
   const res = await db().collection(TRIPS).add({
     data: {
       ...input,
+      collaboratorOpenids: [],
       createdAt: now,
       updatedAt: now,
       updatedBy: input.ownerOpenid,
@@ -55,16 +57,10 @@ export async function createTrip(input: NewTripInput): Promise<string> {
 }
 
 /**
- * 全量替换更新一条 trip（用于编辑保存）
+ * 全量替换更新一条 trip(走 update-trip 云函数,绕开客户端规则,owner + collaborator 都可写)
  */
-export async function updateTrip(tripId: string, patch: Partial<Trip>, openid: string): Promise<void> {
-  await db().collection(TRIPS).doc(tripId).update({
-    data: {
-      ...patch,
-      updatedAt: Date.now(),
-      updatedBy: openid,
-    }
-  })
+export async function updateTrip(tripId: string, patch: Partial<Trip>, _openid: string): Promise<void> {
+  await cloud.updateTrip({ tripId, patch: patch as Record<string, unknown> })
 }
 
 /**
@@ -116,6 +112,7 @@ export async function smartDeleteTrip(trip: Trip, openid: string): Promise<'leav
   await db().collection(TRIPS).doc(trip._id).update({
     data: {
       collaborators: _.pull({ openid }),
+      collaboratorOpenids: _.pull(openid),
       updatedAt: Date.now(),
       updatedBy: openid,
     }

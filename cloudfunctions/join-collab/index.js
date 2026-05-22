@@ -47,6 +47,7 @@ exports.main = async (event, context) => {
         role: 'editor',
         joinedAt: now,
       }]),
+      collaboratorOpenids: _.addToSet(OPENID),
       updatedAt: now,
       updatedBy: OPENID,
     }

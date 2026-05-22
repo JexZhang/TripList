@@ -1,0 +1,9 @@
+{
+  "name": "update-trip",
+  "version": "1.0.0",
+  "description": "Update a trip doc; auth = owner or collaborator",
+  "main": "index.js",
+  "dependencies": {
+    "wx-server-sdk": "~3.0.0"
+  }
+}

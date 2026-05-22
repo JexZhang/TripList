@@ -17,5 +17,18 @@
     "checkInvalidKey": true,
     "ignoreDevUnusedFiles": true,
     "bigPackageSizeSupport": false
+  },
+  "condition": {
+    "miniprogram": {
+      "list": [
+        {
+          "name": "pages/share/index",
+          "pathName": "pages/share/index",
+          "query": "token=e17e79604a0d3b5b35e6e6a0d324868c&kind=collab&tripId=2cd873a46a0fdc25001b51a501e09b78",
+          "scene": null,
+          "launchMode": "default"
+        }
+      ]
+    }
   }
 }
