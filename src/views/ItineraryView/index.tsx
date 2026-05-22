@@ -61,10 +61,15 @@ export default function ItineraryView() {
 
   if (!activeDay) return <View className='itinerary-empty'>没有日程,点 [+] 加一天</View>
 
+  const tabVariant =
+    trip._id === 'seed-mohe' ? 'spine' :
+    trip._id === 'seed-jzg' ? 'calendar' :
+    'ticket'
+
   return (
     <View className='itinerary'>
       {/* day tabs */}
-      <ScrollView className='itin-tabs' scrollX enableFlex>
+      <ScrollView className={`itin-tabs itin-tabs--${tabVariant}`} scrollX enableFlex>
         {trip.days.map((d, idx) => (
           <View
             key={d.id}
@@ -72,8 +77,14 @@ export default function ItineraryView() {
             onClick={() => setActiveDayId(d.id)}
             onLongPress={() => longPressDay(d.id, idx + 1)}
           >
-            <Text className='itin-tab-no'>DAY {String(idx + 1).padStart(2, '0')}</Text>
-            <Text className='itin-tab-date'>{dayjs(d.date).format('MM.DD')}</Text>
+            <Text className='itin-tab-month'>{dayjs(d.date).format('MMM').toUpperCase()}</Text>
+            <Text className='itin-tab-bigday'>{dayjs(d.date).format('D')}</Text>
+            <Text className='itin-tab-no'>{String(idx + 1).padStart(2, '0')}</Text>
+            <View className='itin-tab-sep' />
+            <Text className='itin-tab-date'>{dayjs(d.date).format('M/D')}</Text>
+            <Text className='itin-tab-dlabel'>Day {idx + 1}</Text>
+            <View className='itin-tab-notch itin-tab-notch--t' />
+            <View className='itin-tab-notch itin-tab-notch--b' />
           </View>
         ))}
         <View className='itin-tab-add' onClick={addDay}>

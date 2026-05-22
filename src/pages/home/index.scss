@@ -28,6 +28,8 @@
   font-size: 72rpx;
   font-weight: 800;
   letter-spacing: 6rpx;
+  /* 杂志风格：品牌名使用衬线体 */
+  font-family: var(--font-serif);
   background: linear-gradient(135deg, var(--ink) 0%, var(--accent) 120%);
   -webkit-background-clip: text;
   background-clip: text;
@@ -40,6 +42,8 @@
   color: var(--ink-3);
   letter-spacing: 3rpx;
   font-weight: 500;
+  /* 副标题也用衬线体，增强杂志感 */
+  font-family: var(--font-serif);
 }
 
 /* 装饰小阳光点 */
@@ -123,6 +127,8 @@
   letter-spacing: 1rpx;
   color: var(--ink);
   padding-right: 120rpx;
+  /* 杂志风格：卡片标题使用衬线体 */
+  font-family: var(--font-serif);
 }
 .tc-meta {
   display: block;
@@ -130,6 +136,8 @@
   font-size: 24rpx;
   color: var(--ink-3);
   font-weight: 500;
+  /* 杂志风格：日期信息使用等宽体 */
+  font-family: var(--font-mono);
 }
 .tc-dest {
   display: flex;

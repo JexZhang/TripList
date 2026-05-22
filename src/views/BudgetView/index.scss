@@ -27,8 +27,16 @@
 }
 .bg-total-block { display: flex; flex-direction: column; }
 .bg-total-label { font-size: 22rpx; opacity: 0.85; letter-spacing: 3rpx; font-weight: 600; }
-.bg-total-value { font-size: 64rpx; font-weight: 800; margin-top: 8rpx; letter-spacing: 1rpx; }
-.bg-total-sub { font-size: 34rpx; font-weight: 700; opacity: 0.95; margin-top: 8rpx; }
+.bg-total-value { 
+  font-size: 64rpx; font-weight: 800; margin-top: 8rpx; letter-spacing: 1rpx;
+  /* 杂志风格：总开销数字使用等宽体 */
+  font-family: var(--font-mono);
+}
+.bg-total-sub { 
+  font-size: 34rpx; font-weight: 700; opacity: 0.95; margin-top: 8rpx;
+  /* 杂志风格：人均数字使用等宽体 */
+  font-family: var(--font-mono);
+}
 
 /* ===== 分布 ===== */
 .bg-dist { margin-bottom: 36rpx; padding: 28rpx; background: var(--surface); border-radius: var(--r-lg); box-shadow: var(--shadow-sm); }
@@ -94,7 +102,11 @@
   font-size: 22rpx; color: var(--ink-3); font-weight: 500;
   flex: 1;
 }
-.bg-day-total { font-size: 28rpx; font-weight: 800; color: var(--ink); }
+.bg-day-total { 
+  font-size: 28rpx; font-weight: 800; color: var(--ink);
+  /* 杂志风格：每日合计使用等宽体 */
+  font-family: var(--font-mono);
+}
 
 .bg-spot {
   display: flex; align-items: baseline;

@@ -7,28 +7,188 @@
 
 .mv-modebar {
   white-space: nowrap;
-  padding: 16rpx 24rpx;
+  padding: 16rpx 32rpx 12rpx;
   flex-shrink: 0;
 }
-.mv-mode-item {
-  display: inline-block;
-  margin-right: 14rpx;
-  padding: 12rpx 28rpx;
-  font-size: 26rpx;
+
+/* ============================================
+ * A. 颜色胶囊条（南京 seed-nj）
+ * ============================================ */
+.mv-track-item {
+  --c: var(--accent);
+  display: inline-flex;
+  align-items: center;
+  gap: 10rpx;
+  margin-right: 12rpx;
+  padding: 10rpx 20rpx 10rpx 14rpx;
   background: var(--surface);
-  color: var(--ink-2);
-  border: none;
-  border-radius: 999rpx;
-  box-shadow: var(--shadow-sm);
-  font-weight: 600;
-  transition: transform 0.22s var(--ease-out), background 0.32s var(--ease-out), color 0.28s var(--ease-out), box-shadow 0.32s var(--ease-out);
+  border: 2rpx solid var(--c);
+  border-radius: var(--r-pill);
+  transition: all 0.24s var(--ease-out);
+  vertical-align: middle;
 }
-.mv-mode-item:active { transform: scale(0.94); }
-.mv-mode-item.on {
-  background: linear-gradient(135deg, var(--accent) 0%, var(--accent-2) 100%);
-  color: #FFF;
-  box-shadow: 0 8rpx 20rpx rgba(255, 122, 46, 0.40);
+.mv-track-item:active { transform: scale(0.96); }
+.mv-track-dot {
+  width: 18rpx;
+  height: 18rpx;
+  border-radius: 50%;
+  background: var(--c);
+  flex-shrink: 0;
+}
+.mv-track-label {
+  font-size: 24rpx;
+  font-weight: 700;
+  line-height: 1;
+  color: var(--ink-2);
+  font-family: var(--font-mono);
+  letter-spacing: 0.3rpx;
+}
+.mv-track-item.on {
+  background: var(--c);
+  box-shadow: 0 6rpx 16rpx -2rpx rgba(0, 0, 0, 0.22);
   transform: translateY(-2rpx);
+}
+.mv-track-item.on .mv-track-dot {
+  background: #FFF;
+}
+.mv-track-item.on .mv-track-label {
+  color: #FFF;
+}
+
+/* ============================================
+ * B. 分段控制器（漠河 seed-mohe）
+ * ============================================ */
+.mv-seg-wrap {
+  display: flex;
+  white-space: normal;
+}
+.mv-seg {
+  display: inline-flex;
+  background: rgba(43, 26, 16, 0.06);
+  border-radius: 18rpx;
+  padding: 6rpx;
+  gap: 0;
+  width: 100%;
+}
+.mv-seg-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4rpx;
+  padding: 12rpx 8rpx;
+  border-radius: 14rpx;
+  position: relative;
+  transition: background 0.26s var(--ease-out), color 0.26s var(--ease-out), box-shadow 0.26s var(--ease-out);
+  min-width: 0;
+}
+.mv-seg-item:not(.first):not(.on)::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 18rpx;
+  bottom: 18rpx;
+  width: 2rpx;
+  background: rgba(43, 26, 16, 0.12);
+}
+.mv-seg-item + .on::before,
+.mv-seg-item.on + .mv-seg-item::before { display: none; }
+.mv-seg-label {
+  font-size: 24rpx;
+  font-weight: 700;
+  line-height: 1;
+  color: var(--ink-2);
+  font-family: var(--font-mono);
+}
+.mv-seg-sub {
+  font-size: 18rpx;
+  font-weight: 500;
+  line-height: 1;
+  color: var(--ink-3);
+  font-family: var(--font-mono);
+  letter-spacing: 0.3rpx;
+}
+.mv-seg-item.on {
+  background: var(--surface);
+  box-shadow:
+    0 2rpx 0 rgba(43, 26, 16, 0.04),
+    0 6rpx 14rpx rgba(43, 26, 16, 0.12);
+}
+.mv-seg-item.on .mv-seg-label { color: var(--accent); }
+.mv-seg-item.on .mv-seg-sub { color: var(--ink-2); }
+.mv-seg-item:active { transform: scale(0.97); }
+
+/* ============================================
+ * C. 路线卡片条（九寨沟 seed-jzg）
+ * ============================================ */
+.mv-route {
+  padding-top: 22rpx;
+  padding-bottom: 18rpx;
+}
+.mv-route-cell {
+  display: inline-flex;
+  align-items: center;
+  vertical-align: middle;
+}
+.mv-route-link {
+  width: 28rpx;
+  height: 2rpx;
+  border-top: 2rpx dashed var(--ink-3);
+  opacity: 0.5;
+  margin: 0 -2rpx;
+}
+.mv-route-item {
+  --c: var(--accent);
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4rpx;
+  padding: 12rpx 18rpx;
+  background: var(--surface);
+  border-radius: 14rpx;
+  box-shadow: 0 3rpx 10rpx rgba(43, 26, 16, 0.08);
+  min-width: 96rpx;
+  transition: transform 0.28s var(--ease-spring), box-shadow 0.28s var(--ease-out), background 0.28s var(--ease-out);
+  vertical-align: middle;
+}
+.mv-route-all { margin-right: 4rpx; }
+.mv-route-item:active { transform: scale(0.96); }
+.mv-route-no {
+  font-size: 26rpx;
+  font-weight: 800;
+  line-height: 1;
+  color: var(--ink);
+  font-family: var(--font-serif);
+}
+.mv-route-date {
+  font-size: 20rpx;
+  font-weight: 600;
+  line-height: 1;
+  color: var(--ink-2);
+  font-family: var(--font-mono);
+}
+.mv-route-sub {
+  font-size: 18rpx;
+  font-weight: 500;
+  line-height: 1;
+  color: var(--ink-3);
+  font-family: var(--font-mono);
+  margin-top: 2rpx;
+}
+.mv-route-item.on {
+  background: var(--c);
+  transform: translateY(-6rpx);
+  box-shadow: 0 10rpx 22rpx -4rpx rgba(0, 0, 0, 0.28);
+}
+.mv-route-item.on .mv-route-no,
+.mv-route-item.on .mv-route-date,
+.mv-route-item.on .mv-route-sub {
+  color: #FFF;
+}
+.mv-route-all.on {
+  background: var(--ink);
 }
 
 .mv-map-wrap {

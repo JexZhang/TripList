@@ -120,7 +120,16 @@ export default function MapView() {
 
   return (
     <View className='mv'>
-      <ModeBar days={trip.days} mode={mode} onChange={setMode} />
+      <ModeBar
+        days={trip.days}
+        mode={mode}
+        variant={
+          trip._id === 'seed-mohe' ? 'segmented' :
+          trip._id === 'seed-jzg' ? 'route' :
+          'track'
+        }
+        onChange={setMode}
+      />
       <View className='mv-map-wrap'>
         <Map
           id={MAP_ID}

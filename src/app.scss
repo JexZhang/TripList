@@ -36,9 +36,14 @@ page {
   --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
   --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
 
+  /* 杂志风格字体体系 */
+  --font-serif: "Noto Serif SC", "Songti SC", "STSong", "SimSun", serif;  /* 衬线体 - 标题/品牌 */
+  --font-sans: "PingFang SC", "Noto Sans SC", "Source Han Sans SC", -apple-system, sans-serif;  /* 无衬线 - 正文 */
+  --font-mono: "JetBrains Mono", "SF Mono", "Fira Code", ui-monospace, monospace;  /* 等宽体 - 时间/价格 */
+
   background: var(--bg);
   color: var(--ink);
-  font-family: -apple-system, "PingFang SC", "Hiragino Sans GB", "Helvetica Neue", sans-serif;
+  font-family: var(--font-sans);
 }
 
 /* ===== 全局 keyframes ===== */

@@ -5,54 +5,342 @@
 
 /* ===== 日期 tabs ===== */
 .itin-tabs {
-  display: flex; padding: 0 24rpx;
+  display: flex;
+  padding: 8rpx 32rpx 4rpx;
   white-space: nowrap;
   margin-bottom: 24rpx;
+  gap: 16rpx;
 }
+/* 默认所有"变体专属"元素隐藏，按变体显示 */
+.itin-tab-month,
+.itin-tab-bigday,
+.itin-tab-dlabel { display: none; }
 .itin-tab, .itin-tab-add {
-  display: inline-flex; flex-direction: column;
-  margin-right: 14rpx;
+  position: relative;
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8rpx;
   padding: 14rpx 22rpx;
   background: var(--surface);
-  border-radius: var(--r-md);
+  border-radius: 8rpx;
   color: var(--ink-2);
-  box-shadow: var(--shadow-sm);
-  transition: transform 0.22s var(--ease-out), background 0.32s var(--ease-out), color 0.28s var(--ease-out), box-shadow 0.32s var(--ease-out);
+  box-shadow:
+    0 2rpx 0 rgba(43, 26, 16, 0.04),
+    0 6rpx 14rpx rgba(43, 26, 16, 0.06);
+  transition: transform 0.28s var(--ease-out), box-shadow 0.28s var(--ease-out), background 0.28s var(--ease-out);
+  min-width: 108rpx;
+  min-height: 92rpx;
 }
-.itin-tab:active, .itin-tab-add:active { transform: scale(0.94); }
-.itin-tab.on {
-  background: linear-gradient(135deg, var(--accent) 0%, var(--accent-2) 100%);
-  color: #FFF;
-  box-shadow: 0 8rpx 20rpx rgba(255, 122, 46, 0.40);
-  transform: translateY(-2rpx);
+.itin-tab:active, .itin-tab-add:active {
+  transform: scale(0.96);
 }
-.itin-tab-no { font-size: 20rpx; letter-spacing: 4rpx; font-weight: 800; opacity: 0.85; }
-.itin-tab-date { font-size: 22rpx; margin-top: 4rpx; font-weight: 600; }
 
-.itin-tab-add {
-  align-items: center; justify-content: center;
-  min-width: 72rpx;
-  color: var(--accent);
+/* 票根上下半圆撕口（用页面底色挖洞） */
+.itin-tab-notch {
+  position: absolute;
+  right: -8rpx;
+  width: 16rpx;
+  height: 16rpx;
+  border-radius: 50%;
+  background: var(--bg);
+  pointer-events: none;
+}
+.itin-tab-notch--t { top: -8rpx; }
+.itin-tab-notch--b { bottom: -8rpx; }
+
+/* 激活（票根专属）：奶白纸张 + 轻微旋转 + 橙色右下角戳印 */
+.itin-tabs--ticket .itin-tab.on {
+  background: var(--surface-2);
+  color: var(--ink);
+  box-shadow:
+    0 2rpx 0 rgba(255, 122, 46, 0.18),
+    0 10rpx 22rpx rgba(255, 122, 46, 0.18);
+  transform: rotate(-1.5deg) translateY(-2rpx);
+}
+.itin-tabs--ticket .itin-tab.on::after {
+  content: '';
+  position: absolute;
+  left: 10rpx;
+  bottom: 8rpx;
+  width: 14rpx;
+  height: 14rpx;
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 0 0 4rpx rgba(255, 122, 46, 0.15);
+}
+
+/* 虚线穿孔分隔 */
+.itin-tab-sep {
+  width: 56rpx;
+  height: 0;
+  border-top: 2rpx dashed currentColor;
+  opacity: 0.28;
+}
+.itin-tab.on .itin-tab-sep {
+  opacity: 0.5;
+  border-top-color: var(--accent);
+}
+
+/* 序号：衬线体大数字，车票感 */
+.itin-tab-no {
+  font-size: 38rpx;
   font-weight: 700;
+  line-height: 1;
+  font-family: var(--font-serif);
+  letter-spacing: 0;
+  font-variant-numeric: tabular-nums;
+}
+.itin-tab.on .itin-tab-no {
+  color: var(--accent);
+}
+
+/* 日期：等宽小字 */
+.itin-tab-date {
+  font-size: 22rpx;
+  font-weight: 600;
+  line-height: 1;
+  font-family: var(--font-mono);
+  letter-spacing: 0.5rpx;
+  opacity: 0.85;
+}
+
+/* + 票根（占位空白票，无文字旋转） */
+.itin-tab-add {
+  min-width: 78rpx;
+  min-height: 92rpx;
+  padding: 14rpx 18rpx;
+  color: var(--accent);
+  font-weight: 400;
+  font-size: 44rpx;
+  background: transparent;
+  box-shadow: none;
+  border: 2rpx dashed var(--accent-soft);
+}
+
+/* ============================================
+ * 变体 B · 时间轴脊柱（漠河 seed-mohe）
+ * ============================================ */
+.itin-tabs--spine {
+  position: relative;
+  padding-top: 24rpx;
+  padding-bottom: 16rpx;
+  gap: 4rpx;
+}
+.itin-tabs--spine::before {
+  content: '';
+  position: absolute;
+  left: 64rpx;
+  right: 64rpx;
+  top: 50rpx;
+  height: 0;
+  border-top: 2rpx dashed var(--ink-3);
+  opacity: 0.4;
+  z-index: 0;
+}
+.itin-tabs--spine .itin-tab {
+  background: transparent;
+  box-shadow: none;
+  border-radius: 0;
+  padding: 0 18rpx;
+  min-width: 88rpx;
+  min-height: 0;
+  gap: 0;
+  position: relative;
+  z-index: 1;
+}
+.itin-tabs--spine .itin-tab-notch { display: none; }
+.itin-tabs--spine .itin-tab-sep { display: none; }
+.itin-tabs--spine .itin-tab::before {
+  content: '';
+  width: 18rpx;
+  height: 18rpx;
+  border-radius: 50%;
+  border: 3rpx solid var(--ink-3);
+  background: var(--bg);
+  opacity: 0.55;
+  transition: all 0.3s var(--ease-spring);
+}
+.itin-tabs--spine .itin-tab-no {
+  font-size: 22rpx;
+  font-weight: 700;
+  color: var(--ink-3);
+  font-family: var(--font-mono);
+  margin-top: 14rpx;
+  letter-spacing: 0;
+  transition: color 0.24s var(--ease-out), font-size 0.24s var(--ease-out);
+}
+.itin-tabs--spine .itin-tab-date {
+  font-size: 20rpx;
+  color: var(--ink-3);
+  font-family: var(--font-mono);
+  margin-top: 4rpx;
+  opacity: 0;
+  max-height: 0;
+  overflow: hidden;
+  transition: opacity 0.26s var(--ease-out), max-height 0.26s var(--ease-out), color 0.26s var(--ease-out);
+}
+.itin-tabs--spine .itin-tab.on::before {
+  width: 28rpx;
+  height: 28rpx;
+  border-color: var(--accent);
+  background: var(--accent);
+  box-shadow: 0 0 0 6rpx rgba(255, 122, 46, 0.18);
+  opacity: 1;
+}
+.itin-tabs--spine .itin-tab.on .itin-tab-no {
+  color: var(--accent);
+  font-size: 26rpx;
+  font-weight: 800;
+  margin-top: 10rpx;
+}
+.itin-tabs--spine .itin-tab.on .itin-tab-date {
+  opacity: 1;
+  max-height: 40rpx;
+  color: var(--ink-2);
+  font-weight: 700;
+}
+.itin-tabs--spine .itin-tab-add {
+  background: transparent;
+  border: none;
+  color: var(--accent);
+  min-height: 0;
+  padding: 0 14rpx;
+}
+.itin-tabs--spine .itin-tab-add .itin-tab-no {
+  font-family: var(--font-serif);
+  font-size: 40rpx;
+  margin-top: 6rpx;
+  color: var(--accent);
+}
+.itin-tabs--spine .itin-tab-add::before {
+  content: '';
+  width: 18rpx;
+  height: 18rpx;
+  border-radius: 50%;
+  border: 2rpx dashed var(--accent);
+  background: transparent;
+  opacity: 0.6;
+}
+
+/* ============================================
+ * 变体 C · 日历方块（九寨沟 seed-jzg）
+ * ============================================ */
+.itin-tabs--calendar {
+  padding-top: 6rpx;
+  padding-bottom: 6rpx;
+  gap: 14rpx;
+}
+.itin-tabs--calendar .itin-tab {
+  padding: 0;
+  min-width: 104rpx;
+  min-height: 130rpx;
+  border-radius: 14rpx;
+  background: var(--surface);
+  overflow: hidden;
+  flex-direction: column;
+  gap: 0;
+  box-shadow:
+    0 2rpx 0 rgba(43, 26, 16, 0.04),
+    0 6rpx 14rpx rgba(43, 26, 16, 0.08);
+  border: 2rpx solid rgba(43, 26, 16, 0.05);
+  transition: transform 0.26s var(--ease-spring), box-shadow 0.26s var(--ease-out), border-color 0.26s var(--ease-out);
+}
+.itin-tabs--calendar .itin-tab-notch { display: none; }
+.itin-tabs--calendar .itin-tab-no { display: none; }
+.itin-tabs--calendar .itin-tab-sep { display: none; }
+.itin-tabs--calendar .itin-tab-date { display: none; }
+.itin-tabs--calendar .itin-tab-month {
+  display: block;
+  width: 100%;
+  background: var(--coral);
+  color: #FFF;
+  font-size: 20rpx;
+  font-weight: 800;
+  line-height: 1;
+  padding: 8rpx 0;
+  text-align: center;
+  letter-spacing: 2rpx;
+  font-family: var(--font-sans);
+  transition: background 0.26s var(--ease-out);
+}
+.itin-tabs--calendar .itin-tab-bigday {
+  display: block;
+  font-size: 54rpx;
+  font-weight: 800;
+  line-height: 1;
+  color: var(--ink);
+  font-family: var(--font-serif);
+  padding: 16rpx 0 8rpx;
+  text-align: center;
+  letter-spacing: -1rpx;
+  transition: color 0.26s var(--ease-out);
+}
+.itin-tabs--calendar .itin-tab-dlabel {
+  display: block;
+  font-size: 18rpx;
+  font-weight: 600;
+  color: var(--ink-3);
+  font-family: var(--font-mono);
+  padding: 0 0 10rpx;
+  text-align: center;
+  letter-spacing: 0.5rpx;
+  transition: color 0.26s var(--ease-out);
+}
+.itin-tabs--calendar .itin-tab.on {
+  transform: translateY(-4rpx);
+  border-color: var(--accent);
+  box-shadow:
+    0 4rpx 0 rgba(255, 122, 46, 0.2),
+    0 14rpx 28rpx -4rpx rgba(255, 122, 46, 0.32);
+}
+.itin-tabs--calendar .itin-tab.on .itin-tab-month {
+  background: var(--accent);
+}
+.itin-tabs--calendar .itin-tab.on .itin-tab-bigday {
+  color: var(--accent);
+}
+.itin-tabs--calendar .itin-tab.on .itin-tab-dlabel {
+  color: var(--ink);
+  font-weight: 700;
+}
+.itin-tabs--calendar .itin-tab-add {
+  min-width: 76rpx;
+  min-height: 130rpx;
+  border-radius: 14rpx;
+  border: 2rpx dashed var(--accent-soft);
+  background: transparent;
 }
 
 /* ===== 日期标题 ===== */
 .day-header {
-  padding: 8rpx 32rpx 24rpx;
+  padding: 12rpx 32rpx 28rpx;
   position: relative;
 }
 .dh-cities {
-  font-size: 32rpx;
+  font-size: 34rpx;
   font-weight: 700;
   color: var(--ink);
+  /* 杂志风格：城市标题使用衬线体 */
+  font-family: var(--font-serif);
+  letter-spacing: 1rpx;
 }
-.dh-arrow { font-size: 22rpx; color: var(--ink-3); margin-left: 8rpx; }
+.dh-arrow { 
+  font-size: 24rpx; 
+  color: var(--ink-3); 
+  margin-left: 12rpx;
+  opacity: 0.6;
+}
 .dh-weather {
   display: block;
-  margin-top: 6rpx;
-  font-size: 22rpx;
+  margin-top: 8rpx;
+  font-size: 24rpx;
   color: var(--ink-3);
   font-weight: 500;
+  /* 杂志风格：天气信息使用等宽体 */
+  font-family: var(--font-mono);
+  letter-spacing: 1rpx;
 }
 .dh-city-picker {
   position: absolute;
@@ -115,11 +403,17 @@
   margin-right: 16rpx;
   color: var(--accent);
   min-width: 80rpx;
+  /* 杂志风格：时间使用等宽体 */
+  font-family: var(--font-mono);
 }
 .sc-name { font-size: 30rpx; font-weight: 600; flex: 1; color: var(--ink); }
 .sc-foot { margin-top: 12rpx; display: flex; justify-content: space-between; align-items: baseline; padding-left: 70rpx; }
 .sc-note { font-size: 24rpx; color: var(--ink-3); flex: 1; line-height: 1.5; }
-.sc-price { font-size: 26rpx; font-weight: 700; color: var(--coral); }
+.sc-price { 
+  font-size: 26rpx; font-weight: 700; color: var(--coral);
+  /* 杂志风格：价格使用等宽体 */
+  font-family: var(--font-mono);
+}
 
 .itin-empty {
   text-align: center;

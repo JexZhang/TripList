@@ -113,6 +113,7 @@ export function TripProvider({
   const lastSavedRef = useRef<string>('')  // JSON 字串作为版本指纹
   const pendingRef = useRef(false)
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const seedWarningShownRef = useRef(false)  // 示例攻略警告只显示一次
 
   // 初次拉 + watch 订阅
   useEffect(() => {
@@ -163,7 +164,18 @@ export function TripProvider({
   // 编辑 → 500ms debounce 保存
   useEffect(() => {
     if (!state.trip || state.loading) return
-    if (isSeedTripId(tripId)) return  // 种子示例只读，不写云端
+    if (isSeedTripId(tripId)) {
+      // 示例攻略编辑不保存，仅提示一次
+      if (!seedWarningShownRef.current) {
+        seedWarningShownRef.current = true
+        Taro.showToast({
+          title: '示例攻略仅供展示,复制后可编辑',
+          icon: 'none',
+          duration: 2500,
+        })
+      }
+      return
+    }
     const snapshot = JSON.stringify(state.trip)
     if (snapshot === lastSavedRef.current) return  // 没有真实变化
 

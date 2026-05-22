@@ -135,7 +135,7 @@ export default function Home() {
     <View className='home theme-tegami'>
       <View className='home-head'>
         <Text className='home-brand'>行册</Text>
-        <Text className='home-sub'>旅行攻略 · 清单 · 地图</Text>
+        <Text className='home-sub'>你的旅行，值得被好好记录</Text>
       </View>
 
       {loading && <View className='home-empty'>加载中...</View>}
