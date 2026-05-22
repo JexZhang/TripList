@@ -6,13 +6,14 @@ interface Props {
   collaborators: Collaborator[]
   ownerNickname?: string
   isOwner: boolean
+  onTap?: () => void
 }
 
-export default function CollaboratorsBar({ collaborators, ownerNickname, isOwner }: Props) {
+export default function CollaboratorsBar({ collaborators, ownerNickname, isOwner, onTap }: Props) {
   if (collaborators.length === 0 && isOwner) return null
 
   return (
-    <View className='collab-bar'>
+    <View className='collab-bar' onClick={onTap}>
       <Text className='cb-label'>
         {isOwner ? '协作者' : `${ownerNickname || '原作者'} 的攻略`}
       </Text>
