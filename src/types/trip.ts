@@ -65,6 +65,8 @@ export interface Trip {
   _id: string
   _openid: string
   ownerOpenid: string
+  ownerNickname?: string
+  ownerAvatarUrl?: string
 
   name: string
   pax: number
