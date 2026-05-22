@@ -1,0 +1,60 @@
+.cs-mask {
+  position: fixed;
+  left: 0; right: 0; top: 0; bottom: 0;
+  background: rgba(0,0,0,0.32);
+  z-index: 1000;
+  display: flex;
+  align-items: flex-end;
+}
+.cs-sheet {
+  width: 100%;
+  background: var(--bg, #f7f1e3);
+  border-radius: 24rpx 24rpx 0 0;
+  padding: 32rpx 32rpx 48rpx;
+  box-sizing: border-box;
+  max-height: 70vh;
+  overflow-y: auto;
+}
+.cs-title {
+  font-size: 30rpx;
+  font-weight: 700;
+  margin-bottom: 24rpx;
+}
+.cs-row {
+  display: flex;
+  align-items: center;
+  padding: 16rpx 0;
+  border-bottom: 2rpx solid rgba(0,0,0,0.06);
+}
+.cs-row:last-child {
+  border-bottom: none;
+}
+.cs-avatar {
+  width: 64rpx;
+  height: 64rpx;
+  border-radius: 999rpx;
+  margin-right: 20rpx;
+  background: rgba(0,0,0,0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  font-size: 24rpx;
+  font-weight: 600;
+}
+.cs-avatar-fallback {
+  background: rgba(0,0,0,0.15);
+}
+.cs-info {
+  display: flex;
+  flex-direction: column;
+}
+.cs-name {
+  font-size: 28rpx;
+  font-weight: 600;
+}
+.cs-tag {
+  font-size: 22rpx;
+  opacity: 0.55;
+  margin-top: 4rpx;
+}
