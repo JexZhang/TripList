@@ -5,6 +5,7 @@ import { TripProvider, useTripStore } from '../../store/trip-store'
 import ItineraryView from '../../views/ItineraryView'
 import BudgetView from '../../views/BudgetView'
 import PackingView from '../../views/PackingView'
+import MapView from '../../views/MapView'
 import CollaboratorsBar from '../../components/CollaboratorsBar'
 import TripActionSheet, { type TripAction } from '../../components/TripActionSheet'
 import ShareTypeSheet from '../../components/ShareTypeSheet'
@@ -13,12 +14,13 @@ import { smartDeleteTrip, renameTrip, copyTripLocally } from '../../utils/db'
 import type { ShareKind } from '../../utils/cloud'
 import './index.scss'
 
-type ViewKey = 'itinerary' | 'budget' | 'packing'
+type ViewKey = 'itinerary' | 'budget' | 'packing' | 'map'
 
 const VIEWS: { key: ViewKey; label: string }[] = [
   { key: 'itinerary', label: '攻略' },
   { key: 'budget', label: '开销' },
   { key: 'packing', label: '清单' },
+  { key: 'map', label: '地图' },
 ]
 
 function TripBody() {
@@ -138,6 +140,7 @@ function TripBody() {
         {view === 'itinerary' && <ItineraryView />}
         {view === 'budget' && <BudgetView />}
         {view === 'packing' && <PackingView />}
+        {view === 'map' && <MapView />}
       </View>
 
       <TripActionSheet
