@@ -52,6 +52,7 @@
 .trip-card {
   padding: 32rpx 0;
   border-bottom: 2rpx solid rgba(0,0,0,0.08);
+  position: relative;
 }
 
 .tc-name {
@@ -94,4 +95,44 @@
   font-size: 30rpx;
   font-weight: 500;
   padding: 24rpx 0;
+}
+
+.tc-badge {
+  position: absolute;
+  top: 16rpx;
+  right: 16rpx;
+  font-size: 20rpx;
+  font-weight: 600;
+  padding: 4rpx 12rpx;
+  background: var(--ink, #2c2c2c);
+  color: var(--bg, #f7f1e3);
+  border-radius: 8rpx;
+  letter-spacing: 2rpx;
+}
+
+.tc-owner {
+  display: flex;
+  align-items: center;
+  margin-top: 12rpx;
+  font-size: 22rpx;
+  opacity: 0.65;
+}
+.tc-owner-avatar {
+  width: 32rpx;
+  height: 32rpx;
+  border-radius: 999rpx;
+  margin-right: 8rpx;
+  background: rgba(0,0,0,0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  font-size: 18rpx;
+  font-weight: 600;
+}
+.tc-owner-avatar-fallback {
+  background: rgba(0,0,0,0.15);
+}
+.tc-owner-name {
+  font-size: 22rpx;
 }
