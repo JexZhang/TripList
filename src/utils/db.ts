@@ -1,5 +1,5 @@
 import Taro from '@tarojs/taro'
-import type { Trip, NewTripInput, Collaborator } from '../types/trip'
+import type { Trip, NewTripInput } from '../types/trip'
 
 // @ts-ignore Taro.cloud 在 weapp 端可用
 const db = () => Taro.cloud.database()
@@ -11,20 +11,13 @@ export interface ListTripsResult {
 }
 
 /**
- * 获取当前用户拥有的所有 trips（按 updatedAt 倒序）
- * Phase 5 起扩展为 owner ∪ collaborator
+ * 获取当前用户拥有的所有 trips(owner ∪ collaborator)。
+ * 走 list-my-trips 云函数以绕过 client 端权限规则限制。
  */
-export async function listMyTrips(openid: string): Promise<Trip[]> {
-  const _ = (Taro as any).cloud.database().command
-  const res = await db()
-    .collection(TRIPS)
-    .where(_.or([
-      { _openid: openid },
-      { 'collaborators.openid': openid },
-    ]))
-    .orderBy('updatedAt', 'desc')
-    .get()
-  return (res.data || []) as Trip[]
+export async function listMyTrips(_openid: string): Promise<Trip[]> {
+  const r = await (Taro as any).cloud.callFunction({ name: 'list-my-trips' })
+  const trips = ((r && r.result && r.result.trips) || []) as Trip[]
+  return trips
 }
 
 /**
@@ -128,29 +121,4 @@ export async function smartDeleteTrip(trip: Trip, openid: string): Promise<'leav
     }
   })
   return 'leave'
-}
-
-/**
- * 监听当前用户的 trips 列表实时变化
- * 返回一个 watcher，调用 .close() 取消监听
- * Phase 5 起扩展为 owner ∪ collaborator
- */
-export function watchMyTrips(openid: string, onChange: (trips: Trip[]) => void) {
-  const _ = (Taro as any).cloud.database().command
-  // @ts-ignore
-  return db()
-    .collection(TRIPS)
-    .where(_.or([
-      { _openid: openid },
-      { 'collaborators.openid': openid },
-    ]))
-    .orderBy('updatedAt', 'desc')
-    .watch({
-      onChange: (snapshot: any) => {
-        onChange(snapshot.docs || [])
-      },
-      onError: (err: unknown) => {
-        console.error('[watchMyTrips]', err)
-      }
-    })
 }
