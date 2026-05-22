@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { View, Text, Input, Button } from '@tarojs/components'
 import Taro from '@tarojs/taro'
 import dayjs from 'dayjs'
@@ -7,6 +7,7 @@ import DestinationPicker from '../../components/DestinationPicker'
 import type { Destination } from '../../types/trip'
 import { buildNewTrip } from '../../utils/trip-helpers'
 import { createTrip } from '../../utils/db'
+import { useMe } from '../../store/me-store'
 import './index.scss'
 
 export default function NewTrip() {
@@ -17,16 +18,9 @@ export default function NewTrip() {
     end: dayjs().add(2, 'day').format('YYYY-MM-DD'),
   })
   const [destinations, setDestinations] = useState<Destination[]>([])
-  const [openid, setOpenid] = useState('')
+  const { me } = useMe()
+  const openid = me?.openid || ''
   const [submitting, setSubmitting] = useState(false)
-
-  useEffect(() => {
-    // @ts-ignore Taro.cloud
-    Taro.cloud.callFunction({
-      name: 'ensure-user',
-      data: { nickname: '行册旅人', avatarUrl: '' }
-    }).then((r: any) => setOpenid(r.result.openid))
-  }, [])
 
   const canSubmit = !!name.trim() && !!openid && pax >= 1 && !dayjs(dates.end).isBefore(dates.start)
 
@@ -42,6 +36,8 @@ export default function NewTrip() {
         destinations,
       })
       input.ownerOpenid = openid
+      input.ownerNickname = me?.nickname || '行册旅人'
+      input.ownerAvatarUrl = me?.avatarUrl || ''
       const tripId = await createTrip(input)
       Taro.showToast({ title: '已创建', icon: 'success' })
       setTimeout(() => Taro.redirectTo({ url: `/pages/trip/index?id=${tripId}` }), 600)
