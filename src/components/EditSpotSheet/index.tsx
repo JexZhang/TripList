@@ -23,11 +23,13 @@ interface Props {
 export default function EditSpotSheet({ open, spot, defaultCity, onClose, onSave, onDelete }: Props) {
   const [draft, setDraft] = useState<Partial<Spot>>({})
   const [searchOpen, setSearchOpen] = useState(false)
+  const [keyboardHeight, setKeyboardHeight] = useState(0)
 
   useEffect(() => {
     if (open && spot) {
       setDraft({ ...spot })
     }
+    if (!open) setKeyboardHeight(0)
   }, [open, spot])
 
   if (!open || !spot) return null
@@ -52,8 +54,18 @@ export default function EditSpotSheet({ open, spot, defaultCity, onClose, onSave
 
   const type = draft.type || 'spot'
 
+  const kbProps = {
+    adjustPosition: false,
+    // @ts-ignore
+    onKeyboardHeightChange: (e: any) => setKeyboardHeight(e.detail.height),
+  }
+
   return (
-    <View className='edit-spot-mask' onClick={onClose}>
+    <View
+      className='edit-spot-mask'
+      style={{ paddingBottom: `${keyboardHeight}px`, transition: 'padding-bottom 0.25s ease' }}
+      onClick={onClose}
+    >
       <View className='edit-spot-sheet' onClick={e => e.stopPropagation()}>
         <View className='es-head'>
           <Text className='es-title'>编辑地点</Text>
@@ -108,6 +120,7 @@ export default function EditSpotSheet({ open, spot, defaultCity, onClose, onSave
                 const v = e.detail.value
                 set('price', v ? parseInt(v, 10) || 0 : undefined)
               }}
+              {...kbProps}
             />
           </View>
 
@@ -120,6 +133,7 @@ export default function EditSpotSheet({ open, spot, defaultCity, onClose, onSave
               value={draft.note || ''}
               onInput={e => set('note', e.detail.value)}
               maxlength={500}
+              {...kbProps}
             />
           </View>
 
@@ -133,6 +147,7 @@ export default function EditSpotSheet({ open, spot, defaultCity, onClose, onSave
                 placeholder='1'
                 value={draft.nights != null ? String(draft.nights) : ''}
                 onInput={e => set('nights', parseInt(e.detail.value, 10) || undefined)}
+                {...kbProps}
               />
             </View>
           )}
@@ -147,6 +162,7 @@ export default function EditSpotSheet({ open, spot, defaultCity, onClose, onSave
                   placeholder='高铁 / 飞机 / 自驾...'
                   value={draft.mode || ''}
                   onInput={e => set('mode', e.detail.value)}
+                  {...kbProps}
                 />
               </View>
               <View className='es-field'>
@@ -156,6 +172,7 @@ export default function EditSpotSheet({ open, spot, defaultCity, onClose, onSave
                   placeholder='起点'
                   value={draft.from || ''}
                   onInput={e => set('from', e.detail.value)}
+                  {...kbProps}
                 />
               </View>
               <View className='es-field'>
@@ -165,6 +182,7 @@ export default function EditSpotSheet({ open, spot, defaultCity, onClose, onSave
                   placeholder='终点'
                   value={draft.to || ''}
                   onInput={e => set('to', e.detail.value)}
+                  {...kbProps}
                 />
               </View>
             </>

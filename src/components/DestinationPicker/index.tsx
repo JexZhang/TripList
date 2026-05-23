@@ -14,6 +14,7 @@ export default function DestinationPicker({ value, onChange }: Props) {
   const [results, setResults] = useState<PoiResult[]>([])
   const [loading, setLoading] = useState(false)
   const [open, setOpen] = useState(false)
+  const [keyboardHeight, setKeyboardHeight] = useState(0)
   const reqIdRef = useRef(0)
 
   const search = async (kw: string) => {
@@ -47,6 +48,12 @@ export default function DestinationPicker({ value, onChange }: Props) {
     setKeyword('')
     setResults([])
     setOpen(false)
+    setKeyboardHeight(0)
+  }
+
+  const closeModal = () => {
+    setOpen(false)
+    setKeyboardHeight(0)
   }
 
   const remove = (adcode: string) => {
@@ -66,11 +73,15 @@ export default function DestinationPicker({ value, onChange }: Props) {
       </View>
 
       {open && (
-        <View className='dp-modal-mask' onClick={() => setOpen(false)}>
+        <View
+          className='dp-modal-mask'
+          style={{ paddingBottom: `${keyboardHeight}px`, transition: 'padding-bottom 0.25s ease' }}
+          onClick={closeModal}
+        >
           <View className='dp-modal' onClick={e => e.stopPropagation()}>
             <View className='dp-modal-head'>
               <Text className='dp-modal-title'>添加目的地</Text>
-              <Text className='dp-modal-close' onClick={() => setOpen(false)}>×</Text>
+              <Text className='dp-modal-close' onClick={closeModal}>×</Text>
             </View>
             <Input
               className='dp-search'
@@ -81,6 +92,9 @@ export default function DestinationPicker({ value, onChange }: Props) {
                 search(e.detail.value)
               }}
               focus
+              adjustPosition={false}
+              // @ts-ignore
+              onKeyboardHeightChange={(e: any) => setKeyboardHeight(e.detail.height)}
             />
             <ScrollView className='dp-results' scrollY>
               {loading && <View className='dp-hint'>搜索中...</View>}

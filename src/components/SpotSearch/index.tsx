@@ -23,6 +23,7 @@ export default function SpotSearch({ open, defaultCity, onClose, onSelect }: Pro
   const [results, setResults] = useState<PoiResult[]>([])
   const [loading, setLoading] = useState(false)
   const [debouncedKw, setDebouncedKw] = useState('')
+  const [keyboardHeight, setKeyboardHeight] = useState(0)
 
   // debounce 输入
   useEffect(() => {
@@ -52,6 +53,7 @@ export default function SpotSearch({ open, defaultCity, onClose, onSelect }: Pro
     if (!open) {
       setKeyword('')
       setResults([])
+      setKeyboardHeight(0)
     }
   }, [open])
 
@@ -75,7 +77,11 @@ export default function SpotSearch({ open, defaultCity, onClose, onSelect }: Pro
   }
 
   return (
-    <View className='spot-search-mask' onClick={onClose}>
+    <View
+      className='spot-search-mask'
+      style={{ paddingBottom: `${keyboardHeight}px`, transition: 'padding-bottom 0.25s ease' }}
+      onClick={onClose}
+    >
       <View className='spot-search-sheet' onClick={e => e.stopPropagation()}>
         <View className='ss-head'>
           <Text className='ss-title'>添加地点</Text>
@@ -87,6 +93,9 @@ export default function SpotSearch({ open, defaultCity, onClose, onSelect }: Pro
           value={keyword}
           onInput={e => setKeyword(e.detail.value)}
           focus
+          adjustPosition={false}
+          // @ts-ignore
+          onKeyboardHeightChange={e => setKeyboardHeight(e.detail.height)}
         />
         <ScrollView className='ss-results' scrollY>
           {loading && <View className='ss-hint'>搜索中...</View>}

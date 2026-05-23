@@ -2,6 +2,7 @@
   min-height: 100vh;
   padding: 0 0 32rpx;
   box-sizing: border-box;
+  overflow-x: hidden;
   animation: page-in 0.4s var(--ease-out) both;
   background:
     radial-gradient(100% 50% at 100% 0%, rgba(255, 154, 77, 0.18) 0%, transparent 60%),
