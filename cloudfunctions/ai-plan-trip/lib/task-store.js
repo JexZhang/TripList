@@ -12,14 +12,13 @@ async function createTask({ taskId, openid, tripId, modelAlias, tripContext, pre
     modelAlias,
     tripContext,
     preferences,
-    progress: { days: [] },
-    result: null,
+    // 不再写 progress (前端不订阅 ai_tasks)
+    result: {},  // 初始化为空对象, 避免后续 dot-path 写入 result.xxx 时 502001
     error: null,
     meta: { turns: 0 },
     createdAt: now,
     updatedAt: now,
   }
-  // 支持客户端预生成 _id, 实现"小程序立刻拿到 taskId + 服务端慢跑"
   if (taskId) data._id = taskId
   const res = await db.collection(COL).add({ data })
   return res._id
@@ -38,4 +37,38 @@ async function getTask(taskId) {
   return r && r.data ? r.data : null
 }
 
-module.exports = { createTask, updateTask, getTask, COL }
+/** 仅读 trips 的 _id + aiTaskId, 用于 checkCancelled. 失败返回 null. */
+async function getTripLight(tripId) {
+  const db = cloud.database()
+  const r = await db.collection('trips')
+    .doc(tripId)
+    .field({ _id: true, aiTaskId: true })
+    .get()
+    .catch(() => null)
+  return r && r.data ? r.data : null
+}
+
+/** 终结写入 trip; 若 trip.aiTaskId !== myTaskId, 放弃写入 (用户已停止或重新生成). */
+async function finalizeTrip(tripId, myTaskId, patch) {
+  const t = await getTripLight(tripId)
+  if (!t) {
+    console.warn('[finalizeTrip] trip 已不存在, taskId=', myTaskId)
+    return { written: false, reason: 'trip-missing' }
+  }
+  if (t.aiTaskId !== myTaskId) {
+    console.warn('[finalizeTrip] task superseded, current trip.aiTaskId=', t.aiTaskId, 'my=', myTaskId)
+    return { written: false, reason: 'superseded' }
+  }
+  const db = cloud.database()
+  try {
+    await db.collection('trips').doc(tripId).update({
+      data: { ...patch, updatedAt: Date.now() },
+    })
+    return { written: true }
+  } catch (e) {
+    console.error('[finalizeTrip] update failed', e && e.message)
+    return { written: false, reason: 'db-error', error: e && e.message }
+  }
+}
+
+module.exports = { createTask, updateTask, getTask, getTripLight, finalizeTrip, COL }
