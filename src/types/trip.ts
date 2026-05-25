@@ -85,3 +85,69 @@ export interface Trip {
 
 // 新建 trip 时未落库前的形状
 export type NewTripInput = Omit<Trip, '_id' | '_openid' | 'createdAt' | 'updatedAt' | 'updatedBy'>
+
+// === AI 行程生成相关类型 ===
+
+export type AIPace = '悠闲' | '平衡' | '紧凑'
+export type AIAudience = '独行' | '情侣' | '亲子' | '老人' | '朋友'
+
+// 前端展示给用户的模型 alias;server 端映射到真实 provider + model
+export type AIModelAlias = 'MiMo-V2.5' | 'DeepSeek-V4-PRO' | 'DeepSeek-V4-Flash'
+export const AI_MODEL_ALIASES: AIModelAlias[] = ['MiMo-V2.5', 'DeepSeek-V4-PRO', 'DeepSeek-V4-Flash']
+
+export interface AIPreferences {
+  pace: AIPace
+  audience: AIAudience[]
+  budgetCap?: number          // 人均/天 RMB
+  freeText?: string
+  modelAlias: AIModelAlias    // 必填, 默认 'MiMo-V2.5'
+}
+
+// 注意: 必须复用现有 SpotType ('spot' | 'hotel' | 'meal' | 'transport')。
+// 不要新增 'arrive' 等类型, 否则 ItineraryView/MapView 不识别会渲染异常。
+// 抵达/出发用 type='transport' 表达。
+export interface GeneratedSpot {
+  type: SpotType
+  name: string
+  city: string
+  note?: string
+  price?: number
+  time?: string               // 'HH:mm'
+  lat?: number                // LLM 从 search_poi 工具结果抄过来; 无则前端标记 _unresolved
+  lng?: number
+  adcode?: string
+  _unresolved?: boolean       // 缺 lat/lng 时由 client 端预览标记
+}
+
+export interface GeneratedDay {
+  date: string                // 'YYYY-MM-DD'
+  spots: GeneratedSpot[]
+}
+
+export interface GeneratedPlan {
+  days: GeneratedDay[]
+}
+
+// 异步任务记录(对应 cloud db 集合 ai_tasks)
+export type AITaskStatus = 'pending' | 'streaming' | 'done' | 'error'
+
+export interface AITask {
+  _id: string
+  _openid: string
+  tripId?: string             // 详情页发起带, 新建页不带
+  status: AITaskStatus
+  progress?: GeneratedPlan    // 增量结果, 每生成完 1 天追加
+  result?: GeneratedPlan      // 最终结果
+  error?: string
+  modelAlias: AIModelAlias
+  tripContext: any            // 提交时的 tripContext 副本(便于复现)
+  preferences: AIPreferences
+  meta?: {
+    elapsedMs?: number
+    promptTokens?: number
+    completionTokens?: number
+    turns?: number
+  }
+  createdAt: number
+  updatedAt: number
+}

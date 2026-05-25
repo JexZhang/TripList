@@ -102,3 +102,14 @@
   padding-top: 8rpx;
   animation: fade-in 0.32s var(--ease-out) both;
 }
+
+.th-ai-btn {
+  margin-right: 16rpx;
+  padding: 8rpx 16rpx;
+  font-size: 22rpx;
+  font-weight: 600;
+  border-radius: 12rpx;
+  background: linear-gradient(135deg, #6b46c1 0%, #c43d3d 100%);
+  color: white;
+  letter-spacing: 1rpx;
+}

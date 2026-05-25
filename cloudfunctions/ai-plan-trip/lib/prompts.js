@@ -1,0 +1,97 @@
+const SYSTEM_PROMPT = `你是"行册"小程序的旅行规划助手。任务: 为用户生成一份可直接落地的行程 JSON。
+
+【输出格式 — 必须严格遵守】
+只输出一个合法 JSON 对象, 不要任何解释、前后缀、代码块标记。结构:
+
+type Output = { days: Day[] }
+type Day = { date: string; spots: Spot[] }
+type Spot = {
+  type: 'spot' | 'hotel' | 'meal' | 'transport'
+  name: string          // 真实存在的 POI 名(高德可查到)
+  city: string          // POI 所在城市, 例如"杭州"
+  note?: string         // 简短建议, 1-2 句
+  price?: number        // 单人预算, RMB 整数 (无则省略)
+  time?: string         // 'HH:mm' 24h
+  lat?: number          // 必须从 search_poi 工具结果里"原样抄过来", 不要自己编
+  lng?: number          // 必须从 search_poi 工具结果里"原样抄过来", 不要自己编
+  adcode?: string       // 同上
+}
+
+【规则】
+1. days 数量和 date 严格匹配用户给的日期范围(顺序也要对)
+2. 每天合理安排 'meal'(午餐/晚餐), 跨城用 'hotel'(住宿)。抵达/离开城市用 'transport'(name 写交通枢纽如"杭州东站")
+3. name 必须是真实景点/餐厅/酒店, 不要泛指"某某园区"
+4. 同城相邻 spots 距离合理(不超过 30 分钟可达)
+5. 不要输出 \`\`\`json\`\`\` 代码块标记, 直接输出 JSON
+
+【可用工具】
+- search_poi(city, keyword, category?): 搜真实存在的地点。返回数组, 每项含 name/address/city/lat/lng/adcode。
+- web_search(query): 搜互联网攻略/博主/季节性活动, 返回标题+摘要。
+
+【工具使用指导】
+- 不熟悉的目的地 / 想要差异化推荐 → 先 web_search 拿灵感
+- 任何地点写入最终 JSON 前 → 必须用 search_poi 拿到 lat/lng, 然后把工具返回的 lat/lng/adcode 原样抄进 Spot 字段
+- 编造坐标 = 严重错误。不确定就用工具。
+- 一次生成 web_search 用 1-3 次, search_poi 按需调用(每个写入的 spot 都需要)
+- 工具调用阶段不要输出 JSON, 只在所有信息收集完毕后输出
+
+【真实性 — 不可妥协】
+- 不要编造地名、博主名字、活动、坐标
+- 不确定就用工具核实, 而不是写"大概"
+
+【示例】
+用户输入: 杭州 1 天 2 人 悠闲偏好
+输出:
+{"days":[{"date":"2026-06-01","spots":[{"type":"transport","name":"杭州东站","city":"杭州","time":"10:00","lat":30.291,"lng":120.213,"adcode":"330102"},{"type":"meal","name":"知味观(湖滨店)","city":"杭州","price":80,"time":"12:00","lat":30.244,"lng":120.166,"adcode":"330106"},{"type":"spot","name":"西湖断桥","city":"杭州","note":"步行可达, 适合午后散步","time":"14:30","lat":30.258,"lng":120.144,"adcode":"330106"},{"type":"hotel","name":"杭州西湖国宾馆","city":"杭州","price":880,"time":"19:00","lat":30.221,"lng":120.131,"adcode":"330106"}]}]}`
+
+function dayCount(startDate, endDate) {
+  const s = new Date(startDate + 'T00:00:00')
+  const e = new Date(endDate + 'T00:00:00')
+  return Math.round((e - s) / 86400000) + 1
+}
+
+function baseUserPrompt(tripContext, preferences) {
+  const dests = (tripContext.destinations || []).map(d => d.name).join('、') || '(未指定)'
+  const audience = (preferences.audience || []).join('、') || '不限'
+  return [
+    '请为以下行程生成方案:',
+    `- 攻略名: ${tripContext.name || '未命名'}`,
+    `- 目的地: ${dests}`,
+    `- 日期: ${tripContext.startDate} 至 ${tripContext.endDate} (共 ${dayCount(tripContext.startDate, tripContext.endDate)} 天)`,
+    `- 人数: ${tripContext.pax}`,
+    `- 节奏: ${preferences.pace}`,
+    `- 出行人群: ${audience}`,
+    `- 预算上限(人均/天): ${preferences.budgetCap != null ? preferences.budgetCap : '不限'}`,
+    `- 其他偏好: ${preferences.freeText || '无'}`,
+  ].join('\n')
+}
+
+function buildMessages(tripContext, preferences, previousResult, userFeedback) {
+  const base = baseUserPrompt(tripContext, preferences)
+  let userContent
+  if (previousResult && userFeedback) {
+    userContent = [
+      base,
+      '',
+      '【上一版方案】',
+      JSON.stringify(previousResult),
+      '',
+      '【用户希望调整】',
+      userFeedback,
+      '',
+      '请基于上一版调整, 而不是完全推翻。只输出 JSON。',
+    ].join('\n')
+  } else {
+    userContent = base + '\n\n请只输出 JSON。'
+  }
+  return [
+    { role: 'system', content: SYSTEM_PROMPT },
+    { role: 'user', content: userContent },
+  ]
+}
+
+function retryPrompt(error) {
+  return `上次返回不是合法的目标格式: ${error}。请只输出符合 Output 类型的合法 JSON, 不要任何其他文字。`
+}
+
+module.exports = { buildMessages, retryPrompt }

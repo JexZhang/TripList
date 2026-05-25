@@ -1,0 +1,10 @@
+{
+  "name": "ai-plan-trip",
+  "version": "1.0.0",
+  "description": "AI itinerary generation with agent loop (async)",
+  "main": "index.js",
+  "dependencies": {
+    "wx-server-sdk": "~3.0.0",
+    "axios": "^1.7.0"
+  }
+}

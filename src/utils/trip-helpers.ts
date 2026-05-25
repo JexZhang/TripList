@@ -1,6 +1,6 @@
 import dayjs from 'dayjs'
 import { uid } from './id'
-import type { Day, NewTripInput, Destination } from '../types/trip'
+import type { Day, NewTripInput, Destination, GeneratedDay, GeneratedPlan } from '../types/trip'
 
 /**
  * 按日期范围生成空的 day 数组（每天一条，无 spot）
@@ -58,4 +58,52 @@ export function destinationLabel(destinations: Destination[]): string {
 export function tripSummary(startDate: string, endDate: string, pax: number): string {
   const days = dayjs(endDate).diff(dayjs(startDate), 'day') + 1
   return `${days} 天 · ${pax} 人`
+}
+
+/**
+ * 把一个 LLM 生成的 day 转成 Trip.days 形态(补 id, 丢掉 _unresolved 标记)。
+ */
+export function planDayToDay(gd: GeneratedDay): Day {
+  return {
+    id: uid(),
+    date: gd.date,
+    spots: gd.spots.map(gs => ({
+      id: uid(),
+      type: gs.type,
+      name: gs.name,
+      city: gs.city,
+      note: gs.note,
+      price: gs.price,
+      time: gs.time,
+      lat: gs.lat,
+      lng: gs.lng,
+      adcode: gs.adcode,
+    })),
+    weather: null,
+  }
+}
+
+/**
+ * 按用户勾选的日期, 把 AI 生成的对应天合并进原 days 数组。
+ * - existing 中未被选中的天保持不变
+ * - 选中的天用 AI 版本替换(按 date 匹配)
+ * - 若 AI 给的日期在 existing 中不存在(不该发生), 忽略
+ */
+export function mergePlanIntoDays(
+  existing: Day[],
+  plan: GeneratedPlan,
+  selectedDates: string[],
+): Day[] {
+  const selectedSet = new Set(selectedDates)
+  const aiByDate = new Map<string, GeneratedDay>()
+  for (const gd of plan.days) aiByDate.set(gd.date, gd)
+
+  return existing.map(d => {
+    if (!selectedSet.has(d.date)) return d
+    const gd = aiByDate.get(d.date)
+    if (!gd) return d
+    const replaced = planDayToDay(gd)
+    // 保留原 day 的 id 和 weather, 只替换 spots
+    return { ...d, spots: replaced.spots }
+  })
 }

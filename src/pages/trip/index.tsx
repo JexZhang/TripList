@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import { View, Text, Picker } from '@tarojs/components'
 import Taro, { useRouter, useShareAppMessage } from '@tarojs/taro'
 import { TripProvider, useTripStore } from '../../store/trip-store'
@@ -10,10 +10,16 @@ import CollaboratorsBar from '../../components/CollaboratorsBar'
 import CollaboratorsSheet from '../../components/CollaboratorsSheet'
 import TripActionSheet, { type TripAction } from '../../components/TripActionSheet'
 import ShareTypeSheet from '../../components/ShareTypeSheet'
+import AILoading from '../../components/AILoading'
+import AIPlanForm from '../../components/AIPlanForm'
+import AIPlanPreview from '../../components/AIPlanPreview'
 import { buildShareMessage, shareRef, resetShareRef } from '../../utils/share'
-import { smartDeleteTrip, renameTrip, copyTripLocally } from '../../utils/db'
+import { smartDeleteTrip, renameTrip, copyTripLocally, updateTrip } from '../../utils/db'
 import { isSeedTripId } from '../../data/seed-trips'
+import { mergePlanIntoDays } from '../../utils/trip-helpers'
 import type { ShareKind } from '../../utils/cloud'
+import type { AIPreferences, AITask, GeneratedPlan } from '../../types/trip'
+import { startAITask, watchAITask, PENDING_TIMEOUT_MS, type TaskWatcher } from '../../utils/ai-task'
 import './index.scss'
 
 type ViewKey = 'itinerary' | 'budget' | 'packing' | 'map'
@@ -36,6 +42,18 @@ function TripBody() {
   const [shareReady, setShareReady] = useState({ readonly: false, collab: false })
   const [collabSheetOpen, setCollabSheetOpen] = useState(false)
 
+  // === AI 相关状态 ===
+  const [aiFormOpen, setAiFormOpen] = useState(false)
+  const [aiPreviewOpen, setAiPreviewOpen] = useState(false)
+  const [aiLoadingOpen, setAiLoadingOpen] = useState(false)
+  const [aiTask, setAiTask] = useState<AITask | null>(null)
+  const [aiPrefs, setAiPrefs] = useState<AIPreferences | null>(null)
+  const [aiElapsed, setAiElapsed] = useState(0)
+  const watcherRef = useRef<TaskWatcher | null>(null)
+  const elapsedTimerRef = useRef<any>(null)
+  const pendingTimerRef = useRef<any>(null)
+  const previewAutoOpenedRef = useRef(false)
+
   const t = state.trip
   const isOwner = t ? t._openid === openid : false
 
@@ -44,6 +62,96 @@ function TripBody() {
   if (state.loading) return <View className='trip-empty'>加载中...</View>
   if (state.error) return <View className='trip-empty'>{state.error}</View>
   if (!t) return <View className='trip-empty'>未找到攻略</View>
+
+  // === AI 函数 ===
+  const stopWatch = () => {
+    if (watcherRef.current) { watcherRef.current.close(); watcherRef.current = null }
+    if (elapsedTimerRef.current) { clearInterval(elapsedTimerRef.current); elapsedTimerRef.current = null }
+    if (pendingTimerRef.current) { clearTimeout(pendingTimerRef.current); pendingTimerRef.current = null }
+  }
+
+  const startAi = async (prefs: AIPreferences, previousResult?: GeneratedPlan, userFeedback?: string) => {
+    if (!t) return
+    stopWatch()
+    setAiPrefs(prefs)
+    setAiElapsed(0)
+    setAiTask(null)
+    setAiLoadingOpen(true)
+    setAiPreviewOpen(false)
+    previewAutoOpenedRef.current = false
+    try {
+      const taskId = await startAITask({
+        tripContext: {
+          name: t.name,
+          destinations: t.destinations,
+          startDate: t.startDate,
+          endDate: t.endDate,
+          pax: t.pax,
+        },
+        preferences: prefs,
+        tripId: t._id,
+        previousResult,
+        userFeedback,
+      })
+      elapsedTimerRef.current = setInterval(() => setAiElapsed(e => e + 1), 1000)
+      pendingTimerRef.current = setTimeout(() => {
+        setAiTask(prev => {
+          if (!prev || prev.status === 'pending') {
+            stopWatch(); setAiLoadingOpen(false)
+            Taro.showToast({ title: 'AI 启动超时, 请重试', icon: 'none' })
+          }
+          return prev
+        })
+      }, PENDING_TIMEOUT_MS)
+
+      watcherRef.current = watchAITask(taskId, (tk) => {
+        setAiTask(tk)
+        if (!previewAutoOpenedRef.current && tk.progress && tk.progress.days && tk.progress.days.length > 0) {
+          previewAutoOpenedRef.current = true
+          setAiPreviewOpen(true)
+        }
+        if (tk.status === 'done') {
+          stopWatch(); setAiLoadingOpen(false); setAiPreviewOpen(true)
+        } else if (tk.status === 'error') {
+          stopWatch(); setAiLoadingOpen(false)
+          Taro.showToast({ title: tk.error || 'AI 生成失败', icon: 'none' })
+        }
+      })
+    } catch (e: any) {
+      stopWatch(); setAiLoadingOpen(false)
+      Taro.showToast({ title: e.message || '启动失败', icon: 'none' })
+    }
+  }
+
+  const handleAiOpen = () => { if (isOwner) setAiFormOpen(true) }
+  const handleAiSubmit = (prefs: AIPreferences) => { setAiFormOpen(false); startAi(prefs) }
+  const handleAiRegenerate = (feedback: string) => {
+    if (!aiPrefs || !aiTask || !aiTask.result) return
+    startAi(aiPrefs, aiTask.result, feedback || '请优化方案')
+  }
+
+  const handleAiApply = async (selectedDates: string[]) => {
+    if (!t || !aiTask || !aiTask.result) return
+    const confirm = await Taro.showModal({
+      title: `应用 AI 的 ${selectedDates.length} 天?`,
+      content: '将覆盖选中天的现有 spots, 未选中的天保持不变',
+      confirmText: '应用',
+      confirmColor: '#c43d3d',
+    })
+    if (!confirm.confirm) return
+    try {
+      const newDays = mergePlanIntoDays(t.days, aiTask.result, selectedDates)
+      await updateTrip(t._id, { days: newDays }, openid)
+      dispatch({ type: 'UPDATE_TRIP', patch: { days: newDays } })
+      setAiPreviewOpen(false)
+      Taro.showToast({ title: '已应用', icon: 'success' })
+    } catch (e: any) {
+      console.error('[ai apply]', e)
+      Taro.showToast({ title: '保存失败', icon: 'none' })
+    }
+  }
+
+  useEffect(() => () => stopWatch(), [])
 
   const handleAction = async (action: TripAction) => {
     if (!t) return
@@ -122,7 +230,12 @@ function TripBody() {
       <View className='trip-head'>
         <View className='th-row'>
           <Text className='th-name'>{t.name}</Text>
-          <View className='th-menu' onClick={() => setActionOpen(true)}>⋯</View>
+          <View style={{ display: 'flex', alignItems: 'center' }}>
+            {isOwner && (
+              <View className='th-ai-btn' onClick={handleAiOpen}>✨ AI</View>
+            )}
+            <View className='th-menu' onClick={() => setActionOpen(true)}>⋯</View>
+          </View>
         </View>
         <View className='th-meta'>
           <Text>
@@ -186,6 +299,25 @@ function TripBody() {
         ownerNickname={t.ownerNickname}
         ownerAvatarUrl={t.ownerAvatarUrl}
         onClose={() => setCollabSheetOpen(false)}
+      />
+
+      <AIPlanForm open={aiFormOpen} onClose={() => setAiFormOpen(false)} onSubmit={handleAiSubmit} />
+      <AILoading
+        open={aiLoadingOpen}
+        status={aiTask?.status || 'pending'}
+        doneCount={aiTask?.progress?.days?.length || 0}
+        totalDays={t?.days?.length || 0}
+        onClose={() => setAiLoadingOpen(false)}
+        elapsedSec={aiElapsed}
+      />
+      <AIPlanPreview
+        open={aiPreviewOpen}
+        plan={(aiTask?.result || aiTask?.progress) || null}
+        status={aiTask?.status || 'pending'}
+        generating={aiTask?.status === 'streaming' || aiTask?.status === 'pending'}
+        onRegenerate={handleAiRegenerate}
+        onApply={handleAiApply}
+        onClose={() => setAiPreviewOpen(false)}
       />
     </View>
   )

@@ -98,8 +98,14 @@
   left: 32rpx; right: 32rpx;
   bottom: 48rpx;
   display: flex;
+  flex-direction: column;
   gap: 16rpx;
   z-index: 10;
+}
+
+.nt-row-btns {
+  display: flex;
+  gap: 16rpx;
 }
 
 .nt-cancel, .nt-submit {
@@ -129,3 +135,16 @@
   opacity: 0.45;
   box-shadow: none;
 }
+
+.nt-submit-ai {
+  width: 100%;
+  background: linear-gradient(135deg, #6b46c1 0%, #c43d3d 100%) !important;
+  color: white !important;
+  font-weight: 600;
+  border-radius: var(--r-md) !important;
+  font-size: 30rpx;
+  padding: 28rpx 0;
+  border: none;
+  letter-spacing: 2rpx;
+}
+.nt-submit-ai[disabled] { opacity: 0.5; }
