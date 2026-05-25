@@ -9,6 +9,7 @@ import { fmtDateShort } from '../../utils/format'
 import { tripSummary } from '../../utils/trip-helpers'
 import TripActionSheet, { type TripAction } from '../../components/TripActionSheet'
 import ShareTypeSheet from '../../components/ShareTypeSheet'
+import AILoadingBar, { type AIBarStatus } from '../../components/AILoadingBar'
 import { buildShareMessage, shareRef, resetShareRef } from '../../utils/share'
 import type { ShareKind } from '../../utils/cloud'
 import './index.scss'
@@ -44,6 +45,20 @@ export default function Home() {
       .then(list => setTrips([...SEED_TRIPS, ...list]))
       .finally(() => Taro.hideNavigationBarLoading())
   })
+
+  // AI 任务实时刷新: 只要列表里还有 generating 的 trip, 每 5s 轮询一次
+  // (home 没用 trip watch, 需要这个兗底; trip 一切完后轮询自动停)
+  useEffect(() => {
+    if (!openid) return
+    const hasGenerating = trips.some(t => t.aiStatus === 'generating')
+    if (!hasGenerating) return
+    const timer = setInterval(() => {
+      listMyTrips(openid)
+        .then(list => setTrips([...SEED_TRIPS, ...list]))
+        .catch(e => console.error('[home] ai polling failed', e))
+    }, 5000)
+    return () => clearInterval(timer)
+  }, [openid, trips])
 
   const handleAction = async (action: TripAction) => {
     if (!actionTrip) return
@@ -158,6 +173,12 @@ export default function Home() {
               onClick={() => Taro.navigateTo({ url: `/pages/trip/index?id=${t._id}` })}
               onLongPress={() => setActionTrip(t)}
             >
+              {!isCollab && !isSeed && t.aiStatus && (
+                <AILoadingBar
+                  status={t.aiStatus as AIBarStatus}
+                  onTap={() => Taro.navigateTo({ url: `/pages/trip/index?id=${t._id}` })}
+                />
+              )}
               {isSeed && <View className='tc-badge tc-badge-seed'>示例</View>}
               {isCollab && <View className='tc-badge'>协作</View>}
               <Text className='tc-name'>{t.name}</Text>

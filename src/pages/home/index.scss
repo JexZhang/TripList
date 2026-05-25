@@ -100,6 +100,10 @@
   animation: slide-up 0.5s var(--ease-out) both;
   transition: transform 0.22s var(--ease-out), box-shadow 0.22s var(--ease-out);
 }
+
+.trip-card .ai-bar {
+  margin: -8rpx -8rpx 16rpx -8rpx;
+}
 .trip-card:active {
   transform: scale(0.98);
   box-shadow: var(--shadow-md);
