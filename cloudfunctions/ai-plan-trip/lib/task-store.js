@@ -2,25 +2,26 @@ const cloud = require('wx-server-sdk')
 
 const COL = 'ai_tasks'
 
-async function createTask({ openid, tripId, modelAlias, tripContext, preferences }) {
+async function createTask({ taskId, openid, tripId, modelAlias, tripContext, preferences }) {
   const db = cloud.database()
   const now = Date.now()
-  const res = await db.collection(COL).add({
-    data: {
-      _openid: openid,
-      tripId: tripId || null,
-      status: 'pending',
-      modelAlias,
-      tripContext,
-      preferences,
-      progress: { days: [] },
-      result: null,
-      error: null,
-      meta: { turns: 0 },
-      createdAt: now,
-      updatedAt: now,
-    },
-  })
+  const data = {
+    _openid: openid,
+    tripId: tripId || null,
+    status: 'pending',
+    modelAlias,
+    tripContext,
+    preferences,
+    progress: { days: [] },
+    result: null,
+    error: null,
+    meta: { turns: 0 },
+    createdAt: now,
+    updatedAt: now,
+  }
+  // 支持客户端预生成 _id, 实现"小程序立刻拿到 taskId + 服务端慢跑"
+  if (taskId) data._id = taskId
+  const res = await db.collection(COL).add({ data })
   return res._id
 }
 

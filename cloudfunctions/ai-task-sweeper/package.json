@@ -1,0 +1,9 @@
+{
+  "name": "ai-task-sweeper",
+  "version": "1.0.0",
+  "description": "Cron sweeper: mark stale ai_tasks (streaming/pending > threshold) as error",
+  "main": "index.js",
+  "dependencies": {
+    "wx-server-sdk": "~3.0.0"
+  }
+}

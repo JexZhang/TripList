@@ -13,13 +13,18 @@ import ShareTypeSheet from '../../components/ShareTypeSheet'
 import AILoading from '../../components/AILoading'
 import AIPlanForm from '../../components/AIPlanForm'
 import AIPlanPreview from '../../components/AIPlanPreview'
+import AITaskFab from '../../components/AITaskFab'
 import { buildShareMessage, shareRef, resetShareRef } from '../../utils/share'
 import { smartDeleteTrip, renameTrip, copyTripLocally, updateTrip } from '../../utils/db'
 import { isSeedTripId } from '../../data/seed-trips'
 import { mergePlanIntoDays } from '../../utils/trip-helpers'
 import type { ShareKind } from '../../utils/cloud'
 import type { AIPreferences, AITask, GeneratedPlan } from '../../types/trip'
-import { startAITask, watchAITask, PENDING_TIMEOUT_MS, type TaskWatcher } from '../../utils/ai-task'
+import {
+  startAITask, watchAITask, getAITask,
+  savePendingTask, loadPendingTask, clearPendingTask,
+  PENDING_TIMEOUT_MS, STREAMING_HEARTBEAT_MS, type TaskWatcher,
+} from '../../utils/ai-task'
 import './index.scss'
 
 type ViewKey = 'itinerary' | 'budget' | 'packing' | 'map'
@@ -52,22 +57,73 @@ function TripBody() {
   const watcherRef = useRef<TaskWatcher | null>(null)
   const elapsedTimerRef = useRef<any>(null)
   const pendingTimerRef = useRef<any>(null)
+  const heartbeatTimerRef = useRef<any>(null)
   const previewAutoOpenedRef = useRef(false)
+  const [fabVisible, setFabVisible] = useState(false)
 
   const t = state.trip
   const isOwner = t ? t._openid === openid : false
 
   shareRef.tripName = t?.name || ''
 
+  // 注意: 所有 hooks 必须在早返之前. resumeAi/stopWatch 是后面定义的 const arrow,
+  // 但 effect callback 在 render 之后执行, 那时它们已经初始化, 不会触发 TDZ.
+  useEffect(() => {
+    if (!t) return
+    const rec = loadPendingTask(`trip:${t._id}`)
+    if (rec) resumeAi(rec)
+    return () => stopWatch()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [t?._id])
+
   if (state.loading) return <View className='trip-empty'>加载中...</View>
   if (state.error) return <View className='trip-empty'>{state.error}</View>
   if (!t) return <View className='trip-empty'>未找到攻略</View>
 
   // === AI 函数 ===
+  const scope = t ? `trip:${t._id}` : ''
+
   const stopWatch = () => {
     if (watcherRef.current) { watcherRef.current.close(); watcherRef.current = null }
     if (elapsedTimerRef.current) { clearInterval(elapsedTimerRef.current); elapsedTimerRef.current = null }
     if (pendingTimerRef.current) { clearTimeout(pendingTimerRef.current); pendingTimerRef.current = null }
+    if (heartbeatTimerRef.current) { clearInterval(heartbeatTimerRef.current); heartbeatTimerRef.current = null }
+  }
+
+  const onTaskUpdate = (tk: AITask) => {
+    setAiTask(tk)
+    if (!previewAutoOpenedRef.current && tk.progress && tk.progress.days && tk.progress.days.length > 0) {
+      previewAutoOpenedRef.current = true
+      setAiPreviewOpen(true)
+    }
+    if (tk.status === 'done') {
+      stopWatch(); setAiLoadingOpen(false); setAiPreviewOpen(true); setFabVisible(false)
+      if (scope) clearPendingTask(scope)
+    } else if (tk.status === 'error') {
+      stopWatch(); setAiLoadingOpen(false); setFabVisible(false)
+      Taro.showToast({ title: tk.error || 'AI 生成失败', icon: 'none' })
+      if (scope) clearPendingTask(scope)
+    }
+  }
+
+  const startHeartbeat = (taskId: string) => {
+    if (heartbeatTimerRef.current) clearInterval(heartbeatTimerRef.current)
+    heartbeatTimerRef.current = setInterval(() => {
+      setAiTask(prev => {
+        if (!prev) return prev
+        if (prev.status === 'streaming' || prev.status === 'pending') {
+          const last = prev.updatedAt || 0
+          if (last > 0 && Date.now() - last > STREAMING_HEARTBEAT_MS) {
+            console.warn('[ai] streaming heartbeat lost, taskId=', taskId)
+            stopWatch(); setAiLoadingOpen(false); setFabVisible(false)
+            Taro.showToast({ title: '后台无响应, 请重试', icon: 'none' })
+            if (scope) clearPendingTask(scope)
+            return { ...prev, status: 'error', error: '后台无响应' }
+          }
+        }
+        return prev
+      })
+    }, 10_000)
   }
 
   const startAi = async (prefs: AIPreferences, previousResult?: GeneratedPlan, userFeedback?: string) => {
@@ -78,9 +134,10 @@ function TripBody() {
     setAiTask(null)
     setAiLoadingOpen(true)
     setAiPreviewOpen(false)
+    setFabVisible(false)
     previewAutoOpenedRef.current = false
     try {
-      const taskId = await startAITask({
+      const taskId = startAITask({
         tripContext: {
           name: t.name,
           destinations: t.destinations,
@@ -93,34 +150,47 @@ function TripBody() {
         previousResult,
         userFeedback,
       })
+      savePendingTask({ taskId, prefs, scope, startedAt: Date.now() })
+
       elapsedTimerRef.current = setInterval(() => setAiElapsed(e => e + 1), 1000)
       pendingTimerRef.current = setTimeout(() => {
         setAiTask(prev => {
           if (!prev || prev.status === 'pending') {
-            stopWatch(); setAiLoadingOpen(false)
+            stopWatch(); setAiLoadingOpen(false); setFabVisible(false)
             Taro.showToast({ title: 'AI 启动超时, 请重试', icon: 'none' })
+            clearPendingTask(scope)
           }
           return prev
         })
       }, PENDING_TIMEOUT_MS)
 
-      watcherRef.current = watchAITask(taskId, (tk) => {
-        setAiTask(tk)
-        if (!previewAutoOpenedRef.current && tk.progress && tk.progress.days && tk.progress.days.length > 0) {
-          previewAutoOpenedRef.current = true
-          setAiPreviewOpen(true)
-        }
-        if (tk.status === 'done') {
-          stopWatch(); setAiLoadingOpen(false); setAiPreviewOpen(true)
-        } else if (tk.status === 'error') {
-          stopWatch(); setAiLoadingOpen(false)
-          Taro.showToast({ title: tk.error || 'AI 生成失败', icon: 'none' })
-        }
-      })
+      watcherRef.current = watchAITask(taskId, onTaskUpdate)
+      startHeartbeat(taskId)
     } catch (e: any) {
-      stopWatch(); setAiLoadingOpen(false)
+      stopWatch(); setAiLoadingOpen(false); setFabVisible(false)
+      clearPendingTask(scope)
       Taro.showToast({ title: e.message || '启动失败', icon: 'none' })
     }
+  }
+
+  const resumeAi = async (rec: ReturnType<typeof loadPendingTask>) => {
+    if (!rec || !t) return
+    const tk = await getAITask(rec.taskId)
+    if (!tk) { clearPendingTask(scope); return }
+    if (tk.status === 'done' || tk.status === 'error') {
+      setAiPrefs(rec.prefs); setAiTask(tk)
+      if (tk.status === 'done') setAiPreviewOpen(true)
+      else Taro.showToast({ title: tk.error || 'AI 生成失败', icon: 'none' })
+      clearPendingTask(scope)
+      return
+    }
+    setAiPrefs(rec.prefs); setAiTask(tk)
+    setAiElapsed(Math.floor((Date.now() - rec.startedAt) / 1000))
+    setFabVisible(true)
+    previewAutoOpenedRef.current = (tk.progress && tk.progress.days && tk.progress.days.length > 0) || false
+    elapsedTimerRef.current = setInterval(() => setAiElapsed(e => e + 1), 1000)
+    watcherRef.current = watchAITask(rec.taskId, onTaskUpdate)
+    startHeartbeat(rec.taskId)
   }
 
   const handleAiOpen = () => { if (isOwner) setAiFormOpen(true) }
@@ -150,8 +220,6 @@ function TripBody() {
       Taro.showToast({ title: '保存失败', icon: 'none' })
     }
   }
-
-  useEffect(() => () => stopWatch(), [])
 
   const handleAction = async (action: TripAction) => {
     if (!t) return
@@ -307,8 +375,22 @@ function TripBody() {
         status={aiTask?.status || 'pending'}
         doneCount={aiTask?.progress?.days?.length || 0}
         totalDays={t?.days?.length || 0}
-        onClose={() => setAiLoadingOpen(false)}
+        onClose={() => {
+          setAiLoadingOpen(false)
+          const st = aiTask?.status
+          if (st === 'pending' || st === 'streaming') setFabVisible(true)
+        }}
         elapsedSec={aiElapsed}
+      />
+      <AITaskFab
+        visible={fabVisible}
+        task={aiTask}
+        elapsedSec={aiElapsed}
+        onTap={() => {
+          setFabVisible(false)
+          if (aiTask?.status === 'done') setAiPreviewOpen(true)
+          else setAiLoadingOpen(true)
+        }}
       />
       <AIPlanPreview
         open={aiPreviewOpen}

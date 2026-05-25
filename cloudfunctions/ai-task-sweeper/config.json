@@ -1,0 +1,11 @@
+{
+  "timeout": 60,
+  "memorySize": 128,
+  "triggers": [
+    {
+      "name": "ai-task-sweeper-cron",
+      "type": "timer",
+      "config": "0 */2 * * * * *"
+    }
+  ]
+}
