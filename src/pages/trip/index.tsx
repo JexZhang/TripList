@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { View, Text, Picker } from '@tarojs/components'
 import Taro, { useRouter, useShareAppMessage } from '@tarojs/taro'
 import { TripProvider, useTripStore } from '../../store/trip-store'
+import { useMe } from '../../store/me-store'
 import ItineraryView from '../../views/ItineraryView'
 import BudgetView from '../../views/BudgetView'
 import PackingView from '../../views/PackingView'
@@ -36,6 +37,7 @@ const PAX_OPTIONS = Array.from({ length: 99 }, (_, i) => `${i + 1} 人`)
 function TripBody() {
   const { state, dispatch } = useTripStore()
   const { openid } = useTripStore()
+  const { me } = useMe()
   const [view, setView] = useState<ViewKey>('itinerary')
   const [actionOpen, setActionOpen] = useState(false)
   const [shareOpen, setShareOpen] = useState(false)
@@ -188,7 +190,7 @@ function TripBody() {
       return
     }
     if (action === 'copy') {
-      const newId = await copyTripLocally(t._id, openid)
+      const newId = await copyTripLocally(t._id, openid, me ? { nickname: me.nickname, avatarUrl: me.avatarUrl } : undefined)
       Taro.showToast({ title: '已复制', icon: 'success', duration: 600 })
       setTimeout(() => {
         Taro.hideToast()

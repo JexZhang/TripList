@@ -27,19 +27,33 @@ exports.main = async (event, context) => {
     _id: _srcId,
     _openid: _srcOpenid,
     ownerOpenid: _srcOwner,
+    ownerNickname: _srcOwnerNick,
+    ownerAvatarUrl: _srcOwnerAvatar,
     collaborators: _srcCollabs,
+    collaboratorOpenids: _srcCollabIds,
     createdAt: _srcCreatedAt,
     updatedAt: _srcUpdatedAt,
     updatedBy: _srcUpdatedBy,
+    aiTaskId: _srcAiTaskId,
+    aiStatus: _srcAiStatus,
+    aiDraft: _srcAiDraft,
+    aiError: _srcAiError,
     ...rest
   } = src.data
+
+  // 拉当前用户资料，写入新攻略的 owner 字段
+  const meDoc = await db.collection('users').doc(OPENID).get().catch(() => null)
+  const me = (meDoc && meDoc.data) || {}
 
   const now = Date.now()
   const created = await db.collection('trips').add({
     data: {
       ...rest,
       ownerOpenid: OPENID,
+      ownerNickname: me.nickname || '行册旅人',
+      ownerAvatarUrl: me.avatarUrl || '',
       collaborators: [],
+      collaboratorOpenids: [],
       createdAt: now,
       updatedAt: now,
       updatedBy: OPENID,

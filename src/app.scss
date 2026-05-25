@@ -47,6 +47,50 @@ page {
   overflow-x: hidden;
 }
 
+/* ===== root-portal 子树用：root-portal 不继承 page 上的 CSS 变量,需要在子节点重新声明 ===== */
+.theme-tokens {
+  --bg: #FFF4E6;
+  --bg-soft: #FFE9D1;
+  --surface: #FFFFFF;
+  --surface-2: #FFF9F1;
+  --ink: #2B1A10;
+  --ink-2: #5A4338;
+  --ink-3: #9B8378;
+
+  --accent: #FF7A2E;
+  --accent-2: #FF9A4D;
+  --accent-soft: #FFD3A8;
+  --accent-bg: #FFEBD6;
+  --coral: #FF5B5B;
+  --leaf: #4FB286;
+  --sun: #FFC247;
+
+  --line: rgba(43, 26, 16, 0.08);
+  --line-2: rgba(43, 26, 16, 0.14);
+
+  --shadow-sm: 0 4rpx 14rpx rgba(255, 122, 46, 0.10);
+  --shadow-md: 0 12rpx 32rpx rgba(58, 36, 25, 0.10);
+  --shadow-lg: 0 24rpx 48rpx rgba(255, 122, 46, 0.18);
+
+  --r-xs: 12rpx;
+  --r-sm: 16rpx;
+  --r-md: 22rpx;
+  --r-lg: 32rpx;
+  --r-xl: 40rpx;
+  --r-pill: 999rpx;
+
+  --ease-out: cubic-bezier(0.22, 0.61, 0.36, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  --font-serif: "Noto Serif SC", "Songti SC", "STSong", "SimSun", serif;
+  --font-sans: "PingFang SC", "Noto Sans SC", "Source Han Sans SC", -apple-system, sans-serif;
+  --font-mono: "JetBrains Mono", "SF Mono", "Fira Code", ui-monospace, monospace;
+
+  color: var(--ink);
+  font-family: var(--font-sans);
+}
+
 /* ===== 全局 keyframes ===== */
 @keyframes page-in {
   from { opacity: 0; }
@@ -81,3 +125,106 @@ page {
 /* ===== 全局按压反馈 ===== */
 button { transition: transform 0.18s var(--ease-out), box-shadow 0.22s var(--ease-out), opacity 0.18s ease; }
 button:active:not([disabled]) { transform: scale(0.96); }
+
+/* ===== ProfileSetupModal（全局，避免 chunk 顺序冲突） ===== */
+.psm-mask {
+  position: fixed; inset: 0;
+  background: rgba(43, 26, 16, 0.45);
+  display: flex; align-items: flex-end;
+  z-index: 200;
+  animation: fade-in 0.22s var(--ease-out) both;
+}
+.psm-sheet {
+  width: 100%;
+  background: var(--surface);
+  color: var(--ink);
+  border-radius: var(--r-xl) var(--r-xl) 0 0;
+  padding: 40rpx 40rpx 48rpx;
+  position: relative;
+  box-shadow: 0 -16rpx 48rpx rgba(43, 26, 16, 0.15);
+  animation: sheet-up 0.36s var(--ease-spring) both;
+}
+.psm-sheet::before {
+  content: '';
+  position: absolute;
+  top: 16rpx; left: 50%;
+  transform: translateX(-50%);
+  width: 72rpx; height: 8rpx;
+  background: var(--line-2);
+  border-radius: 999rpx;
+}
+.psm-title {
+  font-size: 36rpx;
+  font-weight: 600;
+  text-align: center;
+  margin-top: 8rpx;
+}
+.psm-sub {
+  font-size: 24rpx;
+  color: var(--ink-3, #9a8b7d);
+  text-align: center;
+  margin: 8rpx 0 32rpx;
+}
+.psm-avatar-btn {
+  background: transparent !important;
+  border: none !important;
+  padding: 0 !important;
+  margin: 0 auto 24rpx;
+  display: flex !important;
+  flex-direction: column;
+  align-items: center;
+  line-height: 1;
+}
+.psm-avatar-btn::after { border: none !important; }
+.psm-avatar {
+  width: 144rpx; height: 144rpx;
+  border-radius: 50%;
+  border: 2rpx solid var(--line-2, #ece1d3);
+  background: var(--accent-bg, #f6efe4);
+}
+.psm-avatar-hint {
+  font-size: 24rpx;
+  color: var(--ink-3, #9a8b7d);
+  margin-top: 12rpx;
+}
+.psm-field { margin: 16rpx 0 24rpx; }
+.psm-label {
+  display: block;
+  font-size: 26rpx;
+  color: var(--ink-2, #5d4f43);
+  margin-bottom: 12rpx;
+}
+.psm-input {
+  width: 100%;
+  height: 80rpx;
+  padding: 0 24rpx;
+  background: var(--accent-bg, #f6efe4);
+  border-radius: var(--r-md, 16rpx);
+  font-size: 30rpx;
+  box-sizing: border-box;
+}
+.psm-actions {
+  display: flex;
+  gap: 24rpx;
+  margin-top: 24rpx;
+}
+.psm-btn {
+  flex: 1;
+  height: 88rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--r-md, 16rpx);
+  font-size: 30rpx;
+  transition: opacity 0.18s var(--ease-out);
+}
+.psm-btn:active { opacity: 0.85; }
+.psm-btn-skip {
+  background: var(--accent-bg, #f6efe4);
+  color: var(--ink-2, #5d4f43);
+}
+.psm-btn-primary {
+  background: var(--accent, #b07a4a);
+  color: #fff;
+}
+.psm-btn.is-disabled { opacity: 0.6; }

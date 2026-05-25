@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react'
-import { View, Text, Input, Textarea, Picker, ScrollView } from '@tarojs/components'
+import { View, Text, Input, Textarea, Picker, ScrollView, RootPortal } from '@tarojs/components'
 import type { Spot, SpotType } from '../../types/trip'
 import SpotSearch, { type SelectedSpotInfo } from '../SpotSearch'
+import { useKeyboardHeight } from '../../utils/use-keyboard-height'
 import './index.scss'
 
 const TYPES: { key: SpotType; label: string }[] = [
@@ -23,13 +24,12 @@ interface Props {
 export default function EditSpotSheet({ open, spot, defaultCity, onClose, onSave, onDelete }: Props) {
   const [draft, setDraft] = useState<Partial<Spot>>({})
   const [searchOpen, setSearchOpen] = useState(false)
-  const [keyboardHeight, setKeyboardHeight] = useState(0)
+  const keyboardHeight = useKeyboardHeight()
 
   useEffect(() => {
     if (open && spot) {
       setDraft({ ...spot })
     }
-    if (!open) setKeyboardHeight(0)
   }, [open, spot])
 
   if (!open || !spot) return null
@@ -54,19 +54,20 @@ export default function EditSpotSheet({ open, spot, defaultCity, onClose, onSave
 
   const type = draft.type || 'spot'
 
-  const kbProps = {
-    adjustPosition: false,
-    // @ts-ignore
-    onKeyboardHeightChange: (e: any) => setKeyboardHeight(e.detail.height),
-  }
+  const kbProps = { adjustPosition: false }
 
   return (
-    <View
-      className='edit-spot-mask'
-      style={{ paddingBottom: `${keyboardHeight}px`, transition: 'padding-bottom 0.25s ease' }}
-      onClick={onClose}
-    >
-      <View className='edit-spot-sheet' onClick={e => e.stopPropagation()}>
+    <>
+    <RootPortal>
+    <View className='edit-spot-mask theme-tokens' onClick={onClose}>
+      <View
+        className='edit-spot-sheet'
+        style={{
+          bottom: `${keyboardHeight}px`,
+          transition: 'bottom 0.25s ease',
+        }}
+        onClick={e => e.stopPropagation()}
+      >
         <View className='es-head'>
           <Text className='es-title'>编辑地点</Text>
           <Text className='es-close' onClick={onClose}>×</Text>
@@ -199,13 +200,15 @@ export default function EditSpotSheet({ open, spot, defaultCity, onClose, onSave
           <View className='es-save' onClick={save}>保存</View>
         </View>
 
-        <SpotSearch
-          open={searchOpen}
-          defaultCity={defaultCity}
-          onClose={() => setSearchOpen(false)}
-          onSelect={replaceLocation}
-        />
       </View>
     </View>
+    </RootPortal>
+    <SpotSearch
+      open={searchOpen}
+      defaultCity={defaultCity}
+      onClose={() => setSearchOpen(false)}
+      onSelect={replaceLocation}
+    />
+    </>
   )
 }

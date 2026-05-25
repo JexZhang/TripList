@@ -66,7 +66,7 @@ export default function Home() {
     setActionTrip(null)
 
     if (action === 'copy') {
-      const newId = await copyTripLocally(t._id, openid)
+      const newId = await copyTripLocally(t._id, openid, me ? { nickname: me.nickname, avatarUrl: me.avatarUrl } : undefined)
       Taro.showToast({ title: '已复制', icon: 'success', duration: 600 })
       setTimeout(() => {
         Taro.hideToast()

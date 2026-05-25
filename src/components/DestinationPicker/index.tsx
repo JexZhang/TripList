@@ -1,7 +1,8 @@
 import { useRef, useState } from 'react'
-import { View, Text, Input, ScrollView } from '@tarojs/components'
+import { View, Text, Input, ScrollView, RootPortal } from '@tarojs/components'
 import { cloud, type PoiResult } from '../../utils/cloud'
 import type { Destination } from '../../types/trip'
+import { useKeyboardHeight } from '../../utils/use-keyboard-height'
 import './index.scss'
 
 interface Props {
@@ -14,7 +15,7 @@ export default function DestinationPicker({ value, onChange }: Props) {
   const [results, setResults] = useState<PoiResult[]>([])
   const [loading, setLoading] = useState(false)
   const [open, setOpen] = useState(false)
-  const [keyboardHeight, setKeyboardHeight] = useState(0)
+  const keyboardHeight = useKeyboardHeight()
   const reqIdRef = useRef(0)
 
   const search = async (kw: string) => {
@@ -48,12 +49,10 @@ export default function DestinationPicker({ value, onChange }: Props) {
     setKeyword('')
     setResults([])
     setOpen(false)
-    setKeyboardHeight(0)
   }
 
   const closeModal = () => {
     setOpen(false)
-    setKeyboardHeight(0)
   }
 
   const remove = (adcode: string) => {
@@ -73,12 +72,17 @@ export default function DestinationPicker({ value, onChange }: Props) {
       </View>
 
       {open && (
-        <View
-          className='dp-modal-mask'
-          style={{ paddingBottom: `${keyboardHeight}px`, transition: 'padding-bottom 0.25s ease' }}
-          onClick={closeModal}
-        >
-          <View className='dp-modal' onClick={e => e.stopPropagation()}>
+        <RootPortal>
+        <View className='dp-modal-mask theme-tokens' onClick={closeModal}>
+          <View
+            className='dp-modal'
+            style={{
+              bottom: `${keyboardHeight}px`,
+              maxHeight: `calc(100vh - ${keyboardHeight}px - 80rpx)`,
+              transition: 'bottom 0.25s ease',
+            }}
+            onClick={e => e.stopPropagation()}
+          >
             <View className='dp-modal-head'>
               <Text className='dp-modal-title'>添加目的地</Text>
               <Text className='dp-modal-close' onClick={closeModal}>×</Text>
@@ -93,8 +97,6 @@ export default function DestinationPicker({ value, onChange }: Props) {
               }}
               focus
               adjustPosition={false}
-              // @ts-ignore
-              onKeyboardHeightChange={(e: any) => setKeyboardHeight(e.detail.height)}
             />
             <ScrollView className='dp-results' scrollY>
               {loading && <View className='dp-hint'>搜索中...</View>}
@@ -110,6 +112,7 @@ export default function DestinationPicker({ value, onChange }: Props) {
             </ScrollView>
           </View>
         </View>
+        </RootPortal>
       )}
     </View>
   )

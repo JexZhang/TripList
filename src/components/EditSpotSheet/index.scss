@@ -1,11 +1,14 @@
 .edit-spot-mask {
   position: fixed; inset: 0;
   background: rgba(43, 26, 16, 0.45);
-  display: flex; align-items: flex-end;
   z-index: 90;
   animation: fade-in 0.22s var(--ease-out) both;
 }
-.edit-spot-sheet { animation: sheet-up 0.4s var(--ease-spring) both; }
+.edit-spot-sheet {
+  position: fixed;
+  left: 0; right: 0;
+  animation: sheet-up 0.4s var(--ease-spring) both;
+}
 .es-type { transition: background 0.28s var(--ease-out), color 0.28s var(--ease-out), transform 0.22s var(--ease-out), box-shadow 0.28s var(--ease-out); }
 .es-type:active { transform: scale(0.94); }
 

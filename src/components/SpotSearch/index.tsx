@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
-import { View, Text, Input, ScrollView } from '@tarojs/components'
+import { View, Text, Input, ScrollView, RootPortal } from '@tarojs/components'
 import { cloud, type PoiResult } from '../../utils/cloud'
+import { useKeyboardHeight } from '../../utils/use-keyboard-height'
 import './index.scss'
 
 export interface SelectedSpotInfo {
@@ -23,7 +24,7 @@ export default function SpotSearch({ open, defaultCity, onClose, onSelect }: Pro
   const [results, setResults] = useState<PoiResult[]>([])
   const [loading, setLoading] = useState(false)
   const [debouncedKw, setDebouncedKw] = useState('')
-  const [keyboardHeight, setKeyboardHeight] = useState(0)
+  const keyboardHeight = useKeyboardHeight()
 
   // debounce 输入
   useEffect(() => {
@@ -53,7 +54,6 @@ export default function SpotSearch({ open, defaultCity, onClose, onSelect }: Pro
     if (!open) {
       setKeyword('')
       setResults([])
-      setKeyboardHeight(0)
     }
   }, [open])
 
@@ -77,12 +77,17 @@ export default function SpotSearch({ open, defaultCity, onClose, onSelect }: Pro
   }
 
   return (
-    <View
-      className='spot-search-mask'
-      style={{ paddingBottom: `${keyboardHeight}px`, transition: 'padding-bottom 0.25s ease' }}
-      onClick={onClose}
-    >
-      <View className='spot-search-sheet' onClick={e => e.stopPropagation()}>
+    <RootPortal>
+    <View className='spot-search-mask theme-tokens' onClick={onClose}>
+      <View
+        className='spot-search-sheet'
+        style={{
+          bottom: `${keyboardHeight}px`,
+          maxHeight: `calc(100vh - ${keyboardHeight}px - 80rpx)`,
+          transition: 'bottom 0.25s ease',
+        }}
+        onClick={e => e.stopPropagation()}
+      >
         <View className='ss-head'>
           <Text className='ss-title'>添加地点</Text>
           <Text className='ss-close' onClick={onClose}>×</Text>
@@ -94,8 +99,6 @@ export default function SpotSearch({ open, defaultCity, onClose, onSelect }: Pro
           onInput={e => setKeyword(e.detail.value)}
           focus
           adjustPosition={false}
-          // @ts-ignore
-          onKeyboardHeightChange={e => setKeyboardHeight(e.detail.height)}
         />
         <ScrollView className='ss-results' scrollY>
           {loading && <View className='ss-hint'>搜索中...</View>}
@@ -116,5 +119,6 @@ export default function SpotSearch({ open, defaultCity, onClose, onSelect }: Pro
         )}
       </View>
     </View>
+    </RootPortal>
   )
 }
