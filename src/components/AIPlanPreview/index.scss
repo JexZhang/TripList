@@ -93,8 +93,8 @@
   font-size: 26rpx;
   box-sizing: border-box;
 }
-.aip-actions { display: flex; margin-top: 20rpx; }
-.aip-btn-regen, .aip-btn-apply {
+.aip-actions { display: flex; gap: 16rpx; margin-top: 20rpx; }
+.aip-btn-regen, .aip-btn-apply, .aip-btn-discard {
   flex: 1;
   text-align: center;
   padding: 22rpx 0;
@@ -102,6 +102,21 @@
   font-weight: 600;
   border-radius: 16rpx;
 }
-.aip-btn-regen { margin-right: 16rpx; background: rgba(0,0,0,0.08); }
+.aip-btn-regen { background: rgba(0,0,0,0.08); }
 .aip-btn-apply { background: var(--ink, #2c2c2c); color: var(--bg, #f7f1e3); }
+.aip-btn-discard {
+  background: #f4f4f6;
+  color: #666;
+  font-size: 28rpx;
+}
 .aip-btn-regen.disabled, .aip-btn-apply.disabled { opacity: 0.4; }
+
+.aip-day-conflict {
+  margin: -4rpx 0 12rpx 56rpx;
+  padding: 6rpx 14rpx;
+  background: #fff4e0;
+  color: #a06b1a;
+  font-size: 22rpx;
+  border-radius: 8rpx;
+  display: inline-block;
+}
