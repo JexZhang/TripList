@@ -1,7 +1,6 @@
 const cloud = require('wx-server-sdk')
 cloud.init({ env: cloud.DYNAMIC_CURRENT_ENV })
 
-// 允许通过本函数修改的字段(白名单,防止协作者改 _openid / ownerOpenid 等)
 const ALLOWED_FIELDS = [
   'name',
   'pax',
@@ -10,7 +9,14 @@ const ALLOWED_FIELDS = [
   'destinations',
   'days',
   'packing',
+  'aiTaskId',
+  'aiStatus',
+  'aiDraft',
+  'aiError',
 ]
+
+// 这些字段只能 owner 改 (协作者不能触发/停止/应用 AI)
+const OWNER_ONLY_FIELDS = new Set(['aiTaskId', 'aiStatus', 'aiDraft', 'aiError'])
 
 exports.main = async (event) => {
   const { OPENID } = cloud.getWXContext()
@@ -32,14 +38,19 @@ exports.main = async (event) => {
     throw new Error('forbidden: not owner or collaborator')
   }
 
-  // 只保留白名单字段
   const cleaned = {}
   for (const k of ALLOWED_FIELDS) {
-    if (patch[k] !== undefined) cleaned[k] = patch[k]
+    if (patch[k] === undefined) continue
+    if (OWNER_ONLY_FIELDS.has(k) && !isOwner) {
+      throw new Error(`forbidden: 协作者不能修改 ${k}`)
+    }
+    cleaned[k] = patch[k]
   }
   cleaned.updatedAt = Date.now()
   cleaned.updatedBy = OPENID
 
+  // aiDraft/aiTaskId/aiStatus/aiError 写 null 是有意的 (清空草稿), 直接 update 走 dot-path 没问题
+  // 因为它们的字段原本就是顶层标量/对象, 不存在嵌套, 不会有上一次"result=null"那种 502001 bug
   await db.collection('trips').doc(tripId).update({ data: cleaned })
   return { ok: true }
 }
