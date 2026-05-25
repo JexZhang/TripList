@@ -5,7 +5,7 @@ const { callChat, MODEL_ALIASES } = require('./lib/llm')
 const { buildMessages, retryPrompt } = require('./lib/prompts')
 const { TOOLS_SCHEMA, executeTool } = require('./lib/tools')
 const { validatePlan } = require('./lib/validate')
-const { createTask, updateTask } = require('./lib/task-store')
+const { createTask, updateTask, getTripLight, finalizeTrip } = require('./lib/task-store')
 
 const MAX_TURNS = 20
 // 软超时: 留给云函数 timeout (600s) 60s buffer, 避免被 SCF 强杀
@@ -112,11 +112,22 @@ async function planMode(event) {
   }
 
   // 2. 同一个 invocation 直接跑完整 loop, 不再 callFunction 派发 worker
-  return await runLoop({ taskId, tripContext, preferences, previousResult, userFeedback })
+  return await runLoop({ taskId, tripId, tripContext, preferences, previousResult, userFeedback })
 }
 
 // ============ runLoop: 多轮 tool calling + 验证 + 写库 ============
-async function runLoop({ taskId, tripContext, preferences, previousResult, userFeedback }) {
+async function runLoop({ taskId, tripId, tripContext, preferences, previousResult, userFeedback }) {
+
+  // 协作式取消: 用户在 trip 上把 aiTaskId 清掉 → 本次任务下一轮 LLM 调用前主动退出, 省 token
+  const checkCancelled = async () => {
+    if (!tripId) return  // 没绑定 trip 的任务无法 cancel (实际新流程下都有 tripId)
+    const t = await getTripLight(tripId)
+    if (!t || t.aiTaskId !== taskId) {
+      const err = new Error('CANCELLED')
+      err.cancelled = true
+      throw err
+    }
+  }
 
   const startTs = Date.now()
   let promptTokens = 0
@@ -167,6 +178,7 @@ async function runLoop({ taskId, tripContext, preferences, previousResult, userF
     let finalContent = null
     for (let turn = 0; turn < MAX_TURNS; turn++) {
       checkSoftTimeout()
+      await checkCancelled()
       turns++
       await traceStep(`turn:${turn + 1}:request`, { messagesCount: messages.length })
 
@@ -241,6 +253,7 @@ async function runLoop({ taskId, tripContext, preferences, previousResult, userF
 
     if (!validation.ok) {
       checkSoftTimeout()
+      await checkCancelled()
       // 重试 1 次, 去掉 tools + 强制 json_object
       messages.push({ role: 'user', content: retryPrompt(validation.error) })
       await traceStep('retry:request', { reason: validation.error })
@@ -264,23 +277,40 @@ async function runLoop({ taskId, tripContext, preferences, previousResult, userF
       }
     }
 
-    // 把生成结果作为 progress 增量(每天独立 update, client 能流式看到)
-    for (let i = 0; i < parsed.days.length; i++) {
-      const partial = { days: parsed.days.slice(0, i + 1) }
-      await updateTask(taskId, { progress: partial })
-    }
-
+    // 1. 写 task done (debug 用)
     const _ = cloud.database().command
     await updateTask(taskId, {
       status: 'done',
-      // 用 _.set() 整体覆盖, 否则 SDK 会翻译成 result.days/result.summary 的 dot-path 写入,
-      // 而初始 result=null 不能创建子字段 -> -502001 "Cannot create field 'days' in element {result: null}"
       result: _.set(parsed),
       meta: { elapsedMs: Date.now() - startTs, promptTokens, completionTokens, turns },
     })
-    return { ok: true }
+
+    // 2. 写 trip 草稿 (前端真正订阅的字段). finalizeTrip 内部会比对 aiTaskId 防覆盖
+    const writeRes = await finalizeTrip(tripId, taskId, {
+      aiStatus: 'ready',
+      aiDraft: _.set(parsed),
+      aiError: null,
+    })
+    if (!writeRes.written) {
+      console.warn('[plan] trip not written:', writeRes.reason)
+    }
+    return { ok: true, tripWritten: writeRes.written }
   } catch (e) {
     const errMsg = e.message || String(e)
+    const cancelled = e && e.cancelled === true
+
+    if (cancelled) {
+      console.warn('[ai-plan-trip run] cancelled by user after', turns, 'turns')
+      try {
+        await updateTask(taskId, {
+          status: 'cancelled',
+          meta: { elapsedMs: Date.now() - startTs, promptTokens, completionTokens, turns },
+        })
+      } catch (_) {}
+      // 不写 trip: 用户已经把 trip.aiTaskId 清成 null 了, finalizeTrip 也会因比对失败而 abort
+      return { ok: false, cancelled: true }
+    }
+
     console.error('[ai-plan-trip run] failed:', errMsg, e.stack)
     try {
       await updateTask(taskId, {
@@ -289,8 +319,18 @@ async function runLoop({ taskId, tripContext, preferences, previousResult, userF
         meta: { elapsedMs: Date.now() - startTs, promptTokens, completionTokens, turns },
       })
     } catch (updErr) {
-      // 关键: 不再静默吞掉. 写库失败也要在日志暴露出来
       console.error('[ai-plan-trip run] updateTask(error) FAILED:', updErr && updErr.message, 'taskId=', taskId)
+    }
+
+    // 写 trip error 状态 (finalizeTrip 内部会 abort 已被超越的写入)
+    try {
+      await finalizeTrip(tripId, taskId, {
+        aiStatus: 'error',
+        aiDraft: null,
+        aiError: errMsg,
+      })
+    } catch (writeErr) {
+      console.error('[ai-plan-trip run] finalizeTrip(error) FAILED:', writeErr && writeErr.message)
     }
     return { ok: false, error: errMsg }
   }
