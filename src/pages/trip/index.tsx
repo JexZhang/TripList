@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from 'react'
+import { useEffect, useState } from 'react'
 import { View, Text, Picker } from '@tarojs/components'
 import Taro, { useRouter, useShareAppMessage } from '@tarojs/taro'
 import { TripProvider, useTripStore } from '../../store/trip-store'
@@ -10,21 +10,16 @@ import CollaboratorsBar from '../../components/CollaboratorsBar'
 import CollaboratorsSheet from '../../components/CollaboratorsSheet'
 import TripActionSheet, { type TripAction } from '../../components/TripActionSheet'
 import ShareTypeSheet from '../../components/ShareTypeSheet'
-import AILoading from '../../components/AILoading'
 import AIPlanForm from '../../components/AIPlanForm'
 import AIPlanPreview from '../../components/AIPlanPreview'
-import AITaskFab from '../../components/AITaskFab'
+import AILoadingBar from '../../components/AILoadingBar'
 import { buildShareMessage, shareRef, resetShareRef } from '../../utils/share'
 import { smartDeleteTrip, renameTrip, copyTripLocally, updateTrip } from '../../utils/db'
 import { isSeedTripId } from '../../data/seed-trips'
 import { mergePlanIntoDays } from '../../utils/trip-helpers'
 import type { ShareKind } from '../../utils/cloud'
-import type { AIPreferences, AITask, GeneratedPlan } from '../../types/trip'
-import {
-  startAITask, watchAITask, getAITask,
-  savePendingTask, loadPendingTask, clearPendingTask,
-  PENDING_TIMEOUT_MS, STREAMING_HEARTBEAT_MS, type TaskWatcher,
-} from '../../utils/ai-task'
+import type { AIPreferences } from '../../types/trip'
+import { startAITask } from '../../utils/ai-task'
 import './index.scss'
 
 type ViewKey = 'itinerary' | 'budget' | 'packing' | 'map'
@@ -47,97 +42,42 @@ function TripBody() {
   const [shareReady, setShareReady] = useState({ readonly: false, collab: false })
   const [collabSheetOpen, setCollabSheetOpen] = useState(false)
 
-  // === AI 相关状态 ===
+  // === AI 草稿流相关 ===
   const [aiFormOpen, setAiFormOpen] = useState(false)
   const [aiPreviewOpen, setAiPreviewOpen] = useState(false)
-  const [aiLoadingOpen, setAiLoadingOpen] = useState(false)
-  const [aiTask, setAiTask] = useState<AITask | null>(null)
-  const [aiPrefs, setAiPrefs] = useState<AIPreferences | null>(null)
-  const [aiElapsed, setAiElapsed] = useState(0)
-  const watcherRef = useRef<TaskWatcher | null>(null)
-  const elapsedTimerRef = useRef<any>(null)
-  const pendingTimerRef = useRef<any>(null)
-  const heartbeatTimerRef = useRef<any>(null)
-  const previewAutoOpenedRef = useRef(false)
-  const [fabVisible, setFabVisible] = useState(false)
-
+  
   const t = state.trip
   const isOwner = t ? t._openid === openid : false
-
+  
   shareRef.tripName = t?.name || ''
-
-  // 注意: 所有 hooks 必须在早返之前. resumeAi/stopWatch 是后面定义的 const arrow,
-  // 但 effect callback 在 render 之后执行, 那时它们已经初始化, 不会触发 TDZ.
+  
+  // 进入 ready 状态首次自动弹 Preview
+  // 注意: 小程序没有 sessionStorage, 用 Taro.getStorageSync (持久 storage), 但 key 含 aiTaskId,
+  // 重新生成会换新 taskId 所以新 task 仍会自动弹一次。应用/舍弃后 aiTaskId 清空, 不再触发。
   useEffect(() => {
-    if (!t) return
-    const rec = loadPendingTask(`trip:${t._id}`)
-    if (rec) resumeAi(rec)
-    return () => stopWatch()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [t?._id])
-
+    if (!t || !isOwner) return
+    if (t.aiStatus !== 'ready') return
+    if (!t.aiTaskId) return
+    const key = `ai-preview-shown:${t._id}:${t.aiTaskId}`
+    try {
+      if (!Taro.getStorageSync(key)) {
+        setAiPreviewOpen(true)
+        Taro.setStorageSync(key, '1')
+      }
+    } catch (_) {}
+  }, [t?._id, t?.aiTaskId, t?.aiStatus, isOwner])
+  
   if (state.loading) return <View className='trip-empty'>加载中...</View>
   if (state.error) return <View className='trip-empty'>{state.error}</View>
   if (!t) return <View className='trip-empty'>未找到攻略</View>
-
-  // === AI 函数 ===
-  const scope = t ? `trip:${t._id}` : ''
-
-  const stopWatch = () => {
-    if (watcherRef.current) { watcherRef.current.close(); watcherRef.current = null }
-    if (elapsedTimerRef.current) { clearInterval(elapsedTimerRef.current); elapsedTimerRef.current = null }
-    if (pendingTimerRef.current) { clearTimeout(pendingTimerRef.current); pendingTimerRef.current = null }
-    if (heartbeatTimerRef.current) { clearInterval(heartbeatTimerRef.current); heartbeatTimerRef.current = null }
-  }
-
-  const onTaskUpdate = (tk: AITask) => {
-    setAiTask(tk)
-    if (!previewAutoOpenedRef.current && tk.progress && tk.progress.days && tk.progress.days.length > 0) {
-      previewAutoOpenedRef.current = true
-      setAiPreviewOpen(true)
-    }
-    if (tk.status === 'done') {
-      stopWatch(); setAiLoadingOpen(false); setAiPreviewOpen(true); setFabVisible(false)
-      if (scope) clearPendingTask(scope)
-    } else if (tk.status === 'error') {
-      stopWatch(); setAiLoadingOpen(false); setFabVisible(false)
-      Taro.showToast({ title: tk.error || 'AI 生成失败', icon: 'none' })
-      if (scope) clearPendingTask(scope)
-    }
-  }
-
-  const startHeartbeat = (taskId: string) => {
-    if (heartbeatTimerRef.current) clearInterval(heartbeatTimerRef.current)
-    heartbeatTimerRef.current = setInterval(() => {
-      setAiTask(prev => {
-        if (!prev) return prev
-        if (prev.status === 'streaming' || prev.status === 'pending') {
-          const last = prev.updatedAt || 0
-          if (last > 0 && Date.now() - last > STREAMING_HEARTBEAT_MS) {
-            console.warn('[ai] streaming heartbeat lost, taskId=', taskId)
-            stopWatch(); setAiLoadingOpen(false); setFabVisible(false)
-            Taro.showToast({ title: '后台无响应, 请重试', icon: 'none' })
-            if (scope) clearPendingTask(scope)
-            return { ...prev, status: 'error', error: '后台无响应' }
-          }
-        }
-        return prev
-      })
-    }, 10_000)
-  }
-
-  const startAi = async (prefs: AIPreferences, previousResult?: GeneratedPlan, userFeedback?: string) => {
-    if (!t) return
-    stopWatch()
-    setAiPrefs(prefs)
-    setAiElapsed(0)
-    setAiTask(null)
-    setAiLoadingOpen(true)
-    setAiPreviewOpen(false)
-    setFabVisible(false)
-    previewAutoOpenedRef.current = false
+  
+  // === AI 行为函数 ===
+  const triggerAiTask = async (prefs: AIPreferences) => {
+    if (!t || !isOwner) return
+    setAiFormOpen(false)
     try {
       const taskId = startAITask({
+        tripId: t._id,
         tripContext: {
           name: t.name,
           destinations: t.destinations,
@@ -146,79 +86,90 @@ function TripBody() {
           pax: t.pax,
         },
         preferences: prefs,
-        tripId: t._id,
-        previousResult,
-        userFeedback,
       })
-      savePendingTask({ taskId, prefs, scope, startedAt: Date.now() })
-
-      elapsedTimerRef.current = setInterval(() => setAiElapsed(e => e + 1), 1000)
-      pendingTimerRef.current = setTimeout(() => {
-        setAiTask(prev => {
-          if (!prev || prev.status === 'pending') {
-            stopWatch(); setAiLoadingOpen(false); setFabVisible(false)
-            Taro.showToast({ title: 'AI 启动超时, 请重试', icon: 'none' })
-            clearPendingTask(scope)
-          }
-          return prev
-        })
-      }, PENDING_TIMEOUT_MS)
-
-      watcherRef.current = watchAITask(taskId, onTaskUpdate)
-      startHeartbeat(taskId)
-    } catch (e: any) {
-      stopWatch(); setAiLoadingOpen(false); setFabVisible(false)
-      clearPendingTask(scope)
-      Taro.showToast({ title: e.message || '启动失败', icon: 'none' })
+      await updateTrip(t._id, {
+        aiTaskId: taskId,
+        aiStatus: 'generating',
+        aiDraft: null,
+        aiError: null,
+      }, openid)
+    } catch (e: unknown) {
+      console.error('[ai trigger]', e)
+      Taro.showToast({ title: 'AI 启动失败', icon: 'none' })
     }
   }
-
-  const resumeAi = async (rec: ReturnType<typeof loadPendingTask>) => {
-    if (!rec || !t) return
-    const tk = await getAITask(rec.taskId)
-    if (!tk) { clearPendingTask(scope); return }
-    if (tk.status === 'done' || tk.status === 'error') {
-      setAiPrefs(rec.prefs); setAiTask(tk)
-      if (tk.status === 'done') setAiPreviewOpen(true)
-      else Taro.showToast({ title: tk.error || 'AI 生成失败', icon: 'none' })
-      clearPendingTask(scope)
-      return
+  
+  const clearAiFields = async () => {
+    if (!t) return
+    await updateTrip(t._id, {
+      aiTaskId: null,
+      aiStatus: null,
+      aiDraft: null,
+      aiError: null,
+    }, openid)
+    dispatch({ type: 'UPDATE_TRIP', patch: { aiTaskId: null, aiStatus: null, aiDraft: null, aiError: null } })
+  }
+  
+  const handleBarTap = async () => {
+    if (!t || !isOwner) return
+    if (t.aiStatus === 'generating') {
+      const res = await Taro.showModal({
+        title: '停止 AI 生成?',
+        content: '已生成的部分会被舍弃, 后台运行的剩余轮次也会终止',
+        confirmText: '停止',
+        confirmColor: '#c43d3d',
+      })
+      if (res.confirm) await clearAiFields()
+    } else if (t.aiStatus === 'ready') {
+      setAiPreviewOpen(true)
+    } else if (t.aiStatus === 'error') {
+      // 重试 = 重新弹 form
+      setAiFormOpen(true)
     }
-    setAiPrefs(rec.prefs); setAiTask(tk)
-    setAiElapsed(Math.floor((Date.now() - rec.startedAt) / 1000))
-    setFabVisible(true)
-    previewAutoOpenedRef.current = (tk.progress && tk.progress.days && tk.progress.days.length > 0) || false
-    elapsedTimerRef.current = setInterval(() => setAiElapsed(e => e + 1), 1000)
-    watcherRef.current = watchAITask(rec.taskId, onTaskUpdate)
-    startHeartbeat(rec.taskId)
   }
-
-  const handleAiOpen = () => { if (isOwner) setAiFormOpen(true) }
-  const handleAiSubmit = (prefs: AIPreferences) => { setAiFormOpen(false); startAi(prefs) }
-  const handleAiRegenerate = (feedback: string) => {
-    if (!aiPrefs || !aiTask || !aiTask.result) return
-    startAi(aiPrefs, aiTask.result, feedback || '请优化方案')
+  
+  const handleAiButtonTap = () => {
+    if (!t || !isOwner) return
+    if (t.aiStatus === null || t.aiStatus === undefined) setAiFormOpen(true)
+    // 否则什么都不做 (用户应该点状态条)
   }
-
-  const handleAiApply = async (selectedDates: string[]) => {
-    if (!t || !aiTask || !aiTask.result) return
-    const confirm = await Taro.showModal({
-      title: `应用 AI 的 ${selectedDates.length} 天?`,
-      content: '将覆盖选中天的现有 spots, 未选中的天保持不变',
-      confirmText: '应用',
-      confirmColor: '#c43d3d',
-    })
-    if (!confirm.confirm) return
+  
+  const handlePreviewApply = async (selectedDates: string[]) => {
+    if (!t || !t.aiDraft) return
     try {
-      const newDays = mergePlanIntoDays(t.days, aiTask.result, selectedDates)
-      await updateTrip(t._id, { days: newDays }, openid)
-      dispatch({ type: 'UPDATE_TRIP', patch: { days: newDays } })
+      const newDays = mergePlanIntoDays(t.days, t.aiDraft, selectedDates)
+      await updateTrip(t._id, {
+        days: newDays,
+        aiTaskId: null,
+        aiStatus: null,
+        aiDraft: null,
+        aiError: null,
+      }, openid)
+      dispatch({ type: 'UPDATE_TRIP', patch: {
+        days: newDays,
+        aiTaskId: null,
+        aiStatus: null,
+        aiDraft: null,
+        aiError: null,
+      } })
       setAiPreviewOpen(false)
       Taro.showToast({ title: '已应用', icon: 'success' })
-    } catch (e: any) {
+    } catch (e: unknown) {
       console.error('[ai apply]', e)
       Taro.showToast({ title: '保存失败', icon: 'none' })
     }
+  }
+  
+  const handlePreviewDiscard = async () => {
+    setAiPreviewOpen(false)
+    await clearAiFields()
+    Taro.showToast({ title: '已舍弃', icon: 'none' })
+  }
+  
+  const handlePreviewRegenerate = () => {
+    // 关 Preview, 弹 Form 让用户重填 preferences. Form submit 会启动新 task 并覆盖 ai* 字段
+    setAiPreviewOpen(false)
+    setAiFormOpen(true)
   }
 
   const handleAction = async (action: TripAction) => {
@@ -300,11 +251,22 @@ function TripBody() {
           <Text className='th-name'>{t.name}</Text>
           <View style={{ display: 'flex', alignItems: 'center' }}>
             {isOwner && (
-              <View className='th-ai-btn' onClick={handleAiOpen}>✨ AI</View>
+              <View
+                className={`th-ai-btn ${t.aiStatus ? 'th-ai-btn-disabled' : ''}`}
+                onClick={handleAiButtonTap}
+              >✨ AI</View>
             )}
             <View className='th-menu' onClick={() => setActionOpen(true)}>⋯</View>
           </View>
         </View>
+        {isOwner && t.aiStatus && (
+          <View className='th-ai-bar'>
+            <AILoadingBar
+              status={t.aiStatus as 'generating' | 'ready' | 'error'}
+              onTap={handleBarTap}
+            />
+          </View>
+        )}
         <View className='th-meta'>
           <Text>
             {t.days[0]?.date || t.startDate} → {t.days[t.days.length - 1]?.date || t.endDate} · {t.days.length || 0} 天 ·{' '}
@@ -369,36 +331,20 @@ function TripBody() {
         onClose={() => setCollabSheetOpen(false)}
       />
 
-      <AIPlanForm open={aiFormOpen} onClose={() => setAiFormOpen(false)} onSubmit={handleAiSubmit} />
-      <AILoading
-        open={aiLoadingOpen}
-        status={aiTask?.status || 'pending'}
-        doneCount={aiTask?.progress?.days?.length || 0}
-        totalDays={t?.days?.length || 0}
-        onClose={() => {
-          setAiLoadingOpen(false)
-          const st = aiTask?.status
-          if (st === 'pending' || st === 'streaming') setFabVisible(true)
-        }}
-        elapsedSec={aiElapsed}
-      />
-      <AITaskFab
-        visible={fabVisible}
-        task={aiTask}
-        elapsedSec={aiElapsed}
-        onTap={() => {
-          setFabVisible(false)
-          if (aiTask?.status === 'done') setAiPreviewOpen(true)
-          else setAiLoadingOpen(true)
-        }}
+      <AIPlanForm
+        open={aiFormOpen}
+        onClose={() => setAiFormOpen(false)}
+        onSubmit={triggerAiTask}
       />
       <AIPlanPreview
         open={aiPreviewOpen}
-        plan={(aiTask?.result || aiTask?.progress) || null}
-        status={aiTask?.status || 'pending'}
-        generating={aiTask?.status === 'streaming' || aiTask?.status === 'pending'}
-        onRegenerate={handleAiRegenerate}
-        onApply={handleAiApply}
+        plan={t.aiDraft || null}
+        status={t.aiStatus === 'ready' ? 'done' : 'pending'}
+        generating={t.aiStatus === 'generating'}
+        existingDays={t.days}
+        onRegenerate={handlePreviewRegenerate}
+        onApply={handlePreviewApply}
+        onDiscard={handlePreviewDiscard}
         onClose={() => setAiPreviewOpen(false)}
       />
     </View>

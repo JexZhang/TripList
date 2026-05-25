@@ -113,3 +113,12 @@
   color: white;
   letter-spacing: 1rpx;
 }
+
+.th-ai-btn-disabled {
+  opacity: 0.4;
+  pointer-events: none;
+}
+
+.th-ai-bar {
+  padding: 16rpx 0 0;
+}
