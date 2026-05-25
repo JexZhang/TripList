@@ -78,6 +78,12 @@ export interface Trip {
   days: Day[]
   packing: PackingItem[]
 
+  // === AI 草稿流字段, 都可空; 老攻略不需要迁移 ===
+  aiTaskId?: string | null
+  aiStatus?: 'generating' | 'ready' | 'error' | null
+  aiDraft?: GeneratedPlan | null
+  aiError?: string | null
+
   createdAt: number
   updatedAt: number
   updatedBy: string
