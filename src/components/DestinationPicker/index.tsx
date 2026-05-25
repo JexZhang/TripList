@@ -101,8 +101,8 @@ export default function DestinationPicker({ value, onChange }: Props) {
               {!loading && results.length === 0 && keyword && (
                 <View className='dp-hint'>未找到，换个关键词</View>
               )}
-              {results.map(r => (
-                <View key={r.adcode || r.name} className='dp-result' onClick={() => add(r)}>
+              {results.map((r, idx) => (
+                <View key={`${r.adcode || 'na'}-${r.name}-${idx}`} className='dp-result' onClick={() => add(r)}>
                   <Text className='dp-result-name'>{r.name}</Text>
                   <Text className='dp-result-addr'>{r.city || r.address}</Text>
                 </View>
