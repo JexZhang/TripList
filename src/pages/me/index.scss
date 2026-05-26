@@ -33,62 +33,6 @@
   margin-bottom: 24rpx;
 }
 
-/* 个人资料 */
-.me-avatar-btn {
-  background: transparent !important;
-  border: none !important;
-  padding: 0 !important;
-  margin: 0 auto 24rpx;
-  display: flex !important;
-  flex-direction: column;
-  align-items: center;
-  line-height: 1;
-}
-.me-avatar-btn::after { border: none !important; }
-.me-avatar {
-  width: 144rpx;
-  height: 144rpx;
-  border-radius: 50%;
-  border: 2rpx solid var(--line-2);
-  background: var(--accent-bg);
-}
-.me-avatar-hint {
-  font-size: 24rpx;
-  color: var(--ink-3);
-  margin-top: 12rpx;
-}
-.me-field { margin: 16rpx 0 24rpx; }
-.me-label {
-  display: block;
-  font-size: 26rpx;
-  color: var(--ink-2);
-  margin-bottom: 12rpx;
-}
-.me-input {
-  width: 100%;
-  height: 80rpx;
-  padding: 0 24rpx;
-  background: var(--accent-bg);
-  border-radius: var(--r-md);
-  font-size: 30rpx;
-  box-sizing: border-box;
-}
-.me-save-btn {
-  height: 88rpx;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: var(--accent);
-  color: #fff;
-  border-radius: var(--r-md);
-  font-size: 30rpx;
-  font-weight: 600;
-  letter-spacing: 4rpx;
-  transition: opacity 0.18s var(--ease-out);
-}
-.me-save-btn:active { opacity: 0.85; }
-.me-save-btn.is-disabled { opacity: 0.5; }
-
 /* 主题选择 */
 .me-theme-grid {
   display: grid;
