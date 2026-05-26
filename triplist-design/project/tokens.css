@@ -1,0 +1,252 @@
+/* ====================================================================
+   行册 · 4 套主题 design tokens
+   每个 .theme-* class 重新声明全部 CSS 变量
+   ==================================================================== */
+
+:root {
+  --ease-out: cubic-bezier(0.22, 0.61, 0.36, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* ===========================
+   THEME · 手紙 TEGAMI (暖橘活力)
+   隐喻：明信片堆叠首页
+=========================== */
+.theme-tegami {
+  --bg: #FFF4E6;
+  --bg-deep: #F4E6CE;
+  --surface: #FFFFFF;
+  --surface-2: #FFF9F1;
+  --ink: #2B1A10;
+  --ink-2: #5A4338;
+  --ink-3: #9B8378;
+  --line: rgba(43,26,16,0.08);
+  --line-2: rgba(43,26,16,0.14);
+
+  --accent: #FF7A2E;
+  --accent-2: #FF9A4D;
+  --accent-soft: #FFD3A8;
+  --accent-bg: #FFEBD6;
+  --coral: #FF5B5B;
+  --leaf: #4FB286;
+  --sun: #FFC247;
+  --plum: #6B46C1;
+
+  --r-xs: 6px;
+  --r-sm: 8px;
+  --r-md: 12px;
+  --r-lg: 16px;
+  --r-xl: 22px;
+  --r-pill: 999px;
+
+  --shadow-sm: 0 2px 7px rgba(255, 122, 46, 0.10);
+  --shadow-md: 0 6px 16px rgba(58, 36, 25, 0.10);
+  --shadow-lg: 0 12px 24px rgba(255, 122, 46, 0.18);
+
+  --font-display: "Noto Serif SC", "Songti SC", "STSong", serif;
+  --font-body: "PingFang SC", "Noto Sans SC", -apple-system, sans-serif;
+  --font-mono: "JetBrains Mono", "SF Mono", ui-monospace, monospace;
+
+  --bg-pattern:
+    radial-gradient(120% 60% at 100% 0%, rgba(255, 154, 77, 0.22) 0%, transparent 55%),
+    radial-gradient(80% 40% at 0% 8%, rgba(255, 194, 71, 0.16) 0%, transparent 60%),
+    var(--bg);
+  --paper-grain: radial-gradient(circle at 25% 35%, rgba(43,26,16,0.018) 0 0.5px, transparent 1px) 0 0/4px 4px,
+                 radial-gradient(circle at 67% 73%, rgba(43,26,16,0.014) 0 0.5px, transparent 1px) 0 0/7px 7px;
+}
+
+/* ===========================
+   THEME · 杂志 MAGAZINE (冷峻编辑感)
+   隐喻：杂志封面首页
+=========================== */
+.theme-magazine {
+  --bg: #F4F0E8;
+  --bg-deep: #E8E2D2;
+  --surface: #FFFFFF;
+  --surface-2: #FAF7EF;
+  --ink: #111111;
+  --ink-2: #3a3936;
+  --ink-3: #80807a;
+  --line: rgba(17,17,17,0.10);
+  --line-2: rgba(17,17,17,0.20);
+
+  --accent: #D62E2E;
+  --accent-2: #FF3B3B;
+  --accent-soft: #FFD9D9;
+  --accent-bg: #FFEFEF;
+  --coral: #D62E2E;
+  --leaf: #2a6b3a;
+  --sun: #C9A227;
+  --plum: #2a2a4a;
+
+  --r-xs: 0px;
+  --r-sm: 0px;
+  --r-md: 2px;
+  --r-lg: 4px;
+  --r-xl: 6px;
+  --r-pill: 999px;
+
+  --shadow-sm: 0 1px 0 rgba(17,17,17,0.10);
+  --shadow-md: 0 4px 0 -2px var(--ink);
+  --shadow-lg: 0 6px 0 -3px var(--ink);
+
+  --font-display: "Playfair Display", "Noto Serif SC", "Songti SC", serif;
+  --font-body: "Helvetica Neue", "PingFang SC", -apple-system, sans-serif;
+  --font-mono: "JetBrains Mono", "SF Mono", ui-monospace, monospace;
+
+  --bg-pattern: var(--bg);
+  --paper-grain: none;
+}
+
+/* ===========================
+   THEME · 明信片 POSTCARD (复古牛皮纸)
+   隐喻：旅行护照首页
+=========================== */
+.theme-postcard {
+  --bg: #EFE6D5;
+  --bg-deep: #D7C4A0;
+  --surface: #FFFCF3;
+  --surface-2: #F5EBD4;
+  --ink: #2B1F0E;
+  --ink-2: #5a4422;
+  --ink-3: #978565;
+  --line: rgba(43,31,14,0.14);
+  --line-2: rgba(43,31,14,0.26);
+
+  --accent: #C13D2F;
+  --accent-2: #E55C44;
+  --accent-soft: #F0BFB6;
+  --accent-bg: #F9E4DD;
+  --coral: #C13D2F;
+  --leaf: #3F6B43;
+  --sun: #D9A93C;
+  --plum: #344B7E;
+
+  --r-xs: 4px;
+  --r-sm: 6px;
+  --r-md: 8px;
+  --r-lg: 10px;
+  --r-xl: 14px;
+  --r-pill: 999px;
+
+  --shadow-sm: 0 1px 3px rgba(43,31,14,0.10);
+  --shadow-md: 0 4px 12px rgba(43,31,14,0.16);
+  --shadow-lg: 0 8px 22px rgba(43,31,14,0.22);
+
+  --font-display: "Noto Serif SC", "Songti SC", "STSong", serif;
+  --font-body: "PingFang SC", "Noto Sans SC", -apple-system, sans-serif;
+  --font-mono: "Courier New", "JetBrains Mono", ui-monospace, monospace;
+
+  --bg-pattern:
+    repeating-linear-gradient(45deg, transparent 0 16px, rgba(43,31,14,0.035) 16px 17px),
+    repeating-linear-gradient(-45deg, transparent 0 16px, rgba(43,31,14,0.025) 16px 17px),
+    linear-gradient(165deg, #efe6d5 0%, #dcc9a5 100%);
+  --paper-grain:
+    radial-gradient(circle at 25% 35%, rgba(43,31,14,0.04) 0 0.5px, transparent 1.2px) 0 0/3px 3px,
+    radial-gradient(circle at 67% 73%, rgba(43,31,14,0.03) 0 0.5px, transparent 1px) 0 0/5px 5px;
+}
+
+/* ===========================
+   THEME · 极简 MINIMAL (清爽留白)
+   隐喻：极简清单首页
+=========================== */
+.theme-minimal {
+  --bg: #FAFAF8;
+  --bg-deep: #F0F0EC;
+  --surface: #FFFFFF;
+  --surface-2: #F7F7F4;
+  --ink: #0F0F0E;
+  --ink-2: #4a4a48;
+  --ink-3: #9a9a96;
+  --line: rgba(15,15,14,0.06);
+  --line-2: rgba(15,15,14,0.12);
+
+  --accent: #2B1A10;
+  --accent-2: #5A4338;
+  --accent-soft: #d8d5cf;
+  --accent-bg: #f2efe9;
+  --coral: #c2473d;
+  --leaf: #5e8a64;
+  --sun: #b8973a;
+  --plum: #5e5466;
+
+  --r-xs: 4px;
+  --r-sm: 6px;
+  --r-md: 10px;
+  --r-lg: 14px;
+  --r-xl: 18px;
+  --r-pill: 999px;
+
+  --shadow-sm: 0 1px 0 rgba(15,15,14,0.04);
+  --shadow-md: 0 1px 3px rgba(15,15,14,0.06);
+  --shadow-lg: 0 4px 14px rgba(15,15,14,0.08);
+
+  --font-display: "PingFang SC", "Noto Sans SC", -apple-system, sans-serif;
+  --font-body: "PingFang SC", "Noto Sans SC", -apple-system, sans-serif;
+  --font-mono: "JetBrains Mono", "SF Mono", ui-monospace, monospace;
+
+  --bg-pattern: var(--bg);
+  --paper-grain: none;
+}
+
+/* ====================================================================
+   全局动画 keyframes
+   ==================================================================== */
+@keyframes page-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+@keyframes slide-up {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes pop-in {
+  0%   { opacity: 0; transform: scale(0.92); }
+  60%  { opacity: 1; transform: scale(1.02); }
+  100% { transform: scale(1); }
+}
+@keyframes sheet-up {
+  from { transform: translateY(100%); }
+  to   { transform: translateY(0); }
+}
+@keyframes shimmer {
+  0%   { transform: translateX(-110%); }
+  100% { transform: translateX(110%); }
+}
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(255,122,46,0.5); }
+  50%      { box-shadow: 0 0 0 8px rgba(255,122,46,0); }
+}
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+@keyframes stamp-down {
+  0% { transform: scale(2) rotate(-20deg); opacity: 0; }
+  60% { transform: scale(0.95) rotate(-12deg); opacity: 1; }
+  100% { transform: scale(1) rotate(-12deg); }
+}
+@keyframes typing-blink {
+  50% { opacity: 0; }
+}
+@keyframes drop-in {
+  from { opacity: 0; transform: translateY(-14px) scale(0.96); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+@keyframes ai-thinking-dots {
+  0%, 80%, 100% { opacity: 0.3; transform: scale(0.9); }
+  40% { opacity: 1; transform: scale(1.1); }
+}
+@keyframes float-y {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-3px); }
+}
+@keyframes pin-bounce {
+  0% { transform: translate(-50%, -100%) scale(0.5); opacity: 0; }
+  60% { transform: translate(-50%, -100%) scale(1.1); opacity: 1; }
+  100% { transform: translate(-50%, -100%) scale(1); }
+}

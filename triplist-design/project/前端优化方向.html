@@ -1,0 +1,2502 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1280">
+<title>行册 · 前端优化方向</title>
+<style>
+  :root {
+    --bg: #FFF4E6;
+    --bg-deep: #F4E6CE;
+    --paper: #FFFCF6;
+    --paper-2: #FFF7EA;
+    --ink: #2B1A10;
+    --ink-2: #5A4338;
+    --ink-3: #9B8378;
+    --line: rgba(43,26,16,0.10);
+    --line-2: rgba(43,26,16,0.18);
+    --accent: #FF7A2E;
+    --accent-2: #FF9A4D;
+    --accent-soft: #FFD3A8;
+    --accent-bg: #FFEBD6;
+    --coral: #FF5B5B;
+    --leaf: #4FB286;
+    --sun: #FFC247;
+    --plum: #6B46C1;
+    --indigo: #2E4DA7;
+
+    --serif: "Noto Serif SC", "Songti SC", "STSong", "SimSun", "Source Han Serif SC", serif;
+    --sans: "PingFang SC", "Noto Sans SC", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    --mono: "JetBrains Mono", "SF Mono", "Fira Code", ui-monospace, monospace;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    font-family: var(--sans);
+    color: var(--ink);
+    overflow-x: hidden;
+    background:
+      radial-gradient(120% 60% at 100% 0%, rgba(255, 154, 77, 0.22) 0%, transparent 55%),
+      radial-gradient(80% 40% at 0% 8%, rgba(255, 194, 71, 0.16) 0%, transparent 60%),
+      var(--bg);
+    background-attachment: fixed;
+    min-height: 100vh;
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* Paper noise overlay */
+  body::before {
+    content: '';
+    position: fixed; inset: 0;
+    background-image:
+      radial-gradient(circle at 13% 27%, rgba(43,26,16,0.025) 0%, transparent 1%),
+      radial-gradient(circle at 67% 81%, rgba(43,26,16,0.02) 0%, transparent 1.2%),
+      radial-gradient(circle at 31% 67%, rgba(43,26,16,0.018) 0%, transparent 0.8%);
+    background-size: 7px 7px, 11px 11px, 9px 9px;
+    pointer-events: none;
+    opacity: 0.7;
+    z-index: 1;
+  }
+
+  .doc {
+    position: relative;
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 72px 64px 120px;
+    z-index: 2;
+  }
+
+  /* ===== Cover ===== */
+  .cover {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr;
+    gap: 56px;
+    align-items: end;
+    padding-bottom: 48px;
+    border-bottom: 1px solid var(--line);
+    margin-bottom: 72px;
+  }
+  .cover-meta {
+    font-family: var(--mono);
+    font-size: 12px;
+    letter-spacing: 2px;
+    color: var(--ink-3);
+    text-transform: uppercase;
+    display: flex;
+    gap: 24px;
+    margin-bottom: 32px;
+  }
+  .cover-meta span:first-child { color: var(--accent); font-weight: 700; }
+  .cover-title {
+    font-family: var(--serif);
+    font-size: 96px;
+    font-weight: 800;
+    letter-spacing: -1px;
+    line-height: 0.95;
+    margin: 0 0 24px;
+    background: linear-gradient(135deg, var(--ink) 0%, var(--accent) 130%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  .cover-title em {
+    font-style: italic;
+    font-weight: 500;
+    color: var(--accent);
+    -webkit-text-fill-color: var(--accent);
+  }
+  .cover-sub {
+    font-family: var(--serif);
+    font-size: 22px;
+    color: var(--ink-2);
+    letter-spacing: 1px;
+    max-width: 540px;
+    line-height: 1.6;
+  }
+  .cover-side {
+    padding-bottom: 12px;
+  }
+  .cover-stat {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--ink-3);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 4px;
+  }
+  .cover-stat-val {
+    font-family: var(--serif);
+    font-size: 56px;
+    font-weight: 700;
+    color: var(--ink);
+    line-height: 1;
+    letter-spacing: -1px;
+  }
+  .cover-stat-row {
+    display: flex;
+    gap: 48px;
+    margin-top: 16px;
+  }
+
+  /* ===== Section header ===== */
+  .section {
+    margin-top: 88px;
+  }
+  .section-head {
+    display: flex;
+    align-items: baseline;
+    gap: 24px;
+    margin-bottom: 48px;
+    padding-bottom: 20px;
+    border-bottom: 2px solid var(--ink);
+  }
+  .section-no {
+    font-family: var(--mono);
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--accent);
+    letter-spacing: 2px;
+  }
+  .section-title {
+    font-family: var(--serif);
+    font-size: 40px;
+    font-weight: 700;
+    margin: 0;
+    letter-spacing: 1px;
+  }
+  .section-cap {
+    margin-left: auto;
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--ink-3);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+
+  /* ===== 现状速记 ===== */
+  .audit {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+  }
+  .audit-card {
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 24px;
+    position: relative;
+  }
+  .audit-tag {
+    display: inline-block;
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 2px;
+    padding: 4px 10px;
+    border-radius: 999px;
+    margin-bottom: 14px;
+  }
+  .audit-tag.good { background: rgba(79,178,134,0.12); color: var(--leaf); }
+  .audit-tag.weak { background: rgba(255,91,91,0.10); color: var(--coral); }
+  .audit-tag.miss { background: var(--accent-bg); color: var(--accent); }
+  .audit-card h4 {
+    margin: 0 0 8px;
+    font-size: 17px;
+    font-weight: 700;
+    color: var(--ink);
+    letter-spacing: 0.5px;
+  }
+  .audit-card p {
+    margin: 0;
+    font-size: 13px;
+    color: var(--ink-2);
+    line-height: 1.6;
+  }
+
+  /* ===== Direction layout ===== */
+  .dirs {
+    display: flex;
+    flex-direction: column;
+    gap: 64px;
+  }
+  .dir {
+    display: grid;
+    grid-template-columns: 240px 1fr 340px;
+    gap: 40px;
+    padding-bottom: 64px;
+    border-bottom: 1px dashed var(--line);
+  }
+  .dir:last-child { border-bottom: none; }
+  .dir.dir--wide-mock {
+    grid-template-columns: 220px 1fr 540px;
+    gap: 32px;
+  }
+
+  .dir-id {
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: 14px;
+    color: var(--accent);
+    letter-spacing: 1px;
+  }
+  .dir-no {
+    font-family: var(--serif);
+    font-size: 88px;
+    font-weight: 800;
+    line-height: 0.9;
+    color: var(--ink);
+    letter-spacing: -2px;
+    margin-top: 4px;
+  }
+  .dir-no .slash {
+    color: var(--accent);
+    font-weight: 500;
+    margin: 0 4px;
+  }
+  .dir-tag {
+    display: inline-block;
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-top: 14px;
+    padding: 5px 10px;
+    background: var(--ink);
+    color: var(--paper);
+    border-radius: 4px;
+  }
+  .dir-tag.user-asked {
+    background: var(--accent);
+    color: white;
+  }
+  .dir-tag.new {
+    background: var(--paper);
+    color: var(--ink);
+    border: 1px solid var(--line-2);
+  }
+  .dir-meta {
+    margin-top: 28px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  .meter {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .meter-label {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--ink-3);
+  }
+  .meter-dots {
+    display: flex;
+    gap: 4px;
+  }
+  .meter-dot {
+    width: 18px;
+    height: 6px;
+    border-radius: 3px;
+    background: var(--line-2);
+  }
+  .meter-dot.on { background: var(--accent); }
+  .meter-dot.on.high { background: var(--coral); }
+  .meter-dot.on.low { background: var(--leaf); }
+
+  .dir-body h3 {
+    font-family: var(--serif);
+    font-size: 36px;
+    font-weight: 700;
+    margin: 0 0 8px;
+    letter-spacing: 0.5px;
+    line-height: 1.15;
+  }
+  .dir-body h3 em {
+    font-style: italic;
+    color: var(--accent);
+  }
+  .dir-deck {
+    font-family: var(--serif);
+    font-size: 18px;
+    color: var(--ink-2);
+    font-style: italic;
+    margin: 0 0 24px;
+    letter-spacing: 0.5px;
+  }
+  .dir-body p {
+    margin: 0 0 18px;
+    font-size: 15px;
+    color: var(--ink);
+    line-height: 1.75;
+    max-width: 560px;
+  }
+  .dir-body p .marker {
+    background: linear-gradient(180deg, transparent 55%, rgba(255,194,71,0.45) 55%);
+    padding: 0 2px;
+  }
+  .dir-body p strong {
+    font-weight: 700;
+    color: var(--accent);
+  }
+  .dir-list {
+    margin: 0 0 18px;
+    padding: 0;
+    list-style: none;
+    counter-reset: i;
+  }
+  .dir-list li {
+    counter-increment: i;
+    position: relative;
+    padding-left: 36px;
+    padding-block: 10px;
+    font-size: 14px;
+    color: var(--ink-2);
+    line-height: 1.6;
+    border-bottom: 1px dotted var(--line);
+  }
+  .dir-list li::before {
+    content: counter(i, decimal-leading-zero);
+    position: absolute;
+    left: 0;
+    top: 12px;
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--accent);
+    letter-spacing: 1px;
+  }
+  .dir-list li b {
+    color: var(--ink);
+    font-weight: 700;
+  }
+
+  .dir-quote {
+    margin-top: 8px;
+    padding: 16px 20px;
+    background: var(--paper-2);
+    border-left: 3px solid var(--accent);
+    border-radius: 0 8px 8px 0;
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: 14px;
+    color: var(--ink-2);
+    line-height: 1.6;
+  }
+  .dir-quote span {
+    display: block;
+    margin-top: 6px;
+    font-family: var(--mono);
+    font-style: normal;
+    font-size: 11px;
+    color: var(--ink-3);
+    letter-spacing: 1.5px;
+  }
+
+  /* ===== Phone mockups ===== */
+  .mock-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    align-items: center;
+  }
+  .mock-row {
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+  }
+  .phone {
+    width: 200px;
+    height: 360px;
+    background: var(--paper);
+    border-radius: 26px;
+    border: 1px solid var(--line-2);
+    padding: 12px 10px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 18px 40px rgba(58,36,25,0.14), 0 4px 8px rgba(58,36,25,0.06);
+    flex-shrink: 0;
+  }
+  .phone.small {
+    width: 150px;
+    height: 270px;
+    border-radius: 20px;
+    padding: 9px 8px;
+  }
+  .phone-notch {
+    position: absolute;
+    top: 6px; left: 50%;
+    transform: translateX(-50%);
+    width: 38px; height: 5px;
+    border-radius: 999px;
+    background: rgba(43,26,16,0.15);
+  }
+  .phone-status {
+    display: flex;
+    justify-content: space-between;
+    font-family: var(--mono);
+    font-size: 7px;
+    color: var(--ink-3);
+    padding: 0 6px 6px;
+    letter-spacing: 0.5px;
+  }
+  .phone-label {
+    text-align: center;
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--ink-3);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-top: 8px;
+  }
+  .phone-label b {
+    color: var(--ink);
+    font-weight: 700;
+  }
+
+  /* phone tokens */
+  .p-bg-tegami { background: linear-gradient(165deg, #FFF4E6 0%, #FFE9D1 100%); }
+  .p-bg-magazine { background: #F7F4EE; }
+  .p-bg-postcard { background: linear-gradient(165deg, #EFE6D5 0%, #DCC9A5 100%); }
+  .p-bg-minimal { background: #FAFAF8; }
+  .p-bg-night { background: linear-gradient(165deg, #1f1812 0%, #2b1a10 100%); }
+
+  .pf {
+    position: absolute;
+    inset: 22px 12px 12px;
+  }
+
+  /* Generic chips/lines */
+  .ln { height: 5px; border-radius: 3px; background: var(--ink); opacity: 0.85; }
+  .ln.s { height: 4px; opacity: 0.5; }
+  .ln.xs { height: 3px; opacity: 0.35; }
+  .ln.acc { background: var(--accent); opacity: 1; }
+  .pill {
+    display: inline-block;
+    height: 11px;
+    border-radius: 999px;
+    background: var(--accent-bg);
+    padding: 0 6px;
+    line-height: 11px;
+    font-size: 6px;
+    color: var(--accent);
+    font-weight: 700;
+  }
+
+  /* ===== Direction 1: themes ===== */
+  .theme-tiles {
+    position: absolute;
+    inset: 22px 12px 12px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+  .theme-tile {
+    border-radius: 12px;
+    padding: 10px;
+    position: relative;
+    overflow: hidden;
+    border: 1px solid var(--line);
+  }
+  .theme-tile.tegami { background: linear-gradient(160deg, #FFF4E6, #FFD3A8); }
+  .theme-tile.magazine { background: #F4EFE3; }
+  .theme-tile.postcard { background: linear-gradient(160deg, #ddc7a3, #b89d6e); }
+  .theme-tile.minimal { background: #F8F8F6; }
+  .theme-name {
+    font-family: var(--serif);
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--ink);
+    margin-bottom: 4px;
+  }
+  .theme-tile.tegami .theme-name { color: #c43d18; }
+  .theme-tile.postcard .theme-name { color: #2b1a10; }
+  .theme-sample {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .theme-tile.tegami .theme-sample div { background: rgba(255,122,46,0.85); }
+  .theme-tile.magazine .theme-sample div { background: #2b1a10; }
+  .theme-tile.postcard .theme-sample div { background: #fffaf0; }
+  .theme-tile.minimal .theme-sample div { background: #2b1a10; }
+  .theme-sample div { height: 3px; border-radius: 2px; }
+  .theme-sample div:nth-child(2) { width: 70%; opacity: 0.7; }
+  .theme-sample div:nth-child(3) { width: 50%; opacity: 0.5; }
+  .theme-checked {
+    position: absolute;
+    top: 6px; right: 6px;
+    width: 12px; height: 12px;
+    border-radius: 50%;
+    background: var(--accent);
+    color: white;
+    font-size: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 700;
+  }
+  .theme-switcher-bar {
+    position: absolute;
+    bottom: 10px; left: 12px; right: 12px;
+    background: var(--ink);
+    color: var(--paper);
+    border-radius: 999px;
+    padding: 6px 10px;
+    font-family: var(--mono);
+    font-size: 7px;
+    letter-spacing: 1.5px;
+    text-align: center;
+    text-transform: uppercase;
+  }
+  .theme-current-head {
+    position: absolute;
+    top: 22px; left: 12px; right: 12px;
+    font-family: var(--mono);
+    font-size: 8px;
+    color: var(--ink-3);
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    text-align: center;
+  }
+
+  /* ===== Direction 2: AI animation storyboard ===== */
+  .storyboard {
+    display: flex;
+    gap: 10px;
+    align-items: stretch;
+  }
+  .frame {
+    flex: 1;
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 12px;
+    position: relative;
+    min-height: 200px;
+  }
+  .frame-no {
+    position: absolute;
+    top: 6px; right: 8px;
+    font-family: var(--mono);
+    font-size: 9px;
+    color: var(--ink-3);
+    letter-spacing: 1px;
+  }
+  .frame-cap {
+    font-family: var(--mono);
+    font-size: 9px;
+    color: var(--ink-3);
+    letter-spacing: 1px;
+    margin-top: 8px;
+    text-transform: uppercase;
+  }
+
+  /* AI think bubble in phone */
+  .ai-think {
+    background: linear-gradient(135deg, var(--plum), var(--accent));
+    color: white;
+    border-radius: 10px;
+    padding: 8px;
+    font-size: 7px;
+    line-height: 1.4;
+    position: relative;
+    overflow: hidden;
+  }
+  .ai-think::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(110deg, transparent 30%, rgba(255,255,255,0.3) 50%, transparent 70%);
+    animation: shimmer 2s linear infinite;
+  }
+  @keyframes shimmer {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
+  }
+  .ai-step {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-family: var(--mono);
+    font-size: 7px;
+    color: var(--ink-2);
+    padding: 3px 0;
+  }
+  .ai-step .dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--accent);
+  }
+  .ai-step.done .dot { background: var(--leaf); }
+  .ai-step.todo .dot { background: var(--line-2); }
+  .ai-step.now .dot {
+    animation: pulse-dot 1.2s ease-in-out infinite;
+  }
+  @keyframes pulse-dot {
+    0%, 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255,122,46,0.5); }
+    50% { transform: scale(1.3); box-shadow: 0 0 0 4px rgba(255,122,46,0); }
+  }
+  .typing {
+    display: inline-block;
+    width: 2px; height: 8px;
+    background: var(--accent);
+    animation: blink 0.7s infinite;
+    vertical-align: middle;
+    margin-left: 1px;
+  }
+  @keyframes blink {
+    50% { opacity: 0; }
+  }
+
+  /* timeline drop animation */
+  .timeline-drop {
+    position: relative;
+    padding-left: 14px;
+    border-left: 2px dotted var(--accent);
+    margin-left: 6px;
+  }
+  .timeline-item {
+    position: relative;
+    margin: 6px 0;
+    padding: 5px 8px;
+    background: var(--paper-2);
+    border-radius: 6px;
+    font-size: 7px;
+    color: var(--ink);
+    font-weight: 600;
+    box-shadow: 0 2px 4px rgba(58,36,25,0.06);
+  }
+  .timeline-item::before {
+    content: '';
+    position: absolute;
+    left: -18px;
+    top: 6px;
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--accent);
+    border: 2px solid var(--paper);
+  }
+  .timeline-item.ghost {
+    opacity: 0.25;
+    background: transparent;
+    border: 1px dashed var(--line-2);
+    box-shadow: none;
+  }
+  .timeline-item.in {
+    animation: drop-in 0.6s var(--ease-spring, cubic-bezier(0.34,1.56,0.64,1)) both;
+  }
+
+  /* ===== Direction 3: Icons ===== */
+  .icon-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+  }
+  .icon-cell {
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 14px 8px 10px;
+    text-align: center;
+  }
+  .icon-cell.before { opacity: 0.6; }
+  .icon-glyph {
+    font-size: 28px;
+    line-height: 1;
+    margin-bottom: 8px;
+    display: block;
+  }
+  .icon-name {
+    font-family: var(--mono);
+    font-size: 8px;
+    color: var(--ink-3);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+  .icon-cell.after .icon-name { color: var(--accent); font-weight: 700; }
+
+  /* Custom SVG icons */
+  .ico-svg {
+    width: 32px; height: 32px;
+    margin: 0 auto 6px;
+    display: block;
+  }
+  .ico-svg path, .ico-svg circle, .ico-svg rect, .ico-svg line {
+    stroke: var(--ink);
+    stroke-width: 1.6;
+    fill: none;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+  .ico-svg .fill { fill: var(--accent-soft); stroke: none; }
+
+  /* ===== Direction 4: Home redesigns ===== */
+  /* layout A: postcard stack */
+  .home-postcard {
+    position: absolute;
+    inset: 22px 12px 12px;
+  }
+  .pc-card {
+    position: absolute;
+    width: 90%;
+    height: 80px;
+    border-radius: 10px;
+    background: var(--paper);
+    border: 1px solid var(--line);
+    padding: 10px;
+    box-shadow: 0 6px 14px rgba(58,36,25,0.12);
+  }
+  .pc-card.c1 {
+    left: 5%; top: 8px;
+    transform: rotate(-2deg);
+    background: linear-gradient(135deg, #fff, #ffe9d1);
+  }
+  .pc-card.c2 {
+    left: 5%; top: 64px;
+    transform: rotate(1.5deg);
+    background: linear-gradient(135deg, #ffe9d1, #ffd3a8);
+  }
+  .pc-card.c3 {
+    left: 5%; top: 120px;
+    transform: rotate(-1deg);
+    background: linear-gradient(135deg, #fff7ea, #ffeac8);
+  }
+  .pc-stamp {
+    position: absolute;
+    top: 6px; right: 6px;
+    width: 16px; height: 16px;
+    border: 2px dashed var(--accent);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--accent);
+    font-family: var(--serif);
+    font-size: 9px;
+    font-weight: 700;
+    background: rgba(255,255,255,0.6);
+  }
+  .pc-title-l {
+    font-family: var(--serif);
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--ink);
+    margin-bottom: 4px;
+  }
+  .pc-meta-l {
+    font-family: var(--mono);
+    font-size: 6px;
+    color: var(--ink-3);
+    letter-spacing: 0.5px;
+  }
+  .pc-dots {
+    display: flex;
+    gap: 3px;
+    margin-top: 5px;
+  }
+  .pc-dots span {
+    width: 14px; height: 4px;
+    border-radius: 2px;
+    background: var(--accent);
+    opacity: 0.75;
+  }
+
+  /* Layout B: passport */
+  .passport {
+    position: absolute;
+    inset: 22px 12px 12px;
+    background:
+      repeating-linear-gradient(45deg, transparent 0 18px, rgba(43,26,16,0.04) 18px 19px),
+      linear-gradient(165deg, #f4e6ce, #e0c89f);
+    border-radius: 12px;
+    padding: 12px 10px;
+  }
+  .passport-head {
+    text-align: center;
+    border-bottom: 2px solid var(--ink);
+    padding-bottom: 6px;
+    margin-bottom: 8px;
+  }
+  .passport-head .l1 {
+    font-family: var(--serif);
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 3px;
+    color: var(--ink);
+  }
+  .passport-head .l2 {
+    font-family: var(--mono);
+    font-size: 6px;
+    color: var(--ink-2);
+    letter-spacing: 1px;
+  }
+  .stamp {
+    position: absolute;
+    width: 50px; height: 50px;
+    border: 2px solid var(--accent);
+    border-radius: 50%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    transform: rotate(-12deg);
+    color: var(--accent);
+    font-family: var(--serif);
+    font-size: 9px;
+    font-weight: 700;
+    background: rgba(255,255,255,0.3);
+    text-align: center;
+    line-height: 1.05;
+  }
+  .stamp.s2 {
+    transform: rotate(8deg);
+    border-color: var(--indigo);
+    color: var(--indigo);
+  }
+  .stamp.s3 {
+    transform: rotate(-4deg);
+    border-color: var(--leaf);
+    color: var(--leaf);
+  }
+  .stamp .num { font-size: 7px; opacity: 0.7; font-family: var(--mono); margin-top: 1px; }
+
+  /* Layout C: map */
+  .home-map {
+    position: absolute;
+    inset: 22px 12px 12px;
+    background:
+      radial-gradient(circle at 30% 40%, #cfd9e3 0%, transparent 30%),
+      radial-gradient(circle at 70% 65%, #cfd9e3 0%, transparent 30%),
+      #e8e0cd;
+    border-radius: 12px;
+    overflow: hidden;
+  }
+  .map-line {
+    position: absolute;
+    height: 1px;
+    background: rgba(43,26,16,0.15);
+  }
+  .map-pin {
+    position: absolute;
+    width: 14px; height: 14px;
+    background: var(--accent);
+    border-radius: 50% 50% 50% 0;
+    transform: rotate(-45deg);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+  }
+  .map-pin::after {
+    content: '';
+    position: absolute;
+    inset: 4px;
+    background: white;
+    border-radius: 50%;
+  }
+  .map-card-pop {
+    position: absolute;
+    bottom: 12px; left: 12px; right: 12px;
+    background: white;
+    border-radius: 10px;
+    padding: 10px;
+    box-shadow: 0 6px 14px rgba(0,0,0,0.12);
+  }
+
+  /* ===== Direction 5: Lifecycle ===== */
+  .lc-phase {
+    position: absolute;
+    top: 6px; left: 12px;
+    font-family: var(--mono);
+    font-size: 8px;
+    letter-spacing: 1.5px;
+    color: var(--accent);
+    text-transform: uppercase;
+    font-weight: 700;
+  }
+  .countdown-big {
+    text-align: center;
+    margin-top: 32px;
+  }
+  .countdown-big .num {
+    font-family: var(--serif);
+    font-size: 60px;
+    font-weight: 800;
+    line-height: 1;
+    color: var(--accent);
+  }
+  .countdown-big .lbl {
+    font-family: var(--mono);
+    font-size: 8px;
+    color: var(--ink-3);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-top: 4px;
+  }
+  .live-now {
+    background: var(--ink);
+    color: white;
+    border-radius: 10px;
+    padding: 10px;
+    margin-top: 28px;
+  }
+  .live-now .lbl {
+    font-family: var(--mono);
+    font-size: 7px;
+    color: var(--accent-2);
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+  }
+  .live-now .name {
+    font-family: var(--serif);
+    font-size: 13px;
+    font-weight: 700;
+    margin-top: 3px;
+  }
+  .live-now .meta {
+    font-family: var(--mono);
+    font-size: 7px;
+    color: rgba(255,255,255,0.6);
+    margin-top: 4px;
+  }
+  .live-next {
+    border: 1px dashed var(--line-2);
+    border-radius: 10px;
+    padding: 8px;
+    margin-top: 10px;
+    font-size: 8px;
+    color: var(--ink-2);
+  }
+  .live-next b { color: var(--ink); font-weight: 700; }
+  .recap-cover {
+    margin-top: 26px;
+    background: linear-gradient(135deg, var(--accent), var(--coral));
+    border-radius: 10px;
+    padding: 14px 10px;
+    color: white;
+    text-align: center;
+  }
+  .recap-cover .yr {
+    font-family: var(--serif);
+    font-size: 28px;
+    font-weight: 800;
+    line-height: 1;
+  }
+  .recap-cover .ttl {
+    font-family: var(--mono);
+    font-size: 7px;
+    letter-spacing: 2px;
+    margin-top: 4px;
+    text-transform: uppercase;
+  }
+  .recap-stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px;
+    margin-top: 10px;
+  }
+  .recap-stat {
+    background: rgba(255,255,255,0.15);
+    border-radius: 6px;
+    padding: 6px;
+  }
+  .recap-stat .v { font-family: var(--serif); font-size: 14px; font-weight: 700; }
+  .recap-stat .l { font-family: var(--mono); font-size: 6px; opacity: 0.8; letter-spacing: 0.5px; }
+
+  /* ===== Direction 6: nav ===== */
+  .tabbar {
+    position: absolute;
+    left: 12px; right: 12px;
+    bottom: 12px;
+    background: var(--paper);
+    border-radius: 18px;
+    padding: 8px 6px;
+    display: flex;
+    justify-content: space-around;
+    box-shadow: 0 6px 18px rgba(58,36,25,0.10);
+    border: 1px solid var(--line);
+  }
+  .tabbar-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3px;
+    flex: 1;
+  }
+  .tabbar-item .ico {
+    width: 16px; height: 16px;
+  }
+  .tabbar-item .lb {
+    font-family: var(--mono);
+    font-size: 6px;
+    color: var(--ink-3);
+    letter-spacing: 0.5px;
+  }
+  .tabbar-item.on .lb { color: var(--accent); font-weight: 700; }
+  .tabbar-item.on::before {
+    content: '';
+    position: absolute;
+    top: -10px;
+    width: 24px; height: 3px;
+    background: var(--accent);
+    border-radius: 0 0 3px 3px;
+  }
+  .tabbar-item { position: relative; }
+  .fab {
+    position: absolute;
+    right: 14px;
+    bottom: 70px;
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--accent), var(--coral));
+    color: white;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px;
+    font-weight: 300;
+    box-shadow: 0 8px 20px rgba(255,122,46,0.40);
+  }
+
+  /* ===== Direction 7: budget viz ===== */
+  .donut-wrap {
+    position: absolute;
+    inset: 22px 12px 12px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 14px;
+  }
+  .donut {
+    width: 110px; height: 110px;
+    border-radius: 50%;
+    background: conic-gradient(
+      var(--accent) 0deg 130deg,
+      var(--coral) 130deg 200deg,
+      var(--sun) 200deg 280deg,
+      var(--leaf) 280deg 360deg
+    );
+    position: relative;
+  }
+  .donut::after {
+    content: '';
+    position: absolute;
+    inset: 22px;
+    background: var(--paper);
+    border-radius: 50%;
+  }
+  .donut-center {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 1;
+  }
+  .donut-center .v {
+    font-family: var(--serif);
+    font-size: 18px;
+    font-weight: 800;
+    color: var(--ink);
+  }
+  .donut-center .l {
+    font-family: var(--mono);
+    font-size: 6px;
+    color: var(--ink-3);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+  .donut-legend {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4px 10px;
+    margin-top: 16px;
+    width: 100%;
+    padding: 0 8px;
+  }
+  .dl-row {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 7px;
+    color: var(--ink-2);
+  }
+  .dl-row .sw {
+    width: 8px; height: 8px;
+    border-radius: 2px;
+  }
+  .dl-row .v {
+    margin-left: auto;
+    font-family: var(--mono);
+    font-weight: 700;
+    color: var(--ink);
+  }
+
+  /* ===== Direction 8: micro / texture ===== */
+  .texture-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+  }
+  .tex-tile {
+    aspect-ratio: 1.4;
+    border-radius: 10px;
+    border: 1px solid var(--line);
+    padding: 10px;
+    background: var(--paper);
+    position: relative;
+    overflow: hidden;
+  }
+  .tex-tile .tx-name {
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 1px;
+    color: var(--ink-3);
+    text-transform: uppercase;
+  }
+  .tex-paper {
+    background:
+      repeating-linear-gradient(0deg, rgba(43,26,16,0.03) 0 1px, transparent 1px 4px),
+      var(--paper);
+  }
+  .tex-grid {
+    background:
+      linear-gradient(90deg, rgba(43,26,16,0.06) 1px, transparent 1px) 0 0/22px 22px,
+      linear-gradient(0deg, rgba(43,26,16,0.06) 1px, transparent 1px) 0 0/22px 22px,
+      var(--paper);
+  }
+  .tex-stamp {
+    background:
+      radial-gradient(circle at 50% 50%, transparent 14px, rgba(255,91,91,0.08) 14px 16px, transparent 16px),
+      var(--paper);
+  }
+  .tex-stamp::after {
+    content: 'PARIS';
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--serif);
+    font-weight: 800;
+    color: rgba(255,91,91,0.6);
+    font-size: 14px;
+    letter-spacing: 2px;
+    border: 2px solid rgba(255,91,91,0.4);
+    border-radius: 50%;
+    width: 56px; height: 56px;
+    margin: auto;
+    transform: rotate(-8deg);
+  }
+  .tex-stamp { display: flex; align-items: flex-end; }
+
+  .micro-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+  }
+  .micro-cell {
+    aspect-ratio: 1.3;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    background: var(--paper);
+    padding: 10px;
+    position: relative;
+    overflow: hidden;
+  }
+  .micro-name {
+    font-family: var(--mono);
+    font-size: 8px;
+    color: var(--ink-3);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+
+  /* skeleton */
+  .sk-line {
+    height: 6px;
+    border-radius: 3px;
+    background: linear-gradient(90deg, var(--accent-bg) 0%, #FFF7EA 50%, var(--accent-bg) 100%);
+    background-size: 200% 100%;
+    animation: skel 1.4s linear infinite;
+    margin-top: 8px;
+  }
+  @keyframes skel {
+    0% { background-position: 100% 0; }
+    100% { background-position: -100% 0; }
+  }
+
+  /* pull refresh */
+  .pull-circle {
+    width: 24px; height: 24px;
+    border: 2px solid var(--accent);
+    border-top-color: transparent;
+    border-radius: 50%;
+    margin: 16px auto 4px;
+    animation: spin 1.2s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .pull-cap {
+    font-family: var(--mono);
+    font-size: 8px;
+    color: var(--ink-3);
+    text-align: center;
+    letter-spacing: 1px;
+  }
+
+  /* haptic ripple */
+  .haptic {
+    width: 30px; height: 30px;
+    background: var(--accent);
+    border-radius: 50%;
+    margin: 18px auto 0;
+    position: relative;
+  }
+  .haptic::before, .haptic::after {
+    content: '';
+    position: absolute;
+    inset: -8px;
+    border: 2px solid var(--accent);
+    border-radius: 50%;
+    opacity: 0.5;
+    animation: ripple 1.6s ease-out infinite;
+  }
+  .haptic::after {
+    animation-delay: 0.8s;
+  }
+  @keyframes ripple {
+    0% { transform: scale(0.6); opacity: 0.6; }
+    100% { transform: scale(2); opacity: 0; }
+  }
+
+  /* drag handle */
+  .drag-card {
+    background: var(--accent-bg);
+    border-radius: 8px;
+    padding: 6px 8px;
+    margin: 6px 0;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 7px;
+    color: var(--ink);
+    font-weight: 600;
+    transform: rotate(-1.5deg);
+    box-shadow: 0 4px 12px rgba(255,122,46,0.20);
+  }
+  .drag-handle {
+    color: var(--ink-3);
+    font-family: var(--mono);
+    font-size: 10px;
+  }
+  .drag-ghost {
+    height: 16px;
+    background: transparent;
+    border: 1px dashed var(--accent);
+    border-radius: 8px;
+    margin: 2px 0;
+  }
+
+  /* ===== Direction 9: Share poster ===== */
+  .poster {
+    width: 200px;
+    height: 280px;
+    background: linear-gradient(165deg, #2b1a10 0%, #5a2912 50%, #ff7a2e 100%);
+    border-radius: 14px;
+    padding: 18px;
+    color: white;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 16px 36px rgba(58,36,25,0.20);
+  }
+  .poster::before {
+    content: '';
+    position: absolute;
+    top: -40px; right: -40px;
+    width: 120px; height: 120px;
+    border-radius: 50%;
+    background: radial-gradient(circle, #FFC247, transparent 70%);
+  }
+  .poster-brand {
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 3px;
+    opacity: 0.7;
+  }
+  .poster-name {
+    font-family: var(--serif);
+    font-size: 22px;
+    font-weight: 800;
+    margin-top: 6px;
+    line-height: 1.1;
+  }
+  .poster-sub {
+    font-family: var(--mono);
+    font-size: 8px;
+    margin-top: 6px;
+    opacity: 0.7;
+    letter-spacing: 1px;
+  }
+  .poster-stat-row {
+    position: absolute;
+    bottom: 50px;
+    left: 18px; right: 18px;
+    display: flex;
+    justify-content: space-between;
+    border-top: 1px solid rgba(255,255,255,0.25);
+    border-bottom: 1px solid rgba(255,255,255,0.25);
+    padding: 8px 0;
+  }
+  .poster-stat .v {
+    font-family: var(--serif);
+    font-size: 16px;
+    font-weight: 700;
+  }
+  .poster-stat .l {
+    font-family: var(--mono);
+    font-size: 6px;
+    opacity: 0.7;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+  .poster-qr {
+    position: absolute;
+    bottom: 14px;
+    right: 14px;
+    width: 28px; height: 28px;
+    background:
+      linear-gradient(45deg, white 25%, transparent 25%, transparent 75%, white 75%),
+      linear-gradient(45deg, white 25%, transparent 25%, transparent 75%, white 75%) 4px 4px,
+      #2b1a10;
+    background-size: 8px 8px;
+    border-radius: 4px;
+  }
+  .poster-tag-text {
+    position: absolute;
+    bottom: 18px;
+    left: 18px;
+    font-family: var(--mono);
+    font-size: 7px;
+    letter-spacing: 1.5px;
+    opacity: 0.7;
+  }
+
+  /* ===== Direction 10: Onboarding ===== */
+  .ob-step {
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 10px;
+    margin-bottom: 8px;
+    display: flex;
+    gap: 8px;
+    align-items: center;
+  }
+  .ob-step .n {
+    width: 18px; height: 18px;
+    border-radius: 50%;
+    background: var(--accent);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--mono);
+    font-size: 8px;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+  .ob-step.todo .n { background: var(--line-2); color: var(--ink-3); }
+  .ob-step .lb {
+    font-size: 8px;
+    color: var(--ink);
+    line-height: 1.4;
+  }
+  .ob-q {
+    background: linear-gradient(135deg, var(--plum), var(--accent));
+    color: white;
+    padding: 10px 12px;
+    border-radius: 12px 12px 12px 4px;
+    font-size: 9px;
+    line-height: 1.4;
+    margin: 12px 12px 6px 12px;
+    max-width: 80%;
+    font-weight: 500;
+  }
+  .ob-a {
+    background: var(--paper-2);
+    color: var(--ink);
+    padding: 8px 12px;
+    border-radius: 12px 12px 4px 12px;
+    font-size: 9px;
+    line-height: 1.4;
+    margin: 6px 12px 6px auto;
+    max-width: 75%;
+    text-align: right;
+    border: 1px solid var(--line);
+  }
+  .ob-chips {
+    display: flex;
+    gap: 4px;
+    flex-wrap: wrap;
+    margin: 6px 12px;
+  }
+  .ob-chips .ch {
+    padding: 4px 8px;
+    background: var(--paper);
+    border: 1px solid var(--line-2);
+    border-radius: 999px;
+    font-size: 7px;
+    color: var(--ink-2);
+  }
+  .ob-chips .ch.on {
+    background: var(--accent);
+    color: white;
+    border-color: var(--accent);
+    font-weight: 700;
+  }
+
+  /* ===== Priority matrix ===== */
+  .matrix {
+    position: relative;
+    height: 480px;
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    padding: 36px;
+    overflow: hidden;
+  }
+  .matrix-axis-x, .matrix-axis-y {
+    position: absolute;
+    color: var(--ink-3);
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+  .matrix-axis-x { bottom: 8px; left: 50%; transform: translateX(-50%); }
+  .matrix-axis-y { left: 8px; top: 50%; transform: translate(-50%, -50%) rotate(-90deg); transform-origin: center; }
+  .matrix-grid {
+    position: absolute;
+    inset: 36px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+  }
+  .matrix-q {
+    border: 1px dashed var(--line);
+    position: relative;
+    padding: 12px;
+  }
+  .matrix-q-name {
+    position: absolute;
+    top: 8px; left: 12px;
+    font-family: var(--serif);
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--ink-3);
+    letter-spacing: 1px;
+  }
+  .mq-tl { background: rgba(255,194,71,0.10); }
+  .mq-tr { background: rgba(79,178,134,0.12); }
+  .mq-bl { background: rgba(155,131,120,0.06); }
+  .mq-br { background: rgba(255,122,46,0.08); }
+
+  .pin {
+    position: absolute;
+    transform: translate(-50%, -50%);
+    background: var(--ink);
+    color: white;
+    padding: 6px 12px;
+    border-radius: 999px;
+    font-family: var(--mono);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    box-shadow: 0 4px 12px rgba(58,36,25,0.20);
+    white-space: nowrap;
+  }
+  .pin.now {
+    background: var(--accent);
+    box-shadow: 0 4px 14px rgba(255,122,46,0.40);
+  }
+  .pin.next {
+    background: var(--paper);
+    color: var(--ink);
+    border: 2px solid var(--accent);
+    box-shadow: 0 4px 14px rgba(255,122,46,0.20);
+  }
+  .pin.later {
+    background: var(--paper);
+    color: var(--ink-2);
+    border: 1px dashed var(--ink-3);
+    box-shadow: none;
+  }
+
+  /* ===== Footer ===== */
+  .footer {
+    margin-top: 100px;
+    padding-top: 32px;
+    border-top: 1px solid var(--line);
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--ink-3);
+    letter-spacing: 1.5px;
+    display: flex;
+    justify-content: space-between;
+  }
+  .footer b { color: var(--accent); font-weight: 700; }
+
+</style>
+</head>
+<body>
+<div class="doc">
+
+  <!-- ============= COVER ============= -->
+  <section class="cover" data-screen-label="01 Cover">
+    <div>
+      <div class="cover-meta">
+        <span>行册 · 设计研讨</span>
+        <span>提案 / DIRECTIONS</span>
+        <span>2026 · 春</span>
+      </div>
+      <h1 class="cover-title">前端优化的<br><em>十个方向</em></h1>
+      <p class="cover-sub">在你提的 5 个之上，再延伸 5 个我觉得对"行册"这个产品本身（旅行 × 杂志 × AI）特别有杠杆的方向。每个方向都配示意图、影响力评估和实现成本，最后给一个推荐优先级矩阵。</p>
+    </div>
+    <div class="cover-side">
+      <div class="cover-stat-row">
+        <div>
+          <div class="cover-stat">Directions</div>
+          <div class="cover-stat-val">10</div>
+        </div>
+        <div>
+          <div class="cover-stat">从用户</div>
+          <div class="cover-stat-val">5</div>
+        </div>
+        <div>
+          <div class="cover-stat">新增</div>
+          <div class="cover-stat-val" style="color: var(--accent)">5</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============= 现状速记 ============= -->
+  <section class="section" data-screen-label="02 Audit">
+    <div class="section-head">
+      <span class="section-no">§ 00</span>
+      <h2 class="section-title">现状速记</h2>
+      <span class="section-cap">AUDIT · 4 OBSERVATIONS</span>
+    </div>
+
+    <div class="audit">
+      <div class="audit-card">
+        <span class="audit-tag good">已经做得好的</span>
+        <h4>设计 token 体系完整</h4>
+        <p>暖橘色系 + 衬线/无衬线/等宽三套字体 + 完整动效缓动曲线，token 命名清晰、有"杂志感"基础。</p>
+      </div>
+      <div class="audit-card">
+        <span class="audit-tag miss">承诺没兑现</span>
+        <h4>4 主题只有 1 个</h4>
+        <p>README 说有"手紙/杂志/明信片/极简"四套，代码里只有 <code style="font-family:var(--mono);font-size:11px">.theme-tegami</code>，其它三套是空头支票。</p>
+      </div>
+      <div class="audit-card">
+        <span class="audit-tag weak">最弱的环节</span>
+        <h4>AI 流程的体感</h4>
+        <p><code style="font-family:var(--mono);font-size:11px">AILoadingBar</code> 是个静态文字条，只有一个 spinning ⟳ emoji。生成→应用全程"几乎不动"，AI 的"魔法感"完全没建立。</p>
+      </div>
+      <div class="audit-card">
+        <span class="audit-tag weak">视觉一致性</span>
+        <h4>图标全是 emoji</h4>
+        <p>tab 名是文字、分类用 emoji（📋💰🎒）、AI 按钮用 ✨ — 体系不统一，且 emoji 在不同平台渲染差异大、不"行册"。</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============= 视觉与品牌系统 ============= -->
+  <section class="section" data-screen-label="03 Visual System">
+    <div class="section-head">
+      <span class="section-no">§ 01</span>
+      <h2 class="section-title">视觉与品牌系统</h2>
+      <span class="section-cap">3 DIRECTIONS · BRAND × SURFACE</span>
+    </div>
+
+    <div class="dirs">
+
+      <!-- DIRECTION 1: themes -->
+      <article class="dir">
+        <div>
+          <div class="dir-id">DIRECTION</div>
+          <div class="dir-no">01</div>
+          <span class="dir-tag user-asked">用户提到 · 整体风格切换</span>
+          <div class="dir-meta">
+            <div class="meter">
+              <span class="meter-label">影响力 IMPACT</span>
+              <div class="meter-dots"><span class="meter-dot on"></span><span class="meter-dot on"></span><span class="meter-dot on"></span><span class="meter-dot on"></span><span class="meter-dot"></span></div>
+            </div>
+            <div class="meter">
+              <span class="meter-label">成本 EFFORT</span>
+              <div class="meter-dots"><span class="meter-dot on high"></span><span class="meter-dot on high"></span><span class="meter-dot on high"></span><span class="meter-dot"></span><span class="meter-dot"></span></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="dir-body">
+          <h3>把"4 主题"<em>真正落地</em></h3>
+          <p class="dir-deck">README 写的是承诺，代码写的是事实 — 让事实赶上承诺。</p>
+
+          <p>当前只有一套 tegami（手紙）主题在跑，其它三套（杂志 / 明信片 / 极简）只在文档里出现。建议把它做成一个真正的 <span class="marker">design token 切换系统</span>，每套主题不只是换色，而是换<b>整套视觉气质</b>：</p>
+
+          <ul class="dir-list">
+            <li><b>手紙</b> — 当前样式（暖橘 + 衬线 + 圆润）。温暖、私人。</li>
+            <li><b>杂志</b> — 黑白高对比 + 大号无衬线 + 紧密栅格 + 红色 accent。冷峻、编辑感。</li>
+            <li><b>明信片</b> — 米黄牛皮纸底 + 邮戳印章 + 旋转票根 + 衬线题图。复古、旅行感。</li>
+            <li><b>极简</b> — 纯白 + 极淡灰 + 单色 accent + 大量留白。专注、当代。</li>
+            <li><b>切换入口</b>放在"我的"或长按 logo，切换有<b>翻页/翻牌过渡动画</b>，不是闪一下完事。</li>
+          </ul>
+
+          <div class="dir-quote">
+            主题不该是"换皮肤"，应该像换刊物 — 同样的内容，不同的"编辑"。
+            <span>— Design intent</span>
+          </div>
+        </div>
+
+        <div class="mock-stack">
+          <div class="phone p-bg-tegami">
+            <div class="phone-notch"></div>
+            <div class="theme-current-head">主题 · THEMES</div>
+            <div class="theme-tiles">
+              <div class="theme-tile tegami">
+                <div class="theme-checked">✓</div>
+                <div class="theme-name">手紙</div>
+                <div class="theme-sample"><div style="width:100%"></div><div></div><div></div></div>
+              </div>
+              <div class="theme-tile magazine">
+                <div class="theme-name">杂志</div>
+                <div class="theme-sample"><div style="width:100%"></div><div></div><div></div></div>
+              </div>
+              <div class="theme-tile postcard">
+                <div class="theme-name">明信片</div>
+                <div class="theme-sample"><div style="width:100%"></div><div></div><div></div></div>
+              </div>
+              <div class="theme-tile minimal">
+                <div class="theme-name">极简</div>
+                <div class="theme-sample"><div style="width:100%"></div><div></div><div></div></div>
+              </div>
+            </div>
+            <div class="theme-switcher-bar">SWIPE TO TRY</div>
+          </div>
+          <div class="phone-label">主题选择 / <b>SWITCHER</b></div>
+        </div>
+      </article>
+
+      <!-- DIRECTION 2: Icons -->
+      <article class="dir">
+        <div>
+          <div class="dir-id">DIRECTION</div>
+          <div class="dir-no">02</div>
+          <span class="dir-tag user-asked">用户提到 · 图标重做</span>
+          <div class="dir-meta">
+            <div class="meter">
+              <span class="meter-label">影响力 IMPACT</span>
+              <div class="meter-dots"><span class="meter-dot on"></span><span class="meter-dot on"></span><span class="meter-dot on"></span><span class="meter-dot"></span><span class="meter-dot"></span></div>
+            </div>
+            <div class="meter">
+              <span class="meter-label">成本 EFFORT</span>
+              <div class="meter-dots"><span class="meter-dot on"></span><span class="meter-dot on"></span><span class="meter-dot"></span><span class="meter-dot"></span><span class="meter-dot"></span></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="dir-body">
+          <h3>专属<em>插画式</em>图标体系</h3>
+          <p class="dir-deck">告别 emoji 大杂烩 — 一套有"手感"的双色线条图标。</p>
+
+          <p>当前 emoji 散落在很多地方：📋 攻略、💰 开销、🎒 清单、✨ AI、📸 等等。这造成两个问题：<b>跨平台渲染不一致</b>（苹果/安卓/微信小程序差异巨大）、<b>风格和 app 的"手紙杂志感"完全不搭</b>。</p>
+
+          <p>建议做一套统一的<span class="marker">线条 + 暖色填充</span>双色图标，~24 个就够覆盖：导航 tab × 4、行程内容类型 × 4、行李分类 × 8、操作 × 6、状态 × 4。每个图标都用同一支"笔"画出来。</p>
+
+          <ul class="dir-list">
+            <li><b>风格</b> — 1.5px 线条、圆角端点、有"手绘抖动"感、内填一抹暖色。</li>
+            <li><b>载体</b> — SVG inline 字符串导出为 React 组件，按需 import，不走 iconfont。</li>
+            <li><b>命名</b> — <code style="font-family:var(--mono);font-size:12px">&lt;Icon name="passport" /&gt;</code>，可改色可改尺寸。</li>
+            <li><b>动效</b> — tab 切换时图标轻微"draw-in"或"morph"动画。</li>
+          </ul>
+        </div>
+
+        <div class="mock-stack">
+          <div class="icon-grid" style="width: 320px">
+            <div class="icon-cell before">
+              <span class="icon-glyph">📋</span>
+              <div class="icon-name">BEFORE</div>
+            </div>
+            <div class="icon-cell before">
+              <span class="icon-glyph">💰</span>
+              <div class="icon-name">BEFORE</div>
+            </div>
+            <div class="icon-cell before">
+              <span class="icon-glyph">🎒</span>
+              <div class="icon-name">BEFORE</div>
+            </div>
+            <div class="icon-cell before">
+              <span class="icon-glyph">✨</span>
+              <div class="icon-name">BEFORE</div>
+            </div>
+
+            <div class="icon-cell after">
+              <svg class="ico-svg" viewBox="0 0 32 32">
+                <rect class="fill" x="6" y="4" width="20" height="24" rx="2"/>
+                <rect x="6" y="4" width="20" height="24" rx="2"/>
+                <line x1="11" y1="11" x2="21" y2="11"/>
+                <line x1="11" y1="16" x2="21" y2="16"/>
+                <line x1="11" y1="21" x2="17" y2="21"/>
+              </svg>
+              <div class="icon-name">攻略</div>
+            </div>
+            <div class="icon-cell after">
+              <svg class="ico-svg" viewBox="0 0 32 32">
+                <circle class="fill" cx="16" cy="16" r="11"/>
+                <circle cx="16" cy="16" r="11"/>
+                <path d="M16 9 v14"/>
+                <path d="M13 12 q3 -1 6 0"/>
+                <path d="M19 20 q-3 1 -6 0"/>
+              </svg>
+              <div class="icon-name">开销</div>
+            </div>
+            <div class="icon-cell after">
+              <svg class="ico-svg" viewBox="0 0 32 32">
+                <path class="fill" d="M8 12 v16 h16 v-16 a4 4 0 0 0 -4 -4 h-8 a4 4 0 0 0 -4 4 z"/>
+                <path d="M8 12 v16 h16 v-16 a4 4 0 0 0 -4 -4 h-8 a4 4 0 0 0 -4 4 z"/>
+                <path d="M14 4 h4 v4 h-4 z"/>
+                <line x1="16" y1="14" x2="16" y2="24"/>
+              </svg>
+              <div class="icon-name">清单</div>
+            </div>
+            <div class="icon-cell after">
+              <svg class="ico-svg" viewBox="0 0 32 32">
+                <path class="fill" d="M16 5 l3 8 l8 3 l-8 3 l-3 8 l-3 -8 l-8 -3 l8 -3 z"/>
+                <path d="M16 5 l3 8 l8 3 l-8 3 l-3 8 l-3 -8 l-8 -3 l8 -3 z"/>
+                <circle cx="25" cy="7" r="1.5" fill="currentColor" stroke="none"/>
+              </svg>
+              <div class="icon-name">AI</div>
+            </div>
+          </div>
+          <div class="phone-label">EMOJI → <b>SIGNATURE ICONS</b></div>
+        </div>
+      </article>
+
+      <!-- DIRECTION 3: texture -->
+      <article class="dir">
+        <div>
+          <div class="dir-id">DIRECTION</div>
+          <div class="dir-no">03</div>
+          <span class="dir-tag new">新增方向</span>
+          <div class="dir-meta">
+            <div class="meter">
+              <span class="meter-label">影响力 IMPACT</span>
+              <div class="meter-dots"><span class="meter-dot on"></span><span class="meter-dot on"></span><span class="meter-dot on"></span><span class="meter-dot"></span><span class="meter-dot"></span></div>
+            </div>
+            <div class="meter">
+              <span class="meter-label">成本 EFFORT</span>
+              <div class="meter-dots"><span class="meter-dot on low"></span><span class="meter-dot on low"></span><span class="meter-dot"></span><span class="meter-dot"></span><span class="meter-dot"></span></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="dir-body">
+          <h3>肌理与<em>装饰元素</em>系统</h3>
+          <p class="dir-deck">让数字界面带一点"纸感、印章感、票根感"。</p>
+
+          <p>"行册"这个名字本身就在暗示一种纸质载体的气质。但当前的 UI 是<b>干净的圆角卡片 + 渐变</b>，肌理感非常弱（只有 itinerary 的票根 tab 表达出来一点）。可以系统性加一层"<span class="marker">装饰图层</span>"：</p>
+
+          <ul class="dir-list">
+            <li><b>纸纹底</b> — 给 surface 加非常淡的噪点/纤维纹理（<code style="font-family:var(--mono);font-size:12px">background-image</code> SVG noise）。</li>
+            <li><b>邮戳印章</b> — 每个 trip 头部右上角自动盖一枚"目的地章"，复古复合。</li>
+            <li><b>票根 tab</b> — 你已经做了一版，再把它做完（撕口、虚线、序号）。</li>
+            <li><b>手绘装饰</b> — 标题下的波浪线、空状态的手绘行李箱、按钮 hover 的手写下划线。</li>
+            <li><b>边角磨损</b> — 重要卡片可加非常轻微的边角磨损/翘起，看起来"被翻阅过"。</li>
+          </ul>
+        </div>
+
+        <div class="mock-stack">
+          <div class="texture-grid" style="width: 320px">
+            <div class="tex-tile tex-paper">
+              <div class="tx-name">PAPER</div>
+            </div>
+            <div class="tex-tile tex-grid">
+              <div class="tx-name">GRID</div>
+            </div>
+            <div class="tex-tile tex-stamp">
+              <div class="tx-name" style="position:absolute;top:10px;left:10px;z-index:2">STAMP</div>
+            </div>
+          </div>
+          <div class="phone-label">肌理 / <b>TEXTURE LAYERS</b></div>
+        </div>
+      </article>
+
+    </div>
+  </section>
+
+  <!-- ============= AI 体验 ============= -->
+  <section class="section" data-screen-label="04 AI Experience">
+    <div class="section-head">
+      <span class="section-no">§ 02</span>
+      <h2 class="section-title">AI 体验</h2>
+      <span class="section-cap">2 DIRECTIONS · MAGIC × FEEDBACK</span>
+    </div>
+
+    <div class="dirs">
+
+      <!-- DIRECTION 4: AI animation -->
+      <article class="dir">
+        <div>
+          <div class="dir-id">DIRECTION</div>
+          <div class="dir-no">04</div>
+          <span class="dir-tag user-asked">用户提到 · AI 动效优化</span>
+          <div class="dir-meta">
+            <div class="meter">
+              <span class="meter-label">影响力 IMPACT</span>
+              <div class="meter-dots"><span class="meter-dot on high"></span><span class="meter-dot on high"></span><span class="meter-dot on high"></span><span class="meter-dot on high"></span><span class="meter-dot on high"></span></div>
+            </div>
+            <div class="meter">
+              <span class="meter-label">成本 EFFORT</span>
+              <div class="meter-dots"><span class="meter-dot on"></span><span class="meter-dot on"></span><span class="meter-dot on"></span><span class="meter-dot"></span><span class="meter-dot"></span></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="dir-body">
+          <h3>AI 生成的<em>剧场化</em>动效</h3>
+          <p class="dir-deck">用户最该感觉到"AI 在为我工作"的地方，目前最没动。</p>
+
+          <p>现在的体验是：填表 → 跳回首页 → 看到一个灰色 bar 写"AI 生成中…" → 几十秒后变绿色"就绪"。整个过程<b>毫无现场感</b>。AI 是这个产品最大的差异化，结果它的视觉表达最弱。</p>
+
+          <p>建议设计一套 <span class="marker">"剧场化"的多帧动效</span>，分三个阶段：</p>
+
+          <ul class="dir-list">
+            <li><b>第 1 帧 · 思考</b> — 紫橙渐变 shimmer 横扫，显示"正在分析你的偏好…"等步骤性文案（不是 spinner）。</li>
+            <li><b>第 2 帧 · 浮现</b> — 每生成一天，那一天的卡片从时间线<b>"掉下来"</b>到位（spring 缓动）。地点 name 用打字机效果一字一字浮现。</li>
+            <li><b>第 3 帧 · 落地</b> — 全部生成完后，"AI 草稿就绪"以一个微微抖动的金色印章形式盖在右上角。点击展开预览。</li>
+            <li><b>背景音</b> — 可选：很轻的"翻纸声"音效（用户可关）。</li>
+            <li><b>错误态</b> — 不是冷冰冰红色，是"AI 写到一半放下笔"，配一句"换个想法重新试试？"</li>
+          </ul>
+
+          <div class="dir-quote">
+            AI 不是后台进程，它是同行的旅伴。要让用户看见它在"写"。
+            <span>— Design intent</span>
+          </div>
+        </div>
+
+        <div style="width: 320px">
+          <div class="storyboard">
+            <div class="frame">
+              <span class="frame-no">01</span>
+              <div class="ai-think" style="margin-top:14px">
+                <div style="font-weight:700;margin-bottom:4px">AI 正在思考</div>
+                <div style="opacity:0.8;line-height:1.5">分析你的偏好<br>· 悠闲节奏<br>· 亲子出行</div>
+              </div>
+              <div style="margin-top:8px">
+                <div class="ai-step done"><span class="dot"></span> 读取偏好</div>
+                <div class="ai-step now"><span class="dot"></span> 搜索景点 …</div>
+                <div class="ai-step todo"><span class="dot"></span> 规划路线</div>
+                <div class="ai-step todo"><span class="dot"></span> 估算预算</div>
+              </div>
+            </div>
+            <div class="frame">
+              <span class="frame-no">02</span>
+              <div style="font-family:var(--mono); font-size:8px; color: var(--ink-3); letter-spacing: 1px; margin-top:14px; margin-bottom: 6px">DAY 1 · 落地中</div>
+              <div class="timeline-drop">
+                <div class="timeline-item">9:00 故宫<span class="typing"></span></div>
+                <div class="timeline-item">12:30 四季民福</div>
+                <div class="timeline-item">15:00 景山公园</div>
+                <div class="timeline-item ghost">17:00 ___</div>
+                <div class="timeline-item ghost">19:00 ___</div>
+              </div>
+            </div>
+            <div class="frame">
+              <span class="frame-no">03</span>
+              <div style="margin-top:14px">
+                <div class="ln s" style="width: 70%"></div>
+                <div class="ln xs" style="margin-top:8px"></div>
+                <div class="ln xs" style="margin-top:4px;width:80%"></div>
+              </div>
+              <div class="stamp" style="position: absolute; top: 80px; right: 20px; transform: rotate(-15deg); width: 64px; height: 64px;">
+                <div>就绪</div>
+                <div class="num">5 DAYS</div>
+              </div>
+              <div style="position:absolute;bottom:8px;left:12px;right:12px;font-family:var(--mono);font-size:8px;color:var(--leaf);font-weight:700;letter-spacing:1px;text-align:center">✓ AI 草稿就绪</div>
+            </div>
+          </div>
+          <div class="frame-cap" style="text-align:center; margin-top:12px">3-frame storyboard / 思考 → 浮现 → 落地</div>
+        </div>
+      </article>
+
+      <!-- DIRECTION 5: AI entry & onboarding -->
+      <article class="dir">
+        <div>
+          <div class="dir-id">DIRECTION</div>
+          <div class="dir-no">05</div>
+          <span class="dir-tag new">新增方向</span>
+          <div class="dir-meta">
+            <div class="meter">
+              <span class="meter-label">影响力 IMPACT</span>
+              <div class="meter-dots"><span class="meter-dot on"></span><span class="meter-dot on"></span><span class="meter-dot on"></span><span class="meter-dot on"></span><span class="meter-dot"></span></div>
+            </div>
+            <div class="meter">
+              <span class="meter-label">成本 EFFORT</span>
+              <div class="meter-dots"><span class="meter-dot on"></span><span class="meter-dot on"></span><span class="meter-dot"></span><span class="meter-dot"></span><span class="meter-dot"></span></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="dir-body">
+          <h3>AI 入口与<em>采访式</em>偏好表单</h3>
+          <p class="dir-deck">把"填表单"变成"和 AI 对话"。</p>
+
+          <p>现在的 AIPlanForm 是一个传统的 sheet：模型/节奏/出行人群/预算/其他偏好 — <b>5 个字段一次性铺开</b>。这种表单在桌面端可以，但在小程序里显得很沉重，而且没"AI 在跟我聊"的感觉。</p>
+
+          <p>建议改成<span class="marker">采访式（chat-like）</span>多步对话，AI 一次问一个问题，用户点 chip 或自由输入回答：</p>
+
+          <ul class="dir-list">
+            <li><b>Q1</b>: "这次想要什么节奏？" → chips: 悠闲 / 平衡 / 紧凑</li>
+            <li><b>Q2</b>: "和谁一起？" → chips: 独行 / 情侣 / 亲子 / 朋友 / 老人</li>
+            <li><b>Q3</b>: "每人每天大概想花多少？" → 滑块或 chips：经济 / 中等 / 奢华</li>
+            <li><b>Q4</b>: "有什么特别想做或不想做的吗？" → 自由输入（可跳过）</li>
+            <li><b>AI 入口</b> — 主页底部"+ 新建攻略"按钮可以裂变成两个：「自己填」「让 AI 帮我」，AI 那个带轻微<b>粒子动效</b>和呼吸光晕。</li>
+            <li><b>每答一题</b> — 上一题缩为一行小总结，新问题滑入。最后展示"我听明白了，开始生成"的确认页。</li>
+          </ul>
+        </div>
+
+        <div class="mock-stack">
+          <div class="phone p-bg-tegami">
+            <div class="phone-notch"></div>
+            <div class="pf">
+              <div style="font-family:var(--mono);font-size:8px;color:var(--ink-3);letter-spacing:1.5px;text-align:center">AI · 问 2 / 4</div>
+              <div class="ob-q">和谁一起出行呢？</div>
+              <div class="ob-a">情侣 ✓</div>
+              <div class="ob-q" style="margin-top:8px">每人每天大概想花多少？</div>
+              <div class="ob-chips">
+                <div class="ch">经济</div>
+                <div class="ch on">中等 ¥500</div>
+                <div class="ch">奢华</div>
+                <div class="ch">自定</div>
+              </div>
+              <div style="position:absolute;bottom:12px;left:12px;right:12px;background:var(--ink);color:white;padding:8px;border-radius:10px;text-align:center;font-size:9px;font-weight:700;letter-spacing:1px">下一题 →</div>
+            </div>
+          </div>
+          <div class="phone-label">AI 采访 / <b>CONVERSATIONAL</b></div>
+        </div>
+      </article>
+
+    </div>
+  </section>
+
+  <!-- ============= 信息架构 ============= -->
+  <section class="section" data-screen-label="05 IA">
+    <div class="section-head">
+      <span class="section-no">§ 03</span>
+      <h2 class="section-title">信息架构 & 首页</h2>
+      <span class="section-cap">3 DIRECTIONS · STRUCTURE × HOME</span>
+    </div>
+
+    <div class="dirs">
+
+      <!-- DIRECTION 6: Home redesign -->
+      <article class="dir dir--wide-mock">
+        <div>
+          <div class="dir-id">DIRECTION</div>
+          <div class="dir-no">06</div>
+          <span class="dir-tag user-asked">用户提到 · 首页 + 布局</span>
+          <div class="dir-meta">
+            <div class="meter">
+              <span class="meter-label">影响力 IMPACT</span>
+              <div class="meter-dots"><span class="meter-dot on"></span><span class="meter-dot on"></span><span class="meter-dot on"></span><span class="meter-dot on"></span><span class="meter-dot"></span></div>
+            </div>
+            <div class="meter">
+              <span class="meter-label">成本 EFFORT</span>
+              <div class="meter-dots"><span class="meter-dot on"></span><span class="meter-dot on"></span><span class="meter-dot on"></span><span class="meter-dot"></span><span class="meter-dot"></span></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="dir-body">
+          <h3>首页：从<em>列表</em>到<em>旅行册</em></h3>
+          <p class="dir-deck">"行册"这个名字值得一个比"一列卡片"更有想象力的首页。</p>
+
+          <p>现在的首页就是一个垂直的 trip 卡片列表 — 功能上没毛病，但完全没有"打开一本册子"的感觉。建议从下面 3 个隐喻里选一个深做（或做成主题切换的一部分）：</p>
+
+          <ul class="dir-list">
+            <li><b>A · 明信片堆</b> — trips 像堆叠的明信片，轻微旋转、错落、可以"翻"。每张右上角自动盖目的地戳。</li>
+            <li><b>B · 旅行护照</b> — 整个首页是一本护照，每个 trip 是一页签证页，盖满目的地章。底部"+ 新页"。</li>
+            <li><b>C · 世界地图</b> — 一张极简地图作为主背景，trips 是地图上的 pin，点 pin 弹出 trip 卡片浮窗。"年度回顾"自然落地。</li>
+          </ul>
+
+          <p>无论选哪个，都建议把<b>主页头部</b>从"行册 · 你的旅行，值得被好好记录"这种标语，改成<span class="marker">期刊式 masthead</span>：「行册 · No. 12 · 2026 春 · 共 5 段旅程」 — 让用户感到"我在写自己的杂志"。</p>
+        </div>
+
+        <div style="display: flex; gap: 12px">
+          <div class="mock-stack">
+            <div class="phone small p-bg-tegami">
+              <div class="phone-notch"></div>
+              <div class="home-postcard">
+                <div class="pc-card c1">
+                  <div class="pc-stamp">京</div>
+                  <div class="pc-title-l">北京 · 五日</div>
+                  <div class="pc-meta-l">2026 · 04</div>
+                  <div class="pc-dots"><span></span><span></span></div>
+                </div>
+                <div class="pc-card c2">
+                  <div class="pc-stamp">闽</div>
+                  <div class="pc-title-l">厦门 周末</div>
+                  <div class="pc-meta-l">2026 · 03</div>
+                  <div class="pc-dots"><span></span></div>
+                </div>
+                <div class="pc-card c3">
+                  <div class="pc-stamp">滇</div>
+                  <div class="pc-title-l">大理 · 七日</div>
+                  <div class="pc-meta-l">2025 · 11</div>
+                  <div class="pc-dots"><span></span><span></span></div>
+                </div>
+              </div>
+            </div>
+            <div class="phone-label">A · <b>明信片堆</b></div>
+          </div>
+          <div class="mock-stack">
+            <div class="phone small p-bg-postcard">
+              <div class="phone-notch"></div>
+              <div class="passport">
+                <div class="passport-head">
+                  <div class="l1">行册 PASSPORT</div>
+                  <div class="l2">XC · 2026 · No. 012</div>
+                </div>
+                <div class="stamp" style="top: 90px; left: 14px">
+                  <div>北京</div>
+                  <div class="num">04 · 26</div>
+                </div>
+                <div class="stamp s2" style="top: 100px; right: 14px">
+                  <div>大理</div>
+                  <div class="num">11 · 25</div>
+                </div>
+                <div class="stamp s3" style="top: 160px; left: 40px">
+                  <div>东京</div>
+                  <div class="num">07 · 25</div>
+                </div>
+              </div>
+            </div>
+            <div class="phone-label">B · <b>旅行护照</b></div>
+          </div>
+          <div class="mock-stack">
+            <div class="phone small">
+              <div class="phone-notch"></div>
+              <div class="home-map">
+                <div class="map-line" style="top: 50px; left: -20px; right: -20px; transform: rotate(8deg)"></div>
+                <div class="map-line" style="top: 120px; left: -20px; right: -20px; transform: rotate(-5deg)"></div>
+                <div class="map-line" style="top: 160px; left: -20px; right: -20px"></div>
+                <div class="map-pin" style="top: 60px; left: 30px"></div>
+                <div class="map-pin" style="top: 90px; left: 90px"></div>
+                <div class="map-pin" style="top: 130px; left: 50px"></div>
+                <div class="map-card-pop">
+                  <div style="font-family:var(--serif);font-size:9px;font-weight:700;color:var(--ink)">北京 · 五日</div>
+                  <div style="font-family:var(--mono);font-size:6px;color:var(--ink-3);margin-top:2px">04.26 → 04.30 · 2 人</div>
+                </div>
+              </div>
+            </div>
+            <div class="phone-label">C · <b>世界地图</b></div>
+          </div>
+        </div>
+      </article>
+
+      <!-- DIRECTION 7: Lifecycle -->
+      <article class="dir dir--wide-mock">
+        <div>
+          <div class="dir-id">DIRECTION</div>
+          <div class="dir-no">07</div>
+          <span class="dir-tag new">新增方向 · 强推</span>
+          <div class="dir-meta">
+            <div class="meter">
+              <span class="meter-label">影响力 IMPACT</span>
+              <div class="meter-dots"><span class="meter-dot on high"></span><span class="meter-dot on high"></span><span class="meter-dot on high"></span><span class="meter-dot on high"></span><span class="meter-dot on high"></span></div>
+            </div>
+            <div class="meter">
+              <span class="meter-label">成本 EFFORT</span>
+              <div class="meter-dots"><span class="meter-dot on"></span><span class="meter-dot on"></span><span class="meter-dot on"></span><span class="meter-dot"></span><span class="meter-dot"></span></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="dir-body">
+          <h3>行程的<em>生命周期</em>三态</h3>
+          <p class="dir-deck">出行前、出行中、出行后 — 同一个 trip，不同状态下应该长得完全不同。</p>
+
+          <p>这是我看完代码后最想推的一个方向。现在不管 trip 是<b>"下周才出发"</b>还是<b>"正在路上"</b>还是<b>"三个月前回来的"</b>，它在首页和详情页都长得一样 — 这是巨大的浪费。每个状态都有完全不同的用户意图：</p>
+
+          <ul class="dir-list">
+            <li><b>出行前 · 计划态</b> — 主视觉是<b>倒计时</b>「还有 12 天 · 北京」+ 清单完成度环 + 天气预告。首页这张卡片浮在最上。</li>
+            <li><b>出行中 · 实时态</b> — 自动切到 Live 模式：当前 spot（深色卡片，强对比）+ 下一站时间 + 当地天气 + 一键叫车/导航。这就是产品的"高光时刻"。</li>
+            <li><b>出行后 · 回顾态</b> — 自动生成「2026 春 · 北京五日」的<b>回顾卡片</b>：去过几个 spot、走了多少 km、花了多少钱、最贵的一餐是…。可分享。</li>
+            <li><b>状态判断</b>用 trip 的 startDate/endDate 自动切换，无需用户操作。</li>
+          </ul>
+
+          <div class="dir-quote">
+            旅行不是一个矩形数据，是一段有起承转合的故事。UI 应该跟着这段故事走。
+            <span>— Design intent</span>
+          </div>
+        </div>
+
+        <div style="display: flex; gap: 12px">
+          <div class="mock-stack">
+            <div class="phone small p-bg-tegami">
+              <div class="phone-notch"></div>
+              <div class="pf">
+                <div class="lc-phase">PRE · 计划态</div>
+                <div class="countdown-big">
+                  <div class="num">12</div>
+                  <div class="lbl">DAYS TO 北京</div>
+                </div>
+                <div style="margin-top: 16px; padding: 8px 10px; background: var(--paper); border-radius: 8px; font-size: 8px; color: var(--ink-2)">
+                  <div style="display:flex;justify-content:space-between"><span>行李清单</span><span style="font-weight:700;color:var(--accent)">12 / 24</span></div>
+                  <div style="margin-top:4px; height: 4px; background: var(--line); border-radius: 2px; overflow:hidden">
+                    <div style="width: 50%; height: 100%; background: var(--accent)"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="phone-label">前 · <b>倒计时</b></div>
+          </div>
+          <div class="mock-stack">
+            <div class="phone small p-bg-tegami">
+              <div class="phone-notch"></div>
+              <div class="pf">
+                <div class="lc-phase">LIVE · 实时态</div>
+                <div class="live-now">
+                  <div class="lbl">● NOW · 14:30</div>
+                  <div class="name">景山公园</div>
+                  <div class="meta">距下一站 1.2km · 步行 18 min</div>
+                </div>
+                <div class="live-next">
+                  下一站 · <b>15:30 北海公园</b><br>
+                  <span style="color:var(--ink-3)">门票 ¥30 · 阴 18°</span>
+                </div>
+              </div>
+            </div>
+            <div class="phone-label">中 · <b>Live</b></div>
+          </div>
+          <div class="mock-stack">
+            <div class="phone small p-bg-tegami">
+              <div class="phone-notch"></div>
+              <div class="pf">
+                <div class="lc-phase">POST · 回顾态</div>
+                <div class="recap-cover">
+                  <div class="yr">北京</div>
+                  <div class="ttl">2026 · 春 · 5 DAYS</div>
+                  <div class="recap-stats">
+                    <div class="recap-stat">
+                      <div class="v">28</div>
+                      <div class="l">SPOTS</div>
+                    </div>
+                    <div class="recap-stat">
+                      <div class="v">¥4,280</div>
+                      <div class="l">TOTAL</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="phone-label">后 · <b>回顾</b></div>
+          </div>
+        </div>
+      </article>
+
+      <!-- DIRECTION 8: Navigation -->
+      <article class="dir">
+        <div>
+          <div class="dir-id">DIRECTION</div>
+          <div class="dir-no">08</div>
+          <span class="dir-tag user-asked">用户提到 · 布局</span>
+          <div class="dir-meta">
+            <div class="meter">
+              <span class="meter-label">影响力 IMPACT</span>
+              <div class="meter-dots"><span class="meter-dot on"></span><span class="meter-dot on"></span><span class="meter-dot on"></span><span class="meter-dot"></span><span class="meter-dot"></span></div>
+            </div>
+            <div class="meter">
+              <span class="meter-label">成本 EFFORT</span>
+              <div class="meter-dots"><span class="meter-dot on low"></span><span class="meter-dot on low"></span><span class="meter-dot"></span><span class="meter-dot"></span><span class="meter-dot"></span></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="dir-body">
+          <h3>导航与<em>层级</em>重构</h3>
+          <p class="dir-deck">把"高频操作"沉底，把"信息密度"沉到内容里。</p>
+
+          <p>当前 trip 页面顶部有：trip 名 → AI 按钮 → 菜单 → AI 状态条 → 日期/人数 → 协作者条 → 4 tab → 内容 — <b>滚动还没开始就已经塞了 7 层</b>。这造成两个问题：内容区域被压缩，关键操作（切换 tab）需要伸手到屏幕中上部。</p>
+
+          <p>建议：</p>
+
+          <ul class="dir-list">
+            <li><b>tab 下沉</b> — 把 4 tab 从顶部移到底部 tab bar（攻略 / 地图 / 开销 / 清单），变成原生小程序底 tab 体验。</li>
+            <li><b>顶部精简</b> — 只保留 trip 名 + 菜单。日期、人数、协作者折叠到副标题行，需要时点开。</li>
+            <li><b>AI 状态条</b>从顶部固定改成<b>右上角浮动徽章</b>，不抢空间但仍可见。</li>
+            <li><b>+ 加号</b>从底部固定按钮，改成<b>右下浮动 FAB</b>，根据当前 tab 智能改变行为（在攻略 tab 加地点、在清单 tab 加物品）。</li>
+            <li><b>头图</b> — 顶部 80rpx 渐变 banner 改成 200rpx 的目的地<b>抽象封面图</b>（地图剪影 / 目的地剪影）。</li>
+          </ul>
+        </div>
+
+        <div class="mock-stack">
+          <div class="phone p-bg-tegami">
+            <div class="phone-notch"></div>
+            <div class="pf">
+              <div style="font-family:var(--serif);font-size:18px;font-weight:800;color:var(--ink);letter-spacing:0.5px">北京 · 五日</div>
+              <div style="font-family:var(--mono);font-size:8px;color:var(--ink-3);margin-top:2px">04.26 → 04.30 · 2 人</div>
+              <div style="margin-top:10px; height: 36px; background: linear-gradient(135deg, var(--accent-soft), var(--accent)); border-radius: 8px; position: relative">
+                <div style="position: absolute; top: 6px; right: 8px; padding: 3px 8px; background: rgba(0,0,0,0.3); color: white; font-size: 7px; border-radius: 999px; font-family:var(--mono); letter-spacing:1px">✨ AI 就绪</div>
+              </div>
+              <div style="margin-top:12px">
+                <div class="ln s" style="width:60%"></div>
+                <div class="ln xs" style="margin-top:6px"></div>
+                <div class="ln xs" style="margin-top:4px;width:80%"></div>
+                <div class="ln s acc" style="margin-top:14px;width:50%"></div>
+                <div class="ln xs" style="margin-top:6px"></div>
+                <div class="ln xs" style="margin-top:4px;width:75%"></div>
+              </div>
+              <div class="fab">+</div>
+              <div class="tabbar">
+                <div class="tabbar-item on">
+                  <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--accent)"><rect x="5" y="3" width="14" height="18" rx="2"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="9" y1="12" x2="15" y2="12"/></svg>
+                  <div class="lb">攻略</div>
+                </div>
+                <div class="tabbar-item">
+                  <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--ink-3)"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/></svg>
+                  <div class="lb">地图</div>
+                </div>
+                <div class="tabbar-item">
+                  <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--ink-3)"><circle cx="12" cy="12" r="9"/><path d="M12 7v10M9 10h6M9 14h6"/></svg>
+                  <div class="lb">开销</div>
+                </div>
+                <div class="tabbar-item">
+                  <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--ink-3)"><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M6 7h12v14H6z"/></svg>
+                  <div class="lb">清单</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="phone-label">底部 nav + FAB / <b>NEW LAYOUT</b></div>
+        </div>
+      </article>
+
+    </div>
+  </section>
+
+  <!-- ============= 内容呈现 ============= -->
+  <section class="section" data-screen-label="06 Content">
+    <div class="section-head">
+      <span class="section-no">§ 04</span>
+      <h2 class="section-title">内容呈现</h2>
+      <span class="section-cap">2 DIRECTIONS · DATA × SHARE</span>
+    </div>
+
+    <div class="dirs">
+
+      <!-- DIRECTION 9: budget viz -->
+      <article class="dir">
+        <div>
+          <div class="dir-id">DIRECTION</div>
+          <div class="dir-no">09</div>
+          <span class="dir-tag new">新增方向</span>
+          <div class="dir-meta">
+            <div class="meter">
+              <span class="meter-label">影响力 IMPACT</span>
+              <div class="meter-dots"><span class="meter-dot on"></span><span class="meter-dot on"></span><span class="meter-dot on"></span><span class="meter-dot"></span><span class="meter-dot"></span></div>
+            </div>
+            <div class="meter">
+              <span class="meter-label">成本 EFFORT</span>
+              <div class="meter-dots"><span class="meter-dot on"></span><span class="meter-dot on"></span><span class="meter-dot"></span><span class="meter-dot"></span><span class="meter-dot"></span></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="dir-body">
+          <h3>开销页的<em>可视化升级</em></h3>
+          <p class="dir-deck">从一根水平条到一个有故事的"账本页"。</p>
+
+          <p>现在的 BudgetView 是：总开销 + 人均 + 一根 4 段堆叠条 + 按天列表。<b>那根条几乎不可读</b>（4 个颜色，肉眼难判断比例）。建议：</p>
+
+          <ul class="dir-list">
+            <li><b>主视觉</b>换成<b>环形图</b>（donut），中心放总金额，四周是分类百分比。环形比条形更易读、更有"账本扉页"感。</li>
+            <li><b>对比基线</b> — 显示"人均 ¥X · 比同行 Y 人少/多 N%"，给数字加意义。</li>
+            <li><b>每日折线</b> — 在 BudgetView 加一行小折线图，看哪天花得最多/少，对应 trip 那天发生了啥。</li>
+            <li><b>"贵的一笔"高亮</b> — 自动标出最贵的一次餐饮、最贵的一晚住宿，做成"小高光卡"。</li>
+            <li><b>多人 split</b> — pax > 1 时，显示"AA 后每人差多少"，付款人自动平账（未来）。</li>
+          </ul>
+        </div>
+
+        <div class="mock-stack">
+          <div class="phone p-bg-tegami">
+            <div class="phone-notch"></div>
+            <div class="donut-wrap">
+              <div class="donut">
+                <div class="donut-center">
+                  <div class="v">¥4,280</div>
+                  <div class="l">TOTAL</div>
+                </div>
+              </div>
+              <div class="donut-legend">
+                <div class="dl-row">
+                  <span class="sw" style="background:var(--accent)"></span>
+                  <span>住宿</span>
+                  <span class="v">36%</span>
+                </div>
+                <div class="dl-row">
+                  <span class="sw" style="background:var(--coral)"></span>
+                  <span>交通</span>
+                  <span class="v">19%</span>
+                </div>
+                <div class="dl-row">
+                  <span class="sw" style="background:var(--sun)"></span>
+                  <span>餐饮</span>
+                  <span class="v">22%</span>
+                </div>
+                <div class="dl-row">
+                  <span class="sw" style="background:var(--leaf)"></span>
+                  <span>杂项</span>
+                  <span class="v">23%</span>
+                </div>
+              </div>
+              <div style="margin-top: 10px; padding: 8px; background: var(--paper-2); border-radius: 6px; font-size: 8px; color: var(--ink-2); text-align:center; width:100%">
+                人均 <b style="color:var(--accent)">¥2,140</b> · 比常规旅人省 12%
+              </div>
+            </div>
+          </div>
+          <div class="phone-label">账本扉页 / <b>BUDGET</b></div>
+        </div>
+      </article>
+
+      <!-- DIRECTION 10: Share poster -->
+      <article class="dir">
+        <div>
+          <div class="dir-id">DIRECTION</div>
+          <div class="dir-no">10</div>
+          <span class="dir-tag new">新增方向</span>
+          <div class="dir-meta">
+            <div class="meter">
+              <span class="meter-label">影响力 IMPACT</span>
+              <div class="meter-dots"><span class="meter-dot on"></span><span class="meter-dot on"></span><span class="meter-dot on"></span><span class="meter-dot on"></span><span class="meter-dot"></span></div>
+            </div>
+            <div class="meter">
+              <span class="meter-label">成本 EFFORT</span>
+              <div class="meter-dots"><span class="meter-dot on"></span><span class="meter-dot on"></span><span class="meter-dot on"></span><span class="meter-dot"></span><span class="meter-dot"></span></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="dir-body">
+          <h3>分享 = <em>海报生成器</em></h3>
+          <p class="dir-deck">小程序里的"分享"是冷启动的金矿，但现在只是发了张文字卡。</p>
+
+          <p>现在的 ShareTypeSheet 只提供"只读分享 / 协作分享"两个文本分享 path。建议在此之上加一个杀手级功能：<span class="marker">"生成旅行海报"</span> — 一张 9:16 的精美图，可保存到相册、发朋友圈：</p>
+
+          <ul class="dir-list">
+            <li><b>海报内容</b> — 目的地名（大）+ 日期 + 行册 logo + 几个核心数字（spots / km / 花费）+ 小程序码。</li>
+            <li><b>风格变体</b> — 提供 3 种风格（电影海报 / 明信片 / 杂志封面），用户选。</li>
+            <li><b>实现</b> — 微信小程序的 canvas API 或 wxml-to-canvas，本质就是把一个 wxml 渲染成图。</li>
+            <li><b>触发时机</b> — 旅行结束自动弹"为这段旅程生成海报？"；也可以在分享菜单常驻入口。</li>
+            <li><b>溢出价值</b> — 用户朋友圈晒图自带小程序码，是<b>自然的获客渠道</b>。</li>
+          </ul>
+
+          <div class="dir-quote">
+            社交分享是 0 成本的增长。让用户「想晒」，比让用户「想用」更难也更值得。
+            <span>— Design intent</span>
+          </div>
+        </div>
+
+        <div class="mock-stack">
+          <div class="poster">
+            <div class="poster-brand">行册 · No.012</div>
+            <div class="poster-name">北京<br>五日</div>
+            <div class="poster-sub">2026 · 04.26 → 04.30</div>
+            <div class="poster-stat-row">
+              <div class="poster-stat">
+                <div class="v">28</div>
+                <div class="l">SPOTS</div>
+              </div>
+              <div class="poster-stat">
+                <div class="v">42<span style="font-size:9px">km</span></div>
+                <div class="l">WALKED</div>
+              </div>
+              <div class="poster-stat">
+                <div class="v">¥4.2k</div>
+                <div class="l">SPENT</div>
+              </div>
+            </div>
+            <div class="poster-tag-text">让旅行被好好记住</div>
+            <div class="poster-qr"></div>
+          </div>
+          <div class="phone-label">朋友圈海报 / <b>SHARE</b></div>
+        </div>
+      </article>
+
+    </div>
+  </section>
+
+  <!-- ============= 优先级矩阵 ============= -->
+  <section class="section" data-screen-label="07 Priority">
+    <div class="section-head">
+      <span class="section-no">§ 05</span>
+      <h2 class="section-title">优先级建议</h2>
+      <span class="section-cap">DO FIRST · DO NEXT · BACKLOG</span>
+    </div>
+
+    <div class="matrix">
+      <div class="matrix-axis-x">→ EFFORT 实现成本</div>
+      <div class="matrix-axis-y">→ IMPACT 影响力</div>
+      <div class="matrix-grid">
+        <div class="matrix-q mq-tl">
+          <div class="matrix-q-name">QUICK WINS · 立刻做</div>
+        </div>
+        <div class="matrix-q mq-tr">
+          <div class="matrix-q-name">BIG BETS · 重点投入</div>
+        </div>
+        <div class="matrix-q mq-bl">
+          <div class="matrix-q-name">FILL-IN · 顺手做</div>
+        </div>
+        <div class="matrix-q mq-br">
+          <div class="matrix-q-name">RECONSIDER · 再想想</div>
+        </div>
+      </div>
+
+      <!-- pins -->
+      <div class="pin now" style="top: 22%; left: 32%">04 · AI 剧场化动效</div>
+      <div class="pin now" style="top: 30%; left: 22%">07 · 生命周期三态</div>
+      <div class="pin next" style="top: 14%; left: 60%">01 · 4 主题落地</div>
+      <div class="pin next" style="top: 40%; left: 55%">06 · 首页重构</div>
+      <div class="pin next" style="top: 35%; left: 75%">10 · 海报生成器</div>
+      <div class="pin" style="top: 50%; left: 28%">05 · AI 采访式</div>
+      <div class="pin" style="top: 62%; left: 18%">08 · 底部 nav</div>
+      <div class="pin" style="top: 68%; left: 36%">03 · 肌理装饰</div>
+      <div class="pin" style="top: 56%; left: 60%">02 · 图标体系</div>
+      <div class="pin" style="top: 72%; left: 68%">09 · 开销可视化</div>
+    </div>
+
+    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-top: 32px">
+      <div class="audit-card">
+        <span class="audit-tag" style="background: var(--accent); color: white">第 1 步 · 立刻</span>
+        <h4>04 + 07 + 08</h4>
+        <p>AI 动效 + 生命周期三态 + 底部 nav 重构。三个都是<b>用户感知最强、技术成本可控</b>的核心改造，做完产品立刻有"完全不一样了"的体感。</p>
+      </div>
+      <div class="audit-card">
+        <span class="audit-tag" style="background: var(--ink); color: white">第 2 步 · 一两周内</span>
+        <h4>01 + 06 + 10</h4>
+        <p>4 主题切换 + 首页重构（选 1 个隐喻）+ 海报生成器。这三个一起做能立住"行册的视觉品牌"，并撬动社交分享。</p>
+      </div>
+      <div class="audit-card">
+        <span class="audit-tag miss">第 3 步 · 慢慢做</span>
+        <h4>02 + 03 + 05 + 09</h4>
+        <p>图标体系、肌理装饰、AI 采访式表单、开销可视化 — 都是"锦上添花"型，可以在主线稳定后分批迭代。</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- footer -->
+  <div class="footer">
+    <span>行册 · 前端优化方向提案 · v1</span>
+    <span>10 DIRECTIONS · 5 USER · 5 NEW · <b>SELECT NEXT →</b></span>
+  </div>
+
+</div>
+</body>
+</html>
