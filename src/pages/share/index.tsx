@@ -5,6 +5,7 @@ import { cloud, type ShareKind } from '../../utils/cloud'
 import { getTrip } from '../../utils/db'
 import { fmtDateShort } from '../../utils/format'
 import { tripSummary } from '../../utils/trip-helpers'
+import { useThemeClass } from '../../utils/theme-class'
 import type { Trip } from '../../types/trip'
 import './index.scss'
 
@@ -17,6 +18,7 @@ export default function SharePage() {
   const [trip, setTrip] = useState<Trip | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const themeCls = useThemeClass('share')
   const [acting, setActing] = useState(false)
 
   // 阻止转发泄漏 token
@@ -71,7 +73,7 @@ export default function SharePage() {
   if (!trip) return <View className='share-empty'>未找到攻略</View>
 
   return (
-    <View className='share theme-tegami'>
+    <View className={themeCls}>
       <View className='share-head'>
         <Text className='sh-label'>{kind === 'readonly' ? '🔒 一份只读攻略' : '👥 协作邀请'}</Text>
       </View>

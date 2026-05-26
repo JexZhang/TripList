@@ -8,13 +8,6 @@
     var(--bg);
 }
 
-.new-trip.theme-tegami {
-  background:
-    radial-gradient(80% 40% at 100% 0%, rgba(255, 154, 77, 0.20) 0%, transparent 60%),
-    var(--bg);
-  color: var(--ink);
-}
-
 .nt-field {
   margin-bottom: 36rpx;
   padding: 28rpx 28rpx 32rpx;

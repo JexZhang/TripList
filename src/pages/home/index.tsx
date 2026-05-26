@@ -5,6 +5,7 @@ import type { Trip } from '../../types/trip'
 import { listMyTrips, renameTrip, copyTripLocally, smartDeleteTrip } from '../../utils/db'
 import { SEED_TRIPS, isSeedTripId } from '../../data/seed-trips'
 import { useMe } from '../../store/me-store'
+import { useThemeClass } from '../../utils/theme-class'
 import { fmtDateShort } from '../../utils/format'
 import { tripSummary } from '../../utils/trip-helpers'
 import TripActionSheet, { type TripAction } from '../../components/TripActionSheet'
@@ -18,6 +19,7 @@ export default function Home() {
   const [trips, setTrips] = useState<Trip[]>([])
   const [loading, setLoading] = useState(true)
   const { me } = useMe()
+  const themeCls = useThemeClass('home')
   const openid = me?.openid || ''
   const [actionTrip, setActionTrip] = useState<Trip | null>(null)
   const [shareTrip, setShareTrip] = useState<Trip | null>(null)
@@ -147,7 +149,7 @@ export default function Home() {
   })
 
   return (
-    <View className='home theme-tegami'>
+    <View className={themeCls}>
       <View className='home-head'>
         <Text className='home-brand'>行册</Text>
         <Text className='home-sub'>你的旅行，值得被好好记录</Text>

@@ -9,6 +9,7 @@ import type { Destination, AIPreferences } from '../../types/trip'
 import { buildNewTrip } from '../../utils/trip-helpers'
 import { createTrip, updateTrip } from '../../utils/db'
 import { useMe } from '../../store/me-store'
+import { useThemeClass } from '../../utils/theme-class'
 import { newAITaskId, fireAITask } from '../../utils/ai-task'
 import './index.scss'
 
@@ -22,6 +23,7 @@ export default function NewTrip() {
   const [destinations, setDestinations] = useState<Destination[]>([])
   const PAX_OPTIONS = Array.from({ length: 99 }, (_, i) => `${i + 1} 人`)
   const { me } = useMe()
+  const themeCls = useThemeClass('new-trip')
   const openid = me?.openid || ''
   const [submitting, setSubmitting] = useState(false)
   const [aiFormOpen, setAiFormOpen] = useState(false)
@@ -82,7 +84,7 @@ export default function NewTrip() {
   }
 
   return (
-    <View className='new-trip theme-tegami'>
+    <View className={themeCls}>
       <View className='nt-field'>
         <Text className='nt-label'>攻略名</Text>
         <Input className='nt-input' placeholder='例：南京 · 金陵四日' value={name} onInput={e => setName(e.detail.value)} />

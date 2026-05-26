@@ -2,10 +2,13 @@ import { createContext, useContext, useEffect, useState, ReactNode } from 'react
 import Taro from '@tarojs/taro'
 import ProfileSetupModal from '../components/ProfileSetupModal'
 
+export type ThemeName = 'tegami' | 'magazine' | 'postcard' | 'minimal'
+
 export interface Me {
   openid: string
   nickname: string
   avatarUrl: string
+  theme: ThemeName | null
 }
 
 interface Ctx {
@@ -36,6 +39,7 @@ export function MeProvider({ children }: { children: ReactNode }) {
         openid: result.openid,
         nickname: result.nickname || '行册旅人',
         avatarUrl: result.avatarUrl || '',
+        theme: (result.theme as ThemeName) || null,
       })
     } catch (e) {
       console.error('[me-store] ensure-user failed', e)

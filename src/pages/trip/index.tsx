@@ -3,6 +3,7 @@ import { View, Text, Picker } from '@tarojs/components'
 import Taro, { useRouter, useShareAppMessage } from '@tarojs/taro'
 import { TripProvider, useTripStore } from '../../store/trip-store'
 import { useMe } from '../../store/me-store'
+import { useThemeClass } from '../../utils/theme-class'
 import ItineraryView from '../../views/ItineraryView'
 import BudgetView from '../../views/BudgetView'
 import PackingView from '../../views/PackingView'
@@ -38,6 +39,7 @@ function TripBody() {
   const { state, dispatch } = useTripStore()
   const { openid } = useTripStore()
   const { me } = useMe()
+  const themeCls = useThemeClass('trip')
   const [view, setView] = useState<ViewKey>('itinerary')
   const [actionOpen, setActionOpen] = useState(false)
   const [shareOpen, setShareOpen] = useState(false)
@@ -251,7 +253,7 @@ function TripBody() {
   }
 
   return (
-    <View className='trip theme-tegami'>
+    <View className={themeCls}>
       <View className='trip-head'>
         <View className='th-row'>
           <Text className='th-name'>{t.name}</Text>
