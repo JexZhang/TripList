@@ -4,6 +4,7 @@ export default defineAppConfig({
     'pages/new-trip/index',
     'pages/trip/index',
     'pages/share/index',
+    'pages/me/index',
   ],
   window: {
     backgroundTextStyle: 'light',
