@@ -1,13 +1,16 @@
+import { useState } from 'react'
 import { View, Text } from '@tarojs/components'
 import { useTheme, VALID_THEMES, type ThemeName } from '../../store/theme-store'
 import { useThemeClass } from '../../utils/theme-class'
 import BrandLogo from '../../components/BrandLogo'
 import AIBadge from '../../components/AIBadge'
+import AIInterview from '../../components/AIInterview'
 import './index.scss'
 
 export default function Preview() {
   const cls = useThemeClass('preview')
   const { theme, setTheme } = useTheme()
+  const [aiOpen, setAiOpen] = useState(false)
 
   return (
     <View className={cls}>
@@ -55,6 +58,21 @@ export default function Preview() {
           <AIBadge status='thinking' size='lg' />
         </View>
       </View>
+
+      <View className='preview-section'>
+        <Text className='preview-section-title'>AIInterview · 采访式 sheet</Text>
+        <View className='preview-row preview-row--stack'>
+          <AIBadge status='idle' size='lg' label='✦ 让 AI 帮你规划' onClick={() => setAiOpen(true)} />
+        </View>
+      </View>
+      <AIInterview
+        open={aiOpen}
+        onClose={() => setAiOpen(false)}
+        onSubmit={(prefs) => {
+          console.log('[preview] interview submit', prefs)
+          setAiOpen(false)
+        }}
+      />
     </View>
   )
 }
