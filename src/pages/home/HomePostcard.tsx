@@ -3,7 +3,6 @@ import { useMemo } from 'react'
 import BrandLogo from '../../components/BrandLogo'
 import AvatarEntry from '../../components/AvatarEntry'
 import HomeBottomCTA from '../../components/HomeBottomCTA'
-import HomeCardAIRow from '../../components/HomeCardAIRow'
 import type { HomeViewProps } from './shared'
 import type { Trip } from '../../types/trip'
 import './styles/home-postcard.scss'
@@ -20,7 +19,7 @@ function tripDays(t: Trip): number {
 }
 
 export default function HomePostcard({
-  trips, loading, openid, onOpenTrip, onLongPressTrip, onNewTrip, onAITrip,
+  trips, loading, onOpenTrip, onLongPressTrip, onNewTrip, onAITrip,
 }: HomeViewProps) {
   const sized = useMemo(() => trips.map((t) => {
     const d = tripDays(t)
@@ -73,7 +72,7 @@ export default function HomePostcard({
                 <Text className='hpp-stamp-date'>{t.startDate.slice(0, 7).replace('-', '.')}</Text>
                 <Text className='hpp-stamp-days'>{t._days} DAYS · {t.pax}P</Text>
                 {ai === 'thinking' && <View className='hpp-stamp-aiglow' />}
-                {ai === 'ready' && <View className='hpp-stamp-airready'>✦</View>}
+                {ai === 'ready' && <View className='hpp-stamp-airready'>✓</View>}
               </View>
             )
           })}

@@ -12,7 +12,7 @@ interface Props {
 export default function HomeBottomCTA({ onAITap, onNewTap, newLabel = '+ 新建攻略' }: Props) {
   return (
     <View className='hcta'>
-      <AIBadge status='idle' size='lg' label='✦ 让 AI 帮你规划' onClick={onAITap} />
+      <AIBadge status='idle' size='lg' label='让 AI 帮你规划' onClick={onAITap} />
       <View className='hcta-new' onClick={onNewTap}>
         <Text>{newLabel}</Text>
       </View>
