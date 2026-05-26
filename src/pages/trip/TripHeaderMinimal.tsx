@@ -44,7 +44,7 @@ export default function TripHeaderMinimal({
 
       {showAI && (
         <View className='thmin-ai'>
-          <AIBadge status='idle' size='compact' label='✦ AI 规划' onClick={onAITap} />
+          <AIBadge status='idle' size='compact' label='AI 规划' onClick={onAITap} />
         </View>
       )}
 

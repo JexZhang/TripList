@@ -48,7 +48,7 @@ export default function TripHeaderMagazine({
         </View>
         {showAI && (
           <View className='thmg-ai'>
-            <AIBadge status='idle' size='compact' label='✦ AI 规划' onClick={onAITap} />
+            <AIBadge status='idle' size='compact' label='AI 规划' onClick={onAITap} />
           </View>
         )}
       </View>

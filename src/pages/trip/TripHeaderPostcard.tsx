@@ -68,7 +68,7 @@ export default function TripHeaderPostcard({
 
         {showAI && (
           <View className='thpp-ai'>
-            <AIBadge status='idle' size='compact' label='✦ AI 规划' onClick={onAITap} />
+            <AIBadge status='idle' size='compact' label='AI 规划' onClick={onAITap} />
           </View>
         )}
       </View>
