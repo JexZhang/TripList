@@ -15,6 +15,18 @@
   padding: 40rpx 8rpx 48rpx;
   position: relative;
   animation: slide-up 0.5s var(--ease-out) both;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 24rpx;
+}
+.home-head-text {
+  flex: 1;
+  min-width: 0;
+  position: relative;
+}
+.home-head-avatar {
+  margin-top: 8rpx;
 }
 .home-brand {
   font-size: 72rpx;
@@ -38,18 +50,15 @@
   font-family: var(--font-serif);
 }
 
-/* 装饰小阳光点 */
-.home-head::after {
+/* 装饰小阳光点：避让头像，放回左上 */
+.home-head-text::after {
   content: '';
   position: absolute;
-  top: 50rpx;
-  right: 24rpx;
-  width: 96rpx;
-  height: 96rpx;
-  border-radius: 999rpx;
-  background: radial-gradient(circle at 30% 30%, #FFD78A 0%, #FF8A3A 70%);
-  box-shadow: 0 12rpx 32rpx rgba(255, 138, 58, 0.45);
-  opacity: 0.9;
+  top: 6rpx;
+  right: -8rpx;
+  width: 0;
+  height: 0;
+  /* tegami 主题装饰由 home-tegami 自己管，本 phase 暂不画 */
 }
 
 /* ===== 空状态 ===== */

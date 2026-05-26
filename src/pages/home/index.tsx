@@ -6,6 +6,7 @@ import { listMyTrips, renameTrip, copyTripLocally, smartDeleteTrip } from '../..
 import { SEED_TRIPS, isSeedTripId } from '../../data/seed-trips'
 import { useMe } from '../../store/me-store'
 import { useThemeClass } from '../../utils/theme-class'
+import AvatarEntry from '../../components/AvatarEntry'
 import { fmtDateShort } from '../../utils/format'
 import { tripSummary } from '../../utils/trip-helpers'
 import TripActionSheet, { type TripAction } from '../../components/TripActionSheet'
@@ -151,8 +152,11 @@ export default function Home() {
   return (
     <View className={themeCls}>
       <View className='home-head'>
-        <Text className='home-brand'>行册</Text>
-        <Text className='home-sub'>你的旅行，值得被好好记录</Text>
+        <View className='home-head-text'>
+          <Text className='home-brand'>行册</Text>
+          <Text className='home-sub'>你的旅行，值得被好好记录</Text>
+        </View>
+        <AvatarEntry className='home-head-avatar' />
       </View>
 
       {loading && <View className='home-empty'>加载中...</View>}
