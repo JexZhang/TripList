@@ -1,4 +1,5 @@
 import { View, Text } from '@tarojs/components'
+import SparkleIcon from '../SparkleIcon'
 import './index.scss'
 
 interface Props {
@@ -12,7 +13,7 @@ export default function TripAIStatusBar({ open, onTap }: Props) {
   return (
     <View className='taisb' onClick={onTap}>
       <View className='taisb-shine' />
-      <Text className='taisb-icon'>✦</Text>
+      <SparkleIcon size={24} className='taisb-icon' />
       <Text className='taisb-text'>AI 正在为你编排 · 点击展开</Text>
       <View className='taisb-dots'>
         <View className='taisb-dot' />

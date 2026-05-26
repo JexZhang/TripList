@@ -33,7 +33,7 @@
   animation: shimmer 2.6s var(--ease-in-out) infinite;
   pointer-events: none;
 }
-.hc-ai-icon  { font-size: 22rpx; }
+.hc-ai-icon  { flex-shrink: 0; }
 .hc-ai-text  { flex: 1; }
 .hc-ai-arrow { font-size: 28rpx; line-height: 1; }
 

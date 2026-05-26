@@ -1,4 +1,5 @@
 import { View, Text } from '@tarojs/components'
+import SparkleIcon from '../SparkleIcon'
 import './index.scss'
 
 export type AIBadgeStatus = 'idle' | 'thinking' | 'ready' | 'error'
@@ -13,9 +14,9 @@ interface Props {
 }
 
 const DEFAULT_LABELS: Record<AIBadgeStatus, string> = {
-  idle:     '✦ 让 AI 帮你规划',
+  idle:     '让 AI 帮你规划',
   thinking: 'AI 正在编排…',
-  ready:    '✦ 草稿就绪',
+  ready:    '草稿就绪',
   error:    '生成失败 · 重试',
 }
 
@@ -33,7 +34,7 @@ export default function AIBadge({
       onClick={(e) => { e.stopPropagation(); onClick?.() }}
     >
       <View className='ai-badge-shine' />
-      <Text className='ai-badge-icon'>✦</Text>
+      <SparkleIcon size={size === 'lg' ? 32 : 26} className='ai-badge-icon' />
       <Text className='ai-badge-text'>{text}</Text>
       {status === 'thinking' && (
         <View className='ai-badge-dots'>

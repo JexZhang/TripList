@@ -36,8 +36,7 @@
 }
 
 .ai-badge-icon {
-  font-size: inherit;
-  line-height: 1;
+  flex-shrink: 0;
 }
 .ai-badge-text {
   position: relative;

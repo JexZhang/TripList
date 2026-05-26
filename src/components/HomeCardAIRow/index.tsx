@@ -1,4 +1,5 @@
 import { View, Text } from '@tarojs/components'
+import SparkleIcon from '../SparkleIcon'
 import './index.scss'
 
 export type HomeCardAIRowStatus = 'thinking' | 'ready' | 'error'
@@ -24,7 +25,7 @@ export default function HomeCardAIRow({ status, hint, onTap }: Props) {
       onClick={(e) => { e.stopPropagation(); onTap?.() }}
     >
       {status === 'thinking' && <View className='hc-ai-shine' />}
-      <Text className='hc-ai-icon'>✦</Text>
+      <SparkleIcon size={22} className='hc-ai-icon' />
       <Text className='hc-ai-text'>
         {c.text}{hint ? ` · ${hint}` : ''}
       </Text>

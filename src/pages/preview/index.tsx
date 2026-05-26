@@ -56,7 +56,7 @@ export default function Preview() {
         </View>
         <View className='preview-row preview-row--stack'>
           <Text className='preview-row-label'>lg (idle)</Text>
-          <AIBadge status='idle' size='lg' label='✦ 让 AI 帮你规划' />
+          <AIBadge status='idle' size='lg' label='让 AI 帮你规划' />
         </View>
         <View className='preview-row preview-row--stack'>
           <Text className='preview-row-label'>lg (thinking)</Text>
@@ -67,7 +67,7 @@ export default function Preview() {
       <View className='preview-section'>
         <Text className='preview-section-title'>AIInterview · 采访式 sheet</Text>
         <View className='preview-row preview-row--stack'>
-          <AIBadge status='idle' size='lg' label='✦ 让 AI 帮你规划' onClick={() => setAiOpen(true)} />
+          <AIBadge status='idle' size='lg' label='让 AI 帮你规划' onClick={() => setAiOpen(true)} />
         </View>
       </View>
       <AIInterview

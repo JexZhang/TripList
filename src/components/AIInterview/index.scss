@@ -80,6 +80,7 @@
   margin-bottom: 24rpx;
 }
 .aiv-bubble-avatar {
+  position: relative;
   flex-shrink: 0;
   width: 44rpx; height: 44rpx;
   border-radius: 50%;
@@ -88,7 +89,6 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 22rpx;
 }
 .aiv-bubble-text {
   font-size: 32rpx;

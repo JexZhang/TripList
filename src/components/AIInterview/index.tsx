@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { View, Text, Textarea, Input } from '@tarojs/components'
+import SparkleIcon from '../SparkleIcon'
 import {
   AI_INTERVIEW,
   type InterviewAnswers,
@@ -101,7 +102,9 @@ export default function AIInterview({ open, onClose, onSubmit }: Props) {
         {!done && q && (
           <View className='aiv-current' key={step}>
             <View className='aiv-bubble'>
-              <Text className='aiv-bubble-avatar'>✦</Text>
+              <View className='aiv-bubble-avatar'>
+                <SparkleIcon size={28} />
+              </View>
               <Text className='aiv-bubble-text'>{q.q}</Text>
             </View>
 
@@ -178,7 +181,8 @@ export default function AIInterview({ open, onClose, onSubmit }: Props) {
             <Text className='aiv-confirm-title'>我听明白了</Text>
             <Text className='aiv-confirm-sub'>将基于你的偏好为你生成行程草稿</Text>
             <View className='aiv-go' onClick={finish}>
-              <Text>✦ 开始生成</Text>
+              <SparkleIcon size={32} />
+              <Text>开始生成</Text>
             </View>
           </View>
         )}
