@@ -75,7 +75,7 @@ export default function ProfileForm({
         <Text className='psm-label'>昵称</Text>
         <Input
           className='psm-input'
-          type='nickname'
+          type='text'
           placeholder='请输入昵称'
           value={nickname}
           onInput={(e) => setNickname(e.detail.value)}

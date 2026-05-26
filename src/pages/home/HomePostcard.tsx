@@ -7,6 +7,15 @@ import type { HomeViewProps } from './shared'
 import type { Trip } from '../../types/trip'
 import './styles/home-postcard.scss'
 
+const STAMP_COLORS = [
+  '#2E5AAC', // 蓝
+  '#C43D3D', // 红
+  '#3A7D5C', // 绿
+  '#8B5CF6', // 紫
+  '#D97706', // 橙棕
+  '#0E7490', // 青
+]
+
 function aiStatusFor(t: Trip): 'thinking' | 'ready' | 'error' | null {
   if (t.aiStatus === 'generating') return 'thinking'
   if (t.aiStatus === 'ready') return 'ready'
@@ -64,6 +73,7 @@ export default function HomePostcard({
                 style={{
                   width: `${size}rpx`,
                   height: `${size}rpx`,
+                  '--stamp-color': STAMP_COLORS[i % STAMP_COLORS.length],
                   animationDelay: `${i * 60}ms`,
                 } as React.CSSProperties}
               >
