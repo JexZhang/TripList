@@ -1,0 +1,79 @@
+.brand-seal {
+  display: inline-flex;
+  align-items: center;
+  gap: 20rpx;
+  animation: drop-in 0.42s var(--ease-spring) both;
+}
+
+/* —— 红方章 —— */
+.brand-seal-mark {
+  position: relative;
+  background: var(--accent);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4rpx;
+  box-shadow: 0 4rpx 14rpx rgba(214, 46, 46, 0.25);
+}
+
+.brand-seal-chars {
+  display: flex;
+  flex-direction: column;
+  line-height: 0.95;
+  font-family: var(--font-display);
+  font-weight: 900;
+  letter-spacing: -2rpx;
+}
+.brand-seal-char {
+  display: block;
+}
+
+.brand-seal-corner {
+  position: absolute;
+  width: 12rpx;
+  height: 12rpx;
+  border: 2rpx solid #fff;
+}
+.brand-seal-corner-tl { top: 6rpx; left: 6rpx; border-right: 0; border-bottom: 0; }
+.brand-seal-corner-br { bottom: 6rpx; right: 6rpx; border-left: 0; border-top: 0; }
+
+/* —— 旁注 —— */
+.brand-seal-side {
+  display: flex;
+  flex-direction: column;
+  gap: 4rpx;
+}
+.brand-seal-en {
+  font-size: 22rpx;
+  font-weight: 700;
+  letter-spacing: 6rpx;
+  color: var(--ink);
+  font-family: var(--font-display);
+}
+.brand-seal-cap {
+  font-size: 18rpx;
+  letter-spacing: 4rpx;
+  color: var(--ink-3);
+  font-family: var(--font-mono);
+}
+
+/* —— 尺寸 —— */
+.brand-seal--sm .brand-seal-mark {
+  width: 56rpx; height: 56rpx;
+}
+.brand-seal--sm .brand-seal-char { font-size: 24rpx; }
+.brand-seal--sm .brand-seal-en   { font-size: 18rpx; }
+.brand-seal--sm .brand-seal-cap  { font-size: 16rpx; }
+
+.brand-seal--md .brand-seal-mark {
+  width: 88rpx; height: 88rpx;
+}
+.brand-seal--md .brand-seal-char { font-size: 36rpx; }
+
+.brand-seal--lg .brand-seal-mark {
+  width: 120rpx; height: 120rpx;
+}
+.brand-seal--lg .brand-seal-char { font-size: 52rpx; }
+.brand-seal--lg .brand-seal-en   { font-size: 24rpx; }
+.brand-seal--lg .brand-seal-cap  { font-size: 20rpx; }
