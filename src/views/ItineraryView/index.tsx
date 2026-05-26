@@ -1,24 +1,35 @@
 import { useState } from 'react'
-import { View, Text, ScrollView } from '@tarojs/components'
+import { View } from '@tarojs/components'
 import Taro from '@tarojs/taro'
 import dayjs from 'dayjs'
 import { useTripStore } from '../../store/trip-store'
+import { useTheme } from '../../store/theme-store'
 import { uid } from '../../utils/id'
-import type { Spot, Day } from '../../types/trip'
-import DayHeader from './DayHeader'
-import SpotCard from './SpotCard'
 import SpotSearch, { type SelectedSpotInfo } from '../../components/SpotSearch'
 import EditSpotSheet from '../../components/EditSpotSheet'
+import type { Spot, Day } from '../../types/trip'
+import DayTabs from './DayTabs'
+import ItinTegami from './ItinTegami'
+import ItinMagazine from './ItinMagazine'
+import ItinPostcard from './ItinPostcard'
+import ItinMinimal from './ItinMinimal'
+import type { ItinViewProps } from './shared'
 import './index.scss'
 
 export default function ItineraryView() {
   const { state, dispatch } = useTripStore()
   const trip = state.trip!
+  const { theme } = useTheme()
   const [activeDayId, setActiveDayId] = useState<string>(trip.days[0]?.id || '')
   const [searchOpen, setSearchOpen] = useState(false)
   const [editSpot, setEditSpot] = useState<{ dayId: string; spot: Spot } | null>(null)
 
-  const activeDay: Day | undefined = trip.days.find(d => d.id === activeDayId) || trip.days[0]
+  const activeDayIdx = trip.days.findIndex((d) => d.id === activeDayId)
+  const activeDay: Day | undefined = trip.days.find((d) => d.id === activeDayId) || trip.days[0]
+
+  if (!activeDay) {
+    return <View className='itinerary-empty'>没有日程,点 [+] 加一天</View>
+  }
 
   const addDay = (position: 'front' | 'back' = 'back') => {
     const last = trip.days[trip.days.length - 1]
@@ -56,13 +67,13 @@ export default function ItineraryView() {
         if (res.confirm) {
           dispatch({ type: 'DELETE_DAY', dayId })
           if (activeDayId === dayId) {
-            setActiveDayId(trip.days.find(d => d.id !== dayId)?.id || '')
+            setActiveDayId(trip.days.find((d) => d.id !== dayId)?.id || '')
           }
         }
       },
     })
     try {
-      const res = await Taro.showActionSheet({ itemList: items.map(i => i.label) })
+      const res = await Taro.showActionSheet({ itemList: items.map((i) => i.label) })
       const picked = items[res.tapIndex]
       if (picked) await picked.action()
     } catch {
@@ -84,60 +95,33 @@ export default function ItineraryView() {
     dispatch({ type: 'ADD_SPOT', dayId: activeDay.id, spot })
   }
 
-  if (!activeDay) return <View className='itinerary-empty'>没有日程,点 [+] 加一天</View>
-
-  const tabVariant =
-    trip._id === 'seed-mohe' ? 'spine' :
-    trip._id === 'seed-jzg' ? 'calendar' :
-    'ticket'
+  const viewProps: ItinViewProps = {
+    trip,
+    activeDay,
+    activeDayIdx,
+    fallbackDestination: trip.destinations?.[0] || null,
+    onSelectDay: setActiveDayId,
+    onLongPressDay: longPressDay,
+    onAddDay: addDay,
+    onSpotClick: (s) => setEditSpot({ dayId: activeDay.id, spot: s }),
+    onAddSpot: () => setSearchOpen(true),
+    onWeatherUpdate: (w) => dispatch({ type: 'UPDATE_DAY', dayId: activeDay.id, patch: { weather: w } }),
+  }
 
   return (
     <View className='itinerary'>
-      {/* day tabs */}
-      <ScrollView className={`itin-tabs itin-tabs--${tabVariant}`} scrollX enableFlex>
-        <View className='itin-tab-add itin-tab-add--front' onClick={() => addDay('front')}>
-          <Text className='itin-tab-no'>+</Text>
-        </View>
-        {trip.days.map((d, idx) => (
-          <View
-            key={d.id}
-            className={`itin-tab ${activeDayId === d.id ? 'on' : ''}`}
-            onClick={() => setActiveDayId(d.id)}
-            onLongPress={() => longPressDay(d.id, idx)}
-          >
-            <Text className='itin-tab-month'>{dayjs(d.date).format('MMM').toUpperCase()}</Text>
-            <Text className='itin-tab-bigday'>{dayjs(d.date).format('D')}</Text>
-            <Text className='itin-tab-no'>{String(idx + 1).padStart(2, '0')}</Text>
-            <View className='itin-tab-sep' />
-            <Text className='itin-tab-date'>{dayjs(d.date).format('M/D')}</Text>
-            <Text className='itin-tab-dlabel'>Day {idx + 1}</Text>
-            <View className='itin-tab-notch itin-tab-notch--t' />
-            <View className='itin-tab-notch itin-tab-notch--b' />
-          </View>
-        ))}
-        <View className='itin-tab-add' onClick={() => addDay('back')}>
-          <Text className='itin-tab-no'>+</Text>
-        </View>
-      </ScrollView>
-
-      {/* 当日 */}
-      <DayHeader
-        day={activeDay}
-        fallbackDestination={trip.destinations?.[0] || null}
-        onWeatherUpdate={w => dispatch({ type: 'UPDATE_DAY', dayId: activeDay.id, patch: { weather: w } })}
+      <DayTabs
+        days={trip.days}
+        activeId={activeDayId}
+        onSelect={setActiveDayId}
+        onLongPress={longPressDay}
+        onAdd={addDay}
       />
 
-      <View className='itin-spots'>
-        {activeDay.spots.map(s => (
-          <SpotCard key={s.id} spot={s} onClick={() => setEditSpot({ dayId: activeDay.id, spot: s })} />
-        ))}
-        {activeDay.spots.length === 0 && (
-          <View className='itin-empty'>这一天还没有地点</View>
-        )}
-        <View className='itin-add-spot' onClick={() => setSearchOpen(true)}>
-          + 添加地点
-        </View>
-      </View>
+      {theme === 'tegami'   && <ItinTegami   {...viewProps} />}
+      {theme === 'magazine' && <ItinMagazine {...viewProps} />}
+      {theme === 'postcard' && <ItinPostcard {...viewProps} />}
+      {theme === 'minimal'  && <ItinMinimal  {...viewProps} />}
 
       <SpotSearch
         open={searchOpen}
@@ -145,13 +129,12 @@ export default function ItineraryView() {
         onClose={() => setSearchOpen(false)}
         onSelect={handleAddSpot}
       />
-
       <EditSpotSheet
         open={!!editSpot}
         spot={editSpot?.spot || null}
         defaultCity={activeDay.spots[0]?.city || trip.destinations?.[0]?.name}
         onClose={() => setEditSpot(null)}
-        onSave={patch => {
+        onSave={(patch) => {
           if (!editSpot) return
           dispatch({ type: 'UPDATE_SPOT', dayId: editSpot.dayId, spotId: editSpot.spot.id, patch })
         }}

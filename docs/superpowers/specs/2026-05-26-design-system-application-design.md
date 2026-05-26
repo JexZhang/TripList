@@ -212,6 +212,8 @@
 
    7.3. ItineraryView 每日列表
 
+      7.3.1. 主体每日卡片（每主题不同结构）
+
       | 主题 | 每日卡片 |
       | --- | --- |
       | 手帖 | 圆角卡 + 暖橘 day no 圆章 + 时间线 dot 暖色 |
@@ -219,14 +221,47 @@
       | 护照 | 椭圆 day 戳 + 牛皮纸底 + 墨水蓝时间数字 |
       | 极简 | 行式：Day 01 small + spots 缩进 hairline |
 
+      7.3.2. DayTabs（顶部日期切换器，4 套独立 variant）
+
+      参考设计稿 `trip.jsx` L255–L309 `DayTabs` 组件，按主题映射：
+
+      | 主题 | variant | 视觉 |
+      | --- | --- | --- |
+      | 手帖 tegami | `ticket`（票根撕口式） | 每个 tab 是一张票根：序号 + 撕口虚线 + 日期 + "Day N" 标签；上下两个 notch 缺口 |
+      | 刊物 magazine | `spine`（时间轴脊柱） | 每个 tab 一个小 dot + `D1` + 日期；底部贯穿一条横线代表脊柱 |
+      | 护照 postcard | `calendar`（日历方块） | 每 tab 一个日历方格：上月份、中大日子、下"Day N"；激活态深棕底 + 牛皮纸纹 |
+      | 极简 minimal | `simple`（极简文字） | 仅"1 / 4.26"两行 + 极细下划线；激活态加粗 |
+
+      7.3.3. 实现策略
+         - 抽象组件 `<DayTabs variant trip activeId onChange/>`（src/components/DayTabs/）
+         - 内部 switch variant 渲染 4 套 DOM
+         - 主题切换无需重渲：`useTheme()` → variant 由 `DAYTAB_VARIANT[theme]` 映射
+         - 保留现有"前后加日期 / 长按调整顺序"逻辑（spec C 决策已确认）
+
    7.4. BudgetView
 
-      | 主题 | 风格 |
+      7.4.1. 单一结构（沿用设计稿 `budget.jsx`）
+
+      不为 4 主题各做独立版式；统一结构 + token 漂移。结构包含：
+
+      - 7.4.1.1. 顶部总览：本次总开销 + 人均（含"省 X%"对比） + 环形 donut（conic-gradient）+ 中心占比文案
+      - 7.4.1.2. 分类图例：色块 + 分类名 + 百分比 + 金额
+      - 7.4.1.3. 每日折线卡：SVG path + 渐变填充 + 6 点（含起点）
+      - 7.4.1.4. 最贵一笔高亮卡：单条 spot/meal/hotel 信息 + 价格 + "占总开销 X%"
+      - 7.4.1.5. 分类明细：可展开/折叠
+
+      7.4.2. 4 主题 token 漂移效果
+
+      | 主题 | 关键差异 |
       | --- | --- |
-      | 手帖 | 大圆角块 + 暖橘渐变进度条 + 圆形分类 chip |
-      | 刊物 | 财报表格：Helvetica 数字 + 黑线 + 红色超支警告 |
-      | 护照 | 账本签证：每分类一行盖戳 + 牛皮纸底 |
-      | 极简 | 纯数字栈：右对齐金额 + 极淡 hairline |
+      | 手帖 | donut 用暖橘渐变环；卡片大圆角 |
+      | 刊物 | donut 仍保留但配色变红/黑系；卡片直角；数字用 Helvetica |
+      | 护照 | donut 用深棕橙系；纸纹底 |
+      | 极简 | donut 极淡线；金额 mono 字体右对齐 |
+
+      7.4.3. 实现策略
+         - 单一 `BudgetView` 组件，DOM 不分主题
+         - SVG path / conic-gradient 颜色用 `var(--accent / --leaf / --plum ...)` 而非硬编码
 
    7.5. PackingView
 
@@ -238,8 +273,23 @@
       | 极简 | 极淡复选框 + 行式 list |
 
    7.6. MapView
-      - 7.6.1. 不做 4 套；地图本体不可主题化
-      - 7.6.2. 仅控件按钮（定位、图层切换）跟随 token
+
+      7.6.1. 地图本体（瓦片/控件）不可主题化，token 跟随即可
+
+      7.6.2. MapModeBar（日期/全部 模式切换器，4 套独立 variant）
+
+      参考设计稿 `trip.jsx` L353+ 与 `MAPMODE_VARIANT` 映射：
+
+      | 主题 | variant | 视觉 |
+      | --- | --- | --- |
+      | 手帖 tegami | `track`（颜色胶囊条） | 每天一颗彩色胶囊（dayColor）+ 全部按钮；激活态实心填充 |
+      | 刊物 magazine | `segmented`（分段控制器） | iOS 风分段控件：黑色边框 + 黑底激活；等宽分隔 |
+      | 护照 postcard | `route`（路线卡片条） | 每天一张迷你"签证卡"：Day N + 日期 + 距离；激活态盖戳样 |
+      | 极简 minimal | `pill`（极简胶囊） | hairline 胶囊；激活态填充黑色 |
+
+      7.6.3. 实现策略
+         - 抽象组件 `<MapModeBar variant trip mode onChange/>`
+         - 与 DayTabs 共用 `dayColor(i)` 工具，保持 trip 内日期色一致
 
    7.7. new-trip 页
       - 7.7.1. 表单页保留单一版式
@@ -358,12 +408,13 @@
       - 底部 CTA 方案 3 落地
       - 验收：四主题切换首页结构全变，AI 卡内行 + 弹 Preview 自动化
 
-   9.4. Phase 4 · trip / itinerary / budget / packing（PR-4a/b/c/d）
+   9.4. Phase 4 · trip / itinerary / budget / packing / map（PR-4a–e）
       - 4a：trip 页 header 4 套
-      - 4b：ItineraryView 4 套
-      - 4c：BudgetView 4 套
+      - 4b：ItineraryView 主体 4 套 + DayTabs 4 variant
+      - 4c：BudgetView 单结构 + 4 主题 token 漂移（不做 4 套版式）
       - 4d：PackingView 4 套
-      - 验收：每 PR 单 view，4 主题视觉走查通过；功能行为不变
+      - 4e：MapView MapModeBar 4 variant（地图本体不变）
+      - 验收：每 PR 单 view / 单切换器，4 主题视觉走查通过；功能行为不变
 
    9.5. Phase 5 · AI 收尾与清理（PR-5）
       - 启用 AIInterview 替换旧 AIPlanForm

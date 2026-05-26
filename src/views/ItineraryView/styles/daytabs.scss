@@ -1,0 +1,196 @@
+/* 通用容器 */
+.dt {
+  display: flex;
+  gap: 12rpx;
+  padding: 16rpx 24rpx;
+  background: var(--surface);
+  white-space: nowrap;
+  border-bottom: 1rpx solid var(--line);
+}
+.dt-item {
+  position: relative;
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.22s var(--ease-out);
+}
+.dt-item:active { transform: scale(0.96); }
+.dt-add {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 64rpx;
+  border-radius: var(--r-sm);
+  background: var(--accent-bg);
+  color: var(--accent);
+  font-size: 32rpx;
+}
+
+/* ============ A. ticket（票根撕口） ============ */
+.dt--ticket .dt-item--ticket {
+  flex-direction: column;
+  padding: 12rpx 20rpx;
+  min-width: 120rpx;
+  background: var(--surface-2);
+  border: 1rpx dashed var(--line-2);
+  border-radius: var(--r-sm);
+}
+.dt--ticket .dt-item--ticket.on {
+  background: var(--accent);
+  color: #fff;
+  border-color: var(--accent);
+}
+.dt-month {
+  font-size: 18rpx;
+  letter-spacing: 4rpx;
+  font-family: var(--font-mono);
+  opacity: 0.7;
+}
+.dt-bigday {
+  font-size: 42rpx;
+  font-weight: 800;
+  font-family: var(--font-display);
+  line-height: 1;
+  margin: 2rpx 0;
+}
+.dt-no {
+  font-size: 16rpx;
+  font-family: var(--font-mono);
+  opacity: 0.6;
+}
+.dt-sep, .dt-date, .dt-label { display: none; }
+.dt-notch {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 12rpx;
+  height: 8rpx;
+  background: var(--surface);
+  border-radius: 50%;
+}
+.dt-notch--t { top: -4rpx; }
+.dt-notch--b { bottom: -4rpx; }
+
+/* ============ B. spine（时间轴脊柱） ============ */
+.dt-spine-wrap {
+  position: relative;
+  background: var(--surface);
+  border-bottom: 2rpx solid var(--ink);
+}
+.dt--spine {
+  padding: 24rpx 24rpx 16rpx;
+  border-bottom: none;
+  background: transparent;
+}
+.dt-item--spine {
+  flex-direction: column;
+  padding: 8rpx 18rpx 16rpx;
+  position: relative;
+}
+.dt-spine-dot {
+  width: 16rpx;
+  height: 16rpx;
+  border-radius: 50%;
+  background: var(--ink);
+  margin-bottom: 8rpx;
+}
+.dt-item--spine.on .dt-spine-dot {
+  background: var(--accent);
+  box-shadow: 0 0 0 6rpx var(--accent-soft);
+}
+.dt-spine-no {
+  font-size: 24rpx;
+  font-weight: 800;
+  font-family: var(--font-display);
+  color: var(--ink);
+}
+.dt-spine-date {
+  font-size: 18rpx;
+  font-family: var(--font-mono);
+  color: var(--ink-3);
+  letter-spacing: 1rpx;
+}
+.dt-item--spine.on .dt-spine-no { color: var(--accent); }
+.dt-spine-line {
+  position: absolute;
+  bottom: -2rpx;
+  left: 24rpx; right: 24rpx;
+  height: 2rpx;
+  background: var(--ink);
+}
+
+/* ============ C. calendar（日历方块） ============ */
+.dt--calendar { gap: 16rpx; }
+.dt-item--calendar {
+  flex-direction: column;
+  width: 120rpx;
+  height: 120rpx;
+  padding: 12rpx 0;
+  background: var(--surface-2);
+  border: 2rpx solid var(--line-2);
+  border-radius: var(--r-sm);
+  align-items: center;
+  justify-content: center;
+}
+.dt-item--calendar.on {
+  background: var(--ink-2);
+  color: var(--surface);
+  border-color: var(--ink-2);
+}
+.dt-cal-month {
+  font-size: 18rpx;
+  font-family: var(--font-mono);
+  letter-spacing: 2rpx;
+  opacity: 0.7;
+}
+.dt-cal-bigday {
+  font-size: 48rpx;
+  font-weight: 900;
+  font-family: var(--font-display);
+  line-height: 1;
+  margin: 4rpx 0;
+}
+.dt-cal-label {
+  font-size: 18rpx;
+  letter-spacing: 2rpx;
+  font-family: var(--font-mono);
+  opacity: 0.8;
+}
+.dt-add--cal {
+  width: 120rpx;
+  height: 120rpx;
+}
+
+/* ============ D. simple（极简文字） ============ */
+.dt--simple { gap: 32rpx; padding: 24rpx; }
+.dt-item--simple {
+  flex-direction: column;
+  align-items: center;
+  padding: 4rpx 0;
+  border-bottom: 2rpx solid transparent;
+}
+.dt-item--simple.on {
+  border-bottom-color: var(--ink);
+}
+.dt-simple-num {
+  font-size: 28rpx;
+  font-weight: 600;
+  color: var(--ink-3);
+  font-family: var(--font-mono);
+}
+.dt-item--simple.on .dt-simple-num {
+  color: var(--ink);
+  font-weight: 800;
+}
+.dt-simple-date {
+  font-size: 18rpx;
+  color: var(--ink-3);
+  font-family: var(--font-mono);
+  margin-top: 2rpx;
+}
+.dt-add--simple {
+  background: transparent;
+  color: var(--ink-3);
+}

@@ -1,0 +1,62 @@
+.itinmg {
+  padding: 16rpx 24rpx 32rpx;
+  animation: fade-in 0.28s var(--ease-out) both;
+}
+
+.itinmg-dayhead {
+  display: flex;
+  align-items: baseline;
+  gap: 16rpx;
+  padding: 24rpx 0 8rpx;
+}
+.itinmg-day-label {
+  font-size: 22rpx;
+  letter-spacing: 6rpx;
+  font-family: var(--font-display);
+  color: var(--ink);
+}
+.itinmg-day-no {
+  font-size: 80rpx;
+  font-weight: 900;
+  font-family: var(--font-display);
+  line-height: 0.9;
+  color: var(--accent);
+}
+.itinmg-day-info { flex: 1; min-width: 0; align-self: center; }
+
+.itinmg-rule {
+  height: 2rpx;
+  background: var(--ink);
+  margin: 16rpx 0 24rpx;
+}
+
+.itinmg-spots {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+.itinmg-spots > .spot-card,
+.itinmg-spots > .itinmg-empty,
+.itinmg-spots > .itinmg-add {
+  border-bottom: 1rpx solid var(--line);
+}
+.itinmg-empty {
+  text-align: center;
+  padding: 64rpx 0;
+  color: var(--ink-3);
+  font-size: 22rpx;
+  letter-spacing: 6rpx;
+  font-family: var(--font-display);
+}
+.itinmg-add {
+  margin-top: 24rpx;
+  padding: 20rpx 0;
+  text-align: center;
+  border: 2rpx solid var(--ink);
+  background: transparent;
+  color: var(--ink);
+  font-size: 24rpx;
+  letter-spacing: 6rpx;
+  font-weight: 700;
+  font-family: var(--font-display);
+}

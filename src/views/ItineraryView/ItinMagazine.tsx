@@ -1,0 +1,37 @@
+import { View, Text } from '@tarojs/components'
+import DayHeader from './DayHeader'
+import SpotCard from './SpotCard'
+import type { ItinViewProps } from './shared'
+import './styles/body-magazine.scss'
+
+export default function ItinMagazine({
+  activeDay, activeDayIdx, fallbackDestination,
+  onSpotClick, onAddSpot, onWeatherUpdate,
+}: ItinViewProps) {
+  return (
+    <View className='itinmg'>
+      <View className='itinmg-dayhead'>
+        <Text className='itinmg-day-label'>DAY</Text>
+        <Text className='itinmg-day-no'>{String(activeDayIdx + 1).padStart(2, '0')}</Text>
+        <View className='itinmg-day-info'>
+          <DayHeader
+            day={activeDay}
+            fallbackDestination={fallbackDestination}
+            onWeatherUpdate={onWeatherUpdate}
+          />
+        </View>
+      </View>
+      <View className='itinmg-rule' />
+
+      <View className='itinmg-spots'>
+        {activeDay.spots.map((s) => (
+          <SpotCard key={s.id} spot={s} onClick={() => onSpotClick(s)} />
+        ))}
+        {activeDay.spots.length === 0 && (
+          <View className='itinmg-empty'>NO ITEMS YET</View>
+        )}
+        <View className='itinmg-add' onClick={onAddSpot}>+ ADD SPOT</View>
+      </View>
+    </View>
+  )
+}

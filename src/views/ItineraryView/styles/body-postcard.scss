@@ -1,0 +1,77 @@
+.itinpp {
+  padding: 16rpx 24rpx 32rpx;
+  animation: fade-in 0.28s var(--ease-out) both;
+}
+
+.itinpp-paper {
+  position: relative;
+  padding: 24rpx;
+  background: var(--surface);
+  border: 2rpx solid var(--line-2);
+  border-radius: var(--r-md);
+  overflow: hidden;
+}
+.itinpp-paper-grain {
+  position: absolute; inset: 0;
+  background:
+    repeating-linear-gradient(45deg, transparent 0 24rpx, rgba(43,31,14,0.02) 24rpx 26rpx);
+  pointer-events: none;
+}
+
+.itinpp-dayhead {
+  display: flex;
+  align-items: center;
+  gap: 20rpx;
+  padding-bottom: 16rpx;
+  border-bottom: 2rpx dashed var(--line-2);
+  position: relative;
+  z-index: 1;
+}
+.itinpp-day-oval {
+  width: 120rpx;
+  height: 88rpx;
+  border-radius: 50%;
+  border: 3rpx solid var(--accent);
+  color: var(--accent);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  transform: rotate(-6deg);
+  flex-shrink: 0;
+}
+.itinpp-day-l1 {
+  font-size: 16rpx;
+  letter-spacing: 3rpx;
+  font-family: var(--font-mono);
+}
+.itinpp-day-l2 {
+  font-size: 36rpx;
+  font-weight: 800;
+  font-family: var(--font-display);
+  line-height: 1;
+}
+.itinpp-day-info { flex: 1; min-width: 0; }
+
+.itinpp-spots {
+  display: flex;
+  flex-direction: column;
+  gap: 14rpx;
+  margin-top: 20rpx;
+  position: relative;
+  z-index: 1;
+}
+.itinpp-empty {
+  text-align: center;
+  padding: 60rpx 0;
+  color: var(--ink-3);
+}
+.itinpp-add {
+  margin-top: 8rpx;
+  padding: 20rpx;
+  text-align: center;
+  border: 2rpx dashed var(--accent);
+  color: var(--accent);
+  border-radius: var(--r-sm);
+  font-size: 26rpx;
+}

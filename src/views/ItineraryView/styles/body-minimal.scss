@@ -1,0 +1,47 @@
+.itinmin {
+  padding: 24rpx 32rpx 32rpx;
+  animation: fade-in 0.28s var(--ease-out) both;
+}
+
+.itinmin-dayhead {
+  display: flex;
+  flex-direction: column;
+  gap: 8rpx;
+  padding: 16rpx 0 12rpx;
+  border-bottom: 1rpx solid var(--line);
+}
+.itinmin-day-label {
+  font-size: 24rpx;
+  letter-spacing: 4rpx;
+  color: var(--ink-3);
+  font-family: var(--font-display);
+}
+.itinmin-day-info { font-size: 30rpx; color: var(--ink); }
+
+.itinmin-spots {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  margin-top: 16rpx;
+}
+.itinmin-spots > .spot-card,
+.itinmin-spots > .itinmin-empty,
+.itinmin-spots > .itinmin-add {
+  border-bottom: 1rpx solid var(--line);
+  padding-left: 12rpx;
+}
+.itinmin-empty {
+  padding: 48rpx 0;
+  text-align: center;
+  color: var(--ink-3);
+  font-size: 32rpx;
+}
+.itinmin-add {
+  margin-top: 24rpx;
+  padding: 16rpx 0;
+  text-align: center;
+  color: var(--ink-3);
+  font-size: 26rpx;
+  letter-spacing: 4rpx;
+}
+.itinmin-add:active { color: var(--ink); }
