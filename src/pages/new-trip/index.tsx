@@ -1,10 +1,11 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { View, Text, Input, Button, Picker } from '@tarojs/components'
-import Taro from '@tarojs/taro'
+import Taro, { useRouter } from '@tarojs/taro'
 import dayjs from 'dayjs'
 import DatePicker from '../../components/DatePicker'
 import DestinationPicker from '../../components/DestinationPicker'
 import AIPlanForm from '../../components/AIPlanForm'
+import AIInterview from '../../components/AIInterview'
 import type { Destination, AIPreferences } from '../../types/trip'
 import { buildNewTrip } from '../../utils/trip-helpers'
 import { createTrip, updateTrip } from '../../utils/db'
@@ -27,6 +28,13 @@ export default function NewTrip() {
   const openid = me?.openid || ''
   const [submitting, setSubmitting] = useState(false)
   const [aiFormOpen, setAiFormOpen] = useState(false)
+  const router = useRouter()
+
+  useEffect(() => {
+    if (router.params?.openAI === '1') {
+      setAiFormOpen(true)
+    }
+  }, [router.params])
 
   const canSubmit = !!name.trim() && !!openid && pax >= 1 && !dayjs(dates.end).isBefore(dates.start)
 
@@ -50,6 +58,14 @@ export default function NewTrip() {
   }
 
   const handleAiSubmit = async (prefs: AIPreferences) => {
+    if (!name.trim()) {
+      Taro.showToast({ title: '请先填写攻略名', icon: 'none' })
+      return
+    }
+    if (!destinations.length) {
+      Taro.showToast({ title: '请先选择目的地', icon: 'none' })
+      return
+    }
     if (!canSubmit) return
     setAiFormOpen(false)
     Taro.showLoading({ title: '准备中…' })
@@ -132,6 +148,12 @@ export default function NewTrip() {
         open={aiFormOpen}
         onClose={() => setAiFormOpen(false)}
         onSubmit={handleAiSubmit}
+      />
+
+      <AIInterview
+        open={aiFormOpen}
+        onClose={() => setAiFormOpen(false)}
+        onSubmit={(prefs) => { setAiFormOpen(false); void handleAiSubmit(prefs) }}
       />
     </View>
   )
