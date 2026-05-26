@@ -172,7 +172,7 @@ function App() {
         <TweakSection label="AI 流程" />
         <TweakSelect label="AI 状态" value={t.aiStatus}
           options={[
-            { value: 'idle',     label: '待发起 (✦ 让 AI 规划)' },
+            { value: 'idle',     label: '待发起 (让 AI 规划)' },
             { value: 'thinking', label: '生成中 · 剧场动效' },
             { value: 'ready',    label: '草稿就绪 · 印章' },
           ]}

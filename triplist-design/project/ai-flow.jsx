@@ -17,9 +17,9 @@ function AIBadge({ status = 'idle', label, onClick, compact = false }) {
   };
   const [c1, c2] = colors[status] || colors.idle;
   const text = label || ({
-    idle: '✦ 让 AI 规划',
+    idle: '让 AI 规划',
     thinking: 'AI 正在编排…',
-    ready: '✦ 草稿就绪',
+    ready: '草稿就绪',
     error: '生成失败 · 重试',
   })[status];
 
