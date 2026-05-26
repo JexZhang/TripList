@@ -5,12 +5,14 @@ import { useThemeClass } from '../../utils/theme-class'
 import BrandLogo from '../../components/BrandLogo'
 import AIBadge from '../../components/AIBadge'
 import AIInterview from '../../components/AIInterview'
+import AILoadingTheater, { type TheaterStatus } from '../../components/AILoadingTheater'
 import './index.scss'
 
 export default function Preview() {
   const cls = useThemeClass('preview')
   const { theme, setTheme } = useTheme()
   const [aiOpen, setAiOpen] = useState(false)
+  const [theaterStatus, setTheaterStatus] = useState<TheaterStatus | null>(null)
 
   return (
     <View className={cls}>
@@ -72,6 +74,21 @@ export default function Preview() {
           console.log('[preview] interview submit', prefs)
           setAiOpen(false)
         }}
+      />
+
+      <View className='preview-section'>
+        <Text className='preview-section-title'>AILoadingTheater · 全屏</Text>
+        <View className='preview-row'>
+          <View className='preview-theme-chip' onClick={() => setTheaterStatus('thinking')}>thinking</View>
+          <View className='preview-theme-chip' onClick={() => setTheaterStatus('ready')}>ready</View>
+          <View className='preview-theme-chip' onClick={() => setTheaterStatus('error')}>error</View>
+        </View>
+      </View>
+      <AILoadingTheater
+        open={theaterStatus !== null}
+        status={theaterStatus || 'thinking'}
+        onCancel={() => setTheaterStatus(null)}
+        onMinimize={() => setTheaterStatus(null)}
       />
     </View>
   )

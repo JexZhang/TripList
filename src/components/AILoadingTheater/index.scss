@@ -1,0 +1,97 @@
+.ait-mask {
+  position: fixed; inset: 0;
+  background: rgba(20, 12, 8, 0.75);
+  z-index: 250;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: fade-in 0.32s var(--ease-out) both;
+}
+.ait-sheet {
+  width: 92%;
+  max-width: 640rpx;
+  position: relative;
+  background: var(--surface);
+  border-radius: var(--r-xl);
+  padding: 64rpx 32rpx 40rpx;
+  text-align: center;
+  animation: pop-in 0.42s var(--ease-spring) both;
+}
+.ait-close {
+  position: absolute;
+  top: 16rpx; right: 24rpx;
+  width: 56rpx; height: 56rpx;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 44rpx;
+  color: var(--ink-3);
+  border-radius: 50%;
+}
+.ait-close:active { background: var(--accent-bg); }
+
+/* —— Orb —— */
+.ait-stage { padding: 24rpx 0 40rpx; }
+.ait-orb {
+  position: relative;
+  width: 240rpx; height: 240rpx;
+  margin: 0 auto 32rpx;
+}
+.ait-orb-core {
+  position: absolute;
+  inset: 25%;
+  border-radius: 50%;
+  background: radial-gradient(circle at 30% 30%, var(--accent-2), var(--plum));
+  box-shadow: 0 0 64rpx rgba(107, 70, 193, 0.55);
+  animation: float-y 2.4s ease-in-out infinite;
+}
+.ait-orb-ring {
+  position: absolute;
+  border-radius: 50%;
+  border: 2rpx solid var(--accent-soft);
+  opacity: 0.6;
+  animation: spin 6s linear infinite;
+}
+.ait-orb-ring.r1 { inset: 12%; border-color: var(--plum); opacity: 0.5; }
+.ait-orb-ring.r2 { inset: 5%;  border-color: var(--accent); opacity: 0.4; animation-duration: 9s; animation-direction: reverse; }
+.ait-orb-ring.r3 { inset: 0;   border-color: var(--sun); opacity: 0.3; animation-duration: 12s; }
+
+.ait-orb--ready .ait-orb-core { background: radial-gradient(circle at 30% 30%, var(--sun), var(--leaf)); }
+.ait-orb--error .ait-orb-core { background: radial-gradient(circle at 30% 30%, var(--coral), var(--accent)); }
+
+.ait-orb-check {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 80rpx;
+  color: #fff;
+  font-weight: 800;
+  animation: pop-in 0.4s var(--ease-spring) both;
+}
+
+.ait-title {
+  display: block;
+  font-size: 36rpx;
+  font-weight: 700;
+  font-family: var(--font-display);
+  color: var(--ink);
+  margin-bottom: 12rpx;
+}
+.ait-stream {
+  display: block;
+  font-size: 24rpx;
+  color: var(--ink-3);
+  letter-spacing: 2rpx;
+  animation: fade-in 0.4s var(--ease-out) both;
+}
+
+.ait-cancel {
+  margin: 24rpx auto 0;
+  display: inline-block;
+  padding: 16rpx 48rpx;
+  background: var(--surface-2);
+  color: var(--ink-2);
+  border-radius: var(--r-pill);
+  font-size: 26rpx;
+}
+.ait-cancel:active { transform: scale(0.96); }
