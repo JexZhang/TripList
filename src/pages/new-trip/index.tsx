@@ -28,11 +28,12 @@ export default function NewTrip() {
   const openid = me?.openid || ''
   const [submitting, setSubmitting] = useState(false)
   const [aiFormOpen, setAiFormOpen] = useState(false)
+  const [interviewOpen, setInterviewOpen] = useState(false)
   const router = useRouter()
 
   useEffect(() => {
     if (router.params?.openAI === '1') {
-      setAiFormOpen(true)
+      setInterviewOpen(true)
     }
   }, [router.params])
 
@@ -151,9 +152,9 @@ export default function NewTrip() {
       />
 
       <AIInterview
-        open={aiFormOpen}
-        onClose={() => setAiFormOpen(false)}
-        onSubmit={(prefs) => { setAiFormOpen(false); void handleAiSubmit(prefs) }}
+        open={interviewOpen}
+        onClose={() => setInterviewOpen(false)}
+        onSubmit={(prefs) => { setInterviewOpen(false); void handleAiSubmit(prefs) }}
       />
     </View>
   )
