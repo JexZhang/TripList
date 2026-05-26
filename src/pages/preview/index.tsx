@@ -7,6 +7,7 @@ import AIBadge from '../../components/AIBadge'
 import AIInterview from '../../components/AIInterview'
 import AILoadingTheater, { type TheaterStatus } from '../../components/AILoadingTheater'
 import TripAIStatusBar from '../../components/TripAIStatusBar'
+import HomeCardAIRow from '../../components/HomeCardAIRow'
 import './index.scss'
 
 export default function Preview() {
@@ -100,6 +101,15 @@ export default function Preview() {
           <View className='preview-theme-chip' onClick={() => setStatusBarOpen((v) => !v)}>
             {statusBarOpen ? '隐藏' : '显示'}
           </View>
+        </View>
+      </View>
+
+      <View className='preview-section'>
+        <Text className='preview-section-title'>HomeCardAIRow · 卡内行</Text>
+        <View className='preview-row preview-row--stack'>
+          <HomeCardAIRow status='thinking' hint='预计 30s' />
+          <HomeCardAIRow status='ready' />
+          <HomeCardAIRow status='error' />
         </View>
       </View>
     </View>

@@ -1,0 +1,51 @@
+.hc-ai {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 10rpx;
+  padding: 12rpx 18rpx;
+  border-radius: var(--r-sm);
+  font-size: 22rpx;
+  font-weight: 600;
+  letter-spacing: 1rpx;
+  overflow: hidden;
+  margin-bottom: 16rpx;
+}
+
+.hc-ai--thinking {
+  background: linear-gradient(135deg, rgba(107, 70, 193, 0.10), rgba(255, 122, 46, 0.10));
+  color: var(--plum);
+}
+.hc-ai--ready {
+  background: linear-gradient(135deg, rgba(79, 178, 134, 0.12), rgba(255, 194, 71, 0.12));
+  color: var(--leaf);
+}
+.hc-ai--error {
+  background: rgba(255, 91, 91, 0.10);
+  color: var(--coral);
+}
+
+.hc-ai-shine {
+  position: absolute;
+  top: 0; bottom: 0; left: 0;
+  width: 40%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.5), transparent);
+  animation: shimmer 2.6s var(--ease-in-out) infinite;
+  pointer-events: none;
+}
+.hc-ai-icon  { font-size: 22rpx; }
+.hc-ai-text  { flex: 1; }
+.hc-ai-arrow { font-size: 28rpx; line-height: 1; }
+
+.hc-ai-dots {
+  display: inline-flex;
+  gap: 5rpx;
+}
+.hc-ai-dot {
+  width: 6rpx; height: 6rpx;
+  border-radius: 50%;
+  background: currentColor;
+  animation: ai-thinking-dots 1.2s ease-in-out infinite;
+}
+.hc-ai-dot:nth-child(2) { animation-delay: 0.18s; }
+.hc-ai-dot:nth-child(3) { animation-delay: 0.36s; }
