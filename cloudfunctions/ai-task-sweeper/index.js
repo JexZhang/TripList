@@ -25,8 +25,10 @@ exports.main = async () => {
     }
 
     let swept = 0
+    let tripsRecovered = 0
     for (const t of data) {
       try {
+        // 1. 标记 task 为 error
         await db.collection(COL).doc(t._id).update({
           data: {
             status: 'error',
@@ -35,13 +37,35 @@ exports.main = async () => {
           },
         })
         swept++
+
+        // 2. 若 task 关联了 trip 且 trip.aiTaskId 仍是这条 task, 把 trip 状态清回 error
+        //    用 where(_id, aiTaskId) 条件更新, DB 层原子保证不会误伤已被覆盖的新任务
+        if (t.tripId) {
+          try {
+            const recoverRes = await db.collection('trips')
+              .where({ _id: t.tripId, aiTaskId: t._id })
+              .update({
+                data: {
+                  aiStatus: 'error',
+                  aiError: '后台执行超时(被回收)',
+                  aiDraft: null,
+                  updatedAt: now,
+                },
+              })
+            if (recoverRes && recoverRes.stats && recoverRes.stats.updated > 0) {
+              tripsRecovered++
+            }
+          } catch (tripErr) {
+            console.error('[sweeper] trip recovery failed', t.tripId, tripErr.message)
+          }
+        }
       } catch (e) {
-        console.error('[sweeper] update failed', t._id, e.message)
+        console.error('[sweeper] task update failed', t._id, e.message)
       }
     }
 
-    console.log(`[sweeper] swept ${swept}/${data.length} stale tasks`)
-    return { swept, scanned: data.length }
+    console.log(`[sweeper] swept ${swept}/${data.length} stale tasks, recovered ${tripsRecovered} trips`)
+    return { swept, scanned: data.length, tripsRecovered }
   } catch (e) {
     console.error('[sweeper] fatal', e)
     return { error: e.message }

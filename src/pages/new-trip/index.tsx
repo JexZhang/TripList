@@ -9,7 +9,7 @@ import type { Destination, AIPreferences } from '../../types/trip'
 import { buildNewTrip } from '../../utils/trip-helpers'
 import { createTrip, updateTrip } from '../../utils/db'
 import { useMe } from '../../store/me-store'
-import { startAITask } from '../../utils/ai-task'
+import { newAITaskId, fireAITask } from '../../utils/ai-task'
 import './index.scss'
 
 export default function NewTrip() {
@@ -59,15 +59,16 @@ export default function NewTrip() {
       input.ownerAvatarUrl = me?.avatarUrl || ''
       const tripId = await createTrip(input)
 
-      // 2. 启动 AI 任务
-      const taskId = startAITask({
+      // 2. 先把 aiTaskId / aiStatus 落库 (云函数 checkCancelled 会读这条记录)
+      const taskId = newAITaskId()
+      await updateTrip(tripId, { aiTaskId: taskId, aiStatus: 'generating', aiDraft: null, aiError: null }, openid)
+
+      // 3. 再触发云函数 (fire-and-forget)
+      fireAITask(taskId, {
         tripId,
         tripContext: { name: input.name, destinations, startDate: dates.start, endDate: dates.end, pax },
         preferences: prefs,
       })
-
-      // 3. 把 aiTaskId / aiStatus 写到 trip 上, 让首页卡片立即能看到状态条
-      await updateTrip(tripId, { aiTaskId: taskId, aiStatus: 'generating', aiDraft: null, aiError: null }, openid)
 
       Taro.hideLoading()
       Taro.showToast({ title: 'AI 正在生成…', icon: 'none', duration: 1200 })

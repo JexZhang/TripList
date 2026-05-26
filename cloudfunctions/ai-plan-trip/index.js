@@ -7,7 +7,9 @@ const { TOOLS_SCHEMA, executeTool } = require('./lib/tools')
 const { validatePlan } = require('./lib/validate')
 const { createTask, updateTask, getTripLight, finalizeTrip } = require('./lib/task-store')
 
-const MAX_TURNS = 20
+// 开启 parallel_tool_calls + prompt 引导批量并发后, 正常 3-5 轮即可结束.
+// 12 轮做硬上限, 撞到就软降级(下面)而非直接 fail.
+const MAX_TURNS = 12
 // 软超时: 留给云函数 timeout (600s) 60s buffer, 避免被 SCF 强杀
 const SOFT_TIMEOUT_MS = 540_000
 
@@ -89,10 +91,30 @@ async function planMode(event) {
 
   const { taskId: clientTaskId, tripContext, preferences, previousResult, userFeedback, tripId } = event
   if (!clientTaskId) throw new Error('缺少 taskId (需客户端预生成)')
+  // 防止任意字符串塞进来 (DB dot-path 攻击 / 超长 _id)
+  if (typeof clientTaskId !== 'string' || !/^[a-z0-9]{16,32}$/.test(clientTaskId)) {
+    throw new Error(`非法 taskId 格式: ${clientTaskId}`)
+  }
   if (!tripContext || !preferences) throw new Error('缺少 tripContext 或 preferences')
   if (!preferences.modelAlias) throw new Error('缺少 modelAlias')
   if (!MODEL_ALIASES[preferences.modelAlias]) {
     throw new Error(`未知模型: ${preferences.modelAlias}`)
+  }
+
+  // 单用户并发限制: 同时最多 2 个 pending/streaming 任务, 防止脚本刷请求消耗 token
+  const db = cloud.database()
+  const _q = db.command
+  try {
+    const { total } = await db.collection('ai_tasks')
+      .where({ _openid: OPENID, status: _q.in(['pending', 'streaming']) })
+      .count()
+    if (total >= 2) {
+      throw new Error(`已有 ${total} 个 AI 任务在运行, 请稍后再试`)
+    }
+  } catch (e) {
+    // count 失败不阻塞主流程, 只记日志
+    if (e.message && e.message.startsWith('已有')) throw e
+    console.warn('[plan] concurrency-check failed (non-fatal):', e.message)
   }
 
   // 1. 用客户端预生成的 _id 插入任务记录, 让前端 watcher 立即能找到
@@ -119,9 +141,27 @@ async function planMode(event) {
 async function runLoop({ taskId, tripId, tripContext, preferences, previousResult, userFeedback }) {
 
   // 协作式取消: 用户在 trip 上把 aiTaskId 清掉 → 本次任务下一轮 LLM 调用前主动退出, 省 token
+  // 对 DB 网络抖动重试一次, 避免单次失败被误判为 cancelled.
   const checkCancelled = async () => {
     if (!tripId) return  // 没绑定 trip 的任务无法 cancel (实际新流程下都有 tripId)
-    const t = await getTripLight(tripId)
+    let t
+    try {
+      t = await getTripLight(tripId)
+    } catch (e) {
+      if (e && e.transient) {
+        console.warn('[checkCancelled] transient, retry once:', e.message)
+        await new Promise(r => setTimeout(r, 500))
+        try {
+          t = await getTripLight(tripId)
+        } catch (e2) {
+          // 第二次还失败, 放过这一轮 (假设没被取消), 下一轮再试
+          console.warn('[checkCancelled] retry failed, skipping this turn:', e2.message)
+          return
+        }
+      } else {
+        throw e
+      }
+    }
     if (!t || t.aiTaskId !== taskId) {
       const err = new Error('CANCELLED')
       err.cancelled = true
@@ -239,7 +279,28 @@ async function runLoop({ taskId, tripId, tripContext, preferences, previousResul
       break
     }
 
-    if (!finalContent) throw new Error(`AI ${MAX_TURNS} 轮未输出最终结果, 多半是模型一直在调工具`)
+    // 软降级: 撞 MAX_TURNS 但还在调工具时, 强制再来 1 轮"不带 tools + 必须 JSON",
+    // 让模型立刻基于已收集的信息收口, 未确认坐标的 spot 省略 lat/lng 即可.
+    if (!finalContent) {
+      checkSoftTimeout()
+      await checkCancelled()
+      messages.push({
+        role: 'user',
+        content: `已达工具调用轮次上限. 立即基于已收集到的信息输出最终 JSON: 能确认坐标的 spot 正常带 lat/lng/adcode; 未能用 search_poi 验证的 spot 可省略 lat/lng/adcode 字段, 但 name/city/type 必须有. 只输出 JSON, 不要任何其他文字.`,
+      })
+      await traceStep('softDegrade:request', { turns })
+      const { msg: degMsg, usage: degUsage } = await callChat({
+        modelAlias: preferences.modelAlias,
+        messages,
+        responseFormat: { type: 'json_object' },
+      })
+      promptTokens += degUsage.prompt_tokens || 0
+      completionTokens += degUsage.completion_tokens || 0
+      turns++
+      finalContent = degMsg.content || ''
+      await traceStep('softDegrade:response', { contentPreview: trunc(finalContent, 600) })
+      if (!finalContent) throw new Error(`AI ${MAX_TURNS} 轮未输出最终结果, 软降级也失败`)
+    }
 
     let parsed = null
     let parseErr = null
@@ -307,7 +368,29 @@ async function runLoop({ taskId, tripId, tripContext, preferences, previousResul
           meta: { elapsedMs: Date.now() - startTs, promptTokens, completionTokens, turns },
         })
       } catch (_) {}
-      // 不写 trip: 用户已经把 trip.aiTaskId 清成 null 了, finalizeTrip 也会因比对失败而 abort
+      // 兜底: 如果 trip.aiTaskId 仍是我的 taskId (false-cancel 场景), 把状态字段清空,
+      // 否则前端会永远停在 'generating'. 用 where(_id, aiTaskId=mine) 条件更新, DB 层面
+      // 保证原子性: 若用户在这一刻已经启动了新任务 (aiTaskId 已被覆盖), 这次写入会 0-match
+      // 不会误伤新任务.
+      try {
+        const recoverRes = await cloud.database()
+          .collection('trips')
+          .where({ _id: tripId, aiTaskId: taskId })
+          .update({
+            data: {
+              aiTaskId: null,
+              aiStatus: null,
+              aiDraft: null,
+              aiError: null,
+              updatedAt: Date.now(),
+            },
+          })
+        if (recoverRes && recoverRes.stats && recoverRes.stats.updated > 0) {
+          console.warn('[ai-plan-trip run] cleared trip ai-state (false-cancel recovery)')
+        }
+      } catch (recoverErr) {
+        console.error('[ai-plan-trip run] recovery write failed:', recoverErr && recoverErr.message)
+      }
       return { ok: false, cancelled: true }
     }
 

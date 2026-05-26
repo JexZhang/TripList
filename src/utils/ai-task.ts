@@ -22,27 +22,29 @@ function generateTaskId(): string {
   return `${ts}${rand}`.slice(0, 32)
 }
 
-/**
- * 启动 AI 任务. fire-and-forget:
- *  - 客户端生成 taskId 并立即返回
- *  - 云函数在后台跑完整个 600s timeout, 进度和终态都直接写 trip 文档
- *  - 客户端只需 watch trip 文档 (现有 trip-store 已订阅), 不再订阅 ai_tasks
- *
- * 调用方流程通常是:
- *   1. await createTrip(...)  // 拿 tripId
- *   2. const taskId = startAITask({ tripId, ... })
- *   3. await updateTrip(tripId, { aiTaskId: taskId, aiStatus: 'generating' }, openid)
- *   4. redirect 或留页, trip-store watch 会推送 aiStatus 变化
- */
-export function startAITask(p: StartParams): string {
-  if (!p.tripId) throw new Error('startAITask: tripId is required')
-  const taskId = generateTaskId()
+/** 仅生成 taskId, 不发请求. 调用方需先把 taskId 写到 trip.aiTaskId 落库, 再 fireAITask. */
+export function newAITaskId(): string {
+  return generateTaskId()
+}
+
+/** fire-and-forget 触发云函数. 必须在 updateTrip(aiTaskId=taskId) 落库之后再调, 否则
+ *  云函数 runLoop 第一轮的 checkCancelled 会读到旧的 aiTaskId, 立即抛 CANCELLED. */
+export function fireAITask(taskId: string, p: StartParams): void {
+  if (!p.tripId) throw new Error('fireAITask: tripId is required')
   ;(Taro as { cloud?: { callFunction: (args: unknown) => Promise<unknown> } }).cloud?.callFunction({
     name: 'ai-plan-trip',
     data: { _mode: 'plan', taskId, ...p },
   })?.catch((err: { errMsg?: string }) => {
-    // 客户端 RPC 超时是预期的, 服务端仍在跑. log 一下就好
-    console.warn('[startAITask] callFunction settled:', err?.errMsg)
+    console.warn('[fireAITask] callFunction settled:', err?.errMsg)
   })
+}
+
+/**
+ * @deprecated 存在竞态: 云函数会在客户端 updateTrip 落库前先读 trip, 看到旧 aiTaskId
+ * 立即被判 CANCELLED. 改用 newAITaskId() + await updateTrip + fireAITask().
+ */
+export function startAITask(p: StartParams): string {
+  const taskId = newAITaskId()
+  fireAITask(taskId, p)
   return taskId
 }

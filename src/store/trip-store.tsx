@@ -28,8 +28,9 @@ type Action =
   | { type: 'SET_TRIP'; trip: Trip }
   | { type: 'UPDATE_TRIP'; patch: Partial<Trip> }
   | { type: 'UPDATE_DAY'; dayId: string; patch: Partial<Day> }
-  | { type: 'ADD_DAY'; day: Day }
+  | { type: 'ADD_DAY'; day: Day; position?: 'front' | 'back' }
   | { type: 'DELETE_DAY'; dayId: string }
+  | { type: 'MOVE_DAY'; dayId: string; targetIndex: number }
   | { type: 'ADD_SPOT'; dayId: string; spot: Spot }
   | { type: 'UPDATE_SPOT'; dayId: string; spotId: string; patch: Partial<Spot> }
   | { type: 'DELETE_SPOT'; dayId: string; spotId: string }
@@ -58,10 +59,36 @@ function reducer(state: State, a: Action): State {
         ...state,
         trip: { ...trip, days: trip.days.map(d => d.id === a.dayId ? { ...d, ...a.patch } : d) }
       }
-    case 'ADD_DAY':
+    case 'ADD_DAY': {
+      if (a.position === 'front') {
+        // 在最前插入: 新首日的 date = 原首日 -1, withSyncedDays 会按这个 base 重新派生
+        const oldStart = trip.days[0]?.date || trip.startDate
+        const prepended = { ...a.day, date: dayjs(oldStart).subtract(1, 'day').format('YYYY-MM-DD') }
+        return { ...state, trip: withSyncedDays(trip, [prepended, ...trip.days]) }
+      }
       return { ...state, trip: withSyncedDays(trip, [...trip.days, a.day]) }
+    }
     case 'DELETE_DAY':
       return { ...state, trip: withSyncedDays(trip, trip.days.filter(d => d.id !== a.dayId)) }
+    case 'MOVE_DAY': {
+      const fromIdx = trip.days.findIndex(d => d.id === a.dayId)
+      if (fromIdx < 0) return state
+      const clamped = Math.max(0, Math.min(trip.days.length - 1, a.targetIndex))
+      if (clamped === fromIdx) return state
+      const next = trip.days.slice()
+      const [moved] = next.splice(fromIdx, 1)
+      next.splice(clamped, 0, moved)
+      // 决定整体起点是否平移:
+      //   挪到最前 -> 整体提前 1 天 (新首日 = 原首日 -1)
+      //   挪到最后 -> 整体推后 1 天 (新首日 = 原首日 +1)
+      //   中间 -> 不变
+      const oldStart = trip.days[0].date
+      let newBase = oldStart
+      if (clamped === 0) newBase = dayjs(oldStart).subtract(1, 'day').format('YYYY-MM-DD')
+      else if (clamped === trip.days.length - 1) newBase = dayjs(oldStart).add(1, 'day').format('YYYY-MM-DD')
+      next[0] = { ...next[0], date: newBase }
+      return { ...state, trip: withSyncedDays(trip, next) }
+    }
     case 'ADD_SPOT':
       return {
         ...state,
@@ -112,6 +139,7 @@ export function TripProvider({
   const [state, dispatch] = useReducer(reducer, { trip: null, loading: true, error: null })
   const lastSavedRef = useRef<string>('')  // JSON 字串作为版本指纹
   const pendingRef = useRef(false)
+  const deferredRemoteRef = useRef<Trip | null>(null)  // pendingRef 期间被丢的远端 doc, save 完成后补合并
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
   const seedWarningShownRef = useRef(false)  // 示例攻略警告只显示一次
 
@@ -146,7 +174,11 @@ export function TripProvider({
       onChange: (snapshot: { docs: Trip[] }) => {
         const doc = snapshot.docs && snapshot.docs[0]
         if (!doc) return
-        if (pendingRef.current) return  // 本地有未保存编辑，忽略远端推送
+        if (pendingRef.current) {
+          // 本地有未保存编辑, 暂存最新远端 doc, save 完成后合并 (避免丢 AI 终态/协作者改动)
+          deferredRemoteRef.current = doc
+          return
+        }
         const incoming = JSON.stringify(doc)
         if (incoming === lastSavedRef.current) return  // 自己刚保存的回声
         dispatch({ type: 'SET_TRIP', trip: doc })
@@ -199,6 +231,24 @@ export function TripProvider({
         Taro.showToast({ title: '保存失败', icon: 'error' })
       } finally {
         pendingRef.current = false
+        // pendingRef 期间收到过远端更新? 把它合并进来 (服务端独有字段 ai*/updatedAt 等)
+        const deferred = deferredRemoteRef.current
+        if (deferred) {
+          deferredRemoteRef.current = null
+          const merged: Trip = { ...deferred, ...(state.trip || {}), ...{
+            // 强制保留服务端独有的字段, 避免被本地 state 覆盖
+            aiTaskId: deferred.aiTaskId,
+            aiStatus: deferred.aiStatus,
+            aiDraft: deferred.aiDraft,
+            aiError: deferred.aiError,
+            collaborators: deferred.collaborators,
+            collaboratorOpenids: (deferred as Trip & { collaboratorOpenids?: string[] }).collaboratorOpenids,
+            updatedAt: deferred.updatedAt,
+            updatedBy: deferred.updatedBy,
+          } }
+          dispatch({ type: 'SET_TRIP', trip: merged })
+          lastSavedRef.current = JSON.stringify(merged)
+        }
       }
     }, 500)
   }, [state.trip, state.loading, openid])

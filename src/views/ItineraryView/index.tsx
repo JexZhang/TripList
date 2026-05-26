@@ -20,28 +20,53 @@ export default function ItineraryView() {
 
   const activeDay: Day | undefined = trip.days.find(d => d.id === activeDayId) || trip.days[0]
 
-  const addDay = () => {
+  const addDay = (position: 'front' | 'back' = 'back') => {
     const last = trip.days[trip.days.length - 1]
-    const newDate = last
-      ? dayjs(last.date).add(1, 'day').format('YYYY-MM-DD')
-      : dayjs(trip.startDate).format('YYYY-MM-DD')
+    const newDate = position === 'front'
+      ? dayjs(trip.days[0]?.date || trip.startDate).subtract(1, 'day').format('YYYY-MM-DD')
+      : last
+        ? dayjs(last.date).add(1, 'day').format('YYYY-MM-DD')
+        : dayjs(trip.startDate).format('YYYY-MM-DD')
     const day: Day = { id: uid(), date: newDate, spots: [], weather: null }
-    dispatch({ type: 'ADD_DAY', day })
+    dispatch({ type: 'ADD_DAY', day, position })
     setActiveDayId(day.id)
   }
 
-  const longPressDay = async (dayId: string, dayNo: number) => {
-    const res = await Taro.showModal({
-      title: `删除 Day ${dayNo}?`,
-      content: '该日的所有 spots 一并删除',
-      confirmText: '删除',
-      confirmColor: '#c43d3d',
+  const longPressDay = async (dayId: string, dayIdx: number) => {
+    const total = trip.days.length
+    const dayNo = dayIdx + 1
+    const items: { label: string; action: () => void }[] = []
+    if (dayIdx > 0) {
+      items.push({ label: '← 前移一位', action: () => dispatch({ type: 'MOVE_DAY', dayId, targetIndex: dayIdx - 1 }) })
+      items.push({ label: '⇤ 移到最前 (整体提前 1 天)', action: () => dispatch({ type: 'MOVE_DAY', dayId, targetIndex: 0 }) })
+    }
+    if (dayIdx < total - 1) {
+      items.push({ label: '后移一位 →', action: () => dispatch({ type: 'MOVE_DAY', dayId, targetIndex: dayIdx + 1 }) })
+      items.push({ label: '⇥ 移到最后 (整体延后 1 天)', action: () => dispatch({ type: 'MOVE_DAY', dayId, targetIndex: total - 1 }) })
+    }
+    items.push({
+      label: `删除 Day ${dayNo}`,
+      action: async () => {
+        const res = await Taro.showModal({
+          title: `删除 Day ${dayNo}?`,
+          content: '该日的所有 spots 一并删除',
+          confirmText: '删除',
+          confirmColor: '#c43d3d',
+        })
+        if (res.confirm) {
+          dispatch({ type: 'DELETE_DAY', dayId })
+          if (activeDayId === dayId) {
+            setActiveDayId(trip.days.find(d => d.id !== dayId)?.id || '')
+          }
+        }
+      },
     })
-    if (res.confirm) {
-      dispatch({ type: 'DELETE_DAY', dayId })
-      if (activeDayId === dayId) {
-        setActiveDayId(trip.days.find(d => d.id !== dayId)?.id || '')
-      }
+    try {
+      const res = await Taro.showActionSheet({ itemList: items.map(i => i.label) })
+      const picked = items[res.tapIndex]
+      if (picked) await picked.action()
+    } catch {
+      // 用户取消
     }
   }
 
@@ -70,12 +95,15 @@ export default function ItineraryView() {
     <View className='itinerary'>
       {/* day tabs */}
       <ScrollView className={`itin-tabs itin-tabs--${tabVariant}`} scrollX enableFlex>
+        <View className='itin-tab-add itin-tab-add--front' onClick={() => addDay('front')}>
+          <Text className='itin-tab-no'>+</Text>
+        </View>
         {trip.days.map((d, idx) => (
           <View
             key={d.id}
             className={`itin-tab ${activeDayId === d.id ? 'on' : ''}`}
             onClick={() => setActiveDayId(d.id)}
-            onLongPress={() => longPressDay(d.id, idx + 1)}
+            onLongPress={() => longPressDay(d.id, idx)}
           >
             <Text className='itin-tab-month'>{dayjs(d.date).format('MMM').toUpperCase()}</Text>
             <Text className='itin-tab-bigday'>{dayjs(d.date).format('D')}</Text>
@@ -87,7 +115,7 @@ export default function ItineraryView() {
             <View className='itin-tab-notch itin-tab-notch--b' />
           </View>
         ))}
-        <View className='itin-tab-add' onClick={addDay}>
+        <View className='itin-tab-add' onClick={() => addDay('back')}>
           <Text className='itin-tab-no'>+</Text>
         </View>
       </ScrollView>

@@ -11,7 +11,7 @@ import CollaboratorsBar from '../../components/CollaboratorsBar'
 import CollaboratorsSheet from '../../components/CollaboratorsSheet'
 import TripActionSheet, { type TripAction } from '../../components/TripActionSheet'
 import ShareTypeSheet from '../../components/ShareTypeSheet'
-import AIPlanForm from '../../components/AIPlanForm'
+import AIPlanForm, { clearAIPlanFormDraft } from '../../components/AIPlanForm'
 import AIPlanPreview from '../../components/AIPlanPreview'
 import AILoadingBar from '../../components/AILoadingBar'
 import { buildShareMessage, shareRef, resetShareRef } from '../../utils/share'
@@ -20,16 +20,16 @@ import { isSeedTripId } from '../../data/seed-trips'
 import { mergePlanIntoDays } from '../../utils/trip-helpers'
 import type { ShareKind } from '../../utils/cloud'
 import type { AIPreferences } from '../../types/trip'
-import { startAITask } from '../../utils/ai-task'
+import { newAITaskId, fireAITask } from '../../utils/ai-task'
 import './index.scss'
 
 type ViewKey = 'itinerary' | 'budget' | 'packing' | 'map'
 
 const VIEWS: { key: ViewKey; label: string }[] = [
   { key: 'itinerary', label: '攻略' },
+  { key: 'map', label: '地图' },
   { key: 'budget', label: '开销' },
   { key: 'packing', label: '清单' },
-  { key: 'map', label: '地图' },
 ]
 
 const PAX_OPTIONS = Array.from({ length: 99 }, (_, i) => `${i + 1} 人`)
@@ -78,7 +78,16 @@ function TripBody() {
     if (!t || !isOwner) return
     setAiFormOpen(false)
     try {
-      const taskId = startAITask({
+      const taskId = newAITaskId()
+      // 先把 aiTaskId 写到 trip 落库, 再发云函数. 反过来云函数会在
+      // updateTrip 完成前先读 trip, 看到旧 aiTaskId 立刻 CANCELLED.
+      await updateTrip(t._id, {
+        aiTaskId: taskId,
+        aiStatus: 'generating',
+        aiDraft: null,
+        aiError: null,
+      }, openid)
+      fireAITask(taskId, {
         tripId: t._id,
         tripContext: {
           name: t.name,
@@ -89,12 +98,6 @@ function TripBody() {
         },
         preferences: prefs,
       })
-      await updateTrip(t._id, {
-        aiTaskId: taskId,
-        aiStatus: 'generating',
-        aiDraft: null,
-        aiError: null,
-      }, openid)
     } catch (e: unknown) {
       console.error('[ai trigger]', e)
       Taro.showToast({ title: 'AI 启动失败', icon: 'none' })
@@ -155,6 +158,7 @@ function TripBody() {
         aiError: null,
       } })
       setAiPreviewOpen(false)
+      clearAIPlanFormDraft()
       Taro.showToast({ title: '已应用', icon: 'success' })
     } catch (e: unknown) {
       console.error('[ai apply]', e)

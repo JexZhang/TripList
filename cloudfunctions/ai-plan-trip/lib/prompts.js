@@ -28,11 +28,14 @@ type Spot = {
 - search_poi(city, keyword, category?): 搜真实存在的地点。返回数组, 每项含 name/address/city/lat/lng/adcode。
 - web_search(query): 搜互联网攻略/博主/季节性活动, 返回标题+摘要。
 
-【工具使用指导】
-- 不熟悉的目的地 / 想要差异化推荐 → 先 web_search 拿灵感
-- 任何地点写入最终 JSON 前 → 必须用 search_poi 拿到 lat/lng, 然后把工具返回的 lat/lng/adcode 原样抄进 Spot 字段
-- 编造坐标 = 严重错误。不确定就用工具。
-- 一次生成 web_search 用 1-3 次, search_poi 按需调用(每个写入的 spot 都需要)
+【工具使用指导 — 必须批量并行】
+- 你支持在一条 assistant 消息里同时发出多个 tool_calls, 必须充分利用:
+  * 先用 1 轮 web_search 拿灵感(同一轮里可并发 1-2 个不同关键词的 web_search)
+  * 然后规划好整个行程的所有候选 spot 名(暂不写最终 JSON), 在**同一轮**里一次性并发发出"每个 spot 一个 search_poi", 不要一个查完再查下一个
+  * 拿到批量候选后, 你来做语义判别: 从每个 search_poi 的候选列表里挑出正确的那个, 把它的 lat/lng/adcode 原样抄进最终 Spot
+  * 一次生成总轮数目标: web_search 1 轮 + search_poi 批量 1-2 轮 + 输出 JSON 1 轮 ≈ 3-4 轮搞定
+- 任何地点写入最终 JSON 前 → 必须用 search_poi 拿到 lat/lng 并语义匹配候选, 不要编造坐标
+- web_search 总共最多用 3 次
 - 工具调用阶段不要输出 JSON, 只在所有信息收集完毕后输出
 
 【真实性 — 不可妥协】

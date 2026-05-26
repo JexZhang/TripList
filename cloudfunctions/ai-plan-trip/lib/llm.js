@@ -41,7 +41,12 @@ async function callChat({ modelAlias, messages, tools, responseFormat }) {
     temperature: 0.5,
     max_tokens: 8192,
   }
-  if (tools && tools.length > 0) body.tools = tools
+  if (tools && tools.length > 0) {
+    body.tools = tools
+    // 显式开启并行 tool calling: 让模型在同一轮里批量发出多个 search_poi,
+    // 避免一个景点查一轮、5 天行程撞 MAX_TURNS 上限.
+    body.parallel_tool_calls = true
+  }
   if (responseFormat) body.response_format = responseFormat
 
   console.log(`[llm:req] model=${model} provider=${provider} msgs=${messages.length} tools=${tools ? tools.length : 0} rf=${!!responseFormat}`)
