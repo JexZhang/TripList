@@ -2,6 +2,7 @@ import { View, Text } from '@tarojs/components'
 import { useTheme, VALID_THEMES, type ThemeName } from '../../store/theme-store'
 import { useThemeClass } from '../../utils/theme-class'
 import BrandLogo from '../../components/BrandLogo'
+import AIBadge from '../../components/AIBadge'
 import './index.scss'
 
 export default function Preview() {
@@ -33,6 +34,25 @@ export default function Preview() {
         <View className='preview-row'>
           <Text className='preview-row-label'>sm</Text>
           <BrandLogo size='sm' />
+        </View>
+      </View>
+
+      <View className='preview-section'>
+        <Text className='preview-section-title'>AIBadge · 4 status × 2 size</Text>
+        <View className='preview-row'>
+          <Text className='preview-row-label'>compact</Text>
+          <AIBadge status='idle' size='compact' />
+          <AIBadge status='thinking' size='compact' />
+          <AIBadge status='ready' size='compact' />
+          <AIBadge status='error' size='compact' />
+        </View>
+        <View className='preview-row preview-row--stack'>
+          <Text className='preview-row-label'>lg (idle)</Text>
+          <AIBadge status='idle' size='lg' label='✦ 让 AI 帮你规划' />
+        </View>
+        <View className='preview-row preview-row--stack'>
+          <Text className='preview-row-label'>lg (thinking)</Text>
+          <AIBadge status='thinking' size='lg' />
         </View>
       </View>
     </View>

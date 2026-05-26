@@ -54,3 +54,11 @@
   color: var(--ink-3);
   min-width: 120rpx;
 }
+
+.preview-row--stack {
+  flex-direction: column;
+  align-items: stretch;
+}
+.preview-row--stack > .preview-row-label {
+  margin-bottom: 8rpx;
+}
