@@ -84,6 +84,9 @@ export interface Trip {
   aiDraft?: GeneratedPlan | null
   aiError?: string | null
 
+  // === 封面图（杂志主题用，其他主题忽略）===
+  coverUrl?: string | null
+
   createdAt: number
   updatedAt: number
   updatedBy: string

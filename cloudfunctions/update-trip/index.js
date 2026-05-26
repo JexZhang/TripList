@@ -13,6 +13,7 @@ const ALLOWED_FIELDS = [
   'aiStatus',
   'aiDraft',
   'aiError',
+  'coverUrl',
 ]
 
 // 这些字段只能 owner 改 (协作者不能触发/停止/应用 AI)
