@@ -19,7 +19,7 @@ function tripDays(t: Trip): number {
 }
 
 export default function HomeMinimal({
-  trips, loading, openid, onOpenTrip, onLongPressTrip, onNewTrip, onAITrip,
+  trips, loading, onOpenTrip, onLongPressTrip, onNewTrip, onAITrip,
 }: HomeViewProps) {
   const totalDays = trips.reduce((s, t) => s + tripDays(t), 0)
 

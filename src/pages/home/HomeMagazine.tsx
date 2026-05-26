@@ -16,7 +16,7 @@ function aiStatusFor(t: Trip): 'thinking' | 'ready' | 'error' | null {
 }
 
 export default function HomeMagazine({
-  trips, loading, openid, onOpenTrip, onLongPressTrip,
+  trips, loading, onOpenTrip, onLongPressTrip,
   onNewTrip, onAITrip, onCoverLongPress,
 }: HomeViewProps) {
   const featured = trips[0]
