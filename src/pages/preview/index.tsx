@@ -6,6 +6,7 @@ import BrandLogo from '../../components/BrandLogo'
 import AIBadge from '../../components/AIBadge'
 import AIInterview from '../../components/AIInterview'
 import AILoadingTheater, { type TheaterStatus } from '../../components/AILoadingTheater'
+import TripAIStatusBar from '../../components/TripAIStatusBar'
 import './index.scss'
 
 export default function Preview() {
@@ -13,6 +14,7 @@ export default function Preview() {
   const { theme, setTheme } = useTheme()
   const [aiOpen, setAiOpen] = useState(false)
   const [theaterStatus, setTheaterStatus] = useState<TheaterStatus | null>(null)
+  const [statusBarOpen, setStatusBarOpen] = useState(false)
 
   return (
     <View className={cls}>
@@ -90,6 +92,16 @@ export default function Preview() {
         onCancel={() => setTheaterStatus(null)}
         onMinimize={() => setTheaterStatus(null)}
       />
+
+      <View className='preview-section'>
+        <Text className='preview-section-title'>TripAIStatusBar · 最小化态</Text>
+        <TripAIStatusBar open={statusBarOpen} onTap={() => setStatusBarOpen(false)} />
+        <View className='preview-row'>
+          <View className='preview-theme-chip' onClick={() => setStatusBarOpen((v) => !v)}>
+            {statusBarOpen ? '隐藏' : '显示'}
+          </View>
+        </View>
+      </View>
     </View>
   )
 }

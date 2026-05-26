@@ -1,0 +1,41 @@
+.taisb {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 14rpx;
+  padding: 18rpx 28rpx;
+  background: linear-gradient(135deg, var(--plum), var(--accent));
+  color: #fff;
+  overflow: hidden;
+  font-size: 24rpx;
+  font-weight: 600;
+  letter-spacing: 2rpx;
+  animation: drop-in 0.36s var(--ease-spring) both;
+}
+.taisb-shine {
+  position: absolute;
+  top: 0; bottom: 0; left: 0;
+  width: 40%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.35), transparent);
+  animation: shimmer 2.4s var(--ease-in-out) infinite;
+  pointer-events: none;
+}
+.taisb-icon {
+  font-size: 24rpx;
+}
+.taisb-text {
+  flex: 1;
+}
+.taisb-dots {
+  display: inline-flex;
+  gap: 6rpx;
+}
+.taisb-dot {
+  width: 8rpx; height: 8rpx;
+  border-radius: 50%;
+  background: #fff;
+  animation: ai-thinking-dots 1.2s ease-in-out infinite;
+}
+.taisb-dot:nth-child(2) { animation-delay: 0.18s; }
+.taisb-dot:nth-child(3) { animation-delay: 0.36s; }
+.taisb:active { opacity: 0.92; }
