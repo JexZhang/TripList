@@ -1,0 +1,140 @@
+.thpp {
+  padding: 16rpx 24rpx 8rpx;
+  animation: page-in 0.36s var(--ease-out) both;
+}
+
+.thpp-paper {
+  position: relative;
+  padding: 16rpx 24rpx 32rpx;
+  background: var(--surface);
+  border: 2rpx solid var(--line-2);
+  border-radius: var(--r-md);
+  overflow: hidden;
+  margin-bottom: 16rpx;
+}
+.thpp-paper-grain {
+  position: absolute; inset: 0;
+  background:
+    repeating-linear-gradient(45deg, transparent 0 24rpx, rgba(43,31,14,0.025) 24rpx 26rpx),
+    repeating-linear-gradient(-45deg, transparent 0 24rpx, rgba(43,31,14,0.02) 24rpx 26rpx);
+  pointer-events: none;
+}
+
+.thpp-topbar {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 4rpx 0 8rpx;
+  border-bottom: 1rpx dashed var(--line-2);
+}
+.thpp-back {
+  width: 56rpx; height: 56rpx;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 36rpx;
+  color: var(--ink-2);
+}
+.thpp-eyebrow {
+  font-size: 22rpx;
+  letter-spacing: 8rpx;
+  font-family: var(--font-mono);
+  color: var(--ink-2);
+}
+.thpp-menu {
+  width: 56rpx; height: 56rpx;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 40rpx;
+  color: var(--ink-2);
+}
+
+.thpp-body {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  gap: 24rpx;
+  padding-top: 24rpx;
+}
+
+.thpp-titleblock { flex: 1; min-width: 0; }
+.thpp-name {
+  display: block;
+  font-size: 44rpx;
+  font-weight: 800;
+  font-family: var(--font-display);
+  color: var(--ink);
+  margin-bottom: 24rpx;
+  line-height: 1.15;
+}
+
+.thpp-meta-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12rpx 24rpx;
+}
+.thpp-meta-row {
+  display: flex;
+  flex-direction: column;
+  gap: 2rpx;
+}
+.thpp-meta-l {
+  font-size: 18rpx;
+  letter-spacing: 4rpx;
+  font-family: var(--font-mono);
+  color: var(--ink-3);
+}
+.thpp-meta-v {
+  font-size: 24rpx;
+  font-weight: 600;
+  font-family: var(--font-display);
+  color: var(--ink);
+}
+.thpp-meta-edit {
+  color: var(--accent);
+}
+
+.thpp-stamp {
+  position: relative;
+  width: 180rpx;
+  height: 180rpx;
+  border: 4rpx solid var(--accent);
+  border-radius: 50%;
+  color: var(--accent);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  transform: rotate(-12deg);
+  background: rgba(255, 252, 243, 0.5);
+  animation: stamp-down 0.6s var(--ease-spring) both;
+  flex-shrink: 0;
+}
+.thpp-stamp-l1 {
+  font-size: 24rpx;
+  font-weight: 800;
+  font-family: var(--font-display);
+}
+.thpp-stamp-l2 {
+  font-size: 18rpx;
+  letter-spacing: 3rpx;
+  font-family: var(--font-mono);
+  margin: 4rpx 0;
+  max-width: 140rpx;
+  overflow: hidden;
+}
+.thpp-stamp-l3 {
+  font-size: 16rpx;
+  letter-spacing: 2rpx;
+  font-family: var(--font-mono);
+  opacity: 0.7;
+}
+
+.thpp-ai {
+  position: absolute;
+  bottom: 16rpx;
+  right: 16rpx;
+  z-index: 2;
+}
+
+.thpp-ai-bar {
+  margin: 0 0 16rpx;
+}
