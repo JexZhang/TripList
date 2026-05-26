@@ -5,6 +5,7 @@ export default defineAppConfig({
     'pages/trip/index',
     'pages/share/index',
     'pages/me/index',
+    'pages/preview/index',
   ],
   window: {
     backgroundTextStyle: 'light',
