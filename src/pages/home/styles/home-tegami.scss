@@ -1,0 +1,121 @@
+.ht {
+  min-height: 100vh;
+  padding: 32rpx 32rpx 320rpx;
+  box-sizing: border-box;
+  background:
+    radial-gradient(120% 60% at 100% 0%, rgba(255, 154, 77, 0.22) 0%, transparent 55%),
+    radial-gradient(80% 40% at 0% 10%, rgba(255, 194, 71, 0.18) 0%, transparent 60%),
+    var(--bg);
+  animation: page-in 0.42s var(--ease-out) both;
+}
+
+.ht-head {
+  padding: 16rpx 8rpx 32rpx;
+  animation: slide-up 0.5s var(--ease-out) both;
+}
+.ht-issue {
+  font-size: 22rpx;
+  color: var(--ink-3);
+  letter-spacing: 4rpx;
+  font-family: var(--font-mono);
+  margin-bottom: 16rpx;
+}
+.ht-head-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+.ht-avatar { margin-top: 12rpx; }
+.ht-tag {
+  display: block;
+  margin-top: 14rpx;
+  font-size: 24rpx;
+  color: var(--ink-3);
+  letter-spacing: 3rpx;
+  font-family: var(--font-display);
+}
+
+.ht-loading {
+  text-align: center;
+  font-size: 26rpx;
+  color: var(--ink-3);
+  padding: 80rpx 0;
+}
+
+.ht-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  margin-top: 24rpx;
+}
+
+.ht-card {
+  margin-top: -40rpx;
+  background: var(--surface);
+  border-radius: var(--r-lg);
+  padding: 28rpx 28rpx 28rpx 40rpx;
+  box-shadow: var(--shadow-md);
+  position: relative;
+  overflow: hidden;
+  animation: slide-up 0.5s var(--ease-out) both;
+  transition: transform 0.22s var(--ease-out);
+}
+.ht-card:first-child { margin-top: 0; }
+.ht-card-0 { transform: rotate(-0.6deg); }
+.ht-card-1 { transform: rotate(0.4deg); }
+.ht-card-2 { transform: rotate(-0.3deg); }
+.ht-card-3 { transform: rotate(0.6deg); }
+.ht-card-4 { transform: rotate(-0.4deg); }
+.ht-card:active {
+  transform: rotate(0deg) scale(0.985);
+  box-shadow: var(--shadow-lg);
+}
+
+.ht-card-edge {
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 12rpx;
+  background: linear-gradient(180deg, var(--c1), var(--c2));
+}
+
+.ht-card-body { position: relative; }
+.ht-card-meta {
+  font-size: 22rpx;
+  color: var(--ink-3);
+  font-family: var(--font-mono);
+  letter-spacing: 1rpx;
+}
+.ht-card-name {
+  display: block;
+  margin-top: 8rpx;
+  font-size: 38rpx;
+  font-weight: 700;
+  font-family: var(--font-display);
+  color: var(--ink);
+  letter-spacing: 1rpx;
+}
+
+.ht-card-foot {
+  margin-top: 16rpx;
+  display: flex;
+  gap: 12rpx;
+}
+.ht-card-badge {
+  padding: 4rpx 14rpx;
+  border-radius: var(--r-pill);
+  font-size: 20rpx;
+  font-weight: 700;
+  letter-spacing: 2rpx;
+  background: linear-gradient(135deg, var(--accent), var(--coral));
+  color: #fff;
+}
+.ht-card-badge-seed {
+  background: linear-gradient(135deg, var(--sun), var(--accent));
+}
+
+.ht-cta {
+  position: fixed;
+  left: 32rpx; right: 32rpx;
+  bottom: 48rpx;
+  z-index: 10;
+}
