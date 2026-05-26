@@ -1,0 +1,72 @@
+/* ===== 行册 · 全局 keyframes ===== */
+
+@keyframes page-in {
+  from { opacity: 0; transform: translateY(16rpx); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes slide-up {
+  from { opacity: 0; transform: translateY(40rpx); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes pop-in {
+  0%   { opacity: 0; transform: scale(0.92); }
+  60%  { opacity: 1; transform: scale(1.02); }
+  100% { transform: scale(1); }
+}
+
+@keyframes sheet-up {
+  from { transform: translateY(100%); }
+  to   { transform: translateY(0); }
+}
+
+@keyframes shimmer {
+  0%   { transform: translateX(-110%); }
+  100% { transform: translateX(110%); }
+}
+
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 16rpx 36rpx rgba(255, 122, 46, 0.40); }
+  50%      { box-shadow: 0 16rpx 44rpx rgba(255, 122, 46, 0.60); }
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes stamp-down {
+  0%   { transform: scale(2) rotate(-20deg); opacity: 0; }
+  60%  { transform: scale(0.95) rotate(-12deg); opacity: 1; }
+  100% { transform: scale(1) rotate(-12deg); }
+}
+
+@keyframes typing-blink {
+  50% { opacity: 0; }
+}
+
+@keyframes drop-in {
+  from { opacity: 0; transform: translateY(-28rpx) scale(0.96); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes ai-thinking-dots {
+  0%, 80%, 100% { opacity: 0.3; transform: scale(0.9); }
+  40%           { opacity: 1; transform: scale(1.1); }
+}
+
+@keyframes float-y {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-6rpx); }
+}
+
+@keyframes pin-bounce {
+  0%   { transform: translate(-50%, -100%) scale(0.5); opacity: 0; }
+  60%  { transform: translate(-50%, -100%) scale(1.1); opacity: 1; }
+  100% { transform: translate(-50%, -100%) scale(1); }
+}

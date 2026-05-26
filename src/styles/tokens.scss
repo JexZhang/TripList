@@ -1,0 +1,204 @@
+/* ====================================================================
+   行册 · 四主题 design tokens
+   - page 根：缺省值（兼容 root-portal）
+   - .theme-tokens：root-portal 子树兜底，挂在弹层/modal 根
+   - .theme-{name}：实际四主题
+   源：triplist-design/project/tokens.css；px → rpx 等比换算（1px = 2rpx）
+   ==================================================================== */
+
+@mixin ease-tokens {
+  --ease-out: cubic-bezier(0.22, 0.61, 0.36, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@mixin font-family-tokens {
+  --font-serif: "Noto Serif SC", "Songti SC", "STSong", "SimSun", serif;
+  --font-sans: "PingFang SC", "Noto Sans SC", "Source Han Sans SC", -apple-system, sans-serif;
+  --font-mono: "JetBrains Mono", "SF Mono", "Fira Code", ui-monospace, monospace;
+  --font-display: var(--font-serif);
+  --font-body: var(--font-sans);
+}
+
+/* ===========================
+   THEME · 手帖 TEGAMI（暖橘活力）默认
+=========================== */
+@mixin theme-tegami-vars {
+  --bg: #FFF4E6;
+  --bg-deep: #F4E6CE;
+  --bg-soft: #FFE9D1;
+  --surface: #FFFFFF;
+  --surface-2: #FFF9F1;
+  --ink: #2B1A10;
+  --ink-2: #5A4338;
+  --ink-3: #9B8378;
+  --line: rgba(43, 26, 16, 0.08);
+  --line-2: rgba(43, 26, 16, 0.14);
+
+  --accent: #FF7A2E;
+  --accent-2: #FF9A4D;
+  --accent-soft: #FFD3A8;
+  --accent-bg: #FFEBD6;
+  --coral: #FF5B5B;
+  --leaf: #4FB286;
+  --sun: #FFC247;
+  --plum: #6B46C1;
+
+  --r-xs: 12rpx;
+  --r-sm: 16rpx;
+  --r-md: 22rpx;
+  --r-lg: 32rpx;
+  --r-xl: 44rpx;
+  --r-pill: 999rpx;
+
+  --shadow-sm: 0 4rpx 14rpx rgba(255, 122, 46, 0.10);
+  --shadow-md: 0 12rpx 32rpx rgba(58, 36, 25, 0.10);
+  --shadow-lg: 0 24rpx 48rpx rgba(255, 122, 46, 0.18);
+
+  --font-display: "Noto Serif SC", "Songti SC", "STSong", serif;
+  --font-body: "PingFang SC", "Noto Sans SC", -apple-system, sans-serif;
+}
+
+/* ===========================
+   THEME · 刊物 MAGAZINE（冷峻编辑感）
+=========================== */
+@mixin theme-magazine-vars {
+  --bg: #F4F0E8;
+  --bg-deep: #E8E2D2;
+  --bg-soft: #ECE6D6;
+  --surface: #FFFFFF;
+  --surface-2: #FAF7EF;
+  --ink: #111111;
+  --ink-2: #3a3936;
+  --ink-3: #80807a;
+  --line: rgba(17, 17, 17, 0.10);
+  --line-2: rgba(17, 17, 17, 0.20);
+
+  --accent: #D62E2E;
+  --accent-2: #FF3B3B;
+  --accent-soft: #FFD9D9;
+  --accent-bg: #FFEFEF;
+  --coral: #D62E2E;
+  --leaf: #2a6b3a;
+  --sun: #C9A227;
+  --plum: #2a2a4a;
+
+  --r-xs: 0;
+  --r-sm: 0;
+  --r-md: 4rpx;
+  --r-lg: 8rpx;
+  --r-xl: 12rpx;
+  --r-pill: 999rpx;
+
+  --shadow-sm: 0 2rpx 0 rgba(17, 17, 17, 0.10);
+  --shadow-md: 0 8rpx 0 -4rpx var(--ink);
+  --shadow-lg: 0 12rpx 0 -6rpx var(--ink);
+
+  --font-display: "Playfair Display", "Noto Serif SC", "Songti SC", serif;
+  --font-body: "Helvetica Neue", "PingFang SC", -apple-system, sans-serif;
+}
+
+/* ===========================
+   THEME · 护照 POSTCARD（复古牛皮纸）
+=========================== */
+@mixin theme-postcard-vars {
+  --bg: #EFE6D5;
+  --bg-deep: #D7C4A0;
+  --bg-soft: #E6DCC4;
+  --surface: #FFFCF3;
+  --surface-2: #F5EBD4;
+  --ink: #2B1F0E;
+  --ink-2: #5a4422;
+  --ink-3: #978565;
+  --line: rgba(43, 31, 14, 0.14);
+  --line-2: rgba(43, 31, 14, 0.26);
+
+  --accent: #C13D2F;
+  --accent-2: #E55C44;
+  --accent-soft: #F0BFB6;
+  --accent-bg: #F9E4DD;
+  --coral: #C13D2F;
+  --leaf: #3F6B43;
+  --sun: #D9A93C;
+  --plum: #344B7E;
+
+  --r-xs: 8rpx;
+  --r-sm: 12rpx;
+  --r-md: 16rpx;
+  --r-lg: 20rpx;
+  --r-xl: 28rpx;
+  --r-pill: 999rpx;
+
+  --shadow-sm: 0 2rpx 6rpx rgba(43, 31, 14, 0.10);
+  --shadow-md: 0 8rpx 24rpx rgba(43, 31, 14, 0.16);
+  --shadow-lg: 0 16rpx 44rpx rgba(43, 31, 14, 0.22);
+
+  --font-display: "Noto Serif SC", "Songti SC", "STSong", serif;
+  --font-body: "PingFang SC", "Noto Sans SC", -apple-system, sans-serif;
+}
+
+/* ===========================
+   THEME · 极简 MINIMAL（清爽留白）
+=========================== */
+@mixin theme-minimal-vars {
+  --bg: #FAFAF8;
+  --bg-deep: #F0F0EC;
+  --bg-soft: #F4F4F0;
+  --surface: #FFFFFF;
+  --surface-2: #F7F7F4;
+  --ink: #0F0F0E;
+  --ink-2: #4a4a48;
+  --ink-3: #9a9a96;
+  --line: rgba(15, 15, 14, 0.06);
+  --line-2: rgba(15, 15, 14, 0.12);
+
+  --accent: #2B1A10;
+  --accent-2: #5A4338;
+  --accent-soft: #d8d5cf;
+  --accent-bg: #f2efe9;
+  --coral: #c2473d;
+  --leaf: #5e8a64;
+  --sun: #b8973a;
+  --plum: #5e5466;
+
+  --r-xs: 8rpx;
+  --r-sm: 12rpx;
+  --r-md: 20rpx;
+  --r-lg: 28rpx;
+  --r-xl: 36rpx;
+  --r-pill: 999rpx;
+
+  --shadow-sm: 0 2rpx 0 rgba(15, 15, 14, 0.04);
+  --shadow-md: 0 2rpx 6rpx rgba(15, 15, 14, 0.06);
+  --shadow-lg: 0 8rpx 28rpx rgba(15, 15, 14, 0.08);
+
+  --font-display: "PingFang SC", "Noto Sans SC", -apple-system, sans-serif;
+  --font-body: "PingFang SC", "Noto Sans SC", -apple-system, sans-serif;
+}
+
+/* ====================================================================
+   实际选择器
+   ==================================================================== */
+
+page {
+  @include ease-tokens;
+  @include font-family-tokens;
+  @include theme-tegami-vars;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-body);
+  overflow-x: hidden;
+}
+
+.theme-tokens {
+  @include ease-tokens;
+  @include font-family-tokens;
+  @include theme-tegami-vars;
+  color: var(--ink);
+  font-family: var(--font-body);
+}
+
+.theme-tegami   { @include theme-tegami-vars; }
+.theme-magazine { @include theme-magazine-vars; }
+.theme-postcard { @include theme-postcard-vars; }
+.theme-minimal  { @include theme-minimal-vars; }
