@@ -264,3 +264,37 @@
   color: #FFF;
   box-shadow: 0 12rpx 28rpx rgba(255, 122, 46, 0.40);
 }
+
+/* ============================================
+ * D. 极简胶囊（minimal）
+ * ============================================ */
+.mv-pill {
+  display: flex;
+  gap: 12rpx;
+  padding: 16rpx 24rpx;
+  background: var(--surface);
+  border-bottom: 1rpx solid var(--line);
+  white-space: nowrap;
+}
+.mv-pill-item {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 6rpx;
+  padding: 10rpx 22rpx;
+  border-radius: var(--r-pill);
+  border: 1rpx solid var(--line-2);
+  font-size: 22rpx;
+  color: var(--ink-2);
+  font-family: var(--font-mono);
+  letter-spacing: 1rpx;
+  transition: all 0.18s var(--ease-out);
+}
+.mv-pill-item.on {
+  background: var(--ink);
+  color: var(--surface);
+  border-color: var(--ink);
+}
+.mv-pill-date {
+  font-size: 18rpx;
+  opacity: 0.7;
+}

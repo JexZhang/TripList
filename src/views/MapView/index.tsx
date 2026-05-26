@@ -2,6 +2,8 @@ import { forwardRef, useCallback, useEffect, useImperativeHandle, useMemo, useRe
 import { Map, View } from '@tarojs/components'
 import Taro from '@tarojs/taro'
 import { useTripStore } from '../../store/trip-store'
+import { useTheme } from '../../store/theme-store'
+import { MAPMODE_VARIANT } from './variants'
 import ModeBar, { type MapMode } from './ModeBar'
 import SpotMapSheet from './SpotMapSheet'
 import { collectLocated, dayColor, encodeMarkerId, decodeMarkerId } from './helpers'
@@ -28,6 +30,8 @@ const SheetContainer = forwardRef<SheetHandle, {}>(function SheetContainer(_prop
 export default function MapView() {
   const { state } = useTripStore()
   const trip = state.trip!
+  const { theme } = useTheme()
+  const variant = MAPMODE_VARIANT[theme]
   const [mode, setMode] = useState<MapMode>('all')
   const ctxRef = useRef<ReturnType<typeof Taro.createMapContext> | null>(null)
   const sheetRef = useRef<SheetHandle | null>(null)
@@ -123,11 +127,7 @@ export default function MapView() {
       <ModeBar
         days={trip.days}
         mode={mode}
-        variant={
-          trip._id === 'seed-mohe' ? 'segmented' :
-          trip._id === 'seed-jzg' ? 'route' :
-          'track'
-        }
+        variant={variant}
         onChange={setMode}
       />
       <View className='mv-map-wrap'>

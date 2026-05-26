@@ -4,7 +4,7 @@ import type { Day } from '../../types/trip'
 import { dayColor } from './helpers'
 
 export type MapMode = 'all' | number
-export type ModeBarVariant = 'track' | 'segmented' | 'route'
+export type ModeBarVariant = 'track' | 'segmented' | 'route' | 'pill'
 
 interface Props {
   days: Day[]
@@ -16,6 +16,7 @@ interface Props {
 export default function ModeBar({ days, mode, variant = 'track', onChange }: Props) {
   if (variant === 'segmented') return <SegmentedBar days={days} mode={mode} onChange={onChange} />
   if (variant === 'route') return <RouteBar days={days} mode={mode} onChange={onChange} />
+  if (variant === 'pill') return <PillBar days={days} mode={mode} onChange={onChange} />
   return <TrackBar days={days} mode={mode} onChange={onChange} />
 }
 
@@ -40,6 +41,30 @@ function TrackBar({ days, mode, onChange }: Omit<Props, 'variant'>) {
         >
           <View className='mv-track-dot' />
           <Text className='mv-track-label'>D{idx + 1} {dayjs(d.date).format('M/D')}</Text>
+        </View>
+      ))}
+    </ScrollView>
+  )
+}
+
+/* ---------- D. 极简胶囊 ---------- */
+function PillBar({ days, mode, onChange }: Omit<Props, 'variant'>) {
+  return (
+    <ScrollView scrollX className='mv-modebar mv-pill'>
+      <View
+        className={`mv-pill-item ${mode === 'all' ? 'on' : ''}`}
+        onClick={() => onChange('all')}
+      >
+        <Text>全部</Text>
+      </View>
+      {days.map((d, idx) => (
+        <View
+          key={d.id}
+          className={`mv-pill-item ${mode === idx ? 'on' : ''}`}
+          onClick={() => onChange(idx)}
+        >
+          <Text>D{idx + 1}</Text>
+          <Text className='mv-pill-date'>{dayjs(d.date).format('M/D')}</Text>
         </View>
       ))}
     </ScrollView>
