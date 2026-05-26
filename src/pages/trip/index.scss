@@ -16,48 +16,6 @@
   font-size: 26rpx;
 }
 
-/* ===== 顶部 ===== */
-.trip-head {
-  padding: 32rpx 32rpx 24rpx;
-}
-.th-name {
-  font-size: 44rpx;
-  font-weight: 800;
-  flex: 1;
-  letter-spacing: 1rpx;
-  /* 杂志风格：攻略标题使用衬线体 */
-  font-family: var(--font-serif);
-  background: linear-gradient(135deg, var(--ink) 0%, var(--accent) 130%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-}
-.th-row { display: flex; align-items: center; justify-content: space-between; }
-.th-menu {
-  width: 64rpx; height: 64rpx;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 36rpx;
-  color: var(--ink-2);
-  background: var(--surface);
-  border-radius: 999rpx;
-  box-shadow: var(--shadow-sm);
-}
-.th-meta {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: baseline;
-  margin-top: 12rpx;
-  font-size: 22rpx;
-  color: var(--ink-3);
-  font-weight: 500;
-  letter-spacing: 1rpx;
-  /* 杂志风格：日期人数使用等宽体 */
-  font-family: var(--font-mono);
-}
-.th-pax-edit {
-  color: var(--accent);
-  font-weight: 700;
-}
 
 /* ===== Tabs ===== */
 .trip-tabs {
@@ -94,24 +52,4 @@
 .trip-content {
   padding-top: 8rpx;
   animation: fade-in 0.32s var(--ease-out) both;
-}
-
-.th-ai-btn {
-  margin-right: 16rpx;
-  padding: 8rpx 16rpx;
-  font-size: 22rpx;
-  font-weight: 600;
-  border-radius: 12rpx;
-  background: linear-gradient(135deg, #6b46c1 0%, #c43d3d 100%);
-  color: white;
-  letter-spacing: 1rpx;
-}
-
-.th-ai-btn-disabled {
-  opacity: 0.4;
-  pointer-events: none;
-}
-
-.th-ai-bar {
-  padding: 16rpx 0 0;
 }

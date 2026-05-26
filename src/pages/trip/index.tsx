@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { View, Text, Picker } from '@tarojs/components'
+import { View } from '@tarojs/components'
 import Taro, { useRouter, useShareAppMessage } from '@tarojs/taro'
 import { TripProvider, useTripStore } from '../../store/trip-store'
 import { useMe } from '../../store/me-store'
@@ -8,13 +8,12 @@ import ItineraryView from '../../views/ItineraryView'
 import BudgetView from '../../views/BudgetView'
 import PackingView from '../../views/PackingView'
 import MapView from '../../views/MapView'
-import CollaboratorsBar from '../../components/CollaboratorsBar'
 import CollaboratorsSheet from '../../components/CollaboratorsSheet'
 import TripActionSheet, { type TripAction } from '../../components/TripActionSheet'
 import ShareTypeSheet from '../../components/ShareTypeSheet'
 import AIPlanForm, { clearAIPlanFormDraft } from '../../components/AIPlanForm'
 import AIPlanPreview from '../../components/AIPlanPreview'
-import AILoadingBar from '../../components/AILoadingBar'
+import TripHeader from './TripHeader'
 import { buildShareMessage, shareRef, resetShareRef } from '../../utils/share'
 import { smartDeleteTrip, renameTrip, copyTripLocally, updateTrip } from '../../utils/db'
 import { isSeedTripId } from '../../data/seed-trips'
@@ -32,8 +31,6 @@ const VIEWS: { key: ViewKey; label: string }[] = [
   { key: 'budget', label: '开销' },
   { key: 'packing', label: '清单' },
 ]
-
-const PAX_OPTIONS = Array.from({ length: 99 }, (_, i) => `${i + 1} 人`)
 
 function TripBody() {
   const { state, dispatch } = useTripStore()
@@ -254,50 +251,17 @@ function TripBody() {
 
   return (
     <View className={themeCls}>
-      <View className='trip-head'>
-        <View className='th-row'>
-          <Text className='th-name'>{t.name}</Text>
-          <View style={{ display: 'flex', alignItems: 'center' }}>
-            {isOwner && (
-              <View
-                className={`th-ai-btn ${t.aiStatus ? 'th-ai-btn-disabled' : ''}`}
-                onClick={handleAiButtonTap}
-              >✨ AI</View>
-            )}
-            <View className='th-menu' onClick={() => setActionOpen(true)}>⋯</View>
-          </View>
-        </View>
-        {isOwner && t.aiStatus && (
-          <View className='th-ai-bar'>
-            <AILoadingBar
-              status={t.aiStatus as 'generating' | 'ready' | 'error'}
-              onTap={handleBarTap}
-            />
-          </View>
-        )}
-        <View className='th-meta'>
-          <Text>
-            {t.days[0]?.date || t.startDate} → {t.days[t.days.length - 1]?.date || t.endDate} · {t.days.length || 0} 天 ·{' '}
-          </Text>
-          <Picker
-            mode='selector'
-            range={PAX_OPTIONS}
-            value={Math.max(0, Math.min(98, (t.pax || 1) - 1))}
-            onChange={e => {
-              const next = Number(e.detail.value) + 1
-              if (next !== t.pax) dispatch({ type: 'UPDATE_TRIP', patch: { pax: next } })
-            }}
-          >
-            <Text className='th-pax-edit'>{t.pax} 人 ▾</Text>
-          </Picker>
-        </View>
-        <CollaboratorsBar
-          collaborators={t.collaborators || []}
-          ownerNickname={t.ownerNickname}
-          isOwner={isOwner}
-          onTap={() => setCollabSheetOpen(true)}
-        />
-      </View>
+      <TripHeader
+        trip={t}
+        isOwner={isOwner}
+        aiStatus={t.aiStatus as 'generating' | 'ready' | 'error' | null | undefined}
+        onAITap={handleAiButtonTap}
+        onAIBarTap={handleBarTap}
+        onMenuTap={() => setActionOpen(true)}
+        onBack={() => Taro.navigateBack().catch(() => Taro.reLaunch({ url: '/pages/home/index' }))}
+        onPaxChange={(next) => dispatch({ type: 'UPDATE_TRIP', patch: { pax: next } })}
+        onCollabTap={() => setCollabSheetOpen(true)}
+      />
 
       <View className='trip-tabs'>
         {VIEWS.map(v => (
