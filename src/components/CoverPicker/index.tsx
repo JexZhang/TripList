@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { View, Text } from '@tarojs/components'
+import { View, Text, RootPortal } from '@tarojs/components'
 import Taro from '@tarojs/taro'
 import { uploadCover } from '../../utils/cover'
 import './index.scss'
@@ -53,26 +53,28 @@ export default function CoverPicker({ open, openid, onPicked, onClose }: Props) 
   }
 
   return (
-    <View className='cp-mask theme-tokens' onClick={onClose}>
-      <View className='cp-sheet' onClick={(e) => e.stopPropagation()}>
-        <Text className='cp-title'>更换封面</Text>
-        <Text className='cp-sub'>16:10 比例展示，建议横构图</Text>
-        <View className='cp-actions'>
-          <View className='cp-action' onClick={() => choose('camera')}>
-            <Text className='cp-action-emoji'>📷</Text>
-            <Text>拍照</Text>
+    <RootPortal>
+      <View className='cp-mask theme-tokens' onClick={onClose}>
+        <View className='cp-sheet' onClick={(e) => e.stopPropagation()}>
+          <Text className='cp-title'>更换封面</Text>
+          <Text className='cp-sub'>16:10 比例展示，建议横构图</Text>
+          <View className='cp-actions'>
+            <View className='cp-action' onClick={() => choose('camera')}>
+              <Text className='cp-action-emoji'>📷</Text>
+              <Text>拍照</Text>
+            </View>
+            <View className='cp-action' onClick={() => choose('album')}>
+              <Text className='cp-action-emoji'>🖼️</Text>
+              <Text>从相册选</Text>
+            </View>
+            <View className='cp-action cp-action--text' onClick={restoreDefault}>
+              <Text className='cp-action-emoji'>↺</Text>
+              <Text>恢复默认</Text>
+            </View>
           </View>
-          <View className='cp-action' onClick={() => choose('album')}>
-            <Text className='cp-action-emoji'>🖼️</Text>
-            <Text>从相册选</Text>
-          </View>
-          <View className='cp-action cp-action--text' onClick={restoreDefault}>
-            <Text className='cp-action-emoji'>↺</Text>
-            <Text>恢复默认</Text>
-          </View>
+          <View className='cp-cancel' onClick={onClose}>取消</View>
         </View>
-        <View className='cp-cancel' onClick={onClose}>取消</View>
       </View>
-    </View>
+    </RootPortal>
   )
 }

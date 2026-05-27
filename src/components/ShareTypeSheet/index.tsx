@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { View, Text, Button } from '@tarojs/components'
+import { View, Text, Button, RootPortal } from '@tarojs/components'
 import type { ShareKind } from '../../utils/cloud'
 import './index.scss'
 
@@ -50,14 +50,16 @@ export default function ShareTypeSheet({ open, onClose, prepare, ready }: Props)
   }
 
   return (
-    <View className='sts-mask' onClick={onClose}>
-      <View className='sts-sheet' onClick={e => e.stopPropagation()}>
-        {renderItem('readonly', '🔒 只读分享', '对方收到一份独立副本,可自由编辑、删除,不影响你这边')}
-        {renderItem('collab', '👥 邀请协作', '对方加入后能编辑同一份攻略,改动实时同步')}
-        <View className='sts-cancel' onClick={onClose}>
-          <Text>取消</Text>
+    <RootPortal>
+      <View className='sts-mask' onClick={onClose}>
+        <View className='sts-sheet' onClick={e => e.stopPropagation()}>
+          {renderItem('readonly', '🔒 只读分享', '对方收到一份独立副本,可自由编辑、删除,不影响你这边')}
+          {renderItem('collab', '👥 邀请协作', '对方加入后能编辑同一份攻略,改动实时同步')}
+          <View className='sts-cancel' onClick={onClose}>
+            <Text>取消</Text>
+          </View>
         </View>
       </View>
-    </View>
+    </RootPortal>
   )
 }

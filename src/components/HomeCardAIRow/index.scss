@@ -1,3 +1,5 @@
+/* === HomeCardAIRow · 4 themes × 3 states === */
+
 .hc-ai {
   position: relative;
   display: flex;
@@ -10,8 +12,11 @@
   letter-spacing: 1rpx;
   overflow: hidden;
   margin-bottom: 16rpx;
+  animation: hc-ai-enter 0.28s var(--ease-out) both;
 }
+.hc-ai-deco { display: none; }
 
+/* --- state base --- */
 .hc-ai--thinking {
   background: linear-gradient(135deg, rgba(107, 70, 193, 0.10), rgba(255, 122, 46, 0.10));
   color: var(--plum);
@@ -49,3 +54,148 @@
 }
 .hc-ai-dot:nth-child(2) { animation-delay: 0.18s; }
 .hc-ai-dot:nth-child(3) { animation-delay: 0.36s; }
+
+/* ===================== tegami ===================== */
+.theme-tegami .hc-ai--thinking {
+  background: var(--bg-soft);
+  border: 2rpx dashed var(--accent);
+}
+.theme-tegami .hc-ai--thinking .hc-ai-icon { color: var(--accent); }
+.theme-tegami .hc-ai--thinking .hc-ai-deco {
+  display: block;
+  position: absolute; top: 0; right: 0;
+  width: 36rpx; height: 36rpx;
+  background: linear-gradient(135deg, transparent 50%, var(--accent-soft) 50%);
+  pointer-events: none;
+}
+.theme-tegami .hc-ai--thinking .hc-ai-shine {
+  background: linear-gradient(110deg, transparent 0%, var(--accent-soft) 50%, transparent 100%);
+  opacity: .55;
+}
+.theme-tegami .hc-ai--ready {
+  background: linear-gradient(135deg, var(--accent-bg), var(--surface-2));
+  border: 2rpx solid var(--accent);
+}
+.theme-tegami .hc-ai--ready .hc-ai-arrow { color: var(--accent); }
+.theme-tegami .hc-ai--error {
+  background: var(--bg-soft);
+  border: 2rpx dashed var(--coral);
+}
+.theme-tegami .hc-ai--error .hc-ai-icon { color: var(--coral); }
+.theme-tegami .hc-ai--error .hc-ai-arrow { color: var(--coral); }
+
+/* ===================== magazine ===================== */
+.theme-magazine .hc-ai {
+  border-radius: 0;
+  font-family: var(--font-display);
+}
+.theme-magazine .hc-ai--thinking {
+  background: var(--surface);
+  border-top: 2rpx solid var(--ink);
+  border-bottom: 2rpx solid var(--ink);
+  color: var(--ink);
+}
+.theme-magazine .hc-ai--thinking .hc-ai-dot {
+  border-radius: 0;
+  width: 4rpx; height: 12rpx;
+  background: var(--ink);
+}
+.theme-magazine .hc-ai--ready {
+  background: var(--ink);
+  color: var(--surface);
+  border-top: 2rpx solid var(--surface);
+  border-bottom: 2rpx solid var(--surface);
+}
+.theme-magazine .hc-ai--ready .hc-ai-arrow { color: var(--surface); }
+.theme-magazine .hc-ai--error {
+  background: var(--surface);
+  border-top: 2rpx solid var(--coral);
+  border-bottom: 2rpx solid var(--coral);
+}
+.theme-magazine .hc-ai--error .hc-ai-icon { color: var(--coral); }
+.theme-magazine .hc-ai--error .hc-ai-arrow { color: var(--coral); }
+
+/* ===================== postcard ===================== */
+.theme-postcard .hc-ai {
+  border-radius: var(--r-lg);
+}
+.theme-postcard .hc-ai--thinking {
+  background: var(--bg-soft);
+  border: 2rpx dashed var(--line-2);
+}
+.theme-postcard .hc-ai--thinking .hc-ai-icon { color: var(--accent); }
+.theme-postcard .hc-ai--thinking .hc-ai-deco {
+  display: block;
+  width: 48rpx; height: 32rpx;
+  border: 2rpx solid var(--accent);
+  border-radius: 999rpx;
+  flex-shrink: 0;
+}
+.theme-postcard .hc-ai--thinking .hc-ai-icon { display: none; }
+.theme-postcard .hc-ai--ready {
+  background: var(--surface-2);
+  border: 2rpx solid var(--accent);
+}
+.theme-postcard .hc-ai--ready .hc-ai-arrow { color: var(--accent); }
+.theme-postcard .hc-ai--error {
+  background: var(--bg-soft);
+  border: 2rpx dashed var(--coral);
+}
+.theme-postcard .hc-ai--error .hc-ai-icon { color: var(--coral); }
+.theme-postcard .hc-ai--error .hc-ai-arrow { color: var(--coral); }
+
+/* ===================== minimal ===================== */
+.theme-minimal .hc-ai {
+  border-radius: 0;
+  background: transparent;
+  padding: 16rpx 20rpx;
+  border-bottom: 1rpx solid var(--line);
+  font-weight: 400;
+}
+.theme-minimal .hc-ai--thinking {
+  color: var(--ink-2);
+}
+.theme-minimal .hc-ai--thinking .hc-ai-icon { color: var(--ink-2); }
+.theme-minimal .hc-ai--ready {
+  background: var(--surface);
+  border-bottom: 1rpx solid var(--ink);
+  color: var(--ink);
+}
+.theme-minimal .hc-ai--ready .hc-ai-arrow { color: var(--ink); }
+.theme-minimal .hc-ai--error {
+  border-bottom: 1rpx solid var(--coral);
+  color: var(--ink);
+}
+.theme-minimal .hc-ai--error .hc-ai-icon { color: var(--coral); }
+.theme-minimal .hc-ai--error .hc-ai-arrow { color: var(--coral); }
+
+/* ===================== animations ===================== */
+@keyframes hc-ai-enter {
+  from { opacity: 0; transform: translateY(6rpx); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+/* error shake */
+.hc-ai--error {
+  animation: hc-ai-enter 0.28s var(--ease-out) both, hc-ai-shake 0.28s 0.28s ease-in-out;
+}
+@keyframes hc-ai-shake {
+  0%, 100% { transform: translateX(0); }
+  25%      { transform: translateX(-6rpx); }
+  75%      { transform: translateX(6rpx); }
+}
+/* error retry icon spin */
+.hc-ai--error .hc-ai-arrow {
+  animation: hc-ai-spin 2.4s ease-in-out infinite;
+}
+@keyframes hc-ai-spin {
+  0%, 80%, 100% { transform: rotate(0); }
+  90%           { transform: rotate(360deg); }
+}
+/* ready arrow nudge */
+.hc-ai--ready .hc-ai-arrow {
+  animation: hc-ai-arrow-nudge 4s ease-in-out infinite;
+}
+@keyframes hc-ai-arrow-nudge {
+  0%, 50%, 100% { transform: translateX(0); }
+  25%           { transform: translateX(4rpx); }
+}

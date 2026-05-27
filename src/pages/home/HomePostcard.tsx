@@ -3,6 +3,7 @@ import { useMemo } from 'react'
 import BrandLogo from '../../components/BrandLogo'
 import AvatarEntry from '../../components/AvatarEntry'
 import HomeBottomCTA from '../../components/HomeBottomCTA'
+import HomeCardAIRow from '../../components/HomeCardAIRow'
 import type { HomeViewProps } from './shared'
 import type { Trip } from '../../types/trip'
 import './styles/home-postcard.scss'
@@ -67,22 +68,32 @@ export default function HomePostcard({
             return (
               <View
                 key={t._id}
-                className='hpp-stamp'
-                onClick={() => onOpenTrip(t)}
-                onLongPress={() => onLongPressTrip(t)}
-                style={{
-                  width: `${size}rpx`,
-                  height: `${size}rpx`,
-                  '--stamp-color': STAMP_COLORS[i % STAMP_COLORS.length],
-                  animationDelay: `${i * 60}ms`,
-                } as React.CSSProperties}
+                className='hpp-stamp-wrap'
               >
-                <Text className='hpp-stamp-name'>{destFull || t.name}</Text>
-                <View className='hpp-stamp-divider' />
-                <Text className='hpp-stamp-date'>{t.startDate.slice(0, 7).replace('-', '.')}</Text>
-                <Text className='hpp-stamp-days'>{t._days} DAYS · {t.pax}P</Text>
-                {ai === 'thinking' && <View className='hpp-stamp-aiglow' />}
-                {ai === 'ready' && <View className='hpp-stamp-airready'>✓</View>}
+                <View
+                  className='hpp-stamp'
+                  onClick={() => onOpenTrip(t)}
+                  onLongPress={() => onLongPressTrip(t)}
+                  style={{
+                    width: `${size}rpx`,
+                    height: `${size}rpx`,
+                    '--stamp-color': STAMP_COLORS[i % STAMP_COLORS.length],
+                    animationDelay: `${i * 60}ms`,
+                  } as React.CSSProperties}
+                >
+                  <Text className='hpp-stamp-name'>{destFull || t.name}</Text>
+                  <View className='hpp-stamp-divider' />
+                  <Text className='hpp-stamp-date'>{t.startDate.slice(0, 7).replace('-', '.')}</Text>
+                  <Text className='hpp-stamp-days'>{t._days} DAYS · {t.pax}P</Text>
+                  {ai === 'thinking' && <View className='hpp-stamp-aiglow' />}
+                  {ai === 'ready' && <View className='hpp-stamp-airready'>✓</View>}
+                </View>
+                {ai && (
+                  <HomeCardAIRow
+                    status={ai}
+                    onTap={() => onOpenTrip(t)}
+                  />
+                )}
               </View>
             )
           })}

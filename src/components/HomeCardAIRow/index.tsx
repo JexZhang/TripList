@@ -24,6 +24,7 @@ export default function HomeCardAIRow({ status, hint, onTap }: Props) {
       className={`hc-ai ${c.cls}`}
       onClick={(e) => { e.stopPropagation(); onTap?.() }}
     >
+      <View className='hc-ai-deco' />
       {status === 'thinking' && <View className='hc-ai-shine' />}
       <SparkleIcon size={22} className='hc-ai-icon' />
       <Text className='hc-ai-text'>
@@ -37,6 +38,7 @@ export default function HomeCardAIRow({ status, hint, onTap }: Props) {
         </View>
       )}
       {status === 'ready' && <Text className='hc-ai-arrow'>›</Text>}
+      {status === 'error' && <Text className='hc-ai-arrow'>↻</Text>}
     </View>
   )
 }

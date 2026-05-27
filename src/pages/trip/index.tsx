@@ -13,13 +13,15 @@ import TripActionSheet, { type TripAction } from '../../components/TripActionShe
 import ShareTypeSheet from '../../components/ShareTypeSheet'
 import AIInterview from '../../components/AIInterview'
 import AILoadingTheater from '../../components/AILoadingTheater'
-import TripAIStatusBar from '../../components/TripAIStatusBar'
+import TripAIStatusBar, { type TripAIStatusBarStatus } from '../../components/TripAIStatusBar'
 import AIPlanPreview from '../../components/AIPlanPreview'
+import { draftKeyEnrich } from '../../components/AIInterview'
 import TripHeader from './TripHeader'
 import { buildShareMessage, shareRef, resetShareRef } from '../../utils/share'
 import { smartDeleteTrip, renameTrip, copyTripLocally, updateTrip } from '../../utils/db'
 import { isSeedTripId } from '../../data/seed-trips'
 import { mergePlanIntoDays } from '../../utils/trip-helpers'
+import { mergeAIDraft } from '../../utils/ai-apply'
 import type { ShareKind } from '../../utils/cloud'
 import type { AIPreferences } from '../../types/trip'
 import { newAITaskId, fireAITask } from '../../utils/ai-task'
@@ -118,10 +120,9 @@ function TripBody() {
     dispatch({ type: 'UPDATE_TRIP', patch: { aiTaskId: null, aiStatus: null, aiDraft: null, aiError: null } })
   }
   
-  const handleBarTap = async () => {
+  const handleInlineBarTap = () => {
     if (!t || !isOwner) return
     if (t.aiStatus === 'generating') {
-      // StatusBar 点击 → 重新展开 Theater
       setTheaterMinimized(false)
     } else if (t.aiStatus === 'ready') {
       setAiPreviewOpen(true)
@@ -156,8 +157,11 @@ function TripBody() {
   const handlePreviewApply = async (selectedDates: string[]) => {
     if (!t || !t.aiDraft) return
     try {
-      const newDays = mergePlanIntoDays(t.days, t.aiDraft, selectedDates)
+      const aiDraft = t.aiDraft as any
+      const patch = mergeAIDraft(t, aiDraft)
+      const newDays = mergePlanIntoDays(t.days, aiDraft, selectedDates)
       await updateTrip(t._id, {
+        ...patch,
         days: newDays,
         aiTaskId: null,
         aiStatus: null,
@@ -165,6 +169,7 @@ function TripBody() {
         aiError: null,
       }, openid)
       dispatch({ type: 'UPDATE_TRIP', patch: {
+        ...patch,
         days: newDays,
         aiTaskId: null,
         aiStatus: null,
@@ -172,6 +177,8 @@ function TripBody() {
         aiError: null,
       } })
       setAiPreviewOpen(false)
+      // Clear enrich draft on apply
+      if (t._id) { try { Taro.removeStorageSync(draftKeyEnrich(t._id)) } catch { /* ignore */ } }
       Taro.showToast({ title: '已应用', icon: 'success' })
     } catch (e: unknown) {
       console.error('[ai apply]', e)
@@ -182,6 +189,8 @@ function TripBody() {
   const handlePreviewDiscard = async () => {
     setAiPreviewOpen(false)
     await clearAiFields()
+    // Clear enrich draft on discard
+    if (t?._id) { try { Taro.removeStorageSync(draftKeyEnrich(t._id)) } catch { /* ignore */ } }
     Taro.showToast({ title: '已舍弃', icon: 'none' })
   }
   
@@ -270,7 +279,7 @@ function TripBody() {
         isOwner={isOwner}
         aiStatus={t.aiStatus as 'generating' | 'ready' | 'error' | null | undefined}
         onAITap={handleAiButtonTap}
-        onAIBarTap={handleBarTap}
+        onAIBarTap={handleInlineBarTap}
         onMenuTap={() => setActionOpen(true)}
         onBack={() => Taro.navigateBack().catch(() => Taro.reLaunch({ url: '/pages/home/index' }))}
         onPaxChange={(next) => dispatch({ type: 'UPDATE_TRIP', patch: { pax: next } })}
@@ -288,7 +297,17 @@ function TripBody() {
       </View>
 
       <View className='trip-content'>
-        {view === 'itinerary' && <ItineraryView />}
+        {view === 'itinerary' && (
+          <>
+            {t.aiStatus && (
+              <TripAIStatusBar
+                status={t.aiStatus as TripAIStatusBarStatus}
+                onTap={handleInlineBarTap}
+              />
+            )}
+            <ItineraryView />
+          </>
+        )}
         {view === 'budget' && <BudgetView />}
         {view === 'packing' && <PackingView />}
         {view === 'map' && <MapView />}
@@ -319,10 +338,13 @@ function TripBody() {
 
       <AIInterview
         open={aiFormOpen}
+        mode='enrich'
+        tripId={t?._id}
         onClose={() => setAiFormOpen(false)}
-        onSubmit={(prefs) => {
+        onSubmit={(data) => {
+          if (data.mode !== 'enrich') return
           setAiFormOpen(false)
-          void triggerAiTask(prefs)
+          void triggerAiTask(data.preferences)
         }}
       />
       <AILoadingTheater
@@ -330,10 +352,6 @@ function TripBody() {
         status='thinking'
         onCancel={handleTheaterCancel}
         onMinimize={handleTheaterMinimize}
-      />
-      <TripAIStatusBar
-        open={t.aiStatus === 'generating' && theaterMinimized}
-        onTap={() => setTheaterMinimized(false)}
       />
       <AIPlanPreview
         open={aiPreviewOpen}

@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { View, Text, ScrollView } from '@tarojs/components'
+import { View, Text, ScrollView, RootPortal } from '@tarojs/components'
 import Taro from '@tarojs/taro'
 import type { GeneratedPlan, GeneratedSpot, AITaskStatus, Day } from '../../types/trip'
 import './index.scss'
@@ -68,8 +68,9 @@ export default function AIPlanPreview({
   }
 
   return (
-    <View className='aip-mask' onClick={onClose}>
-      <View className='aip-sheet' catchMove onClick={(e) => e.stopPropagation()}>
+    <RootPortal>
+      <View className='aip-mask' onClick={onClose}>
+        <View className='aip-sheet' catchMove onClick={(e) => e.stopPropagation()}>
         <View className='aip-header'>
           <Text className='aip-title'>
             AI 方案 {status === 'streaming' ? '· 生成中…' : status === 'done' ? '' : ''}
@@ -149,7 +150,8 @@ export default function AIPlanPreview({
             }}
           >应用 {selected.size > 0 ? `(${selected.size} 天)` : ''}</View>
         </View>
+        </View>
       </View>
-    </View>
+    </RootPortal>
   )
 }

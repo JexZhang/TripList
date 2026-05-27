@@ -1,41 +1,215 @@
+/* === TripAIStatusBar · inline 3-state × 4 themes === */
+
 .taisb {
   position: relative;
   display: flex;
   align-items: center;
   gap: 14rpx;
-  padding: 18rpx 28rpx;
-  background: linear-gradient(135deg, var(--plum), var(--accent));
-  color: #fff;
+  padding: 20rpx 32rpx;
+  border-radius: var(--r-md);
+  margin: 16rpx 0;
   overflow: hidden;
-  font-size: 24rpx;
+  font-size: 28rpx;
   font-weight: 600;
   letter-spacing: 2rpx;
-  animation: drop-in 0.36s var(--ease-spring) both;
+  animation: taisb-enter 0.28s var(--ease-out) both;
 }
-.taisb-shine {
-  position: absolute;
-  top: 0; bottom: 0; left: 0;
-  width: 40%;
-  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.35), transparent);
-  animation: shimmer 2.4s var(--ease-in-out) infinite;
-  pointer-events: none;
-}
-.taisb-icon {
-  flex-shrink: 0;
-}
-.taisb-text {
-  flex: 1;
-}
-.taisb-dots {
-  display: inline-flex;
-  gap: 6rpx;
-}
+.taisb-deco { display: none; }
+.taisb-icon { flex-shrink: 0; }
+.taisb-text { flex: 1; }
+.taisb-arrow { font-size: 36rpx; line-height: 1; }
+.taisb-dots { display: inline-flex; gap: 6rpx; }
 .taisb-dot {
   width: 8rpx; height: 8rpx;
   border-radius: 50%;
-  background: #fff;
+  background: currentColor;
   animation: ai-thinking-dots 1.2s ease-in-out infinite;
 }
 .taisb-dot:nth-child(2) { animation-delay: 0.18s; }
 .taisb-dot:nth-child(3) { animation-delay: 0.36s; }
 .taisb:active { opacity: 0.92; }
+
+/* --- state base --- */
+.taisb--generating {
+  background: var(--bg-soft);
+  color: var(--ink);
+}
+.taisb--ready {
+  background: var(--accent-bg);
+  color: var(--ink);
+}
+.taisb--error {
+  background: var(--bg-soft);
+  color: var(--ink);
+}
+
+/* --- shine (generating) --- */
+.taisb-shine {
+  position: absolute;
+  top: 0; bottom: 0; left: 0;
+  width: 40%;
+  background: linear-gradient(110deg, transparent 0%, var(--accent-soft) 50%, transparent 100%);
+  opacity: .55;
+  animation: taisb-shimmer 3.2s linear infinite;
+  pointer-events: none;
+}
+
+/* ===================== tegami ===================== */
+.theme-tegami .taisb--generating {
+  background: var(--bg-soft);
+  border: 2rpx dashed var(--accent);
+  border-radius: var(--r-md);
+}
+.theme-tegami .taisb--generating .taisb-icon { color: var(--accent); }
+.theme-tegami .taisb--generating .taisb-deco {
+  display: block;
+  position: absolute; top: 0; right: 0;
+  width: 48rpx; height: 48rpx;
+  background: linear-gradient(135deg, transparent 50%, var(--accent-soft) 50%);
+  pointer-events: none;
+}
+.theme-tegami .taisb--ready {
+  background: linear-gradient(135deg, var(--accent-bg), var(--surface-2));
+  border: 2rpx solid var(--accent);
+}
+.theme-tegami .taisb--ready .taisb-arrow { color: var(--accent); }
+.theme-tegami .taisb--error {
+  background: var(--bg-soft);
+  border: 2rpx dashed var(--coral);
+}
+.theme-tegami .taisb--error .taisb-icon { color: var(--coral); }
+.theme-tegami .taisb--error .taisb-arrow { color: var(--coral); }
+
+/* ===================== magazine ===================== */
+.theme-magazine .taisb {
+  border-radius: 0;
+  border-top: 2rpx solid var(--ink);
+  border-bottom: 2rpx solid var(--ink);
+  font-family: var(--font-display);
+}
+.theme-magazine .taisb--generating {
+  background: var(--surface);
+}
+.theme-magazine .taisb--generating .taisb-dot {
+  border-radius: 0;
+  width: 6rpx; height: 16rpx;
+  background: var(--ink);
+  animation: taisb-bar-pulse 0.7s ease-in-out infinite;
+}
+.theme-magazine .taisb--generating .taisb-dot:nth-child(2) { animation-delay: 0.15s; }
+.theme-magazine .taisb--generating .taisb-dot:nth-child(3) { animation-delay: 0.3s; }
+.theme-magazine .taisb--ready {
+  background: var(--ink);
+  color: var(--surface);
+  border-color: var(--surface);
+}
+.theme-magazine .taisb--ready .taisb-arrow { color: var(--surface); }
+.theme-magazine .taisb--error {
+  background: var(--surface);
+  border-color: var(--coral);
+}
+.theme-magazine .taisb--error .taisb-icon { color: var(--coral); }
+.theme-magazine .taisb--error .taisb-arrow { color: var(--coral); }
+
+/* ===================== postcard ===================== */
+.theme-postcard .taisb {
+  border-radius: var(--r-lg);
+}
+.theme-postcard .taisb--generating {
+  background: var(--bg-soft);
+  border: 2rpx dashed var(--line-2);
+}
+.theme-postcard .taisb--generating .taisb-icon { color: var(--accent); }
+.theme-postcard .taisb--generating .taisb-deco {
+  display: block;
+  width: 64rpx; height: 44rpx;
+  border: 2rpx solid var(--accent);
+  border-radius: 999rpx;
+  flex-shrink: 0;
+  animation: taisb-stamp-swing 2.6s ease-in-out infinite;
+}
+.theme-postcard .taisb--generating .taisb-icon { display: none; }
+.theme-postcard .taisb--ready {
+  background: var(--surface-2);
+  border: 2rpx solid var(--accent);
+}
+.theme-postcard .taisb--ready .taisb-arrow { color: var(--accent); }
+.theme-postcard .taisb--error {
+  background: var(--bg-soft);
+  border: 2rpx dashed var(--coral);
+}
+.theme-postcard .taisb--error .taisb-icon { color: var(--coral); }
+.theme-postcard .taisb--error .taisb-arrow { color: var(--coral); }
+
+/* ===================== minimal ===================== */
+.theme-minimal .taisb {
+  border-radius: 0;
+  background: transparent;
+  padding: 28rpx 32rpx;
+  border-bottom: 1rpx solid var(--line);
+  font-weight: 400;
+}
+.theme-minimal .taisb--generating {
+  color: var(--ink-2);
+}
+.theme-minimal .taisb--generating .taisb-icon { color: var(--ink-2); }
+.theme-minimal .taisb--ready {
+  background: var(--surface);
+  border-bottom: 1rpx solid var(--ink);
+  color: var(--ink);
+}
+.theme-minimal .taisb--ready .taisb-arrow { color: var(--ink); }
+.theme-minimal .taisb--error {
+  border-bottom: 1rpx solid var(--coral);
+  color: var(--ink);
+}
+.theme-minimal .taisb--error .taisb-icon { color: var(--coral); }
+.theme-minimal .taisb--error .taisb-arrow { color: var(--coral); }
+
+/* ===================== animations ===================== */
+@keyframes taisb-enter {
+  from { opacity: 0; transform: translateY(6rpx); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes taisb-shimmer {
+  0%   { transform: translateX(-120%); }
+  100% { transform: translateX(350%); }
+}
+@keyframes taisb-bar-pulse {
+  0%, 100% { transform: scaleY(0.4); }
+  50%      { transform: scaleY(1); }
+}
+@keyframes taisb-stamp-swing {
+  0%, 100% { transform: rotate(-3deg); }
+  50%      { transform: rotate(3deg); }
+}
+/* ready arrow nudge */
+.theme-tegami .taisb--ready .taisb-arrow,
+.theme-postcard .taisb--ready .taisb-arrow,
+.theme-minimal .taisb--ready .taisb-arrow {
+  animation: taisb-arrow-nudge 4s ease-in-out infinite;
+}
+.theme-magazine .taisb--ready .taisb-arrow {
+  animation: taisb-arrow-nudge 2.4s ease-in-out infinite;
+}
+@keyframes taisb-arrow-nudge {
+  0%, 50%, 100% { transform: translateX(0); }
+  25%           { transform: translateX(6rpx); }
+}
+/* error shake on entry */
+.taisb--error {
+  animation: taisb-enter 0.28s var(--ease-out) both, taisb-shake 0.28s 0.28s ease-in-out;
+}
+@keyframes taisb-shake {
+  0%, 100% { transform: translateX(0); }
+  25%      { transform: translateX(-6rpx); }
+  75%      { transform: translateX(6rpx); }
+}
+/* error retry icon spin */
+.taisb--error .taisb-arrow {
+  animation: taisb-spin 2.4s ease-in-out infinite;
+}
+@keyframes taisb-spin {
+  0%, 80%, 100% { transform: rotate(0); }
+  90%           { transform: rotate(360deg); }
+}

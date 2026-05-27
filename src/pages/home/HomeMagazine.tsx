@@ -74,19 +74,23 @@ export default function HomeMagazine({
             <Text>本期目录</Text>
             <Text>INDEX</Text>
           </View>
-          {rest.map((t, i) => (
-            <View
-              key={t._id}
-              className='hm-index-row'
-              onClick={() => onOpenTrip(t)}
-              onLongPress={() => onLongPressTrip(t)}
-            >
-              <Text className='hm-index-no'>P. {String(i + 2).padStart(2, '0')}</Text>
-              <Text className='hm-index-name'>{t.name}</Text>
-              <View className='hm-index-dots' />
-              <Text className='hm-index-date'>{t.startDate.slice(0, 7)}</Text>
-            </View>
-          ))}
+          {rest.map((t, i) => {
+            const restAI = aiStatusFor(t)
+            return (
+              <View
+                key={t._id}
+                className='hm-index-row'
+                onClick={() => onOpenTrip(t)}
+                onLongPress={() => onLongPressTrip(t)}
+              >
+                <Text className='hm-index-no'>P. {String(i + 2).padStart(2, '0')}</Text>
+                <Text className='hm-index-name'>{t.name}</Text>
+                <View className='hm-index-dots' />
+                <Text className='hm-index-date'>{t.startDate.slice(0, 7)}</Text>
+                {restAI && <HomeCardAIRow status={restAI} onTap={() => onOpenTrip(t)} />}
+              </View>
+            )
+          })}
         </View>
       )}
 

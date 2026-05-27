@@ -1,5 +1,7 @@
 import Taro from '@tarojs/taro'
-import type { AIPreferences, GeneratedPlan } from '../types/trip'
+import type { AIPreferences, Destination, GeneratedPlan } from '../types/trip'
+import { createTrip, updateTrip } from './db'
+import { buildNewTrip } from './trip-helpers'
 
 interface StartParams {
   tripId: string  // 现在必传, 新建场景在调用前先 createTrip 拿到 _id
@@ -47,4 +49,64 @@ export function startAITask(p: StartParams): string {
   const taskId = newAITaskId()
   fireAITask(taskId, p)
   return taskId
+}
+
+// === createTripAndFireAI: 首页 AI 创建一体化 ===
+
+export interface CreateAITripInput {
+  destinations: Destination[]
+  startDate: string
+  endDate: string
+  pax: number
+  name?: string
+  ownerOpenid: string
+  ownerNickname: string
+  ownerAvatarUrl: string
+}
+
+const DRAFT_KEY_CREATE = 'ai-interview-draft-create'
+
+/**
+ * 首页 AI 创建一体化：buildNewTrip → createTrip → 落 aiTaskId+aiStatus → fireAITask → 清 create 草稿
+ * 返回新 tripId
+ */
+export async function createTripAndFireAI(
+  input: CreateAITripInput,
+  preferences: AIPreferences,
+): Promise<string> {
+  const displayName = input.name?.trim() || 'AI 生成中…'
+  const draft = buildNewTrip({
+    name: displayName,
+    pax: input.pax,
+    startDate: input.startDate,
+    endDate: input.endDate,
+    destinations: input.destinations,
+  })
+  draft.ownerOpenid = input.ownerOpenid
+  draft.ownerNickname = input.ownerNickname
+  draft.ownerAvatarUrl = input.ownerAvatarUrl
+
+  const tripId = await createTrip(draft)
+  const taskId = newAITaskId()
+
+  await updateTrip(
+    tripId,
+    { aiTaskId: taskId, aiStatus: 'generating', aiDraft: null, aiError: null },
+    input.ownerOpenid,
+  )
+
+  fireAITask(taskId, {
+    tripId,
+    tripContext: {
+      name: displayName,
+      destinations: input.destinations,
+      startDate: input.startDate,
+      endDate: input.endDate,
+      pax: input.pax,
+    },
+    preferences,
+  })
+
+  try { Taro.removeStorageSync(DRAFT_KEY_CREATE) } catch { /* ignore */ }
+  return tripId
 }

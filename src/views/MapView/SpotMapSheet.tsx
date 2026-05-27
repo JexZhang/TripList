@@ -1,8 +1,10 @@
-import { useRef } from 'react'
-import { View, Text } from '@tarojs/components'
+import { useEffect, useRef, useState } from 'react'
+import { View, Text, RootPortal } from '@tarojs/components'
 import Taro from '@tarojs/taro'
 import type { Spot } from '../../types/trip'
 import { fmtCurrency } from '../../utils/format'
+import { useTheme } from '../../store/theme-store'
+import './SpotMapSheet.scss'
 
 const TYPE_LABEL: Record<string, string> = {
   spot: '其他',
@@ -17,16 +19,25 @@ interface Props {
 }
 
 export default function SpotMapSheet({ spot, onClose }: Props) {
-  // 缓存上一次的 spot,关闭时仍可渲染内容做退场动画;避免在 picked 切到 null 那一刻
-  // 把整个 mask DOM 卸载 —— 卸载/挂载固定定位的 View 会让 weapp 原生 <map> 重排,
-  // 把视野拉回声明的 latitude/longitude/scale。
+  const { theme } = useTheme()
+  const [mounted, setMounted] = useState(false)
   const lastSpotRef = useRef<Spot | null>(null)
-  if (spot) lastSpotRef.current = spot
+
+  useEffect(() => {
+    if (spot) {
+      lastSpotRef.current = spot
+      setMounted(true)
+    } else {
+      const t = setTimeout(() => setMounted(false), 360)
+      return () => clearTimeout(t)
+    }
+  }, [spot])
+
+  if (!mounted) return null
   const display = spot ?? lastSpotRef.current
-  const visible = !!spot
+  if (!display) return null
 
   const navigate = () => {
-    if (!display) return
     if (typeof display.lat !== 'number' || typeof display.lng !== 'number') return
     Taro.openLocation({
       latitude: display.lat,
@@ -40,12 +51,9 @@ export default function SpotMapSheet({ spot, onClose }: Props) {
   }
 
   return (
-    <View
-      className={`mv-sheet-mask ${visible ? 'visible' : ''}`}
-      onClick={visible ? onClose : undefined}
-    >
-      {display && (
-        <View className='mv-sheet' catchMove onClick={(e) => e.stopPropagation()}>
+    <RootPortal>
+      <View className={`mv-sheet-mask theme-tokens theme-${theme}`} onClick={onClose} catchMove>
+        <View className='mv-sheet' onClick={(e) => e.stopPropagation()}>
           <View className='mv-sheet-tag'>{TYPE_LABEL[display.type] || '地点'}</View>
           <View className='mv-sheet-name'>{display.name}</View>
           {display.city && <View className='mv-sheet-sub'>{display.city}</View>}
@@ -58,7 +66,7 @@ export default function SpotMapSheet({ spot, onClose }: Props) {
           )}
           <View className='mv-sheet-btn' onClick={navigate}>导航</View>
         </View>
-      )}
-    </View>
+      </View>
+    </RootPortal>
   )
 }

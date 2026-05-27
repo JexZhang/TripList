@@ -10,6 +10,8 @@ import { useThemeClass } from '../../utils/theme-class'
 import TripActionSheet, { type TripAction } from '../../components/TripActionSheet'
 import ShareTypeSheet from '../../components/ShareTypeSheet'
 import CoverPicker from '../../components/CoverPicker'
+import AIInterview, { type AIInterviewSubmit } from '../../components/AIInterview'
+import { createTripAndFireAI } from '../../utils/ai-task'
 import { buildShareMessage, shareRef, resetShareRef } from '../../utils/share'
 import type { ShareKind } from '../../utils/cloud'
 import HomeTegami from './HomeTegami'
@@ -30,6 +32,7 @@ export default function Home() {
   const [shareTrip, setShareTrip] = useState<Trip | null>(null)
   const [shareReady, setShareReady] = useState({ readonly: false, collab: false })
   const [coverTrip, setCoverTrip] = useState<Trip | null>(null)
+  const [interviewOpen, setInterviewOpen] = useState(false)
 
   useEffect(() => {
     if (!openid) return
@@ -63,6 +66,37 @@ export default function Home() {
     }, 5000)
     return () => clearInterval(timer)
   }, [openid, trips])
+
+  const handleAiCreate = async (data: AIInterviewSubmit) => {
+    if (data.mode !== 'create') return
+    if (!me?.openid) {
+      Taro.showToast({ title: '请先登录', icon: 'none' })
+      return
+    }
+    Taro.showLoading({ title: '准备中…' })
+    try {
+      const tripId = await createTripAndFireAI(
+        {
+          destinations: data.destinations,
+          startDate: data.startDate,
+          endDate: data.endDate,
+          pax: data.pax,
+          name: data.name,
+          ownerOpenid: me.openid,
+          ownerNickname: me.nickname || '行册旅人',
+          ownerAvatarUrl: me.avatarUrl || '',
+        },
+        data.preferences,
+      )
+      Taro.hideLoading()
+      Taro.showToast({ title: 'AI 正在生成…', icon: 'none', duration: 1000 })
+      setTimeout(() => Taro.redirectTo({ url: `/pages/trip/index?id=${tripId}` }), 500)
+    } catch (e) {
+      Taro.hideLoading()
+      console.warn('[handleAiCreate]', e)
+      Taro.showToast({ title: 'AI 启动失败', icon: 'none' })
+    }
+  }
 
   const handleAction = async (action: TripAction) => {
     if (!actionTrip) return
@@ -154,7 +188,7 @@ export default function Home() {
     onOpenTrip: (t) => Taro.navigateTo({ url: `/pages/trip/index?id=${t._id}` }),
     onLongPressTrip: (t) => setActionTrip(t),
     onNewTrip: () => Taro.navigateTo({ url: '/pages/new-trip/index' }),
-    onAITrip: () => Taro.navigateTo({ url: '/pages/new-trip/index?openAI=1' }),
+    onAITrip: () => setInterviewOpen(true),
     onCoverLongPress: (t) => {
       if (isSeedTripId(t._id)) {
         Taro.showToast({ title: '示例攻略不能改封面', icon: 'none' })
@@ -189,6 +223,16 @@ export default function Home() {
         openid={openid}
         onPicked={handleCoverPicked}
         onClose={() => setCoverTrip(null)}
+      />
+      <AIInterview
+        open={interviewOpen}
+        mode='create'
+        onClose={() => setInterviewOpen(false)}
+        onSubmit={(data) => {
+          if (data.mode !== 'create') return
+          setInterviewOpen(false)
+          void handleAiCreate(data)
+        }}
       />
     </View>
   )

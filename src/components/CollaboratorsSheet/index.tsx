@@ -1,4 +1,4 @@
-import { View, Text, Image } from '@tarojs/components'
+import { View, Text, Image, RootPortal } from '@tarojs/components'
 import type { Collaborator } from '../../types/trip'
 import './index.scss'
 
@@ -24,8 +24,9 @@ export default function CollaboratorsSheet({
   )
 
   return (
-    <View className='cs-mask' onClick={onClose}>
-      <View className='cs-sheet' onClick={(e) => e.stopPropagation()}>
+    <RootPortal>
+      <View className='cs-mask' onClick={onClose}>
+        <View className='cs-sheet' onClick={(e) => e.stopPropagation()}>
         <View className='cs-title'>协作成员</View>
 
         <View className='cs-row'>
@@ -47,7 +48,8 @@ export default function CollaboratorsSheet({
             </View>
           </View>
         ))}
+        </View>
       </View>
-    </View>
+    </RootPortal>
   )
 }

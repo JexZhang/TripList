@@ -137,10 +137,39 @@
   line-height: 1.5;
 }
 
+/* —— 步骤容器 —— */
+.aiv-step {
+  animation: drop-in 0.36s var(--ease-spring) both;
+  padding: 0 0 16rpx;
+}
+.aiv-q {
+  display: block;
+  font-size: 32rpx;
+  font-weight: 600;
+  font-family: var(--font-display);
+  color: var(--ink);
+  margin-bottom: 24rpx;
+}
+.aiv-pax-picker {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20rpx 24rpx;
+  background: var(--accent-bg);
+  border-radius: var(--r-md);
+  font-size: 28rpx;
+  color: var(--ink);
+  margin-bottom: 16rpx;
+}
+.aiv-prefs-host {
+  padding: 0;
+}
+
 .aiv-foot {
   display: flex;
   gap: 24rpx;
   justify-content: flex-end;
+  margin-top: 16rpx;
 }
 .aiv-skip,
 .aiv-next {

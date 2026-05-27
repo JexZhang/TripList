@@ -202,69 +202,6 @@
   height: 100%;
 }
 
-.mv-sheet-mask {
-  position: fixed;
-  left: 0; right: 0; top: 0; bottom: 0;
-  background: rgba(43, 26, 16, 0.45);
-  z-index: 1000;
-  display: flex;
-  align-items: flex-end;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.22s ease;
-}
-.mv-sheet-mask.visible {
-  opacity: 1;
-  pointer-events: auto;
-}
-.mv-sheet {
-  width: 100%;
-  background: var(--surface);
-  border-radius: var(--r-xl) var(--r-xl) 0 0;
-  padding: 40rpx 32rpx 56rpx;
-  box-sizing: border-box;
-  box-shadow: 0 -16rpx 48rpx rgba(43, 26, 16, 0.15);
-  position: relative;
-  transform: translateY(100%);
-  transition: transform 0.36s var(--ease-spring);
-}
-.mv-sheet-mask.visible .mv-sheet { transform: translateY(0); }
-.mv-sheet::before {
-  content: '';
-  position: absolute;
-  top: 16rpx; left: 50%;
-  transform: translateX(-50%);
-  width: 72rpx; height: 8rpx;
-  background: var(--line-2);
-  border-radius: 999rpx;
-}
-.mv-sheet-tag {
-  display: inline-block;
-  font-size: 22rpx;
-  padding: 6rpx 16rpx;
-  border-radius: 999rpx;
-  background: var(--accent-bg);
-  color: var(--accent);
-  margin-bottom: 16rpx;
-  font-weight: 700;
-}
-.mv-sheet-name { font-size: 38rpx; font-weight: 800; color: var(--ink); }
-.mv-sheet-sub { font-size: 24rpx; color: var(--ink-3); margin-top: 8rpx; font-weight: 500; }
-.mv-sheet-note { font-size: 26rpx; margin-top: 16rpx; line-height: 1.6; color: var(--ink-2); }
-.mv-sheet-price { font-size: 28rpx; margin-top: 16rpx; color: var(--coral); font-weight: 700; }
-.mv-sheet-btn {
-  margin-top: 32rpx;
-  text-align: center;
-  padding: 28rpx 0;
-  font-size: 30rpx;
-  font-weight: 700;
-  letter-spacing: 2rpx;
-  border-radius: var(--r-md);
-  background: linear-gradient(135deg, var(--accent) 0%, var(--accent-2) 100%);
-  color: #FFF;
-  box-shadow: 0 12rpx 28rpx rgba(255, 122, 46, 0.40);
-}
-
 /* ============================================
  * D. 极简胶囊（minimal）
  * ============================================ */

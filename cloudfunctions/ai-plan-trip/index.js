@@ -2,7 +2,7 @@ const cloud = require('wx-server-sdk')
 cloud.init({ env: cloud.DYNAMIC_CURRENT_ENV })
 
 const { callChat, MODEL_ALIASES } = require('./lib/llm')
-const { buildMessages, retryPrompt } = require('./lib/prompts')
+const { buildMessages, retryPrompt, isDestEmpty } = require('./lib/prompts')
 const { TOOLS_SCHEMA, executeTool } = require('./lib/tools')
 const { validatePlan } = require('./lib/validate')
 const { createTask, updateTask, getTripLight, finalizeTrip } = require('./lib/task-store')
@@ -83,6 +83,39 @@ async function pingMode(event) {
 }
 
 // ============ PLAN: 单函数完整执行. 客户端 fire-and-forget 调用即可. ============
+
+// === Task 16: destinations 重试专用 — 轻量 focused prompt, 不带 tools ===
+async function fetchDestinationsOnly({ days, name, preferences, pax, modelAlias, messages }) {
+  const summary = days.map((d) => ({ date: d.date, spotCount: d.spots.length })).slice(0, 12)
+  const destRetryPrompt = `这是已生成的攻略概要：
+${JSON.stringify(summary)}
+名称：${name || '（待定）'}
+偏好：${JSON.stringify(preferences)}
+人数：${pax}
+
+请基于此推断 1-3 个最匹配的具体目的地（中文名 + 国家/城市），仅返回 JSON：
+{ "destinations": [ { "name": "杭州", "country": "中国", "city": "杭州" } ] }
+不要返回其他字段，不要重新生成攻略。`
+
+  // 复用已有 messages 上下文 + 追加一条 focused 请求, 不带 tools, 强制 json
+  const retryMessages = [
+    ...messages,
+    { role: 'user', content: destRetryPrompt },
+  ]
+  const { msg } = await callChat({
+    modelAlias,
+    messages: retryMessages,
+    responseFormat: { type: 'json_object' },
+  })
+  const raw = msg.content || ''
+  try {
+    const parsed = JSON.parse(raw)
+    if (Array.isArray(parsed.destinations) && parsed.destinations.length > 0) {
+      return parsed.destinations
+    }
+  } catch { /* fall through */ }
+  return []
+}
 // 流程: 接收外部 taskId → 立刻插记录 → 跑 tool loop → 写最终结果 / 错误
 // 即便客户端 RPC 早就超时, SCF 容器仍按本函数 timeout (600s) 跑完, 不会被回收
 async function planMode(event) {
@@ -384,6 +417,59 @@ async function runLoop({ taskId, tripId, tripContext, preferences, previousResul
       }
     }
 
+    // === 构建 draft：days + 可选 name + 可选 recommendedDestinations ===
+    const aiDraft = { days: parsed.days }
+    if (parsed.name) aiDraft.name = parsed.name
+    if (Array.isArray(parsed.recommendedDestinations) && parsed.recommendedDestinations.length > 0) {
+      aiDraft.recommendedDestinations = parsed.recommendedDestinations
+    }
+
+    // === Task 16: destinations 重试机制 ===
+    // 若用户未填目的地且主返回未含 recommendedDestinations, 用轻量 focused prompt 重试最多3次
+    if (isDestEmpty(tripContext.destinations)) {
+      if (!Array.isArray(aiDraft.recommendedDestinations) || aiDraft.recommendedDestinations.length === 0) {
+        for (let i = 0; i < 3; i++) {
+          console.log(`[ai-plan-trip] destinations retry #${i + 1}`)
+          try {
+            const got = await fetchDestinationsOnly({
+              days: parsed.days,
+              name: parsed.name,
+              preferences,
+              pax: tripContext.pax,
+              modelAlias: preferences.modelAlias,
+              messages,  // 复用已有上下文
+            })
+            if (got.length > 0) {
+              aiDraft.recommendedDestinations = got
+              console.log(`[ai-plan-trip] destinations retry #${i + 1} success:`, JSON.stringify(got).slice(0, 200))
+              break
+            }
+          } catch (retryErr) {
+            console.warn(`[ai-plan-trip] destinations retry #${i + 1} failed:`, retryErr.message)
+          }
+        }
+      }
+      // 3 次重试仍无目的地 → 写 error 状态, 不写 draft
+      if (!aiDraft.recommendedDestinations || aiDraft.recommendedDestinations.length === 0) {
+        console.error('[ai-plan-trip] all destination retries failed')
+        try {
+          await finalizeTrip(tripId, taskId, {
+            aiStatus: 'error',
+            aiDraft: null,
+            aiError: 'AI 未能推荐目的地，请稍后重试或手动添加',
+          })
+        } catch (writeErr) {
+          console.error('[ai-plan-trip] finalizeTrip(dest-error) FAILED:', writeErr.message)
+        }
+        await updateTask(taskId, {
+          status: 'error',
+          error: 'no_destinations_after_retry',
+          meta: { elapsedMs: Date.now() - startTs, promptTokens, completionTokens, turns },
+        })
+        return { ok: false, error: 'no_destinations' }
+      }
+    }
+
     // 1. 写 task done (debug 用)
     const _ = cloud.database().command
     await updateTask(taskId, {
@@ -395,7 +481,7 @@ async function runLoop({ taskId, tripId, tripContext, preferences, previousResul
     // 2. 写 trip 草稿 (前端真正订阅的字段). finalizeTrip 内部会比对 aiTaskId 防覆盖
     const writeRes = await finalizeTrip(tripId, taskId, {
       aiStatus: 'ready',
-      aiDraft: _.set(parsed),
+      aiDraft: _.set(aiDraft),
       aiError: null,
     })
     if (!writeRes.written) {
