@@ -40,21 +40,37 @@
   gap: 24rpx;
 }
 .me-theme-card {
+  position: relative;
   padding: 20rpx;
   border-radius: var(--r-md);
   background: var(--surface-2);
   border: 2rpx solid transparent;
+  overflow: hidden;
   transition: border-color 0.18s var(--ease-out), transform 0.18s var(--ease-out);
 }
 .me-theme-card:active { transform: scale(0.98); }
-.me-theme-card.is-selected {
+.me-theme-card.is-current {
   border-color: var(--accent);
+}
+.me-theme-card.is-pending {
+  border-color: var(--accent);
+  border-style: dashed;
 }
 .me-theme-thumb {
   width: 100%;
   aspect-ratio: 5 / 6.5;
   border-radius: var(--r-sm);
   margin-bottom: 16rpx;
+  overflow: hidden;
+  position: relative;
+  display: block;
+  background: var(--surface);
+}
+.me-theme-thumb image,
+.me-theme-thumb Image {
+  width: 100%;
+  height: 100%;
+  display: block;
   overflow: hidden;
 }
 
@@ -77,3 +93,82 @@
   font-size: 22rpx;
   color: var(--ink-3);
 }
+
+/* 个人资料展示卡 */
+.me-profile-card {
+  display: flex;
+  align-items: center;
+  gap: 24rpx;
+  padding: 24rpx;
+  background: var(--surface-2);
+  border-radius: var(--r-md);
+  position: relative;
+}
+.me-profile-avatar {
+  width: 120rpx;
+  height: 120rpx;
+  border-radius: 50%;
+  background: var(--surface);
+  flex: 0 0 auto;
+}
+.me-profile-text {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+.me-profile-nickname {
+  font-size: 32rpx;
+  font-weight: 600;
+  color: var(--ink);
+  font-family: var(--font-display);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: block;
+}
+.me-profile-edit {
+  flex: 0 0 auto;
+  width: 64rpx;
+  height: 64rpx;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--ink-3);
+  background: var(--surface);
+  border: 1rpx solid var(--line);
+  transition: transform 0.18s var(--ease-out);
+}
+.me-profile-edit:active { transform: scale(0.94); }
+
+/* 主题 badge + 应用按钮 */
+.me-theme-badge {
+  position: absolute;
+  top: 12rpx;
+  right: 12rpx;
+  padding: 4rpx 12rpx;
+  border-radius: var(--r-sm);
+  font-size: 18rpx;
+  font-family: var(--font-mono);
+  letter-spacing: 1rpx;
+}
+.me-theme-badge--current {
+  background: var(--accent);
+  color: #fff;
+}
+.me-theme-badge--pending {
+  background: transparent;
+  color: var(--accent);
+  border: 1rpx dashed var(--accent);
+}
+.me-theme-apply {
+  margin-top: 24rpx;
+  padding: 20rpx;
+  text-align: center;
+  background: var(--accent);
+  color: #fff;
+  border-radius: var(--r-md);
+  font-size: 28rpx;
+  font-weight: 600;
+  transition: transform 0.18s var(--ease-out);
+}
+.me-theme-apply:active { transform: scale(0.98); }
