@@ -14,20 +14,22 @@ export default function DayTabsSpine({ days, activeId, onSelect, onLongPress, on
   return (
     <View className='dt-spine-wrap'>
       <ScrollView scrollX className='dt dt--spine'>
-        {days.map((d, idx) => (
-          <View
-            key={d.id}
-            className={`dt-item dt-item--spine ${activeId === d.id ? 'on' : ''}`}
-            onClick={() => onSelect(d.id)}
-            onLongPress={() => onLongPress(d.id, idx)}
-          >
-            <View className='dt-spine-dot' />
-            <Text className='dt-spine-no'>D{idx + 1}</Text>
-            <Text className='dt-spine-date'>{dayjs(d.date).format('M/D')}</Text>
+        <View className='dt-track dt-track--spine'>
+          {days.map((d, idx) => (
+            <View
+              key={d.id}
+              className={`dt-item dt-item--spine ${activeId === d.id ? 'on' : ''}`}
+              onClick={() => onSelect(d.id)}
+              onLongPress={() => onLongPress(d.id, idx)}
+            >
+              <View className='dt-spine-dot' />
+              <Text className='dt-spine-no'>D{idx + 1}</Text>
+              <Text className='dt-spine-date'>{dayjs(d.date).format('M/D')}</Text>
+            </View>
+          ))}
+          <View className='dt-add dt-add--spine' onClick={() => onAdd('back')}>
+            <Text>+</Text>
           </View>
-        ))}
-        <View className='dt-add' onClick={() => onAdd('back')}>
-          <Text>+</Text>
         </View>
       </ScrollView>
       <View className='dt-spine-line' />

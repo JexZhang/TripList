@@ -1,0 +1,58 @@
+.pmg { padding: 24rpx; animation: fade-in 0.28s var(--ease-out) both; }
+.pmg-masthead {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 4rpx;
+}
+.pmg-eyebrow {
+  font-size: 20rpx;
+  letter-spacing: 6rpx;
+  font-family: var(--font-display);
+  color: var(--ink);
+}
+.pmg-progress {
+  font-size: 28rpx;
+  font-weight: 800;
+  font-family: var(--font-mono);
+  color: var(--accent);
+}
+.pmg-tpl {
+  font-size: 20rpx;
+  letter-spacing: 2rpx;
+  border: 2rpx solid var(--ink);
+  padding: 6rpx 14rpx;
+}
+.pmg-rule { height: 2rpx; background: var(--ink); margin: 12rpx 0 24rpx; }
+.pmg-cat { margin-bottom: 32rpx; }
+.pmg-cat-label {
+  display: block;
+  font-size: 36rpx;
+  font-weight: 900;
+  font-family: var(--font-display);
+  color: var(--ink);
+}
+.pmg-rule-thin { height: 1rpx; background: var(--ink); margin: 8rpx 0 4rpx; }
+.pmg-list { display: flex; flex-direction: column; }
+.pmg-row, .pmg-add {
+  display: flex;
+  align-items: center;
+  gap: 16rpx;
+  padding: 16rpx 0;
+  border-bottom: 1rpx solid var(--line);
+  font-size: 26rpx;
+}
+.pmg-row.on .pmg-name { text-decoration: line-through; color: var(--ink-3); }
+.pmg-check {
+  font-size: 24rpx;
+  width: 36rpx;
+  color: var(--ink);
+  font-family: var(--font-mono);
+}
+.pmg-name { color: var(--ink); flex: 1; }
+.pmg-input {
+  flex: 1;
+  font-size: 26rpx;
+  color: var(--ink);
+  letter-spacing: 2rpx;
+}

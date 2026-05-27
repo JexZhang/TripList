@@ -1,0 +1,95 @@
+.ppp {
+  padding: 24rpx;
+  animation: fade-in 0.28s var(--ease-out) both;
+  background:
+    repeating-linear-gradient(45deg, transparent 0 24rpx, rgba(43,31,14,0.02) 24rpx 26rpx),
+    var(--bg);
+}
+.ppp-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 16rpx;
+  border-bottom: 2rpx dashed var(--line-2);
+  margin-bottom: 24rpx;
+}
+.ppp-lab {
+  font-size: 22rpx;
+  letter-spacing: 6rpx;
+  font-family: var(--font-mono);
+  color: var(--ink-2);
+}
+.ppp-tpl {
+  padding: 8rpx 18rpx;
+  border: 2rpx solid var(--accent);
+  color: var(--accent);
+  border-radius: var(--r-sm);
+  font-size: 22rpx;
+}
+.ppp-cat { margin-bottom: 32rpx; }
+.ppp-cat-label {
+  display: block;
+  font-size: 26rpx;
+  font-weight: 700;
+  font-family: var(--font-display);
+  color: var(--ink);
+  margin-bottom: 12rpx;
+  letter-spacing: 2rpx;
+}
+.ppp-tag {
+  display: flex;
+  align-items: center;
+  gap: 16rpx;
+  padding: 16rpx 20rpx;
+  background: var(--surface);
+  border-radius: var(--r-sm);
+  margin-bottom: 8rpx;
+  border-left: 6rpx solid var(--accent);
+  transition: opacity 0.22s var(--ease-out);
+}
+.ppp-tag.on { opacity: 0.5; }
+.ppp-tag-stamp {
+  width: 60rpx; height: 60rpx;
+  border: 3rpx solid var(--accent);
+  border-radius: 50%;
+  color: var(--accent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28rpx;
+  flex-shrink: 0;
+}
+.ppp-tag-body { flex: 1; min-width: 0; }
+.ppp-tag-name {
+  display: block;
+  font-size: 28rpx;
+  font-weight: 600;
+  color: var(--ink);
+  margin-bottom: 6rpx;
+}
+.ppp-tag-barcode {
+  display: flex;
+  gap: 2rpx;
+  align-items: flex-end;
+  height: 16rpx;
+}
+.ppp-bar { height: 100%; background: var(--ink-3); }
+.ppp-add {
+  display: flex;
+  align-items: center;
+  gap: 8rpx;
+  padding: 12rpx 20rpx;
+  border: 2rpx dashed var(--line-2);
+  border-radius: var(--r-sm);
+}
+.ppp-input { flex: 1; font-size: 26rpx; color: var(--ink); }
+.ppp-add-btn {
+  width: 44rpx; height: 44rpx;
+  border-radius: 50%;
+  background: var(--accent);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 26rpx;
+}

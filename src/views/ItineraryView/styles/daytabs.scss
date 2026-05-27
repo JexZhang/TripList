@@ -1,38 +1,51 @@
-/* 通用容器 */
+/* ============ 通用容器 ============
+ * ScrollView 仅作为横向滚动视口，display: block + nowrap；
+ * 内部用 .dt-track 做 flex 分布，min-width: 100% 保证短行程能撑满，长行程自然溢出滚动。
+ */
 .dt {
-  display: flex;
-  gap: 12rpx;
-  padding: 16rpx 24rpx;
+  display: block;
   background: var(--surface);
-  white-space: nowrap;
   border-bottom: 1rpx solid var(--line);
+  white-space: nowrap;
+}
+.dt-track {
+  display: flex;
+  align-items: center;
+  min-width: 100%;
+  box-sizing: border-box;
 }
 .dt-item {
   position: relative;
-  flex-shrink: 0;
+  flex: 0 0 auto;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   transition: all 0.22s var(--ease-out);
 }
 .dt-item:active { transform: scale(0.96); }
+
 .dt-add {
-  flex-shrink: 0;
+  flex: 0 0 auto;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 64rpx;
   border-radius: var(--r-sm);
   background: var(--accent-bg);
   color: var(--accent);
   font-size: 32rpx;
 }
 
-/* ============ A. ticket（票根撕口） ============ */
+/* ============ A. ticket（票根撕口 · 信笺主题） ============ */
+.dt--ticket { padding: 16rpx 24rpx; }
+.dt-track--ticket {
+  gap: 16rpx;
+  justify-content: space-between;
+}
 .dt--ticket .dt-item--ticket {
   flex-direction: column;
   padding: 12rpx 20rpx;
   min-width: 120rpx;
+  flex: 1 1 0;
   background: var(--surface-2);
   border: 1rpx dashed var(--line-2);
   border-radius: var(--r-sm);
@@ -60,7 +73,6 @@
   font-family: var(--font-mono);
   opacity: 0.6;
 }
-.dt-sep, .dt-date, .dt-label { display: none; }
 .dt-notch {
   position: absolute;
   left: 50%;
@@ -72,21 +84,38 @@
 }
 .dt-notch--t { top: -4rpx; }
 .dt-notch--b { bottom: -4rpx; }
+.dt-add--ticket {
+  flex: 0 0 auto;
+  width: 88rpx;
+  align-self: stretch;
+  min-height: 96rpx;
+  border: 1rpx dashed var(--accent);
+  background: transparent;
+}
 
-/* ============ B. spine（时间轴脊柱） ============ */
+/* ============ B. spine（时间轴脊柱 · 杂志主题） ============
+ * dot 必须落在脊线（左右 24rpx）之间；用 space-between + 边距让首尾点贴齐线端。
+ */
 .dt-spine-wrap {
   position: relative;
   background: var(--surface);
   border-bottom: 2rpx solid var(--ink);
 }
 .dt--spine {
-  padding: 24rpx 24rpx 16rpx;
+  padding: 24rpx 0 16rpx;
   border-bottom: none;
   background: transparent;
 }
+.dt-track--spine {
+  justify-content: space-between;
+  padding: 0 24rpx;
+  gap: 16rpx;
+}
 .dt-item--spine {
+  flex: 1 1 0;
+  min-width: 80rpx;
   flex-direction: column;
-  padding: 8rpx 18rpx 16rpx;
+  padding: 8rpx 0 16rpx;
   position: relative;
 }
 .dt-spine-dot {
@@ -111,6 +140,7 @@
   font-family: var(--font-mono);
   color: var(--ink-3);
   letter-spacing: 1rpx;
+  white-space: nowrap;
 }
 .dt-item--spine.on .dt-spine-no { color: var(--accent); }
 .dt-spine-line {
@@ -120,10 +150,27 @@
   height: 2rpx;
   background: var(--ink);
 }
+.dt-add--spine {
+  flex: 0 0 auto;
+  width: 64rpx;
+  height: 64rpx;
+  border-radius: 50%;
+  background: transparent;
+  border: 1rpx dashed var(--ink-3);
+  color: var(--ink-3);
+}
 
-/* ============ C. calendar（日历方块） ============ */
-.dt--calendar { gap: 16rpx; }
+/* ============ C. calendar（日历方块 · 明信片主题）—— 保留原始 flex 布局 ============ */
+.dt--calendar {
+  display: flex;
+  align-items: center;
+  gap: 16rpx;
+  padding: 16rpx 24rpx;
+  white-space: nowrap;
+}
 .dt-item--calendar {
+  flex-shrink: 0;
+  box-sizing: border-box;
   flex-direction: column;
   width: 120rpx;
   height: 120rpx;
@@ -159,16 +206,24 @@
   opacity: 0.8;
 }
 .dt-add--cal {
+  flex-shrink: 0;
+  box-sizing: border-box;
   width: 120rpx;
   height: 120rpx;
 }
 
 /* ============ D. simple（极简文字） ============ */
-.dt--simple { gap: 32rpx; padding: 24rpx; }
+.dt--simple { padding: 24rpx; }
+.dt-track--simple {
+  justify-content: space-between;
+  gap: 16rpx;
+}
 .dt-item--simple {
+  flex: 1 1 0;
+  min-width: 80rpx;
   flex-direction: column;
   align-items: center;
-  padding: 4rpx 0;
+  padding: 4rpx 8rpx;
   border-bottom: 2rpx solid transparent;
 }
 .dt-item--simple.on {
@@ -189,8 +244,13 @@
   color: var(--ink-3);
   font-family: var(--font-mono);
   margin-top: 2rpx;
+  white-space: nowrap;
 }
 .dt-add--simple {
+  flex: 0 0 auto;
+  width: 64rpx;
+  height: 64rpx;
   background: transparent;
   color: var(--ink-3);
+  border: 1rpx dashed var(--ink-3);
 }

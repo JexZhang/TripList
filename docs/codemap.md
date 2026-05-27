@@ -64,13 +64,19 @@
 - 来源：详见 [trip-core §4](../openspec/specs/trip-core/spec.md)
 
 **BudgetView（开销视图）** — 开销汇总与人均计算
-- 通过三次 reduce 操作分别计算交通总费用、每日分类费用汇总（住宿/餐饮/门票）
-- 人数为零保护：`perPax` 计算使用三元运算符检查 `pax > 0`，避免 NaN 渲染
-- 分布条形图采用 CSS width 内联样式按比例渲染四个色段
+- 通过 `aggregateBudget()` 工具函数聚合四类开销（住宿/交通/餐饮/景点），计算总额、人均、每日趋势和最贵一笔
+- 环形 donut 图使用 conic-gradient 实现，颜色通过 CSS 变量（`var(--plum/leaf/accent/sun)`）支持四主题漂移
+- 每日花销折线图使用 SVG via data URI 实现，`currentColor` 由父元素 `color: var(--accent)` 决定，主题自动适配
+- 分类明细区按类型分组展示所有有价格的 spot，点击可编辑
 - 来源：详见 [trip-core §5](../openspec/specs/trip-core/spec.md)
 
-**PackingView（清单视图）** — 清单管理与模板导入
-- 按 PACKING_CATEGORIES 定义的六大分类分组渲染清单项
+**PackingView（清单视图）** — 清单管理与模板导入，按主题分发四套版式
+- `index.tsx` 为薄 dispatcher，保留 state + CRUD + TemplateImport 弹层，按当前 theme 渲染子组件
+- `PackTegami`（手帖贴纸感）：圆角 chip 网格，勾选后暖橘填充 + 删除线
+- `PackMagazine`（刊物清单卡）：粗线大字分类标题 + 黑色方框复选 □/■
+- `PackPostcard`（护照行李条）：斜纹底 + 行李条 + 圆形戳 + 条形码细纹
+- `PackMinimal`（极简勾选行）：极淡 hairline + 边框方框复选 + 删除线已勾
+- `shared.ts`：共用 `PackViewProps` 接口，4 子组件统一 props 形状
 - 模板导入检测当前清单是否为空：空则直接替换；非空则弹出确认面板提供"合并"/"替换"/"取消"三种策略
 - 合并策略通过 Set 去重（key 为 `${category}::${label}`），确保不引入重复项
 - 来源：详见 [trip-core §5](../openspec/specs/trip-core/spec.md)
@@ -81,7 +87,11 @@
 graph TD
     Index["Index 主组件"] --> TripView["TripView 攻略视图"]
     Index --> BudgetView["BudgetView 开销视图"]
-    Index --> PackingView["PackingView 清单视图"]
+    Index --> PackingView["PackingView 清单视图(dispatcher)"]
+    PackingView --> PackTegami["PackTegami 贴纸感"]
+    PackingView --> PackMagazine["PackMagazine 清单卡"]
+    PackingView --> PackPostcard["PackPostcard 行李条"]
+    PackingView --> PackMinimal["PackMinimal 勾选行"]
     TripView --> mergedDay["mergedDay 合并函数"]
     BudgetView --> mergedDay
     mergedDay --> trips.json["trips.json 基线数据"]
@@ -111,6 +121,8 @@ graph TD
 | [index.tsx](../src/pages/index/index.tsx) | 567 | adapter | 主页面组件 + 三大视图子组件 |
 | [index.scss](../src/pages/index/index.scss) | 684 | view | 页面样式定义，CSS 变量驱动主题 |
 | [index.config.ts](../src/pages/index/index.config.ts) | 3 | config | 页面导航栏标题配置 |
+| [helpers.ts](../src/views/BudgetView/helpers.ts) | 100 | service | BudgetView 价格聚合 / donut 角度 / 折线点计算 |
+| [DailyChart.tsx](../src/views/BudgetView/DailyChart.tsx) | 74 | view | 每日花销折线 SVG 卡（SVG via data URI） |
 
 > **章节来源**
 > → 详见 [trip-core §2](../openspec/specs/trip-core/spec.md)

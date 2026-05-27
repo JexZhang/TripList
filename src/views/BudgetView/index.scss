@@ -1,126 +1,285 @@
-.budget {
-  padding: 8rpx 32rpx 32rpx;
-  animation: page-in 0.36s var(--ease-out) both;
+.bv {
+  padding: 24rpx 24rpx 80rpx;
+  background: var(--bg);
+  min-height: 100vh;
+  box-sizing: border-box;
+  animation: fade-in 0.32s var(--ease-out) both;
+  color: var(--accent); /* DailyChart 用 currentColor 取主题 accent */
 }
 
-/* ===== 总览卡 ===== */
-.bg-total-row {
-  display: flex; justify-content: space-between; align-items: baseline;
-  padding: 36rpx 36rpx;
-  background: linear-gradient(135deg, var(--accent) 0%, var(--accent-2) 100%);
-  color: #FFF;
-  border: none;
-  border-radius: var(--r-lg);
-  margin-bottom: 36rpx;
-  box-shadow: 0 16rpx 36rpx rgba(255, 122, 46, 0.30);
-  position: relative;
-  overflow: hidden;
-  animation: pop-in 0.5s var(--ease-spring) both;
-}
-.bg-total-row::after {
-  content: '';
-  position: absolute;
-  top: -60rpx; right: -60rpx;
-  width: 220rpx; height: 220rpx;
-  border-radius: 999rpx;
-  background: radial-gradient(circle, rgba(255,255,255,0.30), transparent 70%);
-}
-.bg-total-block { display: flex; flex-direction: column; }
-.bg-total-label { font-size: 22rpx; opacity: 0.85; letter-spacing: 3rpx; font-weight: 600; }
-.bg-total-value { 
-  font-size: 64rpx; font-weight: 800; margin-top: 8rpx; letter-spacing: 1rpx;
-  /* 杂志风格：总开销数字使用等宽体 */
-  font-family: var(--font-mono);
-}
-.bg-total-sub { 
-  font-size: 34rpx; font-weight: 700; opacity: 0.95; margin-top: 8rpx;
-  /* 杂志风格：人均数字使用等宽体 */
-  font-family: var(--font-mono);
-}
-
-/* ===== 分布 ===== */
-.bg-dist { margin-bottom: 36rpx; padding: 28rpx; background: var(--surface); border-radius: var(--r-lg); box-shadow: var(--shadow-sm); }
-.bg-dist-bar {
+/* ============ 1. 总览 ============ */
+.bv-head {
   display: flex;
-  height: 28rpx;
-  border: none;
-  border-radius: 999rpx;
-  overflow: hidden;
-  background: var(--bg-soft);
-}
-.dist-seg { height: 100%; }
-.dist-seg.seg-hotel { background: var(--accent); }
-.dist-seg.seg-transport { background: var(--accent-2); }
-.dist-seg.seg-meal { background: var(--sun); }
-.dist-seg.seg-ticket { background: var(--accent-soft); }
-
-.bg-dist-legend {
-  display: flex; flex-direction: column;
-  margin-top: 24rpx;
-}
-.legend-item {
-  display: flex; align-items: center;
-  padding: 14rpx 0;
-  border-bottom: 1rpx dashed var(--line);
-}
-.legend-item:last-child { border-bottom: none; }
-.legend-dot { width: 16rpx; height: 16rpx; border-radius: 999rpx; margin-right: 14rpx; }
-.legend-dot.seg-hotel { background: var(--accent); }
-.legend-dot.seg-transport { background: var(--accent-2); }
-.legend-dot.seg-meal { background: var(--sun); }
-.legend-dot.seg-ticket { background: var(--accent-soft); }
-.legend-label { flex: 1; font-size: 26rpx; color: var(--ink-2); font-weight: 500; }
-.legend-value { font-size: 28rpx; font-weight: 700; color: var(--ink); }
-
-.bg-days { margin-top: 16rpx; }
-
-.bg-day {
-  margin-bottom: 20rpx;
-  padding: 24rpx 28rpx;
+  justify-content: space-between;
+  align-items: center;
+  gap: 24rpx;
+  padding: 24rpx;
   background: var(--surface);
-  border-top: none;
-  border-radius: var(--r-md);
+  border-radius: var(--r-lg);
   box-shadow: var(--shadow-sm);
-  animation: slide-up 0.44s var(--ease-out) both;
+  margin-bottom: 24rpx;
 }
-.bg-days .bg-day:nth-child(1) { animation-delay: 0.08s; }
-.bg-days .bg-day:nth-child(2) { animation-delay: 0.14s; }
-.bg-days .bg-day:nth-child(3) { animation-delay: 0.20s; }
-.bg-days .bg-day:nth-child(n+4) { animation-delay: 0.26s; }
-.bg-dist { animation: slide-up 0.42s var(--ease-out) 0.06s both; }
-.bg-day-head {
-  display: flex; align-items: baseline;
-  padding-bottom: 16rpx;
-  border-bottom: 1rpx dashed var(--line);
+.bv-head-l { flex: 1; min-width: 0; color: var(--ink); }
+.bv-total-label {
+  display: block;
+  font-size: 22rpx;
+  color: var(--ink-3);
+  letter-spacing: 2rpx;
+  margin-bottom: 8rpx;
 }
-.bg-day-no {
-  font-size: 22rpx; letter-spacing: 4rpx; font-weight: 800;
-  margin-right: 16rpx;
+.bv-total-value {
+  display: block;
+  font-size: 56rpx;
+  font-weight: 800;
+  font-family: var(--font-mono);
+  color: var(--ink);
+  margin-bottom: 8rpx;
+}
+.bv-perpax {
+  font-size: 22rpx;
+  color: var(--ink-2);
+}
+.bv-perpax-v {
   color: var(--accent);
-}
-.bg-day-date {
-  font-size: 22rpx; color: var(--ink-3); font-weight: 500;
-  flex: 1;
-}
-.bg-day-total { 
-  font-size: 28rpx; font-weight: 800; color: var(--ink);
-  /* 杂志风格：每日合计使用等宽体 */
+  font-weight: 700;
   font-family: var(--font-mono);
 }
 
-.bg-spot {
-  display: flex; align-items: baseline;
-  padding: 16rpx 0;
-  border-bottom: 1rpx dashed var(--line);
+/* donut */
+.bv-donut-wrap {
+  position: relative;
+  width: 180rpx;
+  height: 180rpx;
+  flex-shrink: 0;
 }
-.bg-spot:last-child { border-bottom: none; }
-.bg-spot-cat {
-  width: 96rpx; font-size: 22rpx; color: var(--ink-3); font-weight: 500;
+.bv-donut {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  position: relative;
 }
-.bg-spot-name { flex: 1; font-size: 26rpx; color: var(--ink-2); }
-.bg-spot-price { font-size: 26rpx; font-weight: 700; color: var(--coral); }
+.bv-donut-hole {
+  position: absolute;
+  inset: 22%;
+  border-radius: 50%;
+  background: var(--surface);
+}
+.bv-donut-center {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: var(--ink);
+}
+.bv-donut-pct {
+  font-size: 30rpx;
+  font-weight: 800;
+  font-family: var(--font-mono);
+  line-height: 1;
+}
+.bv-donut-cap {
+  font-size: 18rpx;
+  color: var(--ink-3);
+  margin-top: 4rpx;
+  letter-spacing: 2rpx;
+}
 
-.bg-empty {
-  text-align: center; padding: 80rpx;
-  color: var(--ink-3); font-size: 26rpx;
+/* ============ 2. 图例 ============ */
+.bv-legend {
+  padding: 24rpx;
+  background: var(--surface);
+  border-radius: var(--r-lg);
+  box-shadow: var(--shadow-sm);
+  margin-bottom: 24rpx;
+}
+.bv-legend-row {
+  display: flex;
+  align-items: center;
+  gap: 12rpx;
+  padding: 12rpx 0;
+  border-bottom: 1rpx solid var(--line);
+  font-size: 24rpx;
+  color: var(--ink);
+}
+.bv-legend-row:last-child { border-bottom: none; }
+.bv-legend-sw {
+  width: 24rpx;
+  height: 24rpx;
+  border-radius: var(--r-xs);
+  flex-shrink: 0;
+}
+.bv-legend-label { flex: 1; color: var(--ink-2); }
+.bv-legend-pct {
+  font-family: var(--font-mono);
+  color: var(--ink-3);
+  width: 80rpx;
+  text-align: right;
+}
+.bv-legend-v {
+  font-family: var(--font-mono);
+  font-weight: 700;
+  color: var(--ink);
+  min-width: 140rpx;
+  text-align: right;
+}
+
+/* ============ 3. 折线卡 ============ */
+.bv-card {
+  padding: 24rpx;
+  background: var(--surface);
+  border-radius: var(--r-lg);
+  box-shadow: var(--shadow-sm);
+  margin-bottom: 24rpx;
+}
+.bv-card-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 16rpx;
+}
+.bv-card-title {
+  font-size: 28rpx;
+  font-weight: 700;
+  font-family: var(--font-display);
+  color: var(--ink);
+}
+.bv-card-cap {
+  font-size: 20rpx;
+  color: var(--ink-3);
+  font-family: var(--font-mono);
+  letter-spacing: 2rpx;
+}
+.bv-chart {
+  width: 100%;
+}
+.bv-chart-scroll {
+  width: 100%;
+  white-space: nowrap;
+}
+.bv-chart-track {
+  display: block;
+}
+.bv-chart-svg {
+  height: 160rpx;
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+}
+.bv-chart-axis {
+  display: flex;
+  margin-top: 8rpx;
+  font-size: 20rpx;
+  font-family: var(--font-mono);
+  color: var(--ink-3);
+}
+.bv-chart-axis-l {
+  flex-shrink: 0;
+  text-align: center;
+  display: inline-block;
+}
+.bv-chart-axis-l.on {
+  color: var(--accent);
+  font-weight: 700;
+}
+.bv-chart-empty {
+  padding: 48rpx 0;
+  text-align: center;
+  color: var(--ink-3);
+  font-size: 22rpx;
+}
+
+/* ============ 4. 最贵一笔 ============ */
+.bv-expensive {
+  padding: 24rpx;
+  background: linear-gradient(135deg, var(--accent), var(--accent-2));
+  color: #fff;
+  border-radius: var(--r-lg);
+  box-shadow: var(--shadow-md);
+  margin-bottom: 24rpx;
+}
+.bv-expensive:active { transform: scale(0.98); }
+.bv-exp-kicker {
+  display: block;
+  font-size: 20rpx;
+  letter-spacing: 4rpx;
+  opacity: 0.85;
+  font-family: var(--font-display);
+  margin-bottom: 8rpx;
+}
+.bv-exp-name {
+  display: block;
+  font-size: 32rpx;
+  font-weight: 700;
+  font-family: var(--font-display);
+  margin-bottom: 12rpx;
+}
+.bv-exp-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+.bv-exp-price {
+  font-size: 40rpx;
+  font-weight: 800;
+  font-family: var(--font-mono);
+}
+.bv-exp-pct {
+  font-size: 22rpx;
+  font-family: var(--font-mono);
+  opacity: 0.85;
+}
+
+/* ============ 5. 分类明细 ============ */
+.bv-details {
+  display: flex;
+  flex-direction: column;
+  gap: 16rpx;
+}
+.bv-detail-group {
+  padding: 16rpx 20rpx;
+  background: var(--surface);
+  border-radius: var(--r-md);
+}
+.bv-detail-head {
+  display: flex;
+  align-items: center;
+  gap: 12rpx;
+  padding-bottom: 12rpx;
+  border-bottom: 1rpx solid var(--line);
+}
+.bv-detail-sw {
+  width: 16rpx; height: 16rpx;
+  border-radius: var(--r-xs);
+}
+.bv-detail-label {
+  flex: 1;
+  font-size: 24rpx;
+  font-weight: 600;
+  color: var(--ink);
+}
+.bv-detail-total {
+  font-size: 24rpx;
+  font-weight: 700;
+  font-family: var(--font-mono);
+  color: var(--ink);
+}
+.bv-detail-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding: 12rpx 0;
+  border-bottom: 1rpx solid var(--line);
+  font-size: 24rpx;
+}
+.bv-detail-row:last-child { border-bottom: none; }
+.bv-detail-row:active { background: var(--accent-bg); }
+.bv-detail-name {
+  flex: 1;
+  color: var(--ink-2);
+}
+.bv-detail-price {
+  font-family: var(--font-mono);
+  font-weight: 600;
+  color: var(--ink);
 }

@@ -1,0 +1,61 @@
+.pmin {
+  padding: 32rpx;
+  animation: fade-in 0.28s var(--ease-out) both;
+}
+.pmin-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 8rpx;
+}
+.pmin-eyebrow {
+  font-size: 22rpx;
+  letter-spacing: 8rpx;
+  color: var(--ink-3);
+  font-family: var(--font-display);
+}
+.pmin-progress {
+  font-size: 36rpx;
+  font-weight: 700;
+  font-family: var(--font-mono);
+  color: var(--ink);
+}
+.pmin-tpl {
+  font-size: 22rpx;
+  color: var(--ink-3);
+  margin-bottom: 32rpx;
+  padding: 8rpx 0;
+}
+.pmin-cat { margin-bottom: 32rpx; }
+.pmin-cat-label {
+  display: block;
+  font-size: 24rpx;
+  letter-spacing: 4rpx;
+  color: var(--ink-3);
+  margin-bottom: 4rpx;
+  padding-bottom: 8rpx;
+  border-bottom: 1rpx solid var(--line);
+}
+.pmin-row, .pmin-add {
+  display: flex;
+  align-items: center;
+  gap: 16rpx;
+  padding: 16rpx 0;
+  border-bottom: 1rpx solid var(--line);
+  font-size: 26rpx;
+}
+.pmin-row.on .pmin-name {
+  text-decoration: line-through;
+  color: var(--ink-3);
+}
+.pmin-box {
+  width: 32rpx; height: 32rpx;
+  border: 1rpx solid var(--ink-2);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 22rpx;
+  color: var(--ink);
+  border-radius: 2rpx;
+}
+.pmin-box--add { border-style: dashed; color: var(--ink-3); }
+.pmin-name { flex: 1; color: var(--ink); }
+.pmin-input { flex: 1; font-size: 26rpx; color: var(--ink); }

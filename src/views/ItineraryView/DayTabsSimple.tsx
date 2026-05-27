@@ -13,19 +13,21 @@ interface Props {
 export default function DayTabsSimple({ days, activeId, onSelect, onLongPress, onAdd }: Props) {
   return (
     <ScrollView scrollX className='dt dt--simple'>
-      {days.map((d, idx) => (
-        <View
-          key={d.id}
-          className={`dt-item dt-item--simple ${activeId === d.id ? 'on' : ''}`}
-          onClick={() => onSelect(d.id)}
-          onLongPress={() => onLongPress(d.id, idx)}
-        >
-          <Text className='dt-simple-num'>{idx + 1}</Text>
-          <Text className='dt-simple-date'>{dayjs(d.date).format('M.D')}</Text>
+      <View className='dt-track dt-track--simple'>
+        {days.map((d, idx) => (
+          <View
+            key={d.id}
+            className={`dt-item dt-item--simple ${activeId === d.id ? 'on' : ''}`}
+            onClick={() => onSelect(d.id)}
+            onLongPress={() => onLongPress(d.id, idx)}
+          >
+            <Text className='dt-simple-num'>{idx + 1}</Text>
+            <Text className='dt-simple-date'>{dayjs(d.date).format('M.D')}</Text>
+          </View>
+        ))}
+        <View className='dt-add dt-add--simple' onClick={() => onAdd('back')}>
+          <Text>+</Text>
         </View>
-      ))}
-      <View className='dt-add dt-add--simple' onClick={() => onAdd('back')}>
-        <Text>+</Text>
       </View>
     </ScrollView>
   )

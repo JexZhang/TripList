@@ -1,0 +1,69 @@
+.ptg { padding: 24rpx; animation: fade-in 0.28s var(--ease-out) both; }
+.ptg-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24rpx;
+}
+.ptg-progress { font-size: 26rpx; font-weight: 600; color: var(--ink); }
+.ptg-tpl {
+  padding: 10rpx 22rpx;
+  background: var(--accent-bg);
+  color: var(--accent);
+  border-radius: var(--r-pill);
+  font-size: 22rpx;
+}
+.ptg-cat { margin-bottom: 28rpx; }
+.ptg-cat-label {
+  display: block;
+  font-size: 24rpx;
+  letter-spacing: 4rpx;
+  color: var(--ink-3);
+  font-family: var(--font-display);
+  margin-bottom: 12rpx;
+}
+.ptg-chips { display: flex; flex-wrap: wrap; gap: 12rpx; }
+.ptg-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8rpx;
+  padding: 14rpx 22rpx;
+  background: var(--surface);
+  border: 2rpx solid var(--line-2);
+  border-radius: var(--r-pill);
+  font-size: 26rpx;
+  color: var(--ink);
+  transition: all 0.22s var(--ease-out);
+}
+.ptg-chip.on {
+  background: var(--accent);
+  color: #fff;
+  border-color: var(--accent);
+  text-decoration: line-through;
+  opacity: 0.85;
+}
+.ptg-chip-check { font-size: 22rpx; }
+.ptg-add-row {
+  display: inline-flex;
+  align-items: center;
+  gap: 8rpx;
+  border: 2rpx dashed var(--line-2);
+  border-radius: var(--r-pill);
+  padding: 6rpx 14rpx;
+}
+.ptg-input {
+  width: 200rpx;
+  font-size: 24rpx;
+  color: var(--ink);
+}
+.ptg-add-btn {
+  width: 40rpx;
+  height: 40rpx;
+  border-radius: 50%;
+  background: var(--accent);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 26rpx;
+}

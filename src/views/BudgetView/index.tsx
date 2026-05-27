@@ -3,111 +3,114 @@ import { View, Text, ScrollView } from '@tarojs/components'
 import { useTripStore } from '../../store/trip-store'
 import { fmtCurrency } from '../../utils/format'
 import EditSpotSheet from '../../components/EditSpotSheet'
-import type { Spot, SpotType } from '../../types/trip'
+import type { Spot } from '../../types/trip'
+import { aggregateBudget, conicFromBuckets } from './helpers'
+import DailyChart from './DailyChart'
 import './index.scss'
-
-interface Bucket {
-  type: SpotType
-  label: string
-  total: number
-}
-
-const CATEGORIES: { type: SpotType; label: string; seg: string }[] = [
-  { type: 'hotel', label: '住宿', seg: 'seg-hotel' },
-  { type: 'transport', label: '交通', seg: 'seg-transport' },
-  { type: 'meal', label: '餐饮', seg: 'seg-meal' },
-  { type: 'spot', label: '杂项', seg: 'seg-ticket' },
-]
 
 export default function BudgetView() {
   const { state, dispatch } = useTripStore()
   const trip = state.trip!
   const [editSpot, setEditSpot] = useState<{ dayId: string; spot: Spot } | null>(null)
 
-  // 聚合 4 类
-  const totals: Record<SpotType, number> = { spot: 0, hotel: 0, meal: 0, transport: 0 }
-  for (const d of trip.days) {
-    for (const s of d.spots) {
-      totals[s.type] = (totals[s.type] || 0) + (s.price || 0)
-    }
-  }
-  const grandTotal = totals.spot + totals.hotel + totals.meal + totals.transport
-  const perPax = trip.pax > 0 ? Math.round(grandTotal / trip.pax) : grandTotal
-  const pct = (n: number) => grandTotal > 0 ? `${(n / grandTotal) * 100}%` : '0%'
+  const { buckets, total, perPax, daily, expensive } = aggregateBudget(trip)
+  const conic = conicFromBuckets(buckets)
+  const hotelPct = buckets.find((b) => b.type === 'hotel')?.pct || 0
 
   return (
-    <View className='budget'>
-      {/* 总览 */}
-      <View className='bg-total-row'>
-        <View className='bg-total-block'>
-          <Text className='bg-total-label'>总开销</Text>
-          <Text className='bg-total-value'>{fmtCurrency(grandTotal)}</Text>
+    <ScrollView scrollY className='bv'>
+      {/* 1. 顶部总览 */}
+      <View className='bv-head'>
+        <View className='bv-head-l'>
+          <Text className='bv-total-label'>本次总开销</Text>
+          <Text className='bv-total-value'>¥{total.toLocaleString()}</Text>
+          <Text className='bv-perpax'>
+            人均 <Text className='bv-perpax-v'>¥{perPax.toLocaleString()}</Text>
+          </Text>
         </View>
-        <View className='bg-total-block'>
-          <Text className='bg-total-label'>人均 ({trip.pax}人)</Text>
-          <Text className='bg-total-sub'>{fmtCurrency(perPax)}</Text>
-        </View>
-      </View>
-
-      {/* 分布条 */}
-      <View className='bg-dist'>
-        <View className='bg-dist-bar'>
-          {CATEGORIES.map(c => (
-            <View
-              key={c.type}
-              className={`dist-seg ${c.seg}`}
-              style={{ width: pct(totals[c.type]) }}
-            />
-          ))}
-        </View>
-        <View className='bg-dist-legend'>
-          {CATEGORIES.map(c => (
-            <View key={c.type} className='legend-item'>
-              <View className={`legend-dot ${c.seg}`} />
-              <Text className='legend-label'>{c.label}</Text>
-              <Text className='legend-value'>{fmtCurrency(totals[c.type])}</Text>
-            </View>
-          ))}
+        <View className='bv-donut-wrap'>
+          <View className='bv-donut' style={{ background: `conic-gradient(${conic})` }}>
+            <View className='bv-donut-hole' />
+          </View>
+          <View className='bv-donut-center'>
+            <Text className='bv-donut-pct'>{Math.round(hotelPct)}%</Text>
+            <Text className='bv-donut-cap'>住宿占比</Text>
+          </View>
         </View>
       </View>
 
-      {/* 按天展开 */}
-      <ScrollView className='bg-days' scrollY>
-        {trip.days.map((d, idx) => {
-          const dayTotal = d.spots.reduce((s, sp) => s + (sp.price || 0), 0)
-          if (d.spots.length === 0) return null
+      {/* 2. 图例 */}
+      <View className='bv-legend'>
+        {buckets.map((b) => (
+          <View key={b.type} className='bv-legend-row'>
+            <View className='bv-legend-sw' style={{ background: b.color }} />
+            <Text className='bv-legend-label'>{b.label}</Text>
+            <Text className='bv-legend-pct'>{Math.round(b.pct)}%</Text>
+            <Text className='bv-legend-v'>¥{b.total.toLocaleString()}</Text>
+          </View>
+        ))}
+      </View>
+
+      {/* 3. 每日折线 */}
+      <View className='bv-card'>
+        <View className='bv-card-head'>
+          <Text className='bv-card-title'>每日花销</Text>
+          <Text className='bv-card-cap'>{daily.length} 天 · 走势</Text>
+        </View>
+        <DailyChart daily={daily} />
+      </View>
+
+      {/* 4. 最贵一笔 */}
+      {expensive && (
+        <View
+          className='bv-expensive'
+          onClick={() => setEditSpot({ dayId: expensive.dayId, spot: expensive.spot })}
+        >
+          <Text className='bv-exp-kicker'>本次最贵一笔</Text>
+          <Text className='bv-exp-name'>{expensive.spot.name}</Text>
+          <View className='bv-exp-meta'>
+            <Text className='bv-exp-price'>¥{(expensive.spot.price || 0).toLocaleString()}</Text>
+            <Text className='bv-exp-pct'>占总开销 {Math.round(expensive.pctOfTotal)}%</Text>
+          </View>
+        </View>
+      )}
+
+      {/* 5. 分类明细：每类下展开该类所有 spot */}
+      <View className='bv-details'>
+        {buckets.map((b) => {
+          const items = trip.days.flatMap((d) =>
+            d.spots.filter((s) => s.type === b.type && (s.price || 0) > 0)
+              .map((s) => ({ dayId: d.id, spot: s })),
+          )
+          if (items.length === 0) return null
           return (
-            <View key={d.id} className='bg-day'>
-              <View className='bg-day-head'>
-                <Text className='bg-day-no'>DAY {String(idx + 1).padStart(2, '0')}</Text>
-                <Text className='bg-day-date'>{d.date}</Text>
-                <Text className='bg-day-total'>{fmtCurrency(dayTotal)}</Text>
+            <View key={b.type} className='bv-detail-group'>
+              <View className='bv-detail-head'>
+                <View className='bv-detail-sw' style={{ background: b.color }} />
+                <Text className='bv-detail-label'>{b.label}</Text>
+                <Text className='bv-detail-total'>¥{b.total.toLocaleString()}</Text>
               </View>
-              {d.spots.map(s => (
+              {items.map(({ dayId, spot }) => (
                 <View
-                  key={s.id}
-                  className='bg-spot'
-                  onClick={() => setEditSpot({ dayId: d.id, spot: s })}
+                  key={spot.id}
+                  className='bv-detail-row'
+                  onClick={() => setEditSpot({ dayId, spot })}
                 >
-                  <Text className='bg-spot-cat'>{CATEGORIES.find(c => c.type === s.type)?.label || '其他'}</Text>
-                  <Text className='bg-spot-name'>{s.name}</Text>
-                  <Text className='bg-spot-price'>{fmtCurrency(s.price || 0)}</Text>
+                  <Text className='bv-detail-name'>{spot.name}</Text>
+                  <Text className='bv-detail-price'>{fmtCurrency(spot.price || 0)}</Text>
                 </View>
               ))}
             </View>
           )
         })}
-        {trip.days.every(d => d.spots.length === 0) && (
-          <View className='bg-empty'>还没有任何 spot；去攻略 tab 添加</View>
-        )}
-      </ScrollView>
+      </View>
 
       <EditSpotSheet
         open={!!editSpot}
         spot={editSpot?.spot || null}
-        defaultCity={editSpot?.spot.city}
+        defaultCity={editSpot?.spot.city || trip.destinations?.[0]?.name}
         onClose={() => setEditSpot(null)}
-        onSave={patch => {
+        onSave={(patch) => {
           if (!editSpot) return
           dispatch({ type: 'UPDATE_SPOT', dayId: editSpot.dayId, spotId: editSpot.spot.id, patch })
         }}
@@ -116,6 +119,6 @@ export default function BudgetView() {
           dispatch({ type: 'DELETE_SPOT', dayId: editSpot.dayId, spotId: editSpot.spot.id })
         }}
       />
-    </View>
+    </ScrollView>
   )
 }
