@@ -1,5 +1,6 @@
 import { View, Text } from '@tarojs/components'
 import BrandLogo from '../../components/BrandLogo'
+import TripPhaseChip from '../../components/TripPhaseChip'
 import AvatarEntry from '../../components/AvatarEntry'
 import HomeBottomCTA from '../../components/HomeBottomCTA'
 import HomeCardAIRow from '../../components/HomeCardAIRow'
@@ -57,6 +58,7 @@ export default function HomeMagazine({
           {featAI && <HomeCardAIRow status={featAI} />}
           <Text className='hm-feature-tag'>本期封面 / COVER STORY</Text>
           <Text className='hm-feature-title'>{featured.name}</Text>
+          <TripPhaseChip trip={featured} className='hm-feature-phase' hidePre />
           <Text className='hm-feature-deck'>
             {destFull} · {featured.pax} 人 · {days} 天行程
           </Text>
@@ -89,6 +91,7 @@ export default function HomeMagazine({
                 <Text className='hm-index-no'>P. {String(i + 2).padStart(2, '0')}</Text>
                 <Text className='hm-index-name'>{t.name}</Text>
                 <View className='hm-index-dots' />
+                <TripPhaseChip trip={t} className='hm-index-phase' hidePre />
                 <Text className='hm-index-date'>{t.startDate.slice(0, 7)}</Text>
                 {restAI && <HomeCardAIRow status={restAI} onTap={() => onOpenTrip(t)} />}
               </View>

@@ -1,5 +1,6 @@
 import { View, Text } from '@tarojs/components'
 import BrandLogo from '../../components/BrandLogo'
+import TripPhaseChip from '../../components/TripPhaseChip'
 import AvatarEntry from '../../components/AvatarEntry'
 import HomeBottomCTA from '../../components/HomeBottomCTA'
 import HomeCardAIRow from '../../components/HomeCardAIRow'
@@ -59,6 +60,7 @@ export default function HomeMinimal({
               <View className='hmin-row-body'>
                 <View className='hmin-row-top'>
                   <Text className='hmin-row-name'>{t.name}</Text>
+                  <TripPhaseChip trip={t} className='hmin-phase' hidePre />
                   <Text className='hmin-row-arrow'>›</Text>
                 </View>
                 <View className='hmin-row-meta'>

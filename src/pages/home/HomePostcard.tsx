@@ -1,10 +1,12 @@
 import { View, Text } from '@tarojs/components'
 import { useMemo } from 'react'
 import BrandLogo from '../../components/BrandLogo'
+import TripPhaseChip from '../../components/TripPhaseChip'
 import AvatarEntry from '../../components/AvatarEntry'
 import HomeBottomCTA from '../../components/HomeBottomCTA'
 import type { HomeViewProps } from './shared'
 import type { Trip } from '../../types/trip'
+import { getTripPhase } from '../../utils/trip-phase'
 import './styles/home-postcard.scss'
 
 /* ── 印泥色：取自各国护照印章真实墨色 ── */
@@ -115,27 +117,30 @@ export default function HomePostcard({
             const ai = aiStatusFor(t)
             const destFull = t.destinations.map((d) => d.name).join(' ')
             const st = stampStyle(t._id, t.name)
+            const phase = getTripPhase(t.startDate, t.endDate)
             return (
-              <View
-                key={t._id}
-                className={`hpp-stamp hpp-stamp--${st.size} hpp-stamp--${st.shape}`}
-                onClick={() => onOpenTrip(t)}
-                onLongPress={() => onLongPressTrip(t)}
-                style={{
-                  '--stamp-color': STAMP_COLORS[i % STAMP_COLORS.length],
-                  animationDelay: `${i * 80}ms`,
-                  transform: `rotate(${st.rotate}deg)`,
-                } as React.CSSProperties}
-              >
-                <View className='hpp-stamp-ring' />
-                <View className='hpp-stamp-face'>
-                  <Text className='hpp-stamp-name'>{destFull || t.name}</Text>
-                  <View className='hpp-stamp-rule' />
-                  <Text className='hpp-stamp-date'>{t.startDate.slice(0, 7).replace('-', '.')}</Text>
-                  <Text className='hpp-stamp-days'>{t._days} DAYS · {t.pax}P</Text>
+              <View key={t._id}>
+                <View
+                  className={`hpp-stamp hpp-stamp--${st.size} hpp-stamp--${st.shape}`}
+                  onClick={() => onOpenTrip(t)}
+                  onLongPress={() => onLongPressTrip(t)}
+                  style={{
+                    '--stamp-color': STAMP_COLORS[i % STAMP_COLORS.length],
+                    animationDelay: `${i * 80}ms`,
+                    transform: `rotate(${st.rotate}deg)`,
+                  } as React.CSSProperties}
+                >
+                  <View className='hpp-stamp-ring' />
+                  <View className='hpp-stamp-face'>
+                    <Text className='hpp-stamp-name'>{destFull || t.name}</Text>
+                    <View className='hpp-stamp-rule' />
+                    <Text className='hpp-stamp-date'>{t.startDate.slice(0, 7).replace('-', '.')}</Text>
+                    <Text className='hpp-stamp-days'>{t._days} DAYS · {t.pax}P</Text>
+                  </View>
+                  {ai === 'thinking' && <View className='hpp-stamp-aiglow' />}
+                  {ai === 'ready' && <View className='hpp-stamp-aibadge'>✓</View>}
                 </View>
-                {ai === 'thinking' && <View className='hpp-stamp-aiglow' />}
-                {ai === 'ready' && <View className='hpp-stamp-aibadge'>✓</View>}
+                {phase !== 'live' && <TripPhaseChip trip={t} className='hpp-card-phase' hidePre />}
               </View>
             )
           })}

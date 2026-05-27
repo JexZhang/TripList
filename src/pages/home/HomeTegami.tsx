@@ -1,6 +1,7 @@
 import { View, Text } from '@tarojs/components'
 import { useMemo } from 'react'
 import BrandLogo from '../../components/BrandLogo'
+import TripPhaseChip from '../../components/TripPhaseChip'
 import AvatarEntry from '../../components/AvatarEntry'
 import HomeBottomCTA from '../../components/HomeBottomCTA'
 import HomeCardAIRow from '../../components/HomeCardAIRow'
@@ -70,6 +71,7 @@ export default function HomeTegami({
                   {fmtDateShort(t.startDate)} → {fmtDateShort(t.endDate)} · {tripSummary(t.startDate, t.endDate, t.pax)}
                 </Text>
                 <Text className='ht-card-name'>{t.name}</Text>
+                <TripPhaseChip trip={t} className='ht-card-phase' hidePre />
                 <View className='ht-card-foot'>
                   {isSeed && <View className='ht-card-badge ht-card-badge-seed'>示例</View>}
                   {isCollab && <View className='ht-card-badge'>协作</View>}

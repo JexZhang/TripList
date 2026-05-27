@@ -1,0 +1,117 @@
+.tpc {
+  display: inline-flex;
+  align-items: center;
+  gap: 8rpx;
+  max-width: 100%;
+  white-space: nowrap;
+  font-family: var(--font-mono);
+  font-size: 22rpx;
+  letter-spacing: 1.2rpx;
+  line-height: 1;
+  box-sizing: border-box;
+}
+
+/* PRE · 纸 */
+.tpc--pre {
+  padding: 10rpx 18rpx;
+  background: var(--surface-2);
+  border: 1rpx solid var(--line);
+  border-radius: 999rpx;
+  color: var(--ink-3);
+}
+.tpc-pre-d {
+  font-size: 18rpx;
+  letter-spacing: 2rpx;
+  color: var(--ink-3);
+  opacity: 0.7;
+}
+.tpc-pre-num {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 28rpx;
+  color: var(--accent);
+  letter-spacing: 0;
+  margin-right: 4rpx;
+}
+.tpc-pre-rule { color: var(--line-2); margin: 0 2rpx; }
+.tpc-pre-dest { color: var(--ink); font-weight: 600; letter-spacing: 1.5rpx; }
+
+/* LIVE · 反 */
+.tpc--live {
+  padding: 10rpx 18rpx 10rpx 14rpx;
+  background: var(--ink);
+  color: var(--surface);
+  border-radius: 999rpx;
+  --phase-live-accent: #ff3b3b;
+}
+.tpc-live-dot {
+  width: 10rpx; height: 10rpx;
+  border-radius: 50%;
+  background: var(--phase-live-accent);
+  box-shadow: 0 0 0 0 rgba(255, 59, 59, 0.55);
+  animation: tpc-pulse 1.6s ease-in-out infinite;
+  flex: 0 0 auto;
+}
+.tpc-live-tag {
+  font-weight: 800;
+  letter-spacing: 3rpx;
+  font-size: 20rpx;
+  color: var(--phase-live-accent);
+}
+.tpc-live-sep { opacity: 0.4; }
+.tpc-live-name {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 24rpx;
+  letter-spacing: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 280rpx;
+}
+@keyframes tpc-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(255, 59, 59, 0.55); }
+  50%      { box-shadow: 0 0 0 10rpx rgba(255, 59, 59, 0); }
+}
+
+/* POST · 归档 */
+.tpc--post {
+  padding: 10rpx 4rpx;
+  border-top: 1rpx solid var(--line);
+  border-bottom: 1rpx solid var(--line);
+  color: var(--ink-3);
+  gap: 10rpx;
+}
+.tpc-post-mark {
+  width: 10rpx; height: 10rpx;
+  border-radius: 50%;
+  border: 1.5rpx solid var(--ink-3);
+}
+.tpc-post-tag { letter-spacing: 3rpx; font-weight: 700; font-size: 18rpx; }
+.tpc-post-sep { opacity: 0.35; padding: 0 2rpx; }
+.tpc-post-v {
+  font-family: var(--font-display);
+  font-weight: 800;
+  color: var(--ink);
+  font-size: 24rpx;
+}
+.tpc-post-l { font-size: 18rpx; letter-spacing: 1.5rpx; }
+
+/* 4 主题局部覆写 */
+.theme-postcard .tpc--pre {
+  background: transparent;
+  border-style: dashed;
+}
+.theme-postcard .tpc--post {
+  border-style: dashed;
+}
+.theme-magazine .tpc--pre {
+  border-radius: 0;
+  border: 0;
+  border-top: 2rpx solid var(--ink);
+  border-bottom: 1rpx solid var(--ink-3);
+  background: transparent;
+  padding: 8rpx 0;
+}
+.theme-minimal .tpc--live {
+  background: var(--ink-2);
+}

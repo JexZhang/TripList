@@ -17,6 +17,7 @@ import TripAIStatusBar, { type TripAIStatusBarStatus } from '../../components/Tr
 import AIPlanPreview from '../../components/AIPlanPreview'
 import { draftKeyEnrich } from '../../components/AIInterview'
 import TripHeader from './TripHeader'
+import TripPhaseHero from '../../components/TripPhaseHero'
 import { buildShareMessage, shareRef, resetShareRef } from '../../utils/share'
 import { smartDeleteTrip, renameTrip, copyTripLocally, updateTrip } from '../../utils/db'
 import { isSeedTripId } from '../../data/seed-trips'
@@ -285,6 +286,8 @@ function TripBody() {
         onPaxChange={(next) => dispatch({ type: 'UPDATE_TRIP', patch: { pax: next } })}
         onCollabTap={() => setCollabSheetOpen(true)}
       />
+
+      {t && <TripPhaseHero trip={t} />}
 
       <View className='trip-tabs'>
         {VIEWS.map(v => (
