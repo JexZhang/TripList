@@ -11,7 +11,9 @@ import MapView from '../../views/MapView'
 import CollaboratorsSheet from '../../components/CollaboratorsSheet'
 import TripActionSheet, { type TripAction } from '../../components/TripActionSheet'
 import ShareTypeSheet from '../../components/ShareTypeSheet'
-import AIPlanForm, { clearAIPlanFormDraft } from '../../components/AIPlanForm'
+import AIInterview from '../../components/AIInterview'
+import AILoadingTheater from '../../components/AILoadingTheater'
+import TripAIStatusBar from '../../components/TripAIStatusBar'
 import AIPlanPreview from '../../components/AIPlanPreview'
 import TripHeader from './TripHeader'
 import { buildShareMessage, shareRef, resetShareRef } from '../../utils/share'
@@ -46,6 +48,7 @@ function TripBody() {
   // === AI 草稿流相关 ===
   const [aiFormOpen, setAiFormOpen] = useState(false)
   const [aiPreviewOpen, setAiPreviewOpen] = useState(false)
+  const [theaterMinimized, setTheaterMinimized] = useState(false)
   
   const t = state.trip
   const isOwner = t ? t._openid === openid : false
@@ -76,6 +79,7 @@ function TripBody() {
   const triggerAiTask = async (prefs: AIPreferences) => {
     if (!t || !isOwner) return
     setAiFormOpen(false)
+    setTheaterMinimized(false)
     try {
       const taskId = newAITaskId()
       // 先把 aiTaskId 写到 trip 落库, 再发云函数. 反过来云函数会在
@@ -117,17 +121,11 @@ function TripBody() {
   const handleBarTap = async () => {
     if (!t || !isOwner) return
     if (t.aiStatus === 'generating') {
-      const res = await Taro.showModal({
-        title: '停止 AI 生成?',
-        content: '已生成的部分会被舍弃, 后台运行的剩余轮次也会终止',
-        confirmText: '停止',
-        confirmColor: '#c43d3d',
-      })
-      if (res.confirm) await clearAiFields()
+      // StatusBar 点击 → 重新展开 Theater
+      setTheaterMinimized(false)
     } else if (t.aiStatus === 'ready') {
       setAiPreviewOpen(true)
     } else if (t.aiStatus === 'error') {
-      // 重试 = 重新弹 form
       setAiFormOpen(true)
     }
   }
@@ -136,6 +134,23 @@ function TripBody() {
     if (!t || !isOwner) return
     if (t.aiStatus === null || t.aiStatus === undefined) setAiFormOpen(true)
     // 否则什么都不做 (用户应该点状态条)
+  }
+
+  const handleTheaterCancel = async () => {
+    const res = await Taro.showModal({
+      title: '停止 AI 生成?',
+      content: '已生成的部分会被舍弃, 后台运行的剩余轮次也会终止',
+      confirmText: '停止',
+      confirmColor: '#c43d3d',
+    })
+    if (res.confirm) {
+      await clearAiFields()
+      setTheaterMinimized(false)
+    }
+  }
+
+  const handleTheaterMinimize = () => {
+    setTheaterMinimized(true)
   }
   
   const handlePreviewApply = async (selectedDates: string[]) => {
@@ -157,7 +172,6 @@ function TripBody() {
         aiError: null,
       } })
       setAiPreviewOpen(false)
-      clearAIPlanFormDraft()
       Taro.showToast({ title: '已应用', icon: 'success' })
     } catch (e: unknown) {
       console.error('[ai apply]', e)
@@ -303,10 +317,23 @@ function TripBody() {
         onClose={() => setCollabSheetOpen(false)}
       />
 
-      <AIPlanForm
+      <AIInterview
         open={aiFormOpen}
         onClose={() => setAiFormOpen(false)}
-        onSubmit={triggerAiTask}
+        onSubmit={(prefs) => {
+          setAiFormOpen(false)
+          void triggerAiTask(prefs)
+        }}
+      />
+      <AILoadingTheater
+        open={t.aiStatus === 'generating' && !theaterMinimized}
+        status='thinking'
+        onCancel={handleTheaterCancel}
+        onMinimize={handleTheaterMinimize}
+      />
+      <TripAIStatusBar
+        open={t.aiStatus === 'generating' && theaterMinimized}
+        onTap={() => setTheaterMinimized(false)}
       />
       <AIPlanPreview
         open={aiPreviewOpen}

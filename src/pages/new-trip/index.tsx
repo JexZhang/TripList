@@ -4,7 +4,6 @@ import Taro, { useRouter } from '@tarojs/taro'
 import dayjs from 'dayjs'
 import DatePicker from '../../components/DatePicker'
 import DestinationPicker from '../../components/DestinationPicker'
-import AIPlanForm from '../../components/AIPlanForm'
 import AIInterview from '../../components/AIInterview'
 import type { Destination, AIPreferences } from '../../types/trip'
 import { buildNewTrip } from '../../utils/trip-helpers'
@@ -27,7 +26,6 @@ export default function NewTrip() {
   const themeCls = useThemeClass('new-trip')
   const openid = me?.openid || ''
   const [submitting, setSubmitting] = useState(false)
-  const [aiFormOpen, setAiFormOpen] = useState(false)
   const [interviewOpen, setInterviewOpen] = useState(false)
   const router = useRouter()
 
@@ -68,7 +66,7 @@ export default function NewTrip() {
       return
     }
     if (!canSubmit) return
-    setAiFormOpen(false)
+    setInterviewOpen(false)
     Taro.showLoading({ title: '准备中…' })
     try {
       // 1. 用空 days 创建 trip
@@ -140,16 +138,10 @@ export default function NewTrip() {
           </Button>
         </View>
 
-        <Button className='nt-submit-ai' disabled={!canSubmit} onClick={() => setAiFormOpen(true)}>
+        <Button className='nt-submit-ai' disabled={!canSubmit} onClick={() => setInterviewOpen(true)}>
           ✨ AI 帮我规划
         </Button>
       </View>
-
-      <AIPlanForm
-        open={aiFormOpen}
-        onClose={() => setAiFormOpen(false)}
-        onSubmit={handleAiSubmit}
-      />
 
       <AIInterview
         open={interviewOpen}

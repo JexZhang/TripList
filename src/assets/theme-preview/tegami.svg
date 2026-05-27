@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 260">
+  <rect width="200" height="260" fill="#FFF7EC"/>
+  <!-- 暖橘色块（左上） -->
+  <rect x="14" y="18" width="54" height="32" rx="6" fill="#FF9A4D"/>
+  <rect x="14" y="56" width="38" height="6" rx="2" fill="#E68A45" opacity="0.6"/>
+  <!-- 卡片 1（最底） -->
+  <rect x="34" y="88" width="132" height="60" rx="10" fill="#FFFFFF" stroke="#E6D6BA" stroke-width="1.5" transform="rotate(-3 100 118)"/>
+  <line x1="48" y1="108" x2="148" y2="108" stroke="#E0CFA8" stroke-width="1.2" transform="rotate(-3 100 118)"/>
+  <line x1="48" y1="120" x2="120" y2="120" stroke="#E0CFA8" stroke-width="1.2" transform="rotate(-3 100 118)"/>
+  <!-- 卡片 2（中间） -->
+  <rect x="30" y="118" width="138" height="62" rx="10" fill="#FFFFFF" stroke="#E6D6BA" stroke-width="1.5" transform="rotate(2 100 149)"/>
+  <line x1="44" y1="138" x2="154" y2="138" stroke="#E0CFA8" stroke-width="1.2" transform="rotate(2 100 149)"/>
+  <line x1="44" y1="150" x2="128" y2="150" stroke="#E0CFA8" stroke-width="1.2" transform="rotate(2 100 149)"/>
+  <!-- 卡片 3（最上） -->
+  <rect x="36" y="152" width="128" height="60" rx="10" fill="#FFFFFF" stroke="#E6D6BA" stroke-width="1.5"/>
+  <circle cx="52" cy="170" r="8" fill="#FF9A4D"/>
+  <line x1="68" y1="170" x2="146" y2="170" stroke="#C9B58E" stroke-width="1.2"/>
+  <line x1="68" y1="182" x2="130" y2="182" stroke="#C9B58E" stroke-width="1.2"/>
+  <!-- 底注 -->
+  <text x="100" y="240" font-family="serif" font-size="10" fill="#8B7250" text-anchor="middle" letter-spacing="3">TEGAMI</text>
+</svg>

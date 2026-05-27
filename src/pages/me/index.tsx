@@ -1,9 +1,13 @@
-import { View, Text } from '@tarojs/components'
+import { Image, View, Text } from '@tarojs/components'
 import Taro from '@tarojs/taro'
 import { useMe } from '../../store/me-store'
 import { useTheme, VALID_THEMES, type ThemeName } from '../../store/theme-store'
 import { useThemeClass } from '../../utils/theme-class'
 import ProfileForm from '../../components/ProfileForm'
+import tegamiThumb   from '../../assets/theme-preview/tegami.svg'
+import magazineThumb from '../../assets/theme-preview/magazine.svg'
+import postcardThumb from '../../assets/theme-preview/postcard.svg'
+import minimalThumb  from '../../assets/theme-preview/minimal.svg'
 import './index.scss'
 
 const THEME_LABELS: Record<ThemeName, { zh: string; en: string }> = {
@@ -11,6 +15,13 @@ const THEME_LABELS: Record<ThemeName, { zh: string; en: string }> = {
   magazine: { zh: '刊物', en: 'MAGAZINE' },
   postcard: { zh: '护照', en: 'POSTCARD' },
   minimal:  { zh: '极简', en: 'MINIMAL' },
+}
+
+const THEME_THUMB: Record<ThemeName, string> = {
+  tegami: tegamiThumb,
+  magazine: magazineThumb,
+  postcard: postcardThumb,
+  minimal: minimalThumb,
 }
 
 export default function Me() {
@@ -48,7 +59,11 @@ export default function Me() {
                 className={`me-theme-card ${selected ? 'is-selected' : ''}`}
                 onClick={() => setTheme(name)}
               >
-                <View className={`me-theme-thumb me-theme-thumb--${name}`} />
+                <Image
+                  className='me-theme-thumb'
+                  src={THEME_THUMB[name]}
+                  mode='aspectFill'
+                />
                 <Text className='me-theme-name-zh'>{THEME_LABELS[name].zh}</Text>
                 <Text className='me-theme-name-en'>{THEME_LABELS[name].en}</Text>
               </View>

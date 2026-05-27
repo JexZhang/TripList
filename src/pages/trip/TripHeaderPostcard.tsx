@@ -1,6 +1,5 @@
 import { View, Text, Picker } from '@tarojs/components'
 import AIBadge from '../../components/AIBadge'
-import AILoadingBar from '../../components/AILoadingBar'
 import CollaboratorsBar from '../../components/CollaboratorsBar'
 import type { TripHeaderViewProps } from './shared-header'
 import './styles/header-postcard.scss'
@@ -8,7 +7,7 @@ import './styles/header-postcard.scss'
 const PAX_OPTIONS = Array.from({ length: 99 }, (_, i) => `${i + 1} 人`)
 
 export default function TripHeaderPostcard({
-  trip, isOwner, aiStatus, onAITap, onAIBarTap, onMenuTap, onBack, onPaxChange, onCollabTap,
+  trip, isOwner, aiStatus, onAITap, onMenuTap, onBack, onPaxChange, onCollabTap,
 }: TripHeaderViewProps) {
   const showAI = isOwner && !aiStatus
   const startDate = trip.days[0]?.date || trip.startDate
@@ -72,15 +71,6 @@ export default function TripHeaderPostcard({
           </View>
         )}
       </View>
-
-      {isOwner && aiStatus && (
-        <View className='thpp-ai-bar'>
-          <AILoadingBar
-            status={aiStatus as 'generating' | 'ready' | 'error'}
-            onTap={onAIBarTap}
-          />
-        </View>
-      )}
 
       <CollaboratorsBar
         collaborators={trip.collaborators || []}

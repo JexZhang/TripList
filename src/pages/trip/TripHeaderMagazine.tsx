@@ -1,6 +1,5 @@
 import { View, Text, Picker } from '@tarojs/components'
 import AIBadge from '../../components/AIBadge'
-import AILoadingBar from '../../components/AILoadingBar'
 import CollaboratorsBar from '../../components/CollaboratorsBar'
 import type { TripHeaderViewProps } from './shared-header'
 import './styles/header-magazine.scss'
@@ -8,7 +7,7 @@ import './styles/header-magazine.scss'
 const PAX_OPTIONS = Array.from({ length: 99 }, (_, i) => `${i + 1} 人`)
 
 export default function TripHeaderMagazine({
-  trip, isOwner, aiStatus, onAITap, onAIBarTap, onMenuTap, onBack, onPaxChange, onCollabTap,
+  trip, isOwner, aiStatus, onAITap, onMenuTap, onBack, onPaxChange, onCollabTap,
 }: TripHeaderViewProps) {
   const showAI = isOwner && !aiStatus
   const startDate = trip.days[0]?.date || trip.startDate
@@ -52,15 +51,6 @@ export default function TripHeaderMagazine({
           </View>
         )}
       </View>
-
-      {isOwner && aiStatus && (
-        <View className='thmg-ai-bar'>
-          <AILoadingBar
-            status={aiStatus as 'generating' | 'ready' | 'error'}
-            onTap={onAIBarTap}
-          />
-        </View>
-      )}
 
       <View className='thmg-rule' />
 

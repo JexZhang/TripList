@@ -55,12 +55,8 @@
   aspect-ratio: 5 / 6.5;
   border-radius: var(--r-sm);
   margin-bottom: 16rpx;
-  background: var(--bg-soft);
+  overflow: hidden;
 }
-.me-theme-thumb--tegami   { background: linear-gradient(135deg, #FFE9D1, #FF9A4D); }
-.me-theme-thumb--magazine { background: linear-gradient(180deg, #F4F0E8 0%, #F4F0E8 60%, #D62E2E 60%, #D62E2E 100%); }
-.me-theme-thumb--postcard { background: repeating-linear-gradient(45deg, #EFE6D5 0 16rpx, #D7C4A0 16rpx 18rpx); }
-.me-theme-thumb--minimal  { background: #FAFAF8; border: 2rpx solid var(--line); }
 
 .me-theme-name-zh {
   display: block;
