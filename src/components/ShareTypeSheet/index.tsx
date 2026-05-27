@@ -53,8 +53,8 @@ export default function ShareTypeSheet({ open, onClose, prepare, ready }: Props)
     <RootPortal>
       <View className='sts-mask' onClick={onClose}>
         <View className='sts-sheet' onClick={e => e.stopPropagation()}>
-          {renderItem('readonly', '🔒 只读分享', '对方收到一份独立副本,可自由编辑、删除,不影响你这边')}
-          {renderItem('collab', '👥 邀请协作', '对方加入后能编辑同一份攻略,改动实时同步')}
+          {renderItem('readonly', '只读分享', '对方收到一份独立副本,可自由编辑、删除,不影响你这边')}
+          {renderItem('collab', '邀请协作', '对方加入后能编辑同一份攻略,改动实时同步')}
           <View className='sts-cancel' onClick={onClose}>
             <Text>取消</Text>
           </View>

@@ -75,7 +75,7 @@ export default function SharePage() {
   return (
     <View className={themeCls}>
       <View className='share-head'>
-        <Text className='sh-label'>{kind === 'readonly' ? '🔒 一份只读攻略' : '👥 协作邀请'}</Text>
+        <Text className='sh-label'>{kind === 'readonly' ? '一份只读攻略' : '协作邀请'}</Text>
       </View>
 
       <View className='share-card'>

@@ -12,25 +12,34 @@ interface Props {
 
 export default function DayTabsCalendar({ days, activeId, onSelect, onLongPress, onAdd }: Props) {
   return (
-    <ScrollView scrollX className='dt dt--calendar'>
-      {days.map((d, idx) => {
-        const date = dayjs(d.date)
-        return (
-          <View
-            key={d.id}
-            className={`dt-item dt-item--calendar ${activeId === d.id ? 'on' : ''}`}
-            onClick={() => onSelect(d.id)}
-            onLongPress={() => onLongPress(d.id, idx)}
-          >
-            <Text className='dt-cal-month'>{date.format('M')} 月</Text>
-            <Text className='dt-cal-bigday'>{date.format('D')}</Text>
-            <Text className='dt-cal-label'>Day {idx + 1}</Text>
+    <View className='dt-pp-wrap'>
+      <ScrollView scrollX className='dt dt--calendar'>
+        <View className='dt-track dt-track--calendar'>
+          {days.map((d, idx) => {
+            const date = dayjs(d.date)
+            const isActive = activeId === d.id
+            return (
+              <View
+                key={d.id}
+                className={`dt-item dt-item--calendar ${isActive ? 'on' : ''}`}
+                onClick={() => onSelect(d.id)}
+                onLongPress={() => onLongPress(d.id, idx)}
+              >
+                <View className='dt-cal-ring' />
+                <View className='dt-cal-inner'>
+                  <Text className='dt-cal-month'>{date.format('M')}月</Text>
+                  <Text className='dt-cal-bigday'>{date.format('D')}</Text>
+                  <Text className='dt-cal-label'>DAY {idx + 1}</Text>
+                </View>
+              </View>
+            )
+          })}
+          <View className='dt-add dt-add--cal' onClick={() => onAdd('back')}>
+            <Text className='dt-add-cal-icon'>+</Text>
+            <Text className='dt-add-cal-text'>NEW</Text>
           </View>
-        )
-      })}
-      <View className='dt-add dt-add--cal' onClick={() => onAdd('back')}>
-        <Text>+</Text>
-      </View>
-    </ScrollView>
+        </View>
+      </ScrollView>
+    </View>
   )
 }

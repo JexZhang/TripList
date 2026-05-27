@@ -84,11 +84,13 @@
 }
 .dt-notch--t { top: -4rpx; }
 .dt-notch--b { bottom: -4rpx; }
+.dt-track--ticket { --dt-ticket-h: 116rpx; }
+.dt--ticket .dt-item--ticket { min-height: var(--dt-ticket-h); }
 .dt-add--ticket {
   flex: 0 0 auto;
   width: 88rpx;
+  min-height: var(--dt-ticket-h);
   align-self: stretch;
-  min-height: 96rpx;
   border: 1rpx dashed var(--accent);
   background: transparent;
 }
@@ -150,66 +152,211 @@
   height: 2rpx;
   background: var(--ink);
 }
+.dt-track--spine { --dt-spine-h: 88rpx; }
+.dt-item--spine { min-height: var(--dt-spine-h); }
 .dt-add--spine {
   flex: 0 0 auto;
   width: 64rpx;
-  height: 64rpx;
-  border-radius: 50%;
+  height: var(--dt-spine-h);
+  border-radius: 32rpx;
   background: transparent;
   border: 1rpx dashed var(--ink-3);
   color: var(--ink-3);
+  align-self: center;
 }
 
-/* ============ C. calendar（日历方块 · 明信片主题）—— 保留原始 flex 布局 ============ */
+/* ============ C. calendar（护照签证页 · 明信片主题） ============
+ * 暖棕底色 + 金色印章双环 + 朱砂选中态，与页面整体统一
+ */
+
+/* 外层容器 — 用主题色做底，和攻略页卡片风格一致 */
+.dt-pp-wrap {
+  position: relative;
+  background: var(--bg-deep, #E6DCC4);
+  border-bottom: none;
+  overflow: hidden;
+}
+
+/* 金色分隔线（底部细线） */
+.dt-pp-wrap::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 2rpx;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(200, 170, 90, 0.3) 15%,
+    rgba(212, 185, 106, 0.45) 50%,
+    rgba(200, 170, 90, 0.3) 85%,
+    transparent 100%
+  );
+  pointer-events: none;
+}
+
 .dt--calendar {
+  display: block;
+  background: transparent;
+  border-bottom: none;
+  padding: 0;
+}
+
+.dt-track--calendar {
   display: flex;
   align-items: center;
-  gap: 16rpx;
-  padding: 16rpx 24rpx;
-  white-space: nowrap;
+  gap: 20rpx;
+  padding: 16rpx 24rpx 20rpx;
+  min-width: 100%;
+  box-sizing: border-box;
 }
+
+/* 日期项 — 签证页方格 */
 .dt-item--calendar {
+  position: relative;
   flex-shrink: 0;
   box-sizing: border-box;
+  width: 128rpx;
+  height: 128rpx;
+  border-radius: 12rpx;
+  overflow: hidden;
+  transition: transform 0.22s var(--ease-out);
+}
+
+.dt-item--calendar:active {
+  transform: scale(0.93);
+}
+
+/* 外环 — 印章双环效果 */
+.dt-cal-ring {
+  position: absolute;
+  inset: 0;
+  border: 3rpx dashed var(--line-2, rgba(43, 31, 14, 0.26));
+  border-radius: 12rpx;
+  pointer-events: none;
+  transition: all 0.25s var(--ease-out);
+}
+
+/* 内圈（::after 模拟双环） */
+.dt-item--calendar::after {
+  content: '';
+  position: absolute;
+  inset: 7rpx;
+  border: 1.5rpx solid var(--line, rgba(43, 31, 14, 0.14));
+  border-radius: 8rpx;
+  pointer-events: none;
+  transition: all 0.25s var(--ease-out);
+}
+
+/* 内容区 */
+.dt-cal-inner {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  display: flex;
   flex-direction: column;
-  width: 120rpx;
-  height: 120rpx;
-  padding: 12rpx 0;
-  background: var(--surface-2);
-  border: 2rpx solid var(--line-2);
-  border-radius: var(--r-sm);
   align-items: center;
   justify-content: center;
+  background: var(--surface, #FFFCF3);
+  border-radius: inherit;
+  transition: all 0.25s var(--ease-out);
 }
-.dt-item--calendar.on {
-  background: var(--ink-2);
-  color: var(--surface);
-  border-color: var(--ink-2);
-}
+
+/* 未选中文字色 */
 .dt-cal-month {
   font-size: 18rpx;
   font-family: var(--font-mono);
-  letter-spacing: 2rpx;
-  opacity: 0.7;
+  letter-spacing: 3rpx;
+  color: var(--ink-3, #978565);
+  transition: color 0.25s var(--ease-out);
 }
+
 .dt-cal-bigday {
-  font-size: 48rpx;
+  font-size: 44rpx;
   font-weight: 900;
   font-family: var(--font-display);
   line-height: 1;
-  margin: 4rpx 0;
+  margin: 4rpx 0 2rpx;
+  color: var(--ink, #2B1F0E);
+  transition: color 0.25s var(--ease-out);
 }
+
 .dt-cal-label {
-  font-size: 18rpx;
-  letter-spacing: 2rpx;
+  font-size: 16rpx;
+  letter-spacing: 4rpx;
   font-family: var(--font-mono);
+  color: var(--ink-3, #978565);
+  transition: color 0.25s var(--ease-out);
+}
+
+/* ═══ 选中态 — 印章盖下 ═══ */
+.dt-item--calendar.on {
+  /* 外环变实线 + 朱砂色 */
+}
+.dt-item--calendar.on .dt-cal-ring {
+  border: 4rpx solid var(--accent, #C13D2F);
+  border-style: solid;
+  opacity: 0.85;
+}
+.dt-item--calendar.on::after {
+  border-color: rgba(193, 61, 47, 0.3);
+  inset: 8rpx;
+}
+.dt-item--calendar.on .dt-cal-inner {
+  background: rgba(193, 61, 47, 0.12);
+}
+.dt-item--calendar.on .dt-cal-month {
+  color: var(--accent, #C13D2F);
+  opacity: 1;
+}
+.dt-item--calendar.on .dt-cal-bigday {
+  color: var(--surface, #FFFCF3);
+}
+.dt-item--calendar.on .dt-cal-label {
+  color: var(--accent, #C13D2F);
   opacity: 0.8;
 }
+
+/* ink-bleed 阴影（选中态） */
+.dt-item--calendar.on {
+  box-shadow:
+    0 0 0 2rpx rgba(193, 61, 47, 0.15),
+    2rpx 3rpx 12rpx rgba(43, 31, 14, 0.25);
+}
+
+/* 添加按钮 — 虚线空白印章 */
 .dt-add--cal {
   flex-shrink: 0;
   box-sizing: border-box;
-  width: 120rpx;
-  height: 120rpx;
+  width: 128rpx;
+  height: 128rpx;
+  flex-direction: column;
+  gap: 2rpx;
+  border: 3rpx dashed var(--line-2, rgba(43, 31, 14, 0.26));
+  border-radius: 12rpx;
+  background: var(--surface, #FFFCF3);
+  color: var(--ink-3, #978565);
+  transition: all 0.22s var(--ease-out);
+}
+.dt-add--cal:active {
+  transform: scale(0.93);
+  border-color: var(--accent, #C13D2F);
+}
+
+.dt-add-cal-icon {
+  font-size: 36rpx;
+  font-weight: 300;
+  line-height: 1;
+  color: var(--ink-3, #978565);
+}
+
+.dt-add-cal-text {
+  font-size: 14rpx;
+  font-family: var(--font-mono);
+  letter-spacing: 4rpx;
+  color: var(--ink-3, #978565);
 }
 
 /* ============ D. simple（极简文字） ============ */
@@ -246,11 +393,14 @@
   margin-top: 2rpx;
   white-space: nowrap;
 }
+.dt-track--simple { --dt-simple-h: 74rpx; }
+.dt-item--simple { min-height: var(--dt-simple-h); }
 .dt-add--simple {
   flex: 0 0 auto;
   width: 64rpx;
-  height: 64rpx;
+  height: var(--dt-simple-h);
   background: transparent;
   color: var(--ink-3);
   border: 1rpx dashed var(--ink-3);
+  align-self: center;
 }

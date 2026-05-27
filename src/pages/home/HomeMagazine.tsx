@@ -4,6 +4,7 @@ import AvatarEntry from '../../components/AvatarEntry'
 import HomeBottomCTA from '../../components/HomeBottomCTA'
 import HomeCardAIRow from '../../components/HomeCardAIRow'
 import MagFeatureCover from '../../components/MagFeatureCover'
+import { isSeedTripId } from '../../data/seed-trips'
 import type { HomeViewProps } from './shared'
 import type { Trip } from '../../types/trip'
 import './styles/home-magazine.scss'
@@ -19,8 +20,10 @@ export default function HomeMagazine({
   trips, loading, onOpenTrip, onLongPressTrip,
   onNewTrip, onAITrip, onCoverLongPress,
 }: HomeViewProps) {
-  const featured = trips[0]
-  const rest = trips.slice(1)
+  const userTrips = trips.filter((t) => !isSeedTripId(t._id))
+  const sortedUser = [...userTrips].sort((a, b) => (b.updatedAt ?? 0) - (a.updatedAt ?? 0))
+  const featured = sortedUser[0] ?? trips.find((t) => isSeedTripId(t._id))
+  const rest = trips.filter((t) => t._id !== featured?._id)
   const featAI = featured ? aiStatusFor(featured) : null
   const destFull = featured?.destinations?.map((d) => d.name).join(' · ') || ''
   const days = featured ? computeDays(featured.startDate, featured.endDate) : 0
