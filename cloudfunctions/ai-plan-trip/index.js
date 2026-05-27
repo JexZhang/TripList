@@ -246,6 +246,33 @@ async function runLoop({ taskId, tripId, tripContext, preferences, previousResul
       })
 
       if (toolCalls.length > 0) {
+        // 单轮 tool_calls 数量上限: 防止模型一次性发出 14 个 search_poi 把高德 QPS 打爆.
+        // 超出的部分用 short-circuit 的 tool 响应敷衍掉, 让下一轮 LLM 自己分批.
+        const MAX_TOOL_CALLS_PER_TURN = 8
+        // 同时 (name, args) 去重: 重复调用直接复用首次结果
+        const seenKey = new Map()  // key → first tool_call_id
+        const executable = []
+        const shortCircuited = []
+        for (let i = 0; i < toolCalls.length; i++) {
+          const tc = toolCalls[i]
+          const key = `${tc.function && tc.function.name}::${tc.function && tc.function.arguments}`
+          if (i >= MAX_TOOL_CALLS_PER_TURN) {
+            shortCircuited.push({ tc, reason: 'over-limit' })
+          } else if (seenKey.has(key)) {
+            shortCircuited.push({ tc, reason: 'duplicate', dupOf: seenKey.get(key) })
+          } else {
+            seenKey.set(key, tc.id)
+            executable.push(tc)
+          }
+        }
+        if (shortCircuited.length > 0) {
+          await traceStep(`turn:${turn + 1}:tool:short-circuit`, {
+            executed: executable.length,
+            skipped: shortCircuited.length,
+            reasons: shortCircuited.map(s => s.reason),
+          })
+        }
+
         // 按 DeepSeek 文档: 工具调用轮次, 必须把整条 assistant message 原样回传
         // (含 reasoning_content), 否则下一轮 400. 等价于 messages.append(choices[0].message)
         messages.push({
@@ -254,7 +281,8 @@ async function runLoop({ taskId, tripId, tripContext, preferences, previousResul
           reasoning_content: msg.reasoning_content || '',
           tool_calls: toolCalls,
         })
-        for (const tc of toolCalls) {
+        // 真正执行的 (并行执行, 加速 tool 阶段)
+        const execResults = await Promise.all(executable.map(async (tc) => {
           let args = {}
           try { args = JSON.parse(tc.function.arguments || '{}') } catch (e) { args = {} }
           const tStart = Date.now()
@@ -265,10 +293,28 @@ async function runLoop({ taskId, tripId, tripContext, preferences, previousResul
             elapsedMs: tMs,
             resultPreview: trunc(result, 500),
           })
+          return { tc, result }
+        }))
+        // OpenAI 协议要求: 每个 tool_call 都必须有对应 tool 响应, 否则下一轮 400
+        // 按原 toolCalls 顺序回写, 让 short-circuited 也有对应响应
+        const resultByCallId = new Map(execResults.map(r => [r.tc.id, r.result]))
+        for (const tc of toolCalls) {
+          let content
+          if (resultByCallId.has(tc.id)) {
+            content = JSON.stringify(resultByCallId.get(tc.id))
+          } else {
+            const sc = shortCircuited.find(s => s.tc.id === tc.id)
+            if (sc && sc.reason === 'duplicate') {
+              const dupResult = resultByCallId.get(sc.dupOf)
+              content = JSON.stringify(dupResult != null ? dupResult : { error: '与本轮另一调用重复' })
+            } else {
+              content = JSON.stringify({ error: `单轮 tool_calls 超过 ${MAX_TOOL_CALLS_PER_TURN} 个上限, 此调用被跳过, 请下一轮再发` })
+            }
+          }
           messages.push({
             role: 'tool',
             tool_call_id: tc.id,
-            content: JSON.stringify(result),
+            content,
           })
         }
         continue

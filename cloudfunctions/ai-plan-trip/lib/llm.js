@@ -51,27 +51,52 @@ async function callChat({ modelAlias, messages, tools, responseFormat }) {
 
   console.log(`[llm:req] model=${model} provider=${provider} msgs=${messages.length} tools=${tools ? tools.length : 0} rf=${!!responseFormat}`)
 
+  // reasoning 模型 + 长 context 单次可能跑 60s+, 给到 130s; SCF 软超时 540s 仍有充足余量
+  const PER_CALL_TIMEOUT_MS = 130_000
+
+  const doRequest = async () => axios.post(endpoint, body, {
+    headers: { 'Content-Type': 'application/json', Authorization: auth },
+    timeout: PER_CALL_TIMEOUT_MS,
+  })
+
   let res
-  const t0 = Date.now()
-  try {
-    res = await axios.post(endpoint, body, {
-      headers: { 'Content-Type': 'application/json', Authorization: auth },
-      timeout: 75000,
-    })
-    console.log(`[llm:res] ok status=${res.status} ms=${Date.now() - t0} bodyLen=${JSON.stringify(res.data).length}`)
-  } catch (e) {
-    console.log(`[llm:res] ERR ms=${Date.now() - t0} code=${e.code} status=${e.response && e.response.status}`)
+  let lastErr
+  // 最多尝试 2 次: 第二次仅在网络/超时类瞬时错误时重试, HTTP 4xx/5xx 不重试 (provider 业务错误)
+  for (let attempt = 1; attempt <= 2; attempt++) {
+    const t0 = Date.now()
+    try {
+      res = await doRequest()
+      console.log(`[llm:res] ok attempt=${attempt} status=${res.status} ms=${Date.now() - t0} bodyLen=${JSON.stringify(res.data).length}`)
+      lastErr = null
+      break
+    } catch (e) {
+      const status = e.response && e.response.status
+      console.log(`[llm:res] ERR attempt=${attempt} ms=${Date.now() - t0} code=${e.code} status=${status}`)
+      lastErr = e
+      // 只对超时/连接类错误重试一次; 业务错误 (4xx/5xx with response) 直接抛
+      const isTransient = !status && (e.code === 'ECONNABORTED' || e.code === 'ETIMEDOUT' || e.code === 'ECONNRESET' || e.code === 'ECONNREFUSED')
+      if (attempt < 2 && isTransient) {
+        const backoffMs = 1500
+        console.warn(`[llm] transient error, retrying in ${backoffMs}ms (code=${e.code})`)
+        await new Promise(r => setTimeout(r, backoffMs))
+        continue
+      }
+      break
+    }
+  }
+
+  if (lastErr) {
+    const e = lastErr
     const status = e.response && e.response.status
     const data = e.response && e.response.data
     console.error('[llm] HTTP error', status, data)
-    // 把 provider 真实错误体透传出来, 方便前端 toast 看到原因
     let detail = ''
     if (data) {
       if (typeof data === 'string') detail = data.slice(0, 300)
       else if (data.error && data.error.message) detail = String(data.error.message).slice(0, 300)
       else detail = JSON.stringify(data).slice(0, 300)
-    } else if (e.code === 'ECONNABORTED') {
-      detail = '请求超时(75s)'
+    } else if (e.code === 'ECONNABORTED' || e.code === 'ETIMEDOUT') {
+      detail = `请求超时(${Math.round(PER_CALL_TIMEOUT_MS / 1000)}s, 已重试1次)`
     } else if (e.message) {
       detail = e.message
     }
