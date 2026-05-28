@@ -3,7 +3,16 @@
   background: rgba(43, 26, 16, 0.45);
   z-index: 1000;
   display: flex; align-items: flex-end;
-  animation: fade-in 0.22s var(--ease-out) both;
+  opacity: 0;
+  pointer-events: none;
+  visibility: hidden;
+  transition: opacity 0.22s var(--ease-out), visibility 0s linear 0.22s;
+}
+.mv-sheet-mask.visible {
+  opacity: 1;
+  pointer-events: auto;
+  visibility: visible;
+  transition: opacity 0.22s var(--ease-out), visibility 0s linear 0s;
 }
 .mv-sheet {
   width: 100%;
@@ -14,7 +23,11 @@
   box-sizing: border-box;
   box-shadow: 0 -16rpx 48rpx rgba(43, 26, 16, 0.15);
   position: relative;
-  animation: sheet-up 0.36s var(--ease-spring) both;
+  transform: translateY(100%);
+  transition: transform 0.36s var(--ease-spring);
+}
+.mv-sheet-mask.visible .mv-sheet {
+  transform: translateY(0);
 }
 .mv-sheet::before {
   content: '';

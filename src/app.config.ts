@@ -12,5 +12,11 @@ export default defineAppConfig({
     navigationBarTitleText: '行册',
     navigationBarTextStyle: 'black'
   },
+  permission: {
+    'scope.userLocation': {
+      desc: '用于在地图上显示你的当前位置',
+    },
+  },
+  requiredPrivateInfos: ['getLocation'],
   lazyCodeLoading: 'requiredComponents'
 })

@@ -84,32 +84,54 @@ export default function MapView() {
     }]
   }, [located, mode])
 
-  const [manualScale, setManualScale] = useState<number | undefined>(undefined)
+  // 关键:用 ref 跟踪用户当前查看的视野,re-render 时不要把它盖掉。
+  // - 首次进入和 mode 变化时,根据 located 计算/居中。
+  // - 用户拖动/缩放后,通过 onRegionChange 写入 ref。
+  // - 平时 <Map> 的 latitude/longitude/scale 绑定到 viewport state,
+  //   只在 mode 切换那一刻更新,其他 re-render 不变(避免视野跳回)。
+  const viewportRef = useRef<{ latitude: number; longitude: number; scale: number }>({
+    latitude: trip.destinations?.[0]?.lat ?? 30.27,
+    longitude: trip.destinations?.[0]?.lng ?? 120.15,
+    scale: 10,
+  })
+  const [viewport, setViewport] = useState(viewportRef.current)
+
+  // mode 变化时居中到当前 mode 的点(初次进入也算 mode 'all' 的变化)
   useEffect(() => {
     if (!ctxRef.current) ctxRef.current = Taro.createMapContext(MAP_ID)
     const ctx = ctxRef.current
     if (located.length === 0) {
-      setManualScale(undefined)
       return
     }
     if (located.length === 1) {
-      setManualScale(14)
+      const next = { latitude: located[0].lat, longitude: located[0].lng, scale: 14 }
+      viewportRef.current = next
+      setViewport(next)
       return
     }
-    setManualScale(undefined)
+    // 多点:用 includePoints 命令式调整视野,然后通过 onRegionChange 拿到中心写回 ref
     ctx.includePoints({
       points: located.map((p) => ({ latitude: p.lat, longitude: p.lng })),
       padding: [80, 40, 80, 40],
     })
-  }, [located])
+  }, [mode, located])
 
-  const latitude = located.length === 1
-    ? located[0].lat
-    : (trip.destinations?.[0]?.lat ?? 30.27)
-  const longitude = located.length === 1
-    ? located[0].lng
-    : (trip.destinations?.[0]?.lng ?? 120.15)
-  const scale = manualScale ?? 10
+  const handleRegionChange = useCallback((e: any) => {
+    // type=end 时拿到稳定中心和 scale
+    if (e?.type !== 'end') return
+    const lat = e?.detail?.centerLocation?.latitude
+    const lng = e?.detail?.centerLocation?.longitude
+    const scale = e?.detail?.scale
+    if (typeof lat === 'number' && typeof lng === 'number') {
+      viewportRef.current = {
+        latitude: lat,
+        longitude: lng,
+        scale: typeof scale === 'number' ? scale : viewportRef.current.scale,
+      }
+      // 不调 setViewport,避免 re-render 触发地图 setData 覆盖。
+      // viewport state 仅在 mode 切换时刷新。
+    }
+  }, [])
 
   // 点 marker 时不在 MapView 里 setState,而是直接命令式调 SheetContainer。
   // 关键:MapView 不再随 sheet 开关 re-render -> <Map> 不会被覆盖。
@@ -121,6 +143,20 @@ export default function MapView() {
     const spot = trip.days[dayIdx]?.spots[spotIdx]
     if (spot) sheetRef.current?.show(spot)
   }, [trip.days])
+
+  // "回到我的位置"按钮:授权 -> 居中
+  const handleLocateMe = useCallback(async () => {
+    try {
+      const res = await Taro.getLocation({ type: 'gcj02' })
+      if (!ctxRef.current) ctxRef.current = Taro.createMapContext(MAP_ID)
+      ctxRef.current.moveToLocation({
+        latitude: res.latitude,
+        longitude: res.longitude,
+      })
+    } catch (e) {
+      Taro.showToast({ title: '请授权位置权限', icon: 'none' })
+    }
+  }, [])
 
   return (
     <View className='mv'>
@@ -134,17 +170,23 @@ export default function MapView() {
         <Map
           id={MAP_ID}
           className='mv-map'
-          latitude={latitude}
-          longitude={longitude}
-          scale={scale}
+          latitude={viewport.latitude}
+          longitude={viewport.longitude}
+          scale={viewport.scale}
           markers={markers as any}
           polyline={polyline as any}
           onMarkerTap={handleTap}
           onCalloutTap={handleTap}
+          onRegionChange={handleRegionChange}
           onError={() => {}}
-          showLocation={false}
+          showLocation
           enableTraffic={false}
         />
+        <View className='mv-locate-btn' onClick={handleLocateMe}>
+          <View className='mv-locate-ring'>
+            <View className='mv-locate-dot' />
+          </View>
+        </View>
       </View>
       <SheetContainer ref={sheetRef} />
     </View>

@@ -1,10 +1,12 @@
 import { View, Text, Picker } from '@tarojs/components'
+import Taro from '@tarojs/taro'
 import AIBadge from '../../components/AIBadge'
 import CollaboratorsBar from '../../components/CollaboratorsBar'
 import type { TripHeaderViewProps } from './shared-header'
 import './styles/header-magazine.scss'
 
 const PAX_OPTIONS = Array.from({ length: 99 }, (_, i) => `${i + 1} 人`)
+const statusBarHeight = Taro.getSystemInfoSync().statusBarHeight || 20
 
 export default function TripHeaderMagazine({
   trip, isOwner, aiStatus, onAITap, onMenuTap, onBack, onPaxChange, onCollabTap,
@@ -16,15 +18,17 @@ export default function TripHeaderMagazine({
 
   return (
     <View className='thmg'>
+      <View style={{ height: `${statusBarHeight}px` }} />
       <View className='thmg-topbar'>
-        <View className='thmg-back' onClick={onBack}>← back</View>
+        <View className='thmg-back' onClick={onBack}>
+          <Text className='thmg-back-arrow'>←</Text>
+          <Text className='thmg-back-text'>BACK</Text>
+        </View>
         <Text className='thmg-issueno'>VOL. {issueNo}</Text>
         <View className='thmg-menu' onClick={onMenuTap}>⋯</View>
       </View>
 
       <View className='thmg-rule thmg-rule-thick' />
-      <Text className='thmg-strap'>EDITORIAL · TRAVEL · PERSONAL</Text>
-      <View className='thmg-rule' />
 
       <View className='thmg-titleblock'>
         <Text className='thmg-name'>{trip.name}</Text>

@@ -43,7 +43,7 @@
   color: var(--ink);
 }
 
-.ss-results { flex: 1; min-height: 0; height: 0; }
+.ss-results { flex: 1; min-height: 200rpx; overflow: hidden; }
 
 .ss-hint {
   padding: 48rpx;

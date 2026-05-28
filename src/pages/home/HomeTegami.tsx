@@ -4,6 +4,7 @@ import BrandLogo from '../../components/BrandLogo'
 import TripPhaseChip from '../../components/TripPhaseChip'
 import AvatarEntry from '../../components/AvatarEntry'
 import HomeBottomCTA from '../../components/HomeBottomCTA'
+import HomeArchiveSection from './HomeArchiveSection'
 import HomeCardAIRow from '../../components/HomeCardAIRow'
 import { isSeedTripId } from '../../data/seed-trips'
 import { fmtDateShort } from '../../utils/format'
@@ -27,7 +28,7 @@ function aiStatusFor(t: Trip): 'thinking' | 'ready' | 'error' | null {
 }
 
 export default function HomeTegami({
-  trips, loading, openid, onOpenTrip, onLongPressTrip, onNewTrip, onAITrip,
+  trips, archivedTrips, loading, openid, onOpenTrip, onLongPressTrip, onNewTrip, onAITrip,
 }: HomeViewProps) {
   const sized = useMemo(() => trips.map((t, i) => ({
     ...t,
@@ -81,6 +82,8 @@ export default function HomeTegami({
           )
         })}
       </View>
+
+      <HomeArchiveSection trips={archivedTrips} onOpenTrip={onOpenTrip} onLongPressTrip={onLongPressTrip} />
 
       <View className='ht-cta'>
         <HomeBottomCTA onAITap={onAITrip} onNewTap={onNewTrip} newLabel='+ 新建明信片' />

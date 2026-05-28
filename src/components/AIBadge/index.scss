@@ -49,8 +49,8 @@
   top: 0; bottom: 0;
   left: 0;
   width: 40%;
-  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
-  animation: shimmer 2.6s var(--ease-in-out) infinite;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.35), transparent);
+  animation: shimmer 2.8s linear infinite;
   pointer-events: none;
 }
 

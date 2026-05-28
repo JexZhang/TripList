@@ -1,3 +1,4 @@
+import Taro from '@tarojs/taro'
 import { useRef, useState } from 'react'
 import { View, Text, Input, ScrollView, RootPortal } from '@tarojs/components'
 import { cloud, type PoiResult } from '../../utils/cloud'
@@ -35,6 +36,7 @@ export default function DestinationPicker({ value, onChange }: Props) {
       if (myId !== reqIdRef.current) return
       console.error('searchPoi failed', e)
       setResults([])
+      Taro.showToast({ title: '搜索失败，请重试', icon: 'none' })
     } finally {
       if (myId === reqIdRef.current) setLoading(false)
     }

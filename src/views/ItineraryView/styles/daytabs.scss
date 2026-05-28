@@ -95,74 +95,118 @@
   background: transparent;
 }
 
-/* ============ B. spine（时间轴脊柱 · 杂志主题） ============
- * dot 必须落在脊线（左右 24rpx）之间；用 space-between + 边距让首尾点贴齐线端。
+/* ============ B. spine（刊物目录栏 · Magazine Issue Folio） ============
+ * 方盒容器 + 竖线分隔 + 衬线体大字号 + 朱红选中底线
  */
 .dt-spine-wrap {
   position: relative;
+  margin: 0 24rpx 16rpx;
+  border: 2rpx solid var(--ink);
   background: var(--surface);
-  border-bottom: 2rpx solid var(--ink);
 }
+
 .dt--spine {
-  padding: 24rpx 0 16rpx;
+  padding: 0;
   border-bottom: none;
   background: transparent;
 }
+
 .dt-track--spine {
-  justify-content: space-between;
-  padding: 0 24rpx;
-  gap: 16rpx;
+  padding: 0;
+  gap: 0;
+  align-items: stretch;
 }
+
+/* ── 日期项 ── */
 .dt-item--spine {
   flex: 1 1 0;
-  min-width: 80rpx;
+  min-width: 120rpx;
   flex-direction: column;
-  padding: 8rpx 0 16rpx;
+  padding: 20rpx 20rpx 16rpx;
   position: relative;
+  border-right: 1rpx solid var(--line-2);
 }
-.dt-spine-dot {
-  width: 16rpx;
-  height: 16rpx;
-  border-radius: 50%;
-  background: var(--ink);
-  margin-bottom: 8rpx;
+.dt-item--spine:last-of-type {
+  border-right: none;
 }
-.dt-item--spine.on .dt-spine-dot {
-  background: var(--accent);
-  box-shadow: 0 0 0 6rpx var(--accent-soft);
-}
+
+/* 大字日期编号 — 刊物主角 */
 .dt-spine-no {
-  font-size: 24rpx;
-  font-weight: 800;
+  font-size: 44rpx;
+  font-weight: 900;
   font-family: var(--font-display);
   color: var(--ink);
+  line-height: 1;
+  letter-spacing: -1rpx;
+  transition: color 0.22s var(--ease-out);
 }
+
+/* 等宽日期 */
 .dt-spine-date {
-  font-size: 18rpx;
+  font-size: 20rpx;
   font-family: var(--font-mono);
   color: var(--ink-3);
-  letter-spacing: 1rpx;
+  letter-spacing: 2rpx;
   white-space: nowrap;
+  margin-top: 6rpx;
+  transition: color 0.22s var(--ease-out);
 }
-.dt-item--spine.on .dt-spine-no { color: var(--accent); }
-.dt-spine-line {
+
+/* ═══ 选中态 ═══ */
+.dt-item--spine.on {
+  background: var(--surface-2);
+}
+.dt-item--spine.on .dt-spine-no {
+  color: var(--accent);
+}
+.dt-item--spine.on .dt-spine-date {
+  color: var(--ink-2);
+}
+
+/* 朱红底部指示条 */
+.dt-spine-bar {
   position: absolute;
-  bottom: -2rpx;
-  left: 24rpx; right: 24rpx;
-  height: 2rpx;
-  background: var(--ink);
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 6rpx;
+  background: var(--accent);
 }
-.dt-track--spine { --dt-spine-h: 88rpx; }
+
+/* ── 添加按钮（+ DAY 标签） ── */
+.dt-track--spine { --dt-spine-h: 96rpx; }
 .dt-item--spine { min-height: var(--dt-spine-h); }
 .dt-add--spine {
   flex: 0 0 auto;
-  width: 64rpx;
-  height: var(--dt-spine-h);
-  border-radius: 32rpx;
-  background: transparent;
-  border: 1rpx dashed var(--ink-3);
+  min-width: 96rpx;
+  min-height: var(--dt-spine-h);
+  flex-direction: column;
+  gap: 2rpx;
+  background: var(--bg-soft);
+  border: none;
+  border-left: 1rpx solid var(--line-2);
+  border-radius: 0;
   color: var(--ink-3);
-  align-self: center;
+  align-self: stretch;
+  transition: all 0.22s var(--ease-out);
+}
+.dt-add--spine:active {
+  background: var(--accent-bg);
+  color: var(--accent);
+}
+.dt-add-spine-icon {
+  font-size: 28rpx;
+  font-weight: 300;
+  font-family: var(--font-mono);
+  line-height: 1;
+  color: inherit;
+}
+.dt-add-spine-label {
+  font-size: 14rpx;
+  font-family: var(--font-mono);
+  letter-spacing: 4rpx;
+  font-weight: 600;
+  color: inherit;
 }
 
 /* ============ C. calendar（护照签证页 · 明信片主题） ============

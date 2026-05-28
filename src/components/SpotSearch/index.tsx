@@ -1,3 +1,4 @@
+import Taro from '@tarojs/taro'
 import { useState, useEffect } from 'react'
 import { View, Text, Input, ScrollView, RootPortal } from '@tarojs/components'
 import { cloud, type PoiResult } from '../../utils/cloud'
@@ -45,6 +46,7 @@ export default function SpotSearch({ open, defaultCity, onClose, onSelect }: Pro
       .catch(e => {
         console.error('[poi search]', e)
         setResults([])
+        Taro.showToast({ title: '搜索失败，请重试', icon: 'none' })
       })
       .finally(() => setLoading(false))
   }, [debouncedKw, defaultCity])

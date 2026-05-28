@@ -3,6 +3,7 @@ import type { Trip } from '../../types/trip'
 /** 4 主题子组件共用的 props */
 export interface HomeViewProps {
   trips: Trip[]
+  archivedTrips: Trip[]
   loading: boolean
   openid: string
   onOpenTrip: (trip: Trip) => void

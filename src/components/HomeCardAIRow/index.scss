@@ -33,9 +33,9 @@
 .hc-ai-shine {
   position: absolute;
   top: 0; bottom: 0; left: 0;
-  width: 40%;
-  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.5), transparent);
-  animation: shimmer 2.6s var(--ease-in-out) infinite;
+  width: 60%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.45), transparent);
+  animation: shimmer 2.8s linear infinite;
   pointer-events: none;
 }
 .hc-ai-icon  { flex-shrink: 0; }

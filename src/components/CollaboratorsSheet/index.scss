@@ -1,3 +1,20 @@
+.cs-root {
+  --surface: #FAF8F5;
+  --surface-2: #F2EFEA;
+  --ink: #2B1A10;
+  --accent: #C8553D;
+  --accent-soft: #E8A598;
+  --line: #E5E0D8;
+  --line-2: #D4CFC7;
+  --r-xl: 32rpx;
+  --shadow-sm: 0 2rpx 8rpx rgba(43, 26, 16, 0.08);
+  --ease-out: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  position: fixed;
+  left: 0; right: 0; top: 0; bottom: 0;
+  z-index: 1000;
+}
+
 .cs-mask {
   position: fixed;
   left: 0; right: 0; top: 0; bottom: 0;
@@ -77,4 +94,42 @@
   color: var(--accent);
   font-weight: 600;
   margin-top: 6rpx;
+}
+
+/* ─ 4 主题覆写 ── */
+.theme-tegami.cs-root {
+  --surface: #FAF8F5;
+  --surface-2: #F2EFEA;
+  --ink: #2B1A10;
+  --accent: #C8553D;
+  --accent-soft: #E8A598;
+  --line: #E5E0D8;
+  --line-2: #D4CFC7;
+}
+.theme-postcard.cs-root {
+  --surface: #F5F3EE;
+  --surface-2: #EAE7E0;
+  --ink: #1A1A1A;
+  --accent: #1E4D8C;
+  --accent-soft: #A8C4E0;
+  --line: #D8D4CC;
+  --line-2: #C8C4BC;
+}
+.theme-magazine.cs-root {
+  --surface: #0A0A0A;
+  --surface-2: #1A1A1A;
+  --ink: #FAF8F5;
+  --accent: #E8A598;
+  --accent-soft: #4A3530;
+  --line: #2A2A2A;
+  --line-2: #3A3A3A;
+}
+.theme-minimal.cs-root {
+  --surface: #FFFFFF;
+  --surface-2: #F5F5F5;
+  --ink: #111111;
+  --accent: #333333;
+  --accent-soft: #E0E0E0;
+  --line: #E5E5E5;
+  --line-2: #D0D0D0;
 }

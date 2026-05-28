@@ -202,6 +202,42 @@
   height: 100%;
 }
 
+/* 回到我的位置按钮 — 模仿高德/百度的右下角圆形按钮 */
+.mv-locate-btn {
+  position: absolute;
+  right: 24rpx;
+  bottom: 40rpx;
+  width: 80rpx;
+  height: 80rpx;
+  border-radius: 50%;
+  background: var(--surface, #FFFFFF);
+  box-shadow: 0 6rpx 18rpx rgba(0, 0, 0, 0.18);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+  transition: transform 0.18s var(--ease-out, ease-out);
+}
+.mv-locate-btn:active {
+  transform: scale(0.92);
+}
+.mv-locate-ring {
+  width: 40rpx;
+  height: 40rpx;
+  border-radius: 50%;
+  border: 3rpx solid var(--accent, #2D7CF5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+}
+.mv-locate-dot {
+  width: 14rpx;
+  height: 14rpx;
+  border-radius: 50%;
+  background: var(--accent, #2D7CF5);
+}
+
 /* ============================================
  * D. 极简胶囊（minimal）
  * ============================================ */

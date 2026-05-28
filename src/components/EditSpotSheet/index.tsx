@@ -134,6 +134,8 @@ export default function EditSpotSheet({ open, spot, defaultCity, onClose, onSave
               value={draft.note || ''}
               onInput={e => set('note', e.detail.value)}
               maxlength={500}
+              autoHeight
+              showConfirmBar={false}
               {...kbProps}
             />
           </View>

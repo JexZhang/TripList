@@ -3,6 +3,7 @@ import BrandLogo from '../../components/BrandLogo'
 import TripPhaseChip from '../../components/TripPhaseChip'
 import AvatarEntry from '../../components/AvatarEntry'
 import HomeBottomCTA from '../../components/HomeBottomCTA'
+import HomeArchiveSection from './HomeArchiveSection'
 import HomeCardAIRow from '../../components/HomeCardAIRow'
 import type { HomeViewProps } from './shared'
 import type { Trip } from '../../types/trip'
@@ -20,7 +21,7 @@ function tripDays(t: Trip): number {
 }
 
 export default function HomeMinimal({
-  trips, loading, onOpenTrip, onLongPressTrip, onNewTrip, onAITrip,
+  trips, archivedTrips, loading, onOpenTrip, onLongPressTrip, onNewTrip, onAITrip,
 }: HomeViewProps) {
   const totalDays = trips.reduce((s, t) => s + tripDays(t), 0)
 
@@ -74,6 +75,8 @@ export default function HomeMinimal({
           )
         })}
       </View>
+
+      <HomeArchiveSection trips={archivedTrips} onOpenTrip={onOpenTrip} onLongPressTrip={onLongPressTrip} />
 
       <View className='hmin-cta'>
         <HomeBottomCTA onAITap={onAITrip} onNewTap={onNewTrip} newLabel='+ 新建' />

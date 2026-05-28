@@ -1,11 +1,10 @@
 import { useEffect, useMemo, useState } from 'react'
-import { View, Text, ScrollView } from '@tarojs/components'
+import { View, Text } from '@tarojs/components'
 import Taro from '@tarojs/taro'
 import dayjs from 'dayjs'
 import type { Trip } from '../../types/trip'
 import {
   getTripPhase,
-  getDaysUntilStart,
   getLiveContext,
   getPostStats,
   haversineKm,
@@ -33,81 +32,14 @@ export default function TripPhaseHero({ trip }: Props) {
     return () => clearInterval(t)
   }, [phase])
 
+  // pre 阶段(行程未开始)信息和 TripHeader 完全重复,直接不渲染,把首屏空间还给攻略。
+  // live/post 阶段保留: 旅行中需要"NEXT 站/距离/天气", 归档后展示统计。
+  if (phase === 'pre') return null
+
   return (
     <View className={`tph tph--${phase}`}>
-      {phase === 'pre' && <PreBlock trip={trip} weather={weather.pre} />}
       {phase === 'live' && <LiveBlock trip={trip} weather={weather.liveToday} />}
       {phase === 'post' && <PostBlock trip={trip} />}
-    </View>
-  )
-}
-
-function PreBlock({
-  trip,
-  weather,
-}: {
-  trip: Trip
-  weather?: { date: string; temp: number; low: number; desc: string; icon: string }[]
-}) {
-  const days = getDaysUntilStart(trip.startDate)
-  const destLabel = trip.destinations?.[0]?.name || '远方'
-  const packingTotal = trip.packing?.length ?? 0
-  const packingDone = trip.packing?.filter((p) => p.checked).length ?? 0
-  const packingPct = packingTotal > 0 ? Math.round((packingDone / packingTotal) * 100) : 0
-  const trickle = Math.min(100, packingPct)
-
-  return (
-    <View className='tph-pre'>
-      <View className='tph-pre-head'>
-        <Text className='tph-pre-head-l'>COUNTDOWN</Text>
-        <Text className='tph-pre-head-r'>UNTIL TRIP</Text>
-      </View>
-
-      <View className='tph-pre-num-row'>
-        <Text className='tph-pre-num'>{days}</Text>
-        <View className='tph-pre-num-cap'>
-          <Text className='tph-pre-num-unit'>days</Text>
-          <Text className='tph-pre-num-dest'>to {destLabel}</Text>
-        </View>
-      </View>
-
-      <View className='tph-pre-meta'>
-        <Text>
-          {dayjs(trip.startDate).format('M/D')} – {dayjs(trip.endDate).format('M/D')}
-        </Text>
-        <Text className='tph-pre-meta-sep'>·</Text>
-        <Text>{trip.pax} 人</Text>
-      </View>
-
-      <View className='tph-rule' />
-
-      {packingTotal > 0 && (
-        <View className='tph-pre-pack'>
-          <Text className='tph-pre-pack-l'>PACKING</Text>
-          <View className='tph-pre-pack-bar'>
-            <View
-              className='tph-pre-pack-bar-fill'
-              style={{ width: `${trickle}%` }}
-            />
-          </View>
-          <Text className='tph-pre-pack-v'>
-            {packingDone} <Text className='tph-pre-pack-v-sub'>/ {packingTotal}</Text>
-          </Text>
-        </View>
-      )}
-
-      {weather && weather.length > 0 && (
-        <ScrollView scrollX className='tph-pre-wx'>
-          {weather.map((w) => (
-            <View key={w.date} className='tph-pre-wx-cell'>
-              <Text className='tph-pre-wx-d'>{dayjs(w.date).format('ddd').toUpperCase()}</Text>
-              <Text className='tph-pre-wx-t'>{w.temp}°</Text>
-              <Text className='tph-pre-wx-l'>{w.low}°</Text>
-              <Text className='tph-pre-wx-desc'>{w.desc}</Text>
-            </View>
-          ))}
-        </ScrollView>
-      )}
     </View>
   )
 }

@@ -1,10 +1,12 @@
 import { View, Text, Picker } from '@tarojs/components'
+import Taro from '@tarojs/taro'
 import AIBadge from '../../components/AIBadge'
 import CollaboratorsBar from '../../components/CollaboratorsBar'
 import type { TripHeaderViewProps } from './shared-header'
 import './styles/header-tegami.scss'
 
 const PAX_OPTIONS = Array.from({ length: 99 }, (_, i) => `${i + 1} 人`)
+const statusBarHeight = Taro.getSystemInfoSync().statusBarHeight || 20
 
 export default function TripHeaderTegami({
   trip, isOwner, aiStatus, onAITap, onMenuTap, onBack, onPaxChange, onCollabTap,
@@ -15,8 +17,11 @@ export default function TripHeaderTegami({
 
   return (
     <View className='thtg'>
+      <View style={{ height: `${statusBarHeight}px` }} />
       <View className='thtg-bar'>
-        <View className='thtg-back' onClick={onBack}>‹</View>
+        <View className='thtg-back' onClick={onBack}>
+          <Text className='thtg-back-label'>↩ 返回</Text>
+        </View>
         <Text className='thtg-issue'>HANDWRITTEN · 2026</Text>
         <View className='thtg-menu' onClick={onMenuTap}>⋯</View>
       </View>

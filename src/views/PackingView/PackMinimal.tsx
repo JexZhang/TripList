@@ -7,10 +7,14 @@ export default function PackMinimal(props: PackViewProps) {
   return (
     <View className='pmin'>
       <View className='pmin-head'>
-        <Text className='pmin-eyebrow'>PACKING</Text>
-        <Text className='pmin-progress'>{checkedCount} / {packing.length}</Text>
+        <View className='pmin-head-left'>
+          <Text className='pmin-eyebrow'>PACKING</Text>
+          <Text className='pmin-progress'>{checkedCount} / {packing.length}</Text>
+        </View>
+        <View className='pmin-tpl' onClick={onOpenTemplate}>
+          <Text className='pmin-tpl-text'>导入模板</Text>
+        </View>
       </View>
-      <View className='pmin-tpl' onClick={onOpenTemplate}>导入模板</View>
 
       {categories.map((cat) => {
         const items = packing.filter((p) => p.category === cat.id)

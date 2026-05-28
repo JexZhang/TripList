@@ -4,6 +4,7 @@ import { View, Text, Textarea, Input, RootPortal, Picker } from '@tarojs/compone
 import DatePicker from '../DatePicker'
 import DestinationPicker from '../DestinationPicker'
 import SparkleIcon from '../SparkleIcon'
+import { useKeyboardHeight } from '../../utils/use-keyboard-height'
 import {
   AI_INTERVIEW,
   type InterviewAnswers,
@@ -75,6 +76,7 @@ export default function AIInterview({ open, mode, tripId, onClose, onSubmit }: P
   const [enrichAnswers, setEnrichAnswers] = useState<InterviewAnswers>({})
   const [stepIdx, setStepIdx] = useState(0)
   const [textBuf, setTextBuf] = useState('')
+  const keyboardHeight = useKeyboardHeight()
 
   // Mount: restore draft or reset
   useEffect(() => {
@@ -190,6 +192,7 @@ export default function AIInterview({ open, mode, tripId, onClose, onSubmit }: P
             className='aiv-input'
             value={answers.name}
             placeholder='例：京都 · 晚秋四日'
+            adjustPosition={false}
             onInput={(e) => updateAnswer('name', e.detail.value)}
           />
           <View className='aiv-foot'>
@@ -233,7 +236,15 @@ export default function AIInterview({ open, mode, tripId, onClose, onSubmit }: P
   return (
     <RootPortal>
       <View className='aiv-mask theme-tokens' onClick={onClose}>
-        <View className='aiv-sheet' catchMove onClick={(e) => e.stopPropagation()}>
+        <View
+          className='aiv-sheet'
+          catchMove
+          style={{
+            transform: `translateY(-${keyboardHeight}px)`,
+            transition: 'transform 0.25s ease',
+          }}
+          onClick={(e) => e.stopPropagation()}
+        >
           <View className='aiv-head'>
             <View className='aiv-progress'>
               {(isCreate ? CREATE_STEPS : AI_INTERVIEW).map((_, i) => (
@@ -354,10 +365,12 @@ function PrefsSubflow({ answers, onAnswers, onDone, onSkip }: PrefsSubflowProps)
           {q.type === 'number' ? (
             <Input className='aiv-input' type='number' value={textBuf}
               placeholder={q.placeholder}
+              adjustPosition={false}
               onInput={(e) => setTextBuf(e.detail.value)} />
           ) : (
             <Textarea className='aiv-textarea' value={textBuf}
               placeholder={q.placeholder}
+              adjustPosition={false}
               onInput={(e) => setTextBuf(e.detail.value)} maxlength={500} autoHeight showConfirmBar={false} />
           )}
           <View className='aiv-foot'>

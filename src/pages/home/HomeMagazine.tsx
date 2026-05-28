@@ -3,6 +3,7 @@ import BrandLogo from '../../components/BrandLogo'
 import TripPhaseChip from '../../components/TripPhaseChip'
 import AvatarEntry from '../../components/AvatarEntry'
 import HomeBottomCTA from '../../components/HomeBottomCTA'
+import HomeArchiveSection from './HomeArchiveSection'
 import HomeCardAIRow from '../../components/HomeCardAIRow'
 import MagFeatureCover from '../../components/MagFeatureCover'
 import { isSeedTripId } from '../../data/seed-trips'
@@ -18,7 +19,7 @@ function aiStatusFor(t: Trip): 'thinking' | 'ready' | 'error' | null {
 }
 
 export default function HomeMagazine({
-  trips, loading, onOpenTrip, onLongPressTrip,
+  trips, archivedTrips, loading, onOpenTrip, onLongPressTrip,
   onNewTrip, onAITrip, onCoverLongPress,
 }: HomeViewProps) {
   const userTrips = trips.filter((t) => !isSeedTripId(t._id))
@@ -99,6 +100,8 @@ export default function HomeMagazine({
           })}
         </View>
       )}
+
+      <HomeArchiveSection trips={archivedTrips} onOpenTrip={onOpenTrip} onLongPressTrip={onLongPressTrip} />
 
       <View className='hm-cta'>
         <HomeBottomCTA onAITap={onAITrip} onNewTap={onNewTrip} newLabel='+ 发起新刊' />

@@ -11,7 +11,6 @@ export default function ItinMinimal({
   return (
     <View className='itinmin'>
       <View className='itinmin-dayhead'>
-        <Text className='itinmin-day-label'>Day {String(activeDayIdx + 1).padStart(2, '0')}</Text>
         <View className='itinmin-day-info'>
           <DayHeader
             day={activeDay}

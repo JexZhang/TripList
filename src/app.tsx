@@ -1,5 +1,5 @@
 import { PropsWithChildren } from 'react'
-import Taro, { useLaunch } from '@tarojs/taro'
+import { useLaunch } from '@tarojs/taro'
 
 import { MeProvider } from './store/me-store'
 import { ThemeProvider } from './store/theme-store'
@@ -18,25 +18,10 @@ if (process.env.TARO_ENV === 'weapp') {
 }
 
 function App({ children }: PropsWithChildren<any>) {
-  useLaunch(async () => {
+  useLaunch(() => {
     console.log('App launched.')
-    
-    if (process.env.TARO_ENV !== 'weapp') return
-    try {
-      // 拉取微信资料；用户首次进入时也写入 users 表
-      const profile = await Taro.getStorage({ key: 'userProfile' }).catch(() => ({ data: null }))
-      if (profile.data) {
-        await wx.cloud.callFunction({
-          name: 'ensure-user',
-          data: {
-            nickname: profile.data.nickName || '行册旅人',
-            avatarUrl: profile.data.avatarUrl || '',
-          }
-        })
-      }
-    } catch (e) {
-      console.warn('ensure-user failed at launch (will retry on next login)', e)
-    }
+    // ensure-user 由 MeProvider 负责调用,不要在这里传 nickname/avatarUrl,
+    // 否则会覆盖用户已保存的昵称
   })
 
   // children 是将要会渲染的页面

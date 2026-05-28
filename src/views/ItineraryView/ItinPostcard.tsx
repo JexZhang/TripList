@@ -13,10 +13,6 @@ export default function ItinPostcard({
       <View className='itinpp-paper'>
         <View className='itinpp-paper-grain' />
         <View className='itinpp-dayhead'>
-          <View className='itinpp-day-oval'>
-            <Text className='itinpp-day-l1'>DAY</Text>
-            <Text className='itinpp-day-l2'>{activeDayIdx + 1}</Text>
-          </View>
           <View className='itinpp-day-info'>
             <DayHeader
               day={activeDay}

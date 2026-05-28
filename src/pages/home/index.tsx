@@ -4,6 +4,7 @@ import Taro, { useDidShow, useShareAppMessage } from '@tarojs/taro'
 import type { Trip } from '../../types/trip'
 import { listMyTrips, renameTrip, copyTripLocally, smartDeleteTrip, updateTrip } from '../../utils/db'
 import { SEED_TRIPS, isSeedTripId } from '../../data/seed-trips'
+import { getTripPhase } from '../../utils/trip-phase'
 import { useMe } from '../../store/me-store'
 import { useTheme } from '../../store/theme-store'
 import { useThemeClass } from '../../utils/theme-class'
@@ -181,8 +182,13 @@ export default function Home() {
     }
   }
 
+  // 首页分区：active (pre/live) + archived (post 折叠展示)
+  const activeTrips = trips.filter((t) => getTripPhase(t.startDate, t.endDate) !== 'post')
+  const archivedTrips = trips.filter((t) => getTripPhase(t.startDate, t.endDate) === 'post')
+
   const props: HomeViewProps = {
-    trips,
+    trips: activeTrips,
+    archivedTrips,
     loading,
     openid,
     onOpenTrip: (t) => Taro.navigateTo({ url: `/pages/trip/index?id=${t._id}` }),

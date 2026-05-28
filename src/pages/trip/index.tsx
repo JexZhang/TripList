@@ -287,8 +287,6 @@ function TripBody() {
         onCollabTap={() => setCollabSheetOpen(true)}
       />
 
-      {t && <TripPhaseHero trip={t} />}
-
       <View className='trip-tabs'>
         {VIEWS.map(v => (
           <View
@@ -302,6 +300,7 @@ function TripBody() {
       <View className='trip-content'>
         {view === 'itinerary' && (
           <>
+            <TripPhaseHero trip={t} />
             {t.aiStatus && (
               <TripAIStatusBar
                 status={t.aiStatus as TripAIStatusBarStatus}
@@ -387,10 +386,11 @@ export default function TripPage() {
   })
 
   useEffect(() => {
+    // 注意:不要传 nickname/avatarUrl,否则会覆盖用户已保存的昵称
     // @ts-ignore Taro.cloud
     Taro.cloud.callFunction({
       name: 'ensure-user',
-      data: { nickname: '行册旅人', avatarUrl: '' }
+      data: {},
     }).then((r: any) => {
       if (r.result && r.result.openid) {
         setOpenid(r.result.openid)

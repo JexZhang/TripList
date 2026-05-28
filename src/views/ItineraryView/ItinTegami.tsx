@@ -11,9 +11,6 @@ export default function ItinTegami({
   return (
     <View className='itintg'>
       <View className='itintg-dayhead'>
-        <View className='itintg-day-stamp'>
-          <Text className='itintg-day-no'>{String(activeDayIdx + 1).padStart(2, '0')}</Text>
-        </View>
         <View className='itintg-day-info'>
           <DayHeader
             day={activeDay}

@@ -11,8 +11,6 @@ export default function ItinMagazine({
   return (
     <View className='itinmg'>
       <View className='itinmg-dayhead'>
-        <Text className='itinmg-day-label'>DAY</Text>
-        <Text className='itinmg-day-no'>{String(activeDayIdx + 1).padStart(2, '0')}</Text>
         <View className='itinmg-day-info'>
           <DayHeader
             day={activeDay}

@@ -22,17 +22,17 @@ export default function DayTabsSpine({ days, activeId, onSelect, onLongPress, on
               onClick={() => onSelect(d.id)}
               onLongPress={() => onLongPress(d.id, idx)}
             >
-              <View className='dt-spine-dot' />
-              <Text className='dt-spine-no'>D{idx + 1}</Text>
+              <Text className='dt-spine-no'>{String(idx + 1).padStart(2, '0')}</Text>
               <Text className='dt-spine-date'>{dayjs(d.date).format('M/D')}</Text>
+              {activeId === d.id && <View className='dt-spine-bar' />}
             </View>
           ))}
           <View className='dt-add dt-add--spine' onClick={() => onAdd('back')}>
-            <Text>+</Text>
+            <Text className='dt-add-spine-icon'>+</Text>
+            <Text className='dt-add-spine-label'>DAY</Text>
           </View>
         </View>
       </ScrollView>
-      <View className='dt-spine-line' />
     </View>
   )
 }

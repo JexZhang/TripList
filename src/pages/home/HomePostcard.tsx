@@ -4,6 +4,7 @@ import BrandLogo from '../../components/BrandLogo'
 import TripPhaseChip from '../../components/TripPhaseChip'
 import AvatarEntry from '../../components/AvatarEntry'
 import HomeBottomCTA from '../../components/HomeBottomCTA'
+import HomeArchiveSection from './HomeArchiveSection'
 import type { HomeViewProps } from './shared'
 import type { Trip } from '../../types/trip'
 import { getTripPhase } from '../../utils/trip-phase'
@@ -60,7 +61,7 @@ function tripDays(t: Trip): number {
 }
 
 export default function HomePostcard({
-  trips, loading, onOpenTrip, onLongPressTrip, onNewTrip, onAITrip,
+  trips, archivedTrips, loading, onOpenTrip, onLongPressTrip, onNewTrip, onAITrip,
 }: HomeViewProps) {
   const sized = useMemo(() => trips.map((t) => ({ ...t, _days: tripDays(t) })), [trips])
   const totalDays = sized.reduce((s, t) => s + t._days, 0)
@@ -150,6 +151,8 @@ export default function HomePostcard({
           <Text>— {trips.length} / ∞ —</Text>
         </View>
       </View>
+
+      <HomeArchiveSection trips={archivedTrips} onOpenTrip={onOpenTrip} onLongPressTrip={onLongPressTrip} />
 
       <View className='hpp-cta'>
         <HomeBottomCTA onAITap={onAITrip} onNewTap={onNewTrip} newLabel='+ 新一页签证' />

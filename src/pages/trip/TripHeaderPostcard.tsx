@@ -1,10 +1,12 @@
 import { View, Text, Picker } from '@tarojs/components'
+import Taro from '@tarojs/taro'
 import AIBadge from '../../components/AIBadge'
 import CollaboratorsBar from '../../components/CollaboratorsBar'
 import type { TripHeaderViewProps } from './shared-header'
 import './styles/header-postcard.scss'
 
 const PAX_OPTIONS = Array.from({ length: 99 }, (_, i) => `${i + 1} 人`)
+const statusBarHeight = Taro.getSystemInfoSync().statusBarHeight || 20
 
 export default function TripHeaderPostcard({
   trip, isOwner, aiStatus, onAITap, onMenuTap, onBack, onPaxChange, onCollabTap,
@@ -16,11 +18,15 @@ export default function TripHeaderPostcard({
 
   return (
     <View className='thpp'>
+      <View style={{ height: `${statusBarHeight}px` }} />
       <View className='thpp-paper'>
         <View className='thpp-paper-grain' />
 
         <View className='thpp-topbar'>
-          <View className='thpp-back' onClick={onBack}>‹</View>
+          <View className='thpp-back' onClick={onBack}>
+            <Text className='thpp-back-icon'>‹</Text>
+            <Text className='thpp-back-label'>EXIT</Text>
+          </View>
           <Text className='thpp-eyebrow'>VISA / 签 证</Text>
           <View className='thpp-menu' onClick={onMenuTap}>⋯</View>
         </View>

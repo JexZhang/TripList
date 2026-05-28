@@ -1,10 +1,12 @@
 import { View, Text, Picker } from '@tarojs/components'
+import Taro from '@tarojs/taro'
 import AIBadge from '../../components/AIBadge'
 import CollaboratorsBar from '../../components/CollaboratorsBar'
 import type { TripHeaderViewProps } from './shared-header'
 import './styles/header-minimal.scss'
 
 const PAX_OPTIONS = Array.from({ length: 99 }, (_, i) => `${i + 1} 人`)
+const statusBarHeight = Taro.getSystemInfoSync().statusBarHeight || 20
 
 export default function TripHeaderMinimal({
   trip, isOwner, aiStatus, onAITap, onMenuTap, onBack, onPaxChange, onCollabTap,
@@ -15,12 +17,15 @@ export default function TripHeaderMinimal({
 
   return (
     <View className='thmin'>
+      <View style={{ height: `${statusBarHeight}px` }} />
       <View className='thmin-bar'>
-        <View className='thmin-back' onClick={onBack}>‹</View>
+        <View className='thmin-back' onClick={onBack}>
+          <Text className='thmin-back-icon'>‹</Text>
+          <Text className='thmin-back-label'>home</Text>
+        </View>
         <View className='thmin-menu' onClick={onMenuTap}>⋯</View>
       </View>
 
-      <Text className='thmin-eyebrow'>CHRONICLE</Text>
       <Text className='thmin-name'>{trip.name}</Text>
 
       <View className='thmin-meta'>

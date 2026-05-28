@@ -29,10 +29,34 @@
   border-bottom: 1rpx dashed var(--line-2);
 }
 .thpp-back {
-  width: 56rpx; height: 56rpx;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 36rpx;
-  color: var(--ink-2);
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2rpx;
+  padding: 10rpx 24rpx;
+  border: 3rpx solid var(--accent);
+  border-radius: 999rpx;
+  color: var(--accent);
+  transform: rotate(-6deg);
+  transition: transform 0.2s var(--ease-out), opacity 0.2s var(--ease-out);
+  background: rgba(255, 252, 243, 0.6);
+}
+.thpp-back-icon {
+  font-size: 32rpx;
+  font-weight: 700;
+  line-height: 1;
+}
+.thpp-back-label {
+  font-size: 16rpx;
+  letter-spacing: 4rpx;
+  font-family: var(--font-mono);
+  font-weight: 700;
+  line-height: 1;
+}
+.thpp-back:active {
+  transform: rotate(-6deg) scale(0.92);
+  opacity: 0.7;
 }
 .thpp-eyebrow {
   font-size: 22rpx;

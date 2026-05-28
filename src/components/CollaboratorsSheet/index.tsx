@@ -1,4 +1,5 @@
 import { View, Text, Image, RootPortal } from '@tarojs/components'
+import { useTheme } from '../../store/theme-store'
 import type { Collaborator } from '../../types/trip'
 import './index.scss'
 
@@ -13,6 +14,7 @@ interface Props {
 export default function CollaboratorsSheet({
   open, collaborators, ownerNickname, ownerAvatarUrl, onClose,
 }: Props) {
+  const theme = useTheme()
   if (!open) return null
 
   const renderAvatar = (avatarUrl: string | undefined, nickname: string | undefined, fallbackKey: string) => (
@@ -25,6 +27,7 @@ export default function CollaboratorsSheet({
 
   return (
     <RootPortal>
+      <View className={`cs-root theme-${theme}`}>
       <View className='cs-mask' onClick={onClose}>
         <View className='cs-sheet' onClick={(e) => e.stopPropagation()}>
         <View className='cs-title'>协作成员</View>
@@ -49,6 +52,7 @@ export default function CollaboratorsSheet({
           </View>
         ))}
         </View>
+      </View>
       </View>
     </RootPortal>
   )

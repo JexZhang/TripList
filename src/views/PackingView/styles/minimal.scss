@@ -5,8 +5,13 @@
 .pmin-head {
   display: flex;
   justify-content: space-between;
-  align-items: baseline;
-  margin-bottom: 8rpx;
+  align-items: center;
+  margin-bottom: 24rpx;
+}
+.pmin-head-left {
+  display: flex;
+  flex-direction: column;
+  gap: 4rpx;
 }
 .pmin-eyebrow {
   font-size: 22rpx;
@@ -21,10 +26,19 @@
   color: var(--ink);
 }
 .pmin-tpl {
+  padding: 12rpx 24rpx;
+  border: 1rpx solid var(--ink-3);
+  border-radius: var(--r-sm);
+  transition: all 0.2s var(--ease-out);
+}
+.pmin-tpl:active {
+  border-color: var(--ink);
+  background: var(--surface-2);
+}
+.pmin-tpl-text {
   font-size: 22rpx;
-  color: var(--ink-3);
-  margin-bottom: 32rpx;
-  padding: 8rpx 0;
+  color: var(--ink-2);
+  letter-spacing: 2rpx;
 }
 .pmin-cat { margin-bottom: 32rpx; }
 .pmin-cat-label {

@@ -11,13 +11,31 @@
   padding: 8rpx 0 12rpx;
 }
 .thmg-back {
-  font-size: 22rpx;
+  display: inline-flex;
+  align-items: center;
+  gap: 8rpx;
+  padding: 8rpx 0;
+  cursor: pointer;
+}
+.thmg-back-arrow {
+  font-size: 28rpx;
+  font-family: var(--font-display);
+  color: var(--ink);
+  transition: transform 0.2s var(--ease-out);
+}
+.thmg-back-text {
+  font-size: 20rpx;
   letter-spacing: 4rpx;
   font-family: var(--font-mono);
+  font-weight: 600;
   color: var(--ink);
-  padding: 8rpx 0;
+  text-decoration: underline;
+  text-underline-offset: 4rpx;
+  text-decoration-color: var(--ink-3);
+  transition: color 0.2s var(--ease-out), text-decoration-color 0.2s var(--ease-out);
 }
-.thmg-back:active { opacity: 0.6; }
+.thmg-back:active .thmg-back-arrow { transform: translateX(-4rpx); }
+.thmg-back:active .thmg-back-text { color: var(--accent); text-decoration-color: var(--accent); }
 .thmg-issueno {
   font-size: 24rpx;
   font-weight: 700;

@@ -82,8 +82,8 @@
 
 .dp-results {
   flex: 1;
-  min-height: 0;
-  height: 0;
+  min-height: 200rpx;
+  overflow: hidden;
 }
 
 .dp-hint {
