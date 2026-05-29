@@ -67,10 +67,14 @@
 }
 .thmin-pax-edit { color: var(--ink); }
 
+.thmin-titleblock {
+  position: relative;
+}
+
 .thmin-ai {
   position: absolute;
-  top: 32rpx;
-  right: 32rpx;
+  bottom: 0;
+  right: 0;
 }
 
 .thmin-ai-bar {

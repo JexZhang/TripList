@@ -4,7 +4,7 @@ import { View, Text, Textarea, Input, RootPortal, Picker } from '@tarojs/compone
 import DatePicker from '../DatePicker'
 import DestinationPicker from '../DestinationPicker'
 import SparkleIcon from '../SparkleIcon'
-import { useKeyboardHeight } from '../../utils/use-keyboard-height'
+import { useKeyboardLift } from '../../utils/use-keyboard-height'
 import {
   AI_INTERVIEW,
   type InterviewAnswers,
@@ -76,7 +76,7 @@ export default function AIInterview({ open, mode, tripId, onClose, onSubmit }: P
   const [enrichAnswers, setEnrichAnswers] = useState<InterviewAnswers>({})
   const [stepIdx, setStepIdx] = useState(0)
   const [textBuf, setTextBuf] = useState('')
-  const keyboardHeight = useKeyboardHeight()
+  const { height: keyboardHeight, bind: kbProps } = useKeyboardLift()
 
   // Mount: restore draft or reset
   useEffect(() => {
@@ -192,7 +192,7 @@ export default function AIInterview({ open, mode, tripId, onClose, onSubmit }: P
             className='aiv-input'
             value={answers.name}
             placeholder='例：京都 · 晚秋四日'
-            adjustPosition={false}
+            {...kbProps}
             onInput={(e) => updateAnswer('name', e.detail.value)}
           />
           <View className='aiv-foot'>
@@ -228,6 +228,7 @@ export default function AIInterview({ open, mode, tripId, onClose, onSubmit }: P
               goNext()
             }
           }}
+          kbProps={kbProps}
         />
       </View>
     )
@@ -264,6 +265,7 @@ export default function AIInterview({ open, mode, tripId, onClose, onSubmit }: P
               onAnswers={setEnrichAnswers}
               onDone={() => onSubmit({ mode: 'enrich', preferences: answersToPreferences(enrichAnswers) })}
               onSkip={() => onSubmit({ mode: 'enrich', preferences: answersToPreferences({}) })}
+              kbProps={kbProps}
             />
           )}
         </View>
@@ -273,14 +275,20 @@ export default function AIInterview({ open, mode, tripId, onClose, onSubmit }: P
 }
 
 // === PrefsSubflow: shared between create prefs step and enrich mode ===
+interface KbBind {
+  adjustPosition: false
+  onKeyboardHeightChange: (e: { detail: { height: number } }) => void
+}
+
 interface PrefsSubflowProps {
   answers: InterviewAnswers
   onAnswers: (a: InterviewAnswers) => void
   onDone: () => void
   onSkip: () => void
+  kbProps: KbBind
 }
 
-function PrefsSubflow({ answers, onAnswers, onDone, onSkip }: PrefsSubflowProps) {
+function PrefsSubflow({ answers, onAnswers, onDone, onSkip, kbProps }: PrefsSubflowProps) {
   const [subStep, setSubStep] = useState(0)
   const [textBuf, setTextBuf] = useState('')
   const q: InterviewQuestion | undefined = AI_INTERVIEW[subStep]
@@ -365,12 +373,12 @@ function PrefsSubflow({ answers, onAnswers, onDone, onSkip }: PrefsSubflowProps)
           {q.type === 'number' ? (
             <Input className='aiv-input' type='number' value={textBuf}
               placeholder={q.placeholder}
-              adjustPosition={false}
+              {...kbProps}
               onInput={(e) => setTextBuf(e.detail.value)} />
           ) : (
             <Textarea className='aiv-textarea' value={textBuf}
               placeholder={q.placeholder}
-              adjustPosition={false}
+              {...kbProps}
               onInput={(e) => setTextBuf(e.detail.value)} maxlength={500} autoHeight showConfirmBar={false} />
           )}
           <View className='aiv-foot'>

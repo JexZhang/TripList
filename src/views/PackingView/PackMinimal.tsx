@@ -40,6 +40,7 @@ export default function PackMinimal(props: PackViewProps) {
                 placeholder='添加…'
                 onInput={(e) => onDraftChange(cat.id, e.detail.value)}
                 onConfirm={() => onAdd(cat.id)}
+                cursorSpacing={20}
               />
             </View>
           </View>

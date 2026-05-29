@@ -36,6 +36,7 @@ export default function PackTegami(props: PackViewProps) {
                   onInput={(e) => onDraftChange(cat.id, e.detail.value)}
                   onConfirm={() => onAdd(cat.id)}
                   confirmType='done'
+                  cursorSpacing={20}
                 />
                 <View className='ptg-add-btn' onClick={() => onAdd(cat.id)}>+</View>
               </View>

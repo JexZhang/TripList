@@ -50,7 +50,7 @@ export default function NewTrip() {
     <View className={themeCls}>
       <View className='nt-field'>
         <Text className='nt-label'>攻略名</Text>
-        <Input className='nt-input' placeholder='例：南京 · 金陵四日' value={name} onInput={e => setName(e.detail.value)} />
+        <Input className='nt-input' placeholder='例：南京 · 金陵四日' value={name} onInput={e => setName(e.detail.value)} cursorSpacing={20} />
       </View>
 
       <View className='nt-field'>

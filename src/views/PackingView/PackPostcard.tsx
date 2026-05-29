@@ -41,6 +41,7 @@ export default function PackPostcard(props: PackViewProps) {
                 placeholder='加一项…'
                 onInput={(e) => onDraftChange(cat.id, e.detail.value)}
                 onConfirm={() => onAdd(cat.id)}
+                cursorSpacing={20}
               />
               <View className='ppp-add-btn' onClick={() => onAdd(cat.id)}>+</View>
             </View>

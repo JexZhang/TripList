@@ -39,6 +39,7 @@ export default function PackMagazine(props: PackViewProps) {
                   placeholder='ADD ITEM…'
                   onInput={(e) => onDraftChange(cat.id, e.detail.value)}
                   onConfirm={() => onAdd(cat.id)}
+                  cursorSpacing={20}
                 />
               </View>
             </View>

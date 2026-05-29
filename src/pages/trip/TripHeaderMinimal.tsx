@@ -26,31 +26,33 @@ export default function TripHeaderMinimal({
         <View className='thmin-menu' onClick={onMenuTap}>⋯</View>
       </View>
 
-      <Text className='thmin-name'>{trip.name}</Text>
+      <View className='thmin-titleblock'>
+        <Text className='thmin-name'>{trip.name}</Text>
 
-      <View className='thmin-meta'>
-        <Text>{startDate} → {endDate}</Text>
-        <Text>·</Text>
-        <Text>{trip.days.length || 0} 天</Text>
-        <Text>·</Text>
-        <Picker
-          mode='selector'
-          range={PAX_OPTIONS}
-          value={Math.max(0, Math.min(98, (trip.pax || 1) - 1))}
-          onChange={(e) => {
-            const next = Number(e.detail.value) + 1
-            if (next !== trip.pax) onPaxChange(next)
-          }}
-        >
-          <Text className='thmin-pax-edit'>{trip.pax} 人 ▾</Text>
-        </Picker>
-      </View>
-
-      {showAI && (
-        <View className='thmin-ai'>
-          <AIBadge status='idle' size='compact' label='AI 规划' onClick={onAITap} />
+        <View className='thmin-meta'>
+          <Text>{startDate} → {endDate}</Text>
+          <Text>·</Text>
+          <Text>{trip.days.length || 0} 天</Text>
+          <Text>·</Text>
+          <Picker
+            mode='selector'
+            range={PAX_OPTIONS}
+            value={Math.max(0, Math.min(98, (trip.pax || 1) - 1))}
+            onChange={(e) => {
+              const next = Number(e.detail.value) + 1
+              if (next !== trip.pax) onPaxChange(next)
+            }}
+          >
+            <Text className='thmin-pax-edit'>{trip.pax} 人 ▾</Text>
+          </Picker>
         </View>
-      )}
+
+        {showAI && (
+          <View className='thmin-ai'>
+            <AIBadge status='idle' size='compact' label='AI 规划' onClick={onAITap} />
+          </View>
+        )}
+      </View>
 
       <View className='thmin-rule' />
 

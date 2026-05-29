@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { View, Text, Input, Textarea, Picker, ScrollView, RootPortal } from '@tarojs/components'
 import type { Spot, SpotType } from '../../types/trip'
 import SpotSearch, { type SelectedSpotInfo } from '../SpotSearch'
-import { useKeyboardHeight } from '../../utils/use-keyboard-height'
+import { useKeyboardLift } from '../../utils/use-keyboard-height'
 import './index.scss'
 
 const TYPES: { key: SpotType; label: string }[] = [
@@ -24,7 +24,7 @@ interface Props {
 export default function EditSpotSheet({ open, spot, defaultCity, onClose, onSave, onDelete }: Props) {
   const [draft, setDraft] = useState<Partial<Spot>>({})
   const [searchOpen, setSearchOpen] = useState(false)
-  const keyboardHeight = useKeyboardHeight()
+  const { height: keyboardHeight, bind: kbProps } = useKeyboardLift()
 
   useEffect(() => {
     if (open && spot) {
@@ -53,8 +53,6 @@ export default function EditSpotSheet({ open, spot, defaultCity, onClose, onSave
   }
 
   const type = draft.type || 'spot'
-
-  const kbProps = { adjustPosition: false }
 
   return (
     <>

@@ -3,7 +3,7 @@ import { useRef, useState } from 'react'
 import { View, Text, Input, ScrollView, RootPortal } from '@tarojs/components'
 import { cloud, type PoiResult } from '../../utils/cloud'
 import type { Destination } from '../../types/trip'
-import { useKeyboardHeight } from '../../utils/use-keyboard-height'
+import { useKeyboardLift } from '../../utils/use-keyboard-height'
 import './index.scss'
 
 interface Props {
@@ -16,7 +16,7 @@ export default function DestinationPicker({ value, onChange }: Props) {
   const [results, setResults] = useState<PoiResult[]>([])
   const [loading, setLoading] = useState(false)
   const [open, setOpen] = useState(false)
-  const keyboardHeight = useKeyboardHeight()
+  const { height: keyboardHeight, bind: kbProps } = useKeyboardLift()
   const reqIdRef = useRef(0)
 
   const search = async (kw: string) => {
@@ -98,7 +98,7 @@ export default function DestinationPicker({ value, onChange }: Props) {
                 search(e.detail.value)
               }}
               focus
-              adjustPosition={false}
+              {...kbProps}
             />
             <ScrollView className='dp-results' scrollY>
               {loading && <View className='dp-hint'>搜索中...</View>}

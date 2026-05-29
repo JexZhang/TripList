@@ -2,7 +2,7 @@ import Taro from '@tarojs/taro'
 import { useState, useEffect } from 'react'
 import { View, Text, Input, ScrollView, RootPortal } from '@tarojs/components'
 import { cloud, type PoiResult } from '../../utils/cloud'
-import { useKeyboardHeight } from '../../utils/use-keyboard-height'
+import { useKeyboardLift } from '../../utils/use-keyboard-height'
 import './index.scss'
 
 export interface SelectedSpotInfo {
@@ -25,7 +25,7 @@ export default function SpotSearch({ open, defaultCity, onClose, onSelect }: Pro
   const [results, setResults] = useState<PoiResult[]>([])
   const [loading, setLoading] = useState(false)
   const [debouncedKw, setDebouncedKw] = useState('')
-  const keyboardHeight = useKeyboardHeight()
+  const { height: keyboardHeight, bind: kbProps } = useKeyboardLift()
 
   // debounce 输入
   useEffect(() => {
@@ -100,7 +100,7 @@ export default function SpotSearch({ open, defaultCity, onClose, onSelect }: Pro
           value={keyword}
           onInput={e => setKeyword(e.detail.value)}
           focus
-          adjustPosition={false}
+          {...kbProps}
         />
         <ScrollView className='ss-results' scrollY>
           {loading && <View className='ss-hint'>搜索中...</View>}

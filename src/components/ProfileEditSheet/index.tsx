@@ -3,6 +3,7 @@ import { View, Text, RootPortal } from '@tarojs/components'
 import Taro from '@tarojs/taro'
 import ProfileForm from '../ProfileForm'
 import { useTheme } from '../../store/theme-store'
+import { useKeyboardLift } from '../../utils/use-keyboard-height'
 import './index.scss'
 
 interface Props {
@@ -23,6 +24,7 @@ export default function ProfileEditSheet({
   const { theme } = useTheme()
   const [mounted, setMounted] = useState(false)
   const [active, setActive] = useState(false)
+  const { height: keyboardHeight, bind: kbProps } = useKeyboardLift()
 
   useEffect(() => {
     if (open) {
@@ -44,6 +46,7 @@ export default function ProfileEditSheet({
         className={`pes-mask theme-tokens theme-${theme} ${active ? 'open' : ''}`}
         onClick={onClose}
         catchMove
+        style={{ paddingBottom: `${keyboardHeight}px`, transition: 'padding-bottom 0.25s ease' }}
       >
         <View className='pes-sheet' onClick={(e) => e.stopPropagation()}>
           <View className='pes-head'>
@@ -54,6 +57,7 @@ export default function ProfileEditSheet({
             <ProfileForm
               initialNickname={initialNickname}
               initialAvatarUrl={initialAvatarUrl}
+              kbProps={kbProps}
               onSubmit={async ({ nickname, avatarUrl }) => {
                 // @ts-ignore Taro.cloud
                 await Taro.cloud.callFunction({

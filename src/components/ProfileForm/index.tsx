@@ -2,6 +2,11 @@ import { useEffect, useState } from 'react'
 import { View, Text, Button, Input, Image } from '@tarojs/components'
 import Taro from '@tarojs/taro'
 
+interface KbBind {
+  adjustPosition: false
+  onKeyboardHeightChange: (e: { detail: { height: number } }) => void
+}
+
 interface Props {
   initialNickname?: string
   initialAvatarUrl?: string
@@ -11,6 +16,8 @@ interface Props {
   secondaryLabel?: string
   onSecondary?: () => void
   onSubmit: (data: { nickname: string; avatarUrl: string }) => Promise<void>
+  /** 由父级 sheet 注入：禁用系统位移 + 上报键盘高度，便于 sheet 整体抬升 */
+  kbProps?: KbBind
 }
 
 const DEFAULT_AVATAR = 'https://mmbiz.qpic.cn/mmbiz/icTdbqWNOwNRna42FI242Lcia07jQodd2FJGIYQfG0LAJGFxM4FbnQP6yfMxBgJ0F3YRqJCJ1aPAK2dQagdusBZg/0'
@@ -22,6 +29,7 @@ export default function ProfileForm({
   secondaryLabel,
   onSecondary,
   onSubmit,
+  kbProps,
 }: Props) {
   const [nickname, setNickname] = useState(
     initialNickname && initialNickname !== '行册旅人' ? initialNickname : '',
@@ -79,6 +87,7 @@ export default function ProfileForm({
           placeholder='请输入昵称'
           value={nickname}
           onInput={(e) => setNickname(e.detail.value)}
+          {...(kbProps ?? { adjustPosition: false as const })}
         />
       </View>
 

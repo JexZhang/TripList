@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { View, Text, Button, RootPortal } from '@tarojs/components'
 import type { ShareKind } from '../../utils/cloud'
+import { useTheme } from '../../store/theme-store'
 import './index.scss'
 
 interface Props {
@@ -14,6 +15,7 @@ interface Props {
 }
 
 export default function ShareTypeSheet({ open, onClose, prepare, ready }: Props) {
+  const { theme } = useTheme()
   const [preparing, setPreparing] = useState<ShareKind | null>(null)
 
   useEffect(() => {
@@ -51,7 +53,7 @@ export default function ShareTypeSheet({ open, onClose, prepare, ready }: Props)
 
   return (
     <RootPortal>
-      <View className='sts-mask' onClick={onClose}>
+      <View className={`sts-mask theme-tokens theme-${theme}`} onClick={onClose}>
         <View className='sts-sheet' onClick={e => e.stopPropagation()}>
           {renderItem('readonly', '只读分享', '对方收到一份独立副本,可自由编辑、删除,不影响你这边')}
           {renderItem('collab', '邀请协作', '对方加入后能编辑同一份攻略,改动实时同步')}
