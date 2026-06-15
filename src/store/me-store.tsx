@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useState, ReactNode } from 'react'
+import { createContext, useCallback, useContext, useEffect, useMemo, useState, ReactNode } from 'react'
 import Taro from '@tarojs/taro'
 import ProfileSetupModal from '../components/ProfileSetupModal'
 
@@ -16,6 +16,8 @@ interface Ctx {
   me: Me | null
   refresh: () => Promise<void>
   openProfileSetup: () => void
+  quota: { flash: number; pro: number } | null
+  refreshQuota: () => Promise<void>
 }
 
 const MeContext = createContext<Ctx | null>(null)
@@ -27,26 +29,39 @@ let sessionSkipped = false
 export function MeProvider({ children }: { children: ReactNode }) {
   const [me, setMe] = useState<Me | null>(null)
   const [setupOpen, setSetupOpen] = useState(false)
+  const [quota, setQuota] = useState<{ flash: number; pro: number } | null>(null)
 
-  const refresh = async () => {
+  // 懒加载：首次需要时才拉配额（不在启动时拉，避免不用 AI 的用户冷启动多一次云调用）
+  const refreshQuota = useCallback(async () => {
+    try {
+      // @ts-ignore Taro.cloud
+      const r = await Taro.cloud.callFunction({ name: 'ai-plan-trip', data: { _mode: 'quota' } })
+      const res = (r as { result?: { ok: boolean; flash: { remaining: number }; pro: { remaining: number } } }).result
+      if (res?.ok) setQuota({ flash: res.flash.remaining, pro: res.pro.remaining })
+    } catch {
+      /* 查询失败时不阻塞用户 */
+    }
+  }, [])
+
+  const refresh = useCallback(async () => {
     try {
       // @ts-ignore Taro.cloud
       const r = await Taro.cloud.callFunction({
         name: 'ensure-user',
         data: {},
       })
-      const result = (r as any).result || {}
+      const result = (r as { result?: Record<string, unknown> }).result || {}
       setMe({
-        openid: result.openid,
-        nickname: result.nickname || '行册旅人',
-        avatarUrl: result.avatarUrl || '',
+        openid: result.openid as string,
+        nickname: (result.nickname as string) || '行册旅人',
+        avatarUrl: (result.avatarUrl as string) || '',
         theme: (result.theme as ThemeName) || null,
         plan: (result.plan as 'free' | 'pro') || 'free',
       })
     } catch (e) {
       console.error('[me-store] ensure-user failed', e)
     }
-  }
+  }, [])
 
   useEffect(() => {
     refresh()
@@ -76,10 +91,15 @@ export function MeProvider({ children }: { children: ReactNode }) {
     Taro.setStorage({ key: SKIP_KEY, data: Date.now() }).catch(() => {})
   }
 
-  const openProfileSetup = () => setSetupOpen(true)
+  const openProfileSetup = useCallback(() => setSetupOpen(true), [])
+
+  const value = useMemo(
+    () => ({ me, refresh, openProfileSetup, quota, refreshQuota }),
+    [me, refresh, openProfileSetup, quota, refreshQuota],
+  )
 
   return (
-    <MeContext.Provider value={{ me, refresh, openProfileSetup }}>
+    <MeContext.Provider value={value}>
       {children}
       <ProfileSetupModal
         open={setupOpen}
