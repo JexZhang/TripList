@@ -44,9 +44,6 @@ async function pingMode(event) {
     return { ok: false, stage: 'config', error: `未知 alias: ${modelAlias}`, knownAliases: Object.keys(MODEL_ALIASES) }
   }
   const envReport = {
-    MIMO_ENDPOINT: !!process.env.MIMO_ENDPOINT,
-    MIMO_MODEL: !!process.env.MIMO_MODEL,
-    MIMO_API_KEY: !!process.env.MIMO_API_KEY,
     DEEPSEEK_PRO_MODEL: !!process.env.DEEPSEEK_PRO_MODEL,
     DEEPSEEK_FLASH_MODEL: !!process.env.DEEPSEEK_FLASH_MODEL,
     DEEPSEEK_API_KEY: !!process.env.DEEPSEEK_API_KEY,

@@ -4,12 +4,6 @@ const axios = require('axios')
 // provider 标记: deepseek 系列在多轮 tool calling 中和 thinking 模式不兼容,
 // 必须显式关闭 thinking, 否则会出现 "must pass reasoning_content" 死循环或静默挂死
 const MODEL_ALIASES = {
-  'MiMo-V2.5': {
-    provider: 'mimo',
-    endpoint: () => process.env.MIMO_ENDPOINT || 'https://api.xiaomimimo.com/v1/chat/completions',
-    model: () => process.env.MIMO_MODEL,
-    auth: () => `Bearer ${process.env.MIMO_API_KEY}`,
-  },
   'DeepSeek-V4-PRO': {
     provider: 'deepseek',
     endpoint: () => 'https://api.deepseek.com/v1/chat/completions',

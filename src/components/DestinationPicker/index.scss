@@ -37,7 +37,7 @@
 .dp-modal-mask {
   position: fixed; inset: 0;
   background: rgba(43, 26, 16, 0.45);
-  z-index: 100;
+  z-index: 300;
   animation: fade-in 0.22s var(--ease-out) both;
 }
 .dp-modal {

@@ -9,9 +9,11 @@ import './index.scss'
 interface Props {
   value: Destination[]
   onChange: (v: Destination[]) => void
+  /** 是否使用 RootPortal 弹出搜索层，默认 true；已在外层 RootPortal 中时传 false 避免嵌套 */
+  portal?: boolean
 }
 
-export default function DestinationPicker({ value, onChange }: Props) {
+export default function DestinationPicker({ value, onChange, portal = true }: Props) {
   const [keyword, setKeyword] = useState('')
   const [results, setResults] = useState<PoiResult[]>([])
   const [loading, setLoading] = useState(false)
@@ -61,6 +63,48 @@ export default function DestinationPicker({ value, onChange }: Props) {
     onChange(value.filter(v => v.adcode !== adcode))
   }
 
+  const modalContent = (
+    <View className='dp-modal-mask theme-tokens' onClick={closeModal}>
+      <View
+        className='dp-modal'
+        style={{
+          bottom: `${keyboardHeight}px`,
+          maxHeight: `calc(100vh - ${keyboardHeight}px - 80rpx)`,
+          transition: 'bottom 0.25s ease',
+        }}
+        onClick={e => e.stopPropagation()}
+      >
+        <View className='dp-modal-head'>
+          <Text className='dp-modal-title'>添加目的地</Text>
+          <Text className='dp-modal-close' onClick={closeModal}>×</Text>
+        </View>
+        <Input
+          className='dp-search'
+          placeholder='搜索城市，例：南京 / 苏州'
+          value={keyword}
+          onInput={e => {
+            setKeyword(e.detail.value)
+            search(e.detail.value)
+          }}
+          focus
+          {...kbProps}
+        />
+        <ScrollView className='dp-results' scrollY>
+          {loading && <View className='dp-hint'>搜索中...</View>}
+          {!loading && results.length === 0 && keyword && (
+            <View className='dp-hint'>未找到，换个关键词</View>
+          )}
+          {results.map((r, idx) => (
+            <View key={`${r.adcode || 'na'}-${r.name}-${idx}`} className='dp-result' onClick={() => add(r)}>
+              <Text className='dp-result-name'>{r.name}</Text>
+              <Text className='dp-result-addr'>{r.city || r.address}</Text>
+            </View>
+          ))}
+        </ScrollView>
+      </View>
+    </View>
+  )
+
   return (
     <View className='dest-picker'>
       <View className='dp-chips'>
@@ -74,47 +118,7 @@ export default function DestinationPicker({ value, onChange }: Props) {
       </View>
 
       {open && (
-        <RootPortal>
-        <View className='dp-modal-mask theme-tokens' onClick={closeModal}>
-          <View
-            className='dp-modal'
-            style={{
-              bottom: `${keyboardHeight}px`,
-              maxHeight: `calc(100vh - ${keyboardHeight}px - 80rpx)`,
-              transition: 'bottom 0.25s ease',
-            }}
-            onClick={e => e.stopPropagation()}
-          >
-            <View className='dp-modal-head'>
-              <Text className='dp-modal-title'>添加目的地</Text>
-              <Text className='dp-modal-close' onClick={closeModal}>×</Text>
-            </View>
-            <Input
-              className='dp-search'
-              placeholder='搜索城市，例：南京 / 苏州'
-              value={keyword}
-              onInput={e => {
-                setKeyword(e.detail.value)
-                search(e.detail.value)
-              }}
-              focus
-              {...kbProps}
-            />
-            <ScrollView className='dp-results' scrollY>
-              {loading && <View className='dp-hint'>搜索中...</View>}
-              {!loading && results.length === 0 && keyword && (
-                <View className='dp-hint'>未找到，换个关键词</View>
-              )}
-              {results.map((r, idx) => (
-                <View key={`${r.adcode || 'na'}-${r.name}-${idx}`} className='dp-result' onClick={() => add(r)}>
-                  <Text className='dp-result-name'>{r.name}</Text>
-                  <Text className='dp-result-addr'>{r.city || r.address}</Text>
-                </View>
-              ))}
-            </ScrollView>
-          </View>
-        </View>
-        </RootPortal>
+        portal ? <RootPortal>{modalContent}</RootPortal> : modalContent
       )}
     </View>
   )

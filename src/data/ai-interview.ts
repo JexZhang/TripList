@@ -39,7 +39,7 @@ export const AI_INTERVIEW: readonly InterviewQuestion[] = [
     id: 'modelAlias',
     q: '选个 AI 模型吧',
     type: 'single',
-    options: ['MiMo-V2.5', 'DeepSeek-V4-PRO', 'DeepSeek-V4-Flash'] as const satisfies readonly AIModelAlias[],
+    options: ['DeepSeek-V4-PRO', 'DeepSeek-V4-Flash'] as const satisfies readonly AIModelAlias[],
   },
 ]
 
@@ -60,6 +60,6 @@ export function answersToPreferences(a: InterviewAnswers): AIPreferences {
     audience: a.audience || [],
     budgetCap: a.budgetCap && budgetNum > 0 ? budgetNum : undefined,
     freeText: a.freeText?.trim() || undefined,
-    modelAlias: a.modelAlias || 'MiMo-V2.5',
+    modelAlias: a.modelAlias || 'DeepSeek-V4-Flash',
   }
 }

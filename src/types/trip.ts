@@ -101,15 +101,15 @@ export type AIPace = '悠闲' | '平衡' | '紧凑'
 export type AIAudience = '独行' | '情侣' | '亲子' | '老人' | '朋友'
 
 // 前端展示给用户的模型 alias;server 端映射到真实 provider + model
-export type AIModelAlias = 'MiMo-V2.5' | 'DeepSeek-V4-PRO' | 'DeepSeek-V4-Flash'
-export const AI_MODEL_ALIASES: AIModelAlias[] = ['MiMo-V2.5', 'DeepSeek-V4-PRO', 'DeepSeek-V4-Flash']
+export type AIModelAlias = 'DeepSeek-V4-PRO' | 'DeepSeek-V4-Flash'
+export const AI_MODEL_ALIASES: AIModelAlias[] = ['DeepSeek-V4-PRO', 'DeepSeek-V4-Flash']
 
 export interface AIPreferences {
   pace: AIPace
   audience: AIAudience[]
   budgetCap?: number          // 人均/天 RMB
   freeText?: string
-  modelAlias: AIModelAlias    // 必填, 默认 'MiMo-V2.5'
+  modelAlias: AIModelAlias    // 必填, 默认 'DeepSeek-V4-Flash'
 }
 
 // 注意: 必须复用现有 SpotType ('spot' | 'hotel' | 'meal' | 'transport')。
