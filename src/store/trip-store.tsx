@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useReducer, useRef, ReactNode } from 'react'
+import { createContext, useContext, useEffect, useMemo, useReducer, useRef, ReactNode } from 'react'
 import Taro from '@tarojs/taro'
 import dayjs from 'dayjs'
 import type { Trip, Day, Spot } from '../types/trip'
@@ -208,30 +208,35 @@ export function TripProvider({
       }
       return
     }
-    const snapshot = JSON.stringify(state.trip)
-    if (snapshot === lastSavedRef.current) return  // 没有真实变化
 
+    // 不在此处同步 JSON.stringify（避免每次按键都序列化整个 trip）。
+    // 标记 pending 并防抖；真正的「是否变化」判断推迟到空闲 500ms 后在回调里做一次。
     pendingRef.current = true
     if (timerRef.current) clearTimeout(timerRef.current)
     timerRef.current = setTimeout(async () => {
       const trip = state.trip!
+      const snapshot = JSON.stringify(trip)
+      const changed = snapshot !== lastSavedRef.current
       try {
-        await updateTrip(trip._id, {
-          name: trip.name,
-          pax: trip.pax,
-          startDate: trip.startDate,
-          endDate: trip.endDate,
-          destinations: trip.destinations,
-          days: trip.days,
-          packing: trip.packing,
-        }, openid)
-        lastSavedRef.current = snapshot
+        if (changed) {
+          await updateTrip(trip._id, {
+            name: trip.name,
+            pax: trip.pax,
+            startDate: trip.startDate,
+            endDate: trip.endDate,
+            destinations: trip.destinations,
+            days: trip.days,
+            packing: trip.packing,
+          }, openid)
+          lastSavedRef.current = snapshot
+        }
       } catch (e) {
         console.error('[trip save]', e)
         Taro.showToast({ title: '保存失败', icon: 'error' })
       } finally {
         pendingRef.current = false
-        // pendingRef 期间收到过远端更新? 把它合并进来 (服务端独有字段 ai*/updatedAt 等)
+        // pendingRef 期间收到过远端更新? 把它合并进来 (服务端独有字段 ai*/updatedAt 等)。
+        // 注意：无论本次是否真的保存(changed)，都要处理 deferred，避免远端更新被搁置。
         const deferred = deferredRemoteRef.current
         if (deferred) {
           deferredRemoteRef.current = null
@@ -260,8 +265,10 @@ export function TripProvider({
     }
   }, [])
 
+  const value = useMemo(() => ({ state, dispatch, openid }), [state, openid])
+
   return (
-    <Ctx.Provider value={{ state, dispatch, openid }}>
+    <Ctx.Provider value={value}>
       {children}
     </Ctx.Provider>
   )
