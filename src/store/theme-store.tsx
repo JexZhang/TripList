@@ -1,4 +1,4 @@
-import { createContext, useCallback, useContext, useEffect, useState, ReactNode } from 'react'
+import { createContext, useCallback, useContext, useEffect, useMemo, useState, ReactNode } from 'react'
 import Taro from '@tarojs/taro'
 import { useMe, type ThemeName } from './me-store'
 
@@ -76,8 +76,10 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
     void writeCloudTheme(next)
   }, [])
 
+  const value = useMemo(() => ({ theme, setTheme }), [theme, setTheme])
+
   return (
-    <ThemeContext.Provider value={{ theme, setTheme }}>
+    <ThemeContext.Provider value={value}>
       {children}
     </ThemeContext.Provider>
   )
