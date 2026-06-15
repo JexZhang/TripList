@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { View } from '@tarojs/components'
 import Taro, { useDidShow, useShareAppMessage } from '@tarojs/taro'
 import type { Trip } from '../../types/trip'
@@ -22,12 +22,26 @@ import HomeMinimal from './HomeMinimal'
 import type { HomeViewProps } from './shared'
 import './index.scss'
 
+const STORAGE_KEY = 'home-trips-cache'  // 仅缓存网络列表部分（不含种子）
+
 export default function Home() {
   const themeCls = useThemeClass()
   const { theme } = useTheme()
-  const [trips, setTrips] = useState<Trip[]>([])
-  const [loading, setLoading] = useState(true)
-  const { me } = useMe()
+  // A2/A3：种子立即可见；命中缓存则一并显示，loading 仅表示「用户真实行程未就绪」
+  const [trips, setTrips] = useState<Trip[]>(() => {
+    try {
+      const cached = Taro.getStorageSync(STORAGE_KEY) as Trip[] | ''
+      if (Array.isArray(cached) && cached.length) return [...SEED_TRIPS, ...cached]
+    } catch { /* ignore */ }
+    return [...SEED_TRIPS]
+  })
+  const [loading, setLoading] = useState<boolean>(() => {
+    try {
+      const cached = Taro.getStorageSync(STORAGE_KEY)
+      return !(Array.isArray(cached) && cached.length)
+    } catch { return true }
+  })
+  const { me, refreshQuota } = useMe()
   const openid = me?.openid || ''
   const [actionTrip, setActionTrip] = useState<Trip | null>(null)
   const [shareTrip, setShareTrip] = useState<Trip | null>(null)
@@ -35,38 +49,56 @@ export default function Home() {
   const [coverTrip, setCoverTrip] = useState<Trip | null>(null)
   const [interviewOpen, setInterviewOpen] = useState(false)
 
-  useEffect(() => {
-    if (!openid) return
-    let cancelled = false
-    listMyTrips(openid)
-      .then((list) => { if (!cancelled) { setTrips([...SEED_TRIPS, ...list]); setLoading(false) } })
-      .catch((e) => {
-        console.error('[home] listMyTrips failed', e)
-        Taro.showToast({ title: '加载失败', icon: 'none' })
-        if (!cancelled) { setTrips([...SEED_TRIPS]); setLoading(false) }
-      })
-    return () => { cancelled = true }
-  }, [openid])
+  const openidRef = useRef(openid)
+  useEffect(() => { openidRef.current = openid }, [openid])
+  const lastLoadedAtRef = useRef(0)
+  const didInitialShowRef = useRef(false)
 
+  // A1：listMyTrips 服务端自取 OPENID，客户端无需等 ensure-user → 挂载即可并行发起
+  const loadTrips = useCallback(async (throttle = false) => {
+    if (throttle && Date.now() - lastLoadedAtRef.current < 2000) return
+    lastLoadedAtRef.current = Date.now()
+    try {
+      const list = await listMyTrips(openidRef.current)
+      setTrips([...SEED_TRIPS, ...list])
+      setLoading(false)
+      try { Taro.setStorageSync(STORAGE_KEY, list) } catch { /* ignore storage full */ }
+    } catch (e) {
+      console.error('[home] listMyTrips failed', e)
+      setLoading(false)
+    }
+  }, [])
+
+  // 挂载即并行发起（不等 openid）
+  useEffect(() => { void loadTrips() }, [loadTrips])
+
+  // A4：useDidShow 在首次显示也会触发，跳过紧跟挂载的那一次，避免首进双拉
   useDidShow(() => {
-    if (!openid) return
-    Taro.showNavigationBarLoading()
-    listMyTrips(openid)
-      .then((list) => setTrips([...SEED_TRIPS, ...list]))
-      .finally(() => Taro.hideNavigationBarLoading())
+    if (!didInitialShowRef.current) { didInitialShowRef.current = true; return }
+    void loadTrips(true)
   })
 
+  // A5：仅在「有生成中的行程」翻转时开/关定时器，不再因 trips 变化每轮重建
+  const hasGenerating = trips.some((t) => t.aiStatus === 'generating')
   useEffect(() => {
-    if (!openid) return
-    const hasGenerating = trips.some((t) => t.aiStatus === 'generating')
     if (!hasGenerating) return
     const timer = setInterval(() => {
-      listMyTrips(openid)
-        .then((list) => setTrips([...SEED_TRIPS, ...list]))
+      listMyTrips(openidRef.current)
+        .then((list) => {
+          setTrips([...SEED_TRIPS, ...list])
+          try { Taro.setStorageSync(STORAGE_KEY, list) } catch { /* ignore */ }
+        })
         .catch((e) => console.error('[home] ai polling failed', e))
-    }, 5000)
+    }, 8000)
     return () => clearInterval(timer)
-  }, [openid, trips])
+  }, [hasGenerating])
+
+  // A5 + B2：生成由「进行中」→「完成」时刷新配额
+  const prevGeneratingRef = useRef(hasGenerating)
+  useEffect(() => {
+    if (prevGeneratingRef.current && !hasGenerating) void refreshQuota()
+    prevGeneratingRef.current = hasGenerating
+  }, [hasGenerating, refreshQuota])
 
   const handleAiCreate = async (data: AIInterviewSubmit) => {
     if (data.mode !== 'create') return
@@ -183,8 +215,11 @@ export default function Home() {
   }
 
   // 首页分区：active (pre/live) + archived (post 折叠展示)
-  const activeTrips = trips.filter((t) => getTripPhase(t.startDate, t.endDate) !== 'post')
-  const archivedTrips = trips.filter((t) => getTripPhase(t.startDate, t.endDate) === 'post')
+  const { activeTrips, archivedTrips } = useMemo(() => {
+    const active = trips.filter((t) => getTripPhase(t.startDate, t.endDate) !== 'post')
+    const archived = trips.filter((t) => getTripPhase(t.startDate, t.endDate) === 'post')
+    return { activeTrips: active, archivedTrips: archived }
+  }, [trips])
 
   const props: HomeViewProps = {
     trips: activeTrips,
