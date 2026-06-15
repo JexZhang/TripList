@@ -3,6 +3,7 @@ import { useMemo } from 'react'
 import BrandLogo from '../../components/BrandLogo'
 import TripPhaseChip from '../../components/TripPhaseChip'
 import AvatarEntry from '../../components/AvatarEntry'
+import HomeAIBanner from '../../components/HomeAIBanner'
 import HomeBottomCTA from '../../components/HomeBottomCTA'
 import HomeArchiveSection from './HomeArchiveSection'
 import HomeCardAIRow from '../../components/HomeCardAIRow'
@@ -46,6 +47,8 @@ export default function HomeTegami({
         </View>
         <Text className='ht-tag'>你的旅行，值得被好好记录</Text>
       </View>
+
+      <HomeAIBanner onTap={onAITrip} />
 
       {loading && <View className='ht-loading'>加载中…</View>}
 

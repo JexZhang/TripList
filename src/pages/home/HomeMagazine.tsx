@@ -2,6 +2,7 @@ import { View, Text } from '@tarojs/components'
 import BrandLogo from '../../components/BrandLogo'
 import TripPhaseChip from '../../components/TripPhaseChip'
 import AvatarEntry from '../../components/AvatarEntry'
+import HomeAIBanner from '../../components/HomeAIBanner'
 import HomeBottomCTA from '../../components/HomeBottomCTA'
 import HomeArchiveSection from './HomeArchiveSection'
 import HomeCardAIRow from '../../components/HomeCardAIRow'
@@ -47,6 +48,8 @@ export default function HomeMagazine({
         <View className='hm-rule' />
         <Text className='hm-strap'>EDITORIAL · TRAVEL · PERSONAL</Text>
       </View>
+
+      <HomeAIBanner onTap={onAITrip} />
 
       {loading && <View className='hm-loading'>加载中…</View>}
 

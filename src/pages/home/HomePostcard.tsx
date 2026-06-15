@@ -3,6 +3,7 @@ import { useMemo } from 'react'
 import BrandLogo from '../../components/BrandLogo'
 import TripPhaseChip from '../../components/TripPhaseChip'
 import AvatarEntry from '../../components/AvatarEntry'
+import HomeAIBanner from '../../components/HomeAIBanner'
 import HomeBottomCTA from '../../components/HomeBottomCTA'
 import HomeArchiveSection from './HomeArchiveSection'
 import type { HomeViewProps } from './shared'
@@ -85,6 +86,10 @@ export default function HomePostcard({
           <Text className='hpp-cover-type'>PASSPORT</Text>
           <Text className='hpp-cover-no'>No. XC-2026-{String(trips.length).padStart(4, '0')}</Text>
         </View>
+      </View>
+
+      <View className='hpp-ai-banner'>
+        <HomeAIBanner onTap={onAITrip} />
       </View>
 
       {loading && <View className='hpp-loading'>Stamping visas…</View>}

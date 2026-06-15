@@ -27,10 +27,14 @@
    =========================== */
 .hpp {
   min-height: 100vh;
-  padding: 0 0 340rpx;
+  padding: 0 0 120rpx;
   box-sizing: border-box;
   background: var(--bg);
   animation: page-in 0.42s var(--ease-out) both;
+}
+
+.hpp-ai-banner {
+  padding: 24rpx 20rpx 0;
 }
 
 /* ===========================
@@ -511,9 +515,6 @@
 }
 
 .hpp-cta {
-  position: fixed;
-  left: 32rpx;
-  right: 32rpx;
-  bottom: 48rpx;
-  z-index: 10;
+  margin-top: 24rpx;
+  padding: 0 20rpx;
 }

@@ -1,6 +1,6 @@
 .ht {
   min-height: 100vh;
-  padding: 32rpx 32rpx 320rpx;
+  padding: 32rpx 32rpx 120rpx;
   box-sizing: border-box;
   background:
     radial-gradient(120% 60% at 100% 0%, rgba(255, 154, 77, 0.22) 0%, transparent 55%),
@@ -114,8 +114,5 @@
 }
 
 .ht-cta {
-  position: fixed;
-  left: 32rpx; right: 32rpx;
-  bottom: 48rpx;
-  z-index: 10;
+  margin-top: 24rpx;
 }

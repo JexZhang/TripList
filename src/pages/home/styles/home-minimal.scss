@@ -1,6 +1,6 @@
 .hmin {
   min-height: 100vh;
-  padding: 32rpx 32rpx 320rpx;
+  padding: 32rpx 32rpx 120rpx;
   box-sizing: border-box;
   background: var(--bg);
   animation: page-in 0.42s var(--ease-out) both;
@@ -89,8 +89,5 @@
 }
 
 .hmin-cta {
-  position: fixed;
-  left: 32rpx; right: 32rpx;
-  bottom: 48rpx;
-  z-index: 10;
+  margin-top: 24rpx;
 }

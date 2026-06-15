@@ -2,6 +2,7 @@ import { View, Text } from '@tarojs/components'
 import BrandLogo from '../../components/BrandLogo'
 import TripPhaseChip from '../../components/TripPhaseChip'
 import AvatarEntry from '../../components/AvatarEntry'
+import HomeAIBanner from '../../components/HomeAIBanner'
 import HomeBottomCTA from '../../components/HomeBottomCTA'
 import HomeArchiveSection from './HomeArchiveSection'
 import HomeCardAIRow from '../../components/HomeCardAIRow'
@@ -44,6 +45,8 @@ export default function HomeMinimal({
           </View>
         </View>
       </View>
+
+      <HomeAIBanner onTap={onAITrip} />
 
       {loading && <View className='hmin-loading'>加载中…</View>}
 

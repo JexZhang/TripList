@@ -1,5 +1,5 @@
 import { View, Text } from '@tarojs/components'
-import AIBadge from '../AIBadge'
+// import AIBadge from '../AIBadge'
 import './index.scss'
 
 interface Props {
@@ -9,10 +9,10 @@ interface Props {
   newLabel?: string
 }
 
-export default function HomeBottomCTA({ onAITap, onNewTap, newLabel = '+ 新建攻略' }: Props) {
+export default function HomeBottomCTA({ onAITap: _onAITap, onNewTap, newLabel = '+ 新建攻略' }: Props) {
   return (
     <View className='hcta'>
-      <AIBadge status='idle' size='lg' label='让 AI 帮你规划' onClick={onAITap} />
+      {/* AI 入口已移至首页顶部 HomeAIBanner */}
       <View className='hcta-new' onClick={onNewTap}>
         <Text>{newLabel}</Text>
       </View>

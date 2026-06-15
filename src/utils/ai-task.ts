@@ -74,7 +74,8 @@ export async function createTripAndFireAI(
   input: CreateAITripInput,
   preferences: AIPreferences,
 ): Promise<string> {
-  const displayName = input.name?.trim() || 'AI 生成中…'
+  const user = input.name?.trim()
+  const displayName = user || `旅行攻略 ${input.startDate?.slice(0, 10) || ''}`.trim()
   const draft = buildNewTrip({
     name: displayName,
     pax: input.pax,
