@@ -18,7 +18,12 @@ export default function DatePicker({ value, onChange }: Props) {
       <Picker
         mode='date'
         value={value.start}
-        onChange={e => onChange({ ...value, start: String(e.detail.value) })}
+        end={value.end}
+        onChange={e => {
+          const start = String(e.detail.value)
+          // 起始日晚于结束日时，把结束日一并顶到起始日，保证 start <= end
+          onChange({ start, end: start > value.end ? start : value.end })
+        }}
       >
         <View className='dp-field'>
           <Text className='dp-label'>起</Text>
@@ -32,7 +37,11 @@ export default function DatePicker({ value, onChange }: Props) {
         mode='date'
         value={value.end}
         start={value.start}
-        onChange={e => onChange({ ...value, end: String(e.detail.value) })}
+        onChange={e => {
+          const end = String(e.detail.value)
+          // 结束日早于起始日时回钳到起始日
+          onChange({ ...value, end: end < value.start ? value.start : end })
+        }}
       >
         <View className='dp-field'>
           <Text className='dp-label'>止</Text>
