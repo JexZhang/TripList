@@ -1,6 +1,7 @@
-import { useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import Taro from '@tarojs/taro'
 import { View, Text, Textarea, Input, RootPortal, Picker } from '@tarojs/components'
+import type { ITouchEvent } from '@tarojs/components/types'
 import DatePicker from '../DatePicker'
 import DestinationPicker from '../DestinationPicker'
 import SparkleIcon from '../SparkleIcon'
@@ -9,15 +10,14 @@ import {
   AI_INTERVIEW,
   type InterviewAnswers,
   type InterviewQuestion,
+  type OptionLabel,
   answersToPreferences,
 } from '../../data/ai-interview'
 import {
-  CREATE_STEPS,
   STEP_TITLES,
   STEP_SKIP_HINT,
   emptyCreateAnswers,
   type CreateAnswers,
-  type CreateStepId,
 } from '../../data/ai-interview-create'
 import type { AIPreferences, Destination } from '../../types/trip'
 import './index.scss'
@@ -50,7 +50,7 @@ const DRAFT_KEY_CREATE = 'ai-interview-draft-create'
 const draftKeyEnrich = (tripId: string) => `ai-interview-draft-enrich-${tripId}`
 
 interface CreateDraft { stepIdx: number; answers: CreateAnswers }
-interface EnrichDraft { answers: InterviewAnswers }
+interface EnrichDraft { stepIdx: number; answers: InterviewAnswers }
 
 function readDraft<T>(key: string): T | null {
   try {
@@ -69,14 +69,40 @@ function clearDraft(key: string): void {
 
 export { DRAFT_KEY_CREATE, draftKeyEnrich, clearDraft }
 
+// === Step count constants ===
+const PREFS_COUNT = AI_INTERVIEW.length // 5
+const CREATE_TOTAL = 3 + PREFS_COUNT + 1 // dest + dates + pax + prefs×5 + name = 9
+const ENRICH_TOTAL = PREFS_COUNT // 5
+const CREATE_PREFS_START = 3
+const CREATE_NAME_IDX = 8
+
 // === Component ===
 export default function AIInterview({ open, mode, tripId, onClose, onSubmit }: Props) {
   const isCreate = mode === 'create'
+  const totalSteps = isCreate ? CREATE_TOTAL : ENRICH_TOTAL
+
   const [answers, setAnswers] = useState<CreateAnswers>(emptyCreateAnswers)
-  const [enrichAnswers, setEnrichAnswers] = useState<InterviewAnswers>({})
+  const [prefAnswers, setPrefAnswers] = useState<InterviewAnswers>({})
   const [stepIdx, setStepIdx] = useState(0)
+  const [slideDir, setSlideDir] = useState<'left' | 'right' | ''>('')
   const [textBuf, setTextBuf] = useState('')
+  const touchRef = useRef<{ x: number; y: number } | null>(null)
   const { height: keyboardHeight, bind: kbProps } = useKeyboardLift()
+
+  // ─── 配额：从云端查询剩余次数 ───
+  const [quota, setQuota] = useState<{ flash: number; pro: number }>({ flash: 0, pro: 0 })
+  useEffect(() => {
+    if (!open) return
+    // @ts-ignore Taro.cloud
+    Taro.cloud.callFunction({ name: 'ai-plan-trip', data: { _mode: 'quota' } })
+      .then((res) => {
+        const r = res.result as { ok: boolean; flash: { remaining: number }; pro: { remaining: number } }
+        if (r?.ok) {
+          setQuota({ flash: r.flash.remaining, pro: r.pro.remaining })
+        }
+      })
+      .catch(() => { /* 查询失败时不阻塞用户 */ })
+  }, [open])
 
   // Mount: restore draft or reset
   useEffect(() => {
@@ -85,16 +111,17 @@ export default function AIInterview({ open, mode, tripId, onClose, onSubmit }: P
       const d = readDraft<CreateDraft>(DRAFT_KEY_CREATE)
       if (d) {
         setAnswers(d.answers)
-        setStepIdx(Math.min(d.stepIdx, CREATE_STEPS.length - 1))
+        setStepIdx(Math.min(d.stepIdx, CREATE_TOTAL - 1))
       } else {
         setAnswers(emptyCreateAnswers())
         setStepIdx(0)
       }
+      setPrefAnswers({})
     } else {
       const key = tripId ? draftKeyEnrich(tripId) : ''
       const d = key ? readDraft<EnrichDraft>(key) : null
-      setEnrichAnswers(d?.answers ?? {})
-      setStepIdx(0)
+      setPrefAnswers(d?.answers ?? {})
+      setStepIdx(d ? Math.min(d.stepIdx, ENRICH_TOTAL - 1) : 0)
     }
     setTextBuf('')
   }, [open, isCreate, tripId])
@@ -105,22 +132,47 @@ export default function AIInterview({ open, mode, tripId, onClose, onSubmit }: P
     if (isCreate) {
       writeDraft(DRAFT_KEY_CREATE, { stepIdx, answers } satisfies CreateDraft)
     } else if (tripId) {
-      writeDraft(draftKeyEnrich(tripId), { answers: enrichAnswers } satisfies EnrichDraft)
+      writeDraft(draftKeyEnrich(tripId), { stepIdx, answers: prefAnswers } satisfies EnrichDraft)
     }
-  }, [open, isCreate, tripId, stepIdx, answers, enrichAnswers])
+  }, [open, isCreate, tripId, stepIdx, answers, prefAnswers])
+
+  const animateStep = useCallback((dir: 'left' | 'right', fn: () => void) => {
+    setSlideDir(dir)
+    setTimeout(() => { fn(); setSlideDir('') }, 180)
+  }, [])
+
+  // === Derived state (before early return for hook ordering) ===
+  const inPrefs = isCreate
+    ? (stepIdx >= CREATE_PREFS_START && stepIdx < CREATE_NAME_IDX)
+    : true
+  const prefSubStep = isCreate ? stepIdx - CREATE_PREFS_START : stepIdx
+
+  // Sync textBuf when navigating to a text/number prefs question
+  useEffect(() => {
+    if (!open || !inPrefs) return
+    const q = AI_INTERVIEW[prefSubStep]
+    if (q && (q.type === 'number' || q.type === 'free')) {
+      const saved = prefAnswers[q.id as keyof InterviewAnswers] as string | undefined
+      setTextBuf(saved || '')
+    }
+  }, [open, stepIdx, inPrefs, prefSubStep, prefAnswers])
 
   if (!open) return null
 
-  const createStep = CREATE_STEPS[stepIdx]
-  const createDone = stepIdx >= CREATE_STEPS.length
+  const isLastStep = stepIdx === totalSteps - 1
 
-  const goNext = () => setStepIdx((s) => s + 1)
+  // === Navigation ===
+  const goNext = () => animateStep('left', () => setStepIdx((s) => Math.min(s + 1, totalSteps - 1)))
+  const goBack = () => animateStep('right', () => setStepIdx((s) => Math.max(s - 1, 0)))
 
-  const updateAnswer = <K extends keyof CreateAnswers>(k: K, v: CreateAnswers[K]) => {
-    setAnswers((a) => ({ ...a, [k]: v }))
+  const handleBack = () => {
+    if (stepIdx === 0) return
+    if (isCreate && stepIdx === CREATE_PREFS_START) goBack() // exit prefs → pax
+    else if (!isCreate && stepIdx === 0) return // enrich first step: no-op
+    else goBack()
   }
 
-  const submitCreate = () => {
+  const handleCreateSubmit = () => {
     onSubmit({
       mode: 'create',
       destinations: answers.destinations,
@@ -132,20 +184,96 @@ export default function AIInterview({ open, mode, tripId, onClose, onSubmit }: P
     })
   }
 
-  const renderCreateStep = () => {
-    if (createStep === 'dest') {
+  const handleEnrichSubmit = (final?: InterviewAnswers) => {
+    onSubmit({ mode: 'enrich', preferences: answersToPreferences(final ?? prefAnswers) })
+  }
+
+  const handleSubmit = () => {
+    // 配额校验由云函数 ai-plan-trip 服务端权威执行，前端直接提交
+    if (isCreate) {
+      handleCreateSubmit()
+    } else {
+      handleEnrichSubmit()
+    }
+  }
+
+  const handleNext = () => {
+    if (isLastStep) {
+      handleSubmit()
+      return
+    }
+    goNext()
+  }
+
+  const handleSkip = () => {
+    if (!isCreate) { handleSubmit(); return }
+    if (stepIdx === 0) { goNext(); return } // dest skip → dates
+    if (stepIdx === CREATE_NAME_IDX) { handleSubmit(); return } // name skip → submit
+    goNext()
+  }
+
+  const handlePrefAnswer = (updated: InterviewAnswers) => {
+    setPrefAnswers(updated)
+    if (isCreate) {
+      setAnswers((a) => ({ ...a, preferences: answersToPreferences(updated) }))
+    }
+  }
+
+  const handleTextSubmit = (updated: InterviewAnswers) => {
+    setPrefAnswers(updated)
+    if (isCreate) {
+      setAnswers((a) => ({ ...a, preferences: answersToPreferences(updated) }))
+    }
+    setTextBuf('')
+    if (!isLastStep) goNext()
+    else handleSubmit()
+  }
+
+  const handleSkipFree = () => {
+    const q = AI_INTERVIEW[prefSubStep]
+    if (!q) return
+    const updated = { ...prefAnswers, [q.id]: '' }
+    setPrefAnswers(updated)
+    if (isCreate) {
+      setAnswers((a) => ({ ...a, preferences: answersToPreferences(updated) }))
+    }
+    setTextBuf('')
+    if (!isLastStep) goNext()
+    else handleSubmit()
+  }
+
+  // Touch swipe
+  const onTouchStart = (e: ITouchEvent) => {
+    const t = e.touches[0]
+    touchRef.current = { x: t.clientX, y: t.clientY }
+  }
+  const onTouchEnd = (e: ITouchEvent) => {
+    if (!touchRef.current) return
+    const t = e.changedTouches[0]
+    const dx = t.clientX - touchRef.current.x
+    const dy = t.clientY - touchRef.current.y
+    touchRef.current = null
+    if (Math.abs(dx) < 60 || Math.abs(dy) > Math.abs(dx) * 0.7) return
+    if (dx > 0) handleBack()
+    else handleNext()
+  }
+
+  // === Step content rendering ===
+  const renderStepContent = () => {
+    // Create: dest (0), dates (1), pax (2)
+    if (isCreate && stepIdx === 0) {
       return (
         <View className='aiv-step'>
           <Text className='aiv-q'>{STEP_TITLES.dest}</Text>
-          <DestinationPicker value={answers.destinations} onChange={(v) => updateAnswer('destinations', v)} />
+          <DestinationPicker value={answers.destinations} onChange={(v) => setAnswers((a) => ({ ...a, destinations: v }))} />
           <View className='aiv-foot'>
-            <View className='aiv-skip' onClick={goNext}>{STEP_SKIP_HINT.dest}</View>
-            <View className='aiv-next' onClick={goNext}>下一步 →</View>
+            <View className='aiv-skip' onClick={handleSkip}>{STEP_SKIP_HINT.dest}</View>
+            <View className='aiv-next' onClick={handleNext}>下一步 →</View>
           </View>
         </View>
       )
     }
-    if (createStep === 'dates') {
+    if (isCreate && stepIdx === 1) {
       return (
         <View className='aiv-step'>
           <Text className='aiv-q'>{STEP_TITLES.dates}</Text>
@@ -154,12 +282,13 @@ export default function AIInterview({ open, mode, tripId, onClose, onSubmit }: P
             onChange={(v) => setAnswers((a) => ({ ...a, startDate: v.start, endDate: v.end }))}
           />
           <View className='aiv-foot'>
-            <View className='aiv-next' onClick={goNext}>下一步 →</View>
+            <View className='aiv-back' onClick={handleBack}>← 上一步</View>
+            <View className='aiv-next' onClick={handleNext}>下一步 →</View>
           </View>
         </View>
       )
     }
-    if (createStep === 'pax') {
+    if (isCreate && stepIdx === 2) {
       const PAX_OPTIONS = Array.from({ length: 99 }, (_, i) => `${i + 1} 人`)
       return (
         <View className='aiv-step'>
@@ -168,7 +297,7 @@ export default function AIInterview({ open, mode, tripId, onClose, onSubmit }: P
             mode='selector'
             range={PAX_OPTIONS}
             value={Math.max(0, Math.min(98, answers.pax - 1))}
-            onChange={(e) => updateAnswer('pax', Number(e.detail.value) + 1)}
+            onChange={(e) => setAnswers((a) => ({ ...a, pax: Number(e.detail.value) + 1 }))}
           >
             <View className='aiv-pax-picker'>
               <Text>{answers.pax} 人</Text>
@@ -176,15 +305,14 @@ export default function AIInterview({ open, mode, tripId, onClose, onSubmit }: P
             </View>
           </Picker>
           <View className='aiv-foot'>
-            <View className='aiv-next' onClick={goNext}>下一步 →</View>
+            <View className='aiv-back' onClick={handleBack}>← 上一步</View>
+            <View className='aiv-next' onClick={handleNext}>下一步 →</View>
           </View>
         </View>
       )
     }
-    if (createStep === 'prefs') {
-      return renderPrefsStep(false)
-    }
-    if (createStep === 'name') {
+    // Create: name (8)
+    if (isCreate && stepIdx === CREATE_NAME_IDX) {
       return (
         <View className='aiv-step'>
           <Text className='aiv-q'>{STEP_TITLES.name}</Text>
@@ -193,45 +321,38 @@ export default function AIInterview({ open, mode, tripId, onClose, onSubmit }: P
             value={answers.name}
             placeholder='例：京都 · 晚秋四日'
             {...kbProps}
-            onInput={(e) => updateAnswer('name', e.detail.value)}
+            onInput={(e) => setAnswers((a) => ({ ...a, name: e.detail.value }))}
           />
           <View className='aiv-foot'>
-            <View className='aiv-skip' onClick={submitCreate}>{STEP_SKIP_HINT.name}</View>
-            <View className='aiv-next' onClick={submitCreate}>开始生成</View>
+            <View className='aiv-back' onClick={handleBack}>← 上一步</View>
+            <View className='aiv-skip' onClick={handleSkip}>{STEP_SKIP_HINT.name}</View>
+            <View className='aiv-next' onClick={handleNext}>开始生成</View>
           </View>
         </View>
       )
     }
-    return null
-  }
-
-  const renderPrefsStep = (isEnrich: boolean) => {
-    return (
-      <View className='aiv-step aiv-prefs-host'>
+    // Prefs (create steps 3-7 or enrich steps 0-4)
+    if (inPrefs) {
+      const isFirst = stepIdx === 0
+      return (
         <PrefsSubflow
-          answers={isEnrich ? enrichAnswers : (answers.preferences as unknown as InterviewAnswers)}
-          onAnswers={(a) => {
-            if (isEnrich) setEnrichAnswers(a)
-            else updateAnswer('preferences', answersToPreferences(a))
-          }}
-          onDone={() => {
-            if (isEnrich) {
-              onSubmit({ mode: 'enrich', preferences: answersToPreferences(enrichAnswers) })
-            } else {
-              goNext()
-            }
-          }}
-          onSkip={() => {
-            if (isEnrich) {
-              onSubmit({ mode: 'enrich', preferences: answersToPreferences({}) })
-            } else {
-              goNext()
-            }
-          }}
+          question={AI_INTERVIEW[prefSubStep]}
+          answers={isCreate ? (answers.preferences as unknown as InterviewAnswers) : prefAnswers}
+          onAnswer={handlePrefAnswer}
+          onNext={handleNext}
+          onBack={isFirst ? undefined : handleBack}
+          onSkip={handleSkip}
+          onTextSubmit={handleTextSubmit}
+          onSkipFree={handleSkipFree}
+          textBuf={textBuf}
+          setTextBuf={setTextBuf}
           kbProps={kbProps}
+          isLast={isLastStep}
+          quota={quota}
         />
-      </View>
-    )
+      )
+    }
+    return null
   }
 
   return (
@@ -245,110 +366,111 @@ export default function AIInterview({ open, mode, tripId, onClose, onSubmit }: P
             transition: 'transform 0.25s ease',
           }}
           onClick={(e) => e.stopPropagation()}
+          onTouchStart={onTouchStart}
+          onTouchEnd={onTouchEnd}
         >
           <View className='aiv-head'>
             <View className='aiv-progress'>
-              {(isCreate ? CREATE_STEPS : AI_INTERVIEW).map((_, i) => (
+              {Array.from({ length: totalSteps }, (_, i) => (
                 <View key={i}
                   className={`aiv-dot ${i < stepIdx ? 'done' : ''} ${i === stepIdx ? 'now' : ''}`}
+                  onClick={() => {
+                    if (i < stepIdx) animateStep('right', () => setStepIdx(i))
+                    else if (i > stepIdx) animateStep('left', () => setStepIdx(i))
+                  }}
                 />
               ))}
             </View>
             <View className='aiv-close' onClick={onClose}>×</View>
           </View>
 
-          {isCreate ? (
-            createDone ? null : renderCreateStep()
-          ) : (
-            <PrefsSubflow
-              answers={enrichAnswers}
-              onAnswers={setEnrichAnswers}
-              onDone={() => onSubmit({ mode: 'enrich', preferences: answersToPreferences(enrichAnswers) })}
-              onSkip={() => onSubmit({ mode: 'enrich', preferences: answersToPreferences({}) })}
-              kbProps={kbProps}
-            />
-          )}
+          <View className={`aiv-slide ${slideDir ? `out-${slideDir}` : 'in'}`} key={stepIdx}>
+            {renderStepContent()}
+          </View>
         </View>
       </View>
     </RootPortal>
   )
 }
 
-// === PrefsSubflow: shared between create prefs step and enrich mode ===
+// === PrefsSubflow: controlled, stateless ===
 interface KbBind {
   adjustPosition: false
   onKeyboardHeightChange: (e: { detail: { height: number } }) => void
 }
 
 interface PrefsSubflowProps {
+  question: InterviewQuestion
   answers: InterviewAnswers
-  onAnswers: (a: InterviewAnswers) => void
-  onDone: () => void
+  onAnswer: (a: InterviewAnswers) => void
+  onNext: () => void
+  onBack?: () => void
   onSkip: () => void
+  onTextSubmit: (a: InterviewAnswers) => void
+  onSkipFree: () => void
+  textBuf: string
+  setTextBuf: (s: string) => void
   kbProps: KbBind
+  isLast: boolean
+  quota: { flash: number; pro: number }
 }
 
-function PrefsSubflow({ answers, onAnswers, onDone, onSkip, kbProps }: PrefsSubflowProps) {
-  const [subStep, setSubStep] = useState(0)
-  const [textBuf, setTextBuf] = useState('')
-  const q: InterviewQuestion | undefined = AI_INTERVIEW[subStep]
-  const doneRef = useRef(onDone)
-  doneRef.current = onDone
-
-  // 完成后在 effect 中触发 onDone，避免 render 中 setState
-  useEffect(() => {
-    if (subStep >= AI_INTERVIEW.length) {
-      doneRef.current()
-    }
-  }, [subStep])
-
-  // 切步时从 draft 恢复 textBuf（number/free 类型字段）
-  useEffect(() => {
-    if (q && (q.type === 'number' || q.type === 'free')) {
-      const saved = answers[q.id as keyof InterviewAnswers] as string | undefined
-      setTextBuf(saved || '')
-    }
-  }, [subStep])
-
-  if (subStep >= AI_INTERVIEW.length) return null
+function PrefsSubflow({
+  question: q, answers, onAnswer, onNext, onBack, onSkip,
+  onTextSubmit, onSkipFree, textBuf, setTextBuf, kbProps, isLast, quota,
+}: PrefsSubflowProps) {
   if (!q) return null
-
-  const pickSingle = (opt: string) => {
-    onAnswers({ ...answers, [q.id]: opt })
-    setTimeout(() => setSubStep((s) => s + 1), 280)
-  }
-  const toggleMulti = (opt: string) => {
-    const prev = (answers[q.id as keyof InterviewAnswers] as string[] | undefined) || []
-    const next = prev.includes(opt) ? prev.filter((x) => x !== opt) : [...prev, opt]
-    onAnswers({ ...answers, [q.id]: next })
-  }
-  const submitTextOrNumber = () => {
-    onAnswers({ ...answers, [q.id]: textBuf.trim() })
-    setTextBuf('')
-    setSubStep((s) => s + 1)
-  }
-  const skipFree = () => {
-    onAnswers({ ...answers, [q.id]: '' })
-    setTextBuf('')
-    setSubStep((s) => s + 1)
-  }
+  const nextLabel = isLast ? '开始生成' : '下一步 →'
 
   return (
-    <View className='aiv-current'>
+    <View className='aiv-step aiv-prefs-host'>
       <View className='aiv-bubble'>
         <View className='aiv-bubble-avatar'><SparkleIcon size={28} /></View>
         <Text className='aiv-bubble-text'>{q.q}</Text>
       </View>
+
       {q.type === 'single' && q.options && (
-        <View className='aiv-chips'>
-          {q.options.map((opt) => (
-            <View key={opt}
-              className={`aiv-chip ${answers[q.id as keyof InterviewAnswers] === opt ? 'on' : ''}`}
-              onClick={() => pickSingle(opt)}
-            >{opt}</View>
-          ))}
-        </View>
+        <>
+          {q.optionLabels ? (
+            <View className='aiv-model-cards'>
+              {q.options.map((opt) => {
+                const info: OptionLabel | undefined = q.optionLabels![opt]
+                const selected = answers[q.id as keyof InterviewAnswers] === opt
+                const remain = opt === 'DeepSeek-V4-PRO' ? quota.pro : quota.flash
+                return (
+                  <View key={opt}
+                    className={`aiv-model-card ${selected ? 'on' : ''}`}
+                    onClick={() => onAnswer({ ...answers, [q.id]: opt })}
+                  >
+                    <View className='aiv-model-head'>
+                      <Text className='aiv-model-label'>{info?.label ?? opt}</Text>
+                      {info?.tag && <Text className='aiv-model-tag'>{info.tag}</Text>}
+                    </View>
+                    {info?.desc && <Text className='aiv-model-desc'>{info.desc}</Text>}
+                    <Text className='aiv-model-quota'>
+                      今日剩余 {remain} 次
+                    </Text>
+                  </View>
+                )
+              })}
+            </View>
+          ) : (
+            <View className='aiv-chips'>
+              {q.options.map((opt) => (
+                <View key={opt}
+                  className={`aiv-chip ${answers[q.id as keyof InterviewAnswers] === opt ? 'on' : ''}`}
+                  onClick={() => onAnswer({ ...answers, [q.id]: opt })}
+                >{opt}</View>
+              ))}
+            </View>
+          )}
+          <View className='aiv-foot'>
+            {onBack && <View className='aiv-back' onClick={onBack}>← 上一步</View>}
+            <View className='aiv-next' onClick={onNext}>{nextLabel}</View>
+          </View>
+        </>
       )}
+
       {q.type === 'multi' && q.options && (
         <>
           <View className='aiv-chips'>
@@ -357,17 +479,23 @@ function PrefsSubflow({ answers, onAnswers, onDone, onSkip, kbProps }: PrefsSubf
               return (
                 <View key={opt}
                   className={`aiv-chip ${arr.includes(opt) ? 'on' : ''}`}
-                  onClick={() => toggleMulti(opt)}
+                  onClick={() => {
+                    const prev = (answers[q.id as keyof InterviewAnswers] as string[] | undefined) || []
+                    const next = prev.includes(opt) ? prev.filter((x) => x !== opt) : [...prev, opt]
+                    onAnswer({ ...answers, [q.id]: next })
+                  }}
                 >{opt}</View>
               )
             })}
           </View>
           <View className='aiv-foot'>
+            {onBack && <View className='aiv-back' onClick={onBack}>← 上一步</View>}
             <View className='aiv-skip' onClick={onSkip}>跳过</View>
-            <View className='aiv-next' onClick={() => setSubStep((s) => s + 1)}>下一题 →</View>
+            <View className='aiv-next' onClick={onNext}>{nextLabel}</View>
           </View>
         </>
       )}
+
       {(q.type === 'number' || q.type === 'free') && (
         <>
           {q.type === 'number' ? (
@@ -382,8 +510,11 @@ function PrefsSubflow({ answers, onAnswers, onDone, onSkip, kbProps }: PrefsSubf
               onInput={(e) => setTextBuf(e.detail.value)} maxlength={500} autoHeight showConfirmBar={false} />
           )}
           <View className='aiv-foot'>
-            <View className='aiv-skip' onClick={skipFree}>跳过</View>
-            <View className='aiv-next' onClick={submitTextOrNumber}>下一步 →</View>
+            {onBack && <View className='aiv-back' onClick={onBack}>← 上一步</View>}
+            <View className='aiv-skip' onClick={onSkipFree}>跳过</View>
+            <View className='aiv-next' onClick={() => {
+              onTextSubmit({ ...answers, [q.id]: textBuf.trim() })
+            }}>{nextLabel}</View>
           </View>
         </>
       )}

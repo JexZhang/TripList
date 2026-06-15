@@ -35,6 +35,7 @@ exports.main = async (event, context) => {
         nickname: hasNickname ? nickname : PLACEHOLDER_NICKNAME,
         avatarUrl: hasAvatarUrl ? avatarUrl : '',
         theme: safeTheme || null,
+        plan: 'free',
         createdAt: now,
         lastSeenAt: now,
       },
@@ -48,5 +49,6 @@ exports.main = async (event, context) => {
     nickname: u.nickname || PLACEHOLDER_NICKNAME,
     avatarUrl: u.avatarUrl || '',
     theme: u.theme || null,
+    plan: u.plan || 'free',
   }
 }

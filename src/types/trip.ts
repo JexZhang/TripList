@@ -105,7 +105,7 @@ export type AIModelAlias = 'DeepSeek-V4-PRO' | 'DeepSeek-V4-Flash'
 export const AI_MODEL_ALIASES: AIModelAlias[] = ['DeepSeek-V4-PRO', 'DeepSeek-V4-Flash']
 
 export interface AIPreferences {
-  pace: AIPace
+  pace?: AIPace
   audience: AIAudience[]
   budgetCap?: number          // 人均/天 RMB
   freeText?: string

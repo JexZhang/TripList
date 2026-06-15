@@ -34,7 +34,7 @@ export function emptyCreateAnswers(): CreateAnswers {
     startDate: dayjs().format('YYYY-MM-DD'),
     endDate: dayjs().add(2, 'day').format('YYYY-MM-DD'),
     pax: 2,
-    preferences: { pace: '平衡', audience: [], modelAlias: 'DeepSeek-V4-Flash' },
+    preferences: { audience: [], modelAlias: 'DeepSeek-V4-Flash' },
     name: '',
   }
 }

@@ -82,7 +82,7 @@ function baseUserPrompt(tripContext, preferences) {
     `- 目的地: ${dests}`,
     `- 日期: ${tripContext.startDate} 至 ${tripContext.endDate} (共 ${dayCount(tripContext.startDate, tripContext.endDate)} 天)`,
     `- 人数: ${tripContext.pax}`,
-    `- 节奏: ${preferences.pace}`,
+    `- 节奏: ${preferences.pace || '不限'}`,
     `- 出行人群: ${audience}`,
     `- 预算上限(人均/天): ${preferences.budgetCap != null ? preferences.budgetCap : '不限'}`,
     `- 其他偏好: ${preferences.freeText || '无'}`,

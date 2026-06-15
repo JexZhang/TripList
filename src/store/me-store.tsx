@@ -9,6 +9,7 @@ export interface Me {
   nickname: string
   avatarUrl: string
   theme: ThemeName | null
+  plan: 'free' | 'pro'
 }
 
 interface Ctx {
@@ -40,6 +41,7 @@ export function MeProvider({ children }: { children: ReactNode }) {
         nickname: result.nickname || '行册旅人',
         avatarUrl: result.avatarUrl || '',
         theme: (result.theme as ThemeName) || null,
+        plan: (result.plan as 'free' | 'pro') || 'free',
       })
     } catch (e) {
       console.error('[me-store] ensure-user failed', e)

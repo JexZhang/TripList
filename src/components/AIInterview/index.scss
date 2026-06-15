@@ -36,6 +36,11 @@
 }
 .aiv-dot.done { background: var(--accent-soft); }
 .aiv-dot.now  { background: var(--accent); transform: scale(1.2); }
+.aiv-dot.done,
+.aiv-dot.now {
+  cursor: pointer;
+  pointer-events: auto;
+}
 .aiv-close {
   width: 56rpx; height: 56rpx;
   display: flex; align-items: center; justify-content: center;
@@ -70,9 +75,6 @@
 }
 
 /* —— 当前问题 —— */
-.aiv-current {
-  animation: drop-in 0.36s var(--ease-spring) both;
-}
 .aiv-bubble {
   display: flex;
   align-items: flex-start;
@@ -172,12 +174,19 @@
   margin-top: 16rpx;
 }
 .aiv-skip,
-.aiv-next {
+.aiv-next,
+.aiv-back {
   padding: 16rpx 32rpx;
   font-size: 26rpx;
   font-weight: 600;
   border-radius: var(--r-pill);
 }
+.aiv-back {
+  background: transparent;
+  color: var(--ink-3);
+  margin-right: auto;
+}
+.aiv-back:active { opacity: 0.6; }
 .aiv-skip {
   background: var(--surface-2);
   color: var(--ink-3);
@@ -225,3 +234,83 @@
   animation: pulse-glow 3s ease-in-out infinite;
 }
 .aiv-go:active { transform: scale(0.97); }
+
+/* —— 滑动动画 —— */
+.aiv-slide {
+  animation: slide-in-right 0.28s var(--ease-out) both;
+}
+.aiv-slide.out-left {
+  animation: slide-out-left 0.18s var(--ease-out) both;
+}
+.aiv-slide.out-right {
+  animation: slide-out-right 0.18s var(--ease-out) both;
+}
+
+@keyframes slide-in-right {
+  from { opacity: 0; transform: translateX(40rpx); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+@keyframes slide-out-left {
+  from { opacity: 1; transform: translateX(0); }
+  to   { opacity: 0; transform: translateX(-40rpx); }
+}
+@keyframes slide-out-right {
+  from { opacity: 1; transform: translateX(0); }
+  to   { opacity: 0; transform: translateX(40rpx); }
+}
+
+/* —— 模型选择卡片 —— */
+.aiv-model-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 16rpx;
+  margin-bottom: 24rpx;
+}
+.aiv-model-card {
+  padding: 24rpx 28rpx;
+  background: var(--surface-2);
+  border: 2rpx solid var(--line-2);
+  border-radius: var(--r-lg);
+  transition: all 0.18s var(--ease-out);
+  cursor: pointer;
+}
+.aiv-model-card:active { transform: scale(0.98); }
+.aiv-model-card.on {
+  background: var(--accent-bg);
+  border-color: var(--accent);
+  box-shadow: 0 4rpx 16rpx rgba(107, 70, 193, 0.12);
+}
+.aiv-model-head {
+  display: flex;
+  align-items: center;
+  gap: 12rpx;
+  margin-bottom: 6rpx;
+}
+.aiv-model-label {
+  font-size: 30rpx;
+  font-weight: 700;
+  color: var(--ink);
+  font-family: var(--font-display);
+}
+.aiv-model-tag {
+  font-size: 20rpx;
+  font-weight: 600;
+  color: #fff;
+  background: linear-gradient(135deg, var(--plum), var(--accent));
+  padding: 4rpx 14rpx;
+  border-radius: var(--r-pill);
+  letter-spacing: 2rpx;
+}
+.aiv-model-desc {
+  display: block;
+  font-size: 24rpx;
+  color: var(--ink-3);
+  line-height: 1.4;
+}
+.aiv-model-quota {
+  display: block;
+  font-size: 22rpx;
+  color: var(--ink-3);
+  margin-top: 6rpx;
+  opacity: 0.7;
+}

@@ -27,6 +27,14 @@
   border-radius: 50%;
 }
 .ait-close:active { background: var(--accent-bg); }
+.ait-close-hint {
+  position: absolute;
+  top: 28rpx; right: 80rpx;
+  font-size: 20rpx;
+  color: var(--ink-3);
+  opacity: 0.6;
+  white-space: nowrap;
+}
 
 /* —— Orb —— */
 .ait-stage { padding: 24rpx 0 40rpx; }

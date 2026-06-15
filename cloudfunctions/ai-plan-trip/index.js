@@ -13,6 +13,65 @@ const MAX_TURNS = 12
 // 软超时: 留给云函数 timeout (600s) 60s buffer, 避免被 SCF 强杀
 const SOFT_TIMEOUT_MS = 540_000
 
+// ─── 配额配置（服务端权威） ───
+const QUOTA_LIMITS = {
+  free: { flash: 2, pro: 1 },
+  pro:  { flash: 99, pro: 99 },
+}
+
+function getTier(modelAlias) {
+  return modelAlias === 'DeepSeek-V4-PRO' ? 'pro' : 'flash'
+}
+
+function todayCST() {
+  const now = new Date(Date.now() + 8 * 3600_000)
+  return now.toISOString().slice(0, 10)
+}
+
+/**
+ * 从 users 集合读取用户等级，不存在默认 'free'
+ */
+async function getUserPlan(db, openid) {
+  try {
+    const { data } = await db.collection('users').doc(openid).get()
+    return data.plan || 'free'
+  } catch {
+    return 'free'
+  }
+}
+
+/**
+ * 原子扣减配额：返回 { ok: true } 或 { ok: false, reason }
+ * 使用 where(tier < limit) + inc(1) 保证不超扣
+ */
+async function consumeQuota(db, openid, tier, plan = 'free') {
+  const limit = (QUOTA_LIMITS[plan] && QUOTA_LIMITS[plan][tier]) || 0
+  if (limit <= 0) return { ok: false, reason: '该模型不可用' }
+
+  const _ = db.command
+  const docId = `${openid}_${todayCST()}`
+  const coll = db.collection('ai_daily_usage')
+
+  // 确保文档存在
+  try {
+    await coll.doc(docId).get()
+  } catch {
+    await coll.add({
+      data: { _id: docId, _openid: openid, date: todayCST(), flash: 0, pro: 0 },
+    })
+  }
+
+  // 原子扣减
+  const res = await coll
+    .where({ _id: docId, [tier]: _.lt(limit) })
+    .update({ data: { [tier]: _.inc(1) } })
+
+  if (res.stats.updated === 0) {
+    return { ok: false, reason: `今日${tier === 'flash' ? '闪电版' : '旗舰版'}次数已用完，明天再来` }
+  }
+  return { ok: true }
+}
+
 // 进程级兜底: 抓未处理的异常和 promise 拒绝, 至少进日志 (SCF 可能会重启容器, 但避免静默)
 process.on('unhandledRejection', (reason, p) => {
   console.error('[ai-plan-trip] UNHANDLED REJECTION', reason)
@@ -29,8 +88,33 @@ exports.main = async (event) => {
   const { _mode = 'plan' } = event || {}
 
   if (_mode === 'ping') return await pingMode(event)
+  if (_mode === 'quota') return await quotaMode()
   if (_mode === 'plan' || _mode === 'start') return await planMode(event)
   throw new Error(`Unknown _mode: ${_mode}`)
+}
+
+// ============ QUOTA: 轻量查询剩余配额 ============
+async function quotaMode() {
+  const { OPENID } = cloud.getWXContext()
+  if (!OPENID) throw new Error('OPENID missing')
+
+  const db = cloud.database()
+  const plan = await getUserPlan(db, OPENID)
+  const limits = QUOTA_LIMITS[plan] || QUOTA_LIMITS.free
+
+  const docId = `${OPENID}_${todayCST()}`
+  let usage = { flash: 0, pro: 0 }
+  try {
+    const { data } = await db.collection('ai_daily_usage').doc(docId).get()
+    usage = { flash: data.flash || 0, pro: data.pro || 0 }
+  } catch { /* 文档不存在 → 用量 0 */ }
+
+  return {
+    ok: true,
+    plan,
+    flash: { remaining: Math.max(0, limits.flash - usage.flash), limit: limits.flash },
+    pro:   { remaining: Math.max(0, limits.pro - usage.pro),     limit: limits.pro },
+  }
 }
 
 // ============ PING: 云端调试模型联通性, 直接同步返回结果, 不写库不走 worker ============
@@ -145,6 +229,21 @@ async function planMode(event) {
     // count 失败不阻塞主流程, 只记日志
     if (e.message && e.message.startsWith('已有')) throw e
     console.warn('[plan] concurrency-check failed (non-fatal):', e.message)
+  }
+
+  // ─── 配额校验（原子扣减，服务端权威） ───
+  const tier = getTier(preferences.modelAlias)
+  const plan = await getUserPlan(db, OPENID)
+  try {
+    const quotaRes = await consumeQuota(db, OPENID, tier, plan)
+    if (!quotaRes.ok) {
+      throw new Error(`QUOTA:${quotaRes.reason}`)
+    }
+  } catch (e) {
+    if (e.message && e.message.startsWith('QUOTA:')) {
+      throw new Error(e.message.slice(6))
+    }
+    console.warn('[plan] quota-check failed (non-fatal, 放行):', e.message)
   }
 
   // 1. 用客户端预生成的 _id 插入任务记录, 让前端 watcher 立即能找到

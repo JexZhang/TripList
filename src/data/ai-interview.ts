@@ -2,11 +2,18 @@ import type { AIAudience, AIPace, AIModelAlias } from '../types/trip'
 
 export type InterviewQType = 'single' | 'multi' | 'free' | 'number'
 
+export interface OptionLabel {
+  label: string
+  desc: string
+  tag?: string
+}
+
 export interface InterviewQuestion {
   id: string
   q: string
   type: InterviewQType
   options?: readonly string[]
+  optionLabels?: Record<string, OptionLabel>
   placeholder?: string
 }
 
@@ -39,7 +46,17 @@ export const AI_INTERVIEW: readonly InterviewQuestion[] = [
     id: 'modelAlias',
     q: '选个 AI 模型吧',
     type: 'single',
-    options: ['DeepSeek-V4-PRO', 'DeepSeek-V4-Flash'] as const satisfies readonly AIModelAlias[],
+    options: ['DeepSeek-V4-Flash', 'DeepSeek-V4-PRO'] as const satisfies readonly AIModelAlias[],
+    optionLabels: {
+      'DeepSeek-V4-Flash': {
+        label: '⚡ 闪电版',
+        desc: '高性价比 · 适合 3 天以内攻略',
+      },
+      'DeepSeek-V4-PRO': {
+        label: '✨ 旗舰版',
+        desc: '更高质量 · 深度长线攻略推荐',
+      },
+    },
   },
 ]
 
@@ -56,7 +73,7 @@ import type { AIPreferences } from '../types/trip'
 export function answersToPreferences(a: InterviewAnswers): AIPreferences {
   const budgetNum = Number(a.budgetCap)
   return {
-    pace: a.pace || '平衡',
+    pace: a.pace || undefined,
     audience: a.audience || [],
     budgetCap: a.budgetCap && budgetNum > 0 ? budgetNum : undefined,
     freeText: a.freeText?.trim() || undefined,

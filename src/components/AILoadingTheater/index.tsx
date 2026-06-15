@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import Taro from '@tarojs/taro'
 import { View, Text, RootPortal } from '@tarojs/components'
 import './index.scss'
 
@@ -65,7 +66,12 @@ export default function AILoadingTheater({
     <RootPortal>
       <View className='ait-mask theme-tokens'>
         <View className='ait-sheet'>
-          <View className='ait-close' onClick={onMinimize}>×</View>
+          <View className='ait-close' onClick={onMinimize}>
+            <Text>×</Text>
+          </View>
+          {status === 'thinking' && (
+            <Text className='ait-close-hint'>放心关闭，后台继续生成</Text>
+          )}
           <View className='ait-stage'>
             <View className={`ait-orb ait-orb--${status}`}>
               <View className='ait-orb-core' />
@@ -84,7 +90,17 @@ export default function AILoadingTheater({
           </View>
 
           {status === 'thinking' && (
-            <View className='ait-cancel' onClick={onCancel}>停止生成</View>
+            <View className='ait-cancel' onClick={() => {
+              Taro.showModal({
+                title: '确定停止？',
+                content: '本次生成机会已扣除，停止后额度不会恢复。',
+                confirmText: '继续生成',
+                cancelText: '确定停止',
+                success: (res) => {
+                  if (res.cancel) onCancel?.()
+                },
+              })
+            }}>停止生成</View>
           )}
         </View>
       </View>
