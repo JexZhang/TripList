@@ -22,7 +22,7 @@ export default function TripPhaseHero({ trip }: Props) {
   const [tick, setTick] = useState(0)
   const phase = useMemo(
     () => getTripPhase(trip.startDate, trip.endDate),
-    [trip.startDate, trip.endDate, tick],
+    [trip.startDate, trip.endDate],
   )
   const weather = useTripWeather(trip, phase)
 
