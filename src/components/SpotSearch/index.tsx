@@ -104,8 +104,8 @@ export default function SpotSearch({ open, defaultCity, onClose, onSelect }: Pro
         />
         <ScrollView className='ss-results' scrollY>
           {loading && <View className='ss-hint'>搜索中...</View>}
-          {!loading && results.map((r, i) => (
-            <View key={`${r.adcode}-${i}`} className='ss-result' onClick={() => useResult(r)}>
+          {!loading && results.map((r) => (
+            <View key={`${r.name}-${r.lat}-${r.lng}`} className='ss-result' onClick={() => useResult(r)}>
               <Text className='ss-result-name'>{r.name}</Text>
               <Text className='ss-result-addr'>{r.city ? `${r.city} · ` : ''}{r.address || ''}</Text>
             </View>
