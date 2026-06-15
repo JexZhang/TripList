@@ -42,6 +42,7 @@ A5 采用**方案一（修依赖轮询）**，watch 推送方案明确延后到 
 ### A2 立即渲染本地种子
 - **问题**：`SEED_TRIPS` 为静态本地数据，却只在网络 `.then` 里才 `setTrips([...SEED_TRIPS, ...list])`（`:42`），初值 `trips=[]` 导致等待期空屏。
 - **做法**：`trips` 初值直接为 `SEED_TRIPS`；网络返回后合并为 `[...SEED_TRIPS, ...list]`。
+- **`loading` 语义重定义**：种子现在恒在首屏渲染，故 `loading` 不再表示"整屏等待"，而仅表示"**用户真实行程尚未就绪**"（无缓存命中且网络未返回）。各 Home 变体应据此只对"用户行程区"展示加载态/骨架，不再整屏盖 loading；命中缓存时 `loading=false`。
 
 ### A3 Storage 缓存（stale-while-revalidate）
 - **做法**：缓存键 `home-trips-cache`（单键；小程序单设备单用户，账号切换罕见，由下次网络结果覆盖）。仅缓存**网络列表部分**（不含种子）。
@@ -50,13 +51,14 @@ A5 采用**方案一（修依赖轮询）**，watch 推送方案明确延后到 
 - **接受的取舍**：极端情况下别的设备刚删/改的行程会**短暂（几百 ms）显示旧态**，网络回来即纠正。对行程 app 可接受。
 
 ### A4 去重首次双拉
-- **问题**：`useEffect`（`:41`）与 `useDidShow`（`:54`）都会拉列表，`useDidShow` 首次显示也触发 → 首进发两次。
-- **做法**：`loadTrips()` 内加 `lastLoadedAtRef` 节流（距上次 < 2s 直接跳过网络部分）。挂载 effect 调一次 `loadTrips()`；`useDidShow` 也调 `loadTrips()`，刚加载过即 no-op。
+- **问题**：`useEffect`（`:41`）与 `useDidShow`（`:54`）都会拉列表，而 `useDidShow` 在**首次显示也会触发** → 首进发两次相同请求。
+- **做法**：用 **"跳过首次 show" 标志**（`didInitialShowRef`）而非时间节流。挂载 effect 调一次 `loadTrips()`；`useDidShow` 第一次触发时（紧跟挂载）直接跳过，之后每次返回首页都正常 `loadTrips()` 刷新。
+- **理由**：避免时间节流带来的副作用——用户"首页→详情页改了标题/封面→很快退回"时，时间节流会漏掉刷新；"跳过首次"只针对挂载那一次重复，不影响后续任何正常返回刷新。
 
 ### A5 AI 轮询依赖 bug（方案一）
 - **问题**：`useEffect(..., [openid, trips])`（`:59-69`）的 interval 每轮 `setTrips` 都改变 `trips` 引用 → 定时器**每轮拆建**，时序脆弱。
 - **不能简单改 `[openid]`**：`trips` 依赖身兼"启动/停止轮询"两职，改 `[openid]` 会令 `hasGenerating` 闭包定格，导致永不启动或永不停止。
-- **做法**：在 render 计算 `const hasGenerating = trips.some(t => t.aiStatus === 'generating')`，effect 依赖改为 `[hasGenerating]`。定时器仅在 `hasGenerating` 翻转时开/关，生成期间稳定每 **8s**（从 5s 放宽）轮询一次。轮询体内复用 `loadTrips()`/`listMyTrips()`。
+- **做法**：在 render 计算 `const hasGenerating = trips.some(t => t.aiStatus === 'generating')`，effect 依赖改为 `[hasGenerating]`。定时器仅在 `hasGenerating` 翻转时开/关，生成期间稳定每 **8s**（从 5s 放宽）轮询一次。轮询体只走**网络拉取路径**（`listMyTrips()` → `setTrips` + 回写缓存），**不走** `loadTrips()` 的"先读缓存再渲染"分支，避免把旧缓存又渲染一遍。
 - **配额联动**：额外一个 effect 监听 `hasGenerating` 由 `true→false`（生成完成）时调用 `me-store` 的 `refreshQuota()`（见 B2）。该刷新触发点设计为与轮询/未来 watch 解耦——SP-3 换 watch 时此处可平移、B2 不返工。
 
 ---
@@ -70,8 +72,8 @@ A5 采用**方案一（修依赖轮询）**，watch 推送方案明确延后到 
 ### B2 配额缓存（me-store + SWR）
 - **问题**：`src/components/AIInterview/index.tsx:94-105` 每次 `open` 都 `callFunction('ai-plan-trip', {_mode:'quota'})`。配额是用户级，不必每次重拉。
 - **做法**：
-  - `me-store` 增加 `quota: { flash: number; pro: number } | null` 与 `refreshQuota()` 方法；启动（`ensure-user` 后）拉一次。
-  - `AIInterview` 改为消费 `useMe().quota`，**立即**显示缓存值；`open` 时后台调 `refreshQuota()` 校正（SWR）。
+  - `me-store` 增加 `quota: { flash: number; pro: number } | null` 与 `refreshQuota()` 方法。**懒加载**：**不在启动时拉**（避免从不使用 AI 的用户冷启动多一次云调用，与 SP-1 减少启动工作的目标一致），首次需要时才拉并缓存。
+  - `AIInterview` 改为消费 `useMe().quota`：有缓存则**立即**显示；每次 `open` 后台调 `refreshQuota()` 拉取/校正（首次即懒加载，之后 SWR）。
   - 生成完成后由首页触发 `refreshQuota()`（见 A5）。
 - **取舍**：配额是"能否消费"的闸门，显示过期偏高会误导，故**不强缓存**，采用 stale-while-revalidate（立即显示 + 后台校正 + 完成后刷新）。
 
@@ -131,7 +133,7 @@ A5 采用**方案一（修依赖轮询）**，watch 推送方案明确延后到 
   1. 首页冷启动：立即可见种子 + 缓存列表；网络回填覆盖；
   2. 重复进出首页：不发起重复全量请求（控制台/Network 观察）；
   3. 攻略详情页：无第二次 `ensure-user`、无多余"登录中…"；
-  4. `AIInterview`：打开瞬间显示配额、后台校正；
+  4. `AIInterview`：首次打开拉取后显示配额，**后续打开瞬间显示缓存值**并后台校正；生成完成后配额刷新；
   5. 编辑多天行程：连续输入不卡；保存与协作同步行为正确（自身回声不重复保存、协作者改动能同步）；
   6. AI 生成：状态仍能刷新、完成后停止轮询、配额刷新。
 - 凡本地无法验证的项，明确标注缺口，不假装通过。
