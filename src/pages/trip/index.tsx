@@ -373,7 +373,8 @@ function TripBody() {
 export default function TripPage() {
   const router = useRouter()
   const tripId = router.params.id || ''
-  const [openid, setOpenid] = useState('')
+  const { me } = useMe()
+  const openid = me?.openid || ''
 
   // 用户点 <Button open-type="share"> 时 WeChat 触发,根据 button dataset.kind 选 payload
   useShareAppMessage((options) => {
@@ -384,19 +385,6 @@ export default function TripPage() {
       path: '/pages/home/index',
     }
   })
-
-  useEffect(() => {
-    // 注意:不要传 nickname/avatarUrl,否则会覆盖用户已保存的昵称
-    // @ts-ignore Taro.cloud
-    Taro.cloud.callFunction({
-      name: 'ensure-user',
-      data: {},
-    }).then((r: any) => {
-      if (r.result && r.result.openid) {
-        setOpenid(r.result.openid)
-      }
-    })
-  }, [])
 
   if (!tripId) return <View className='trip-empty'>缺少 trip id</View>
   if (!openid) return <View className='trip-empty'>登录中...</View>
