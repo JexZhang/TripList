@@ -6,6 +6,7 @@ import DatePicker from '../DatePicker'
 import DestinationPicker from '../DestinationPicker'
 import SparkleIcon from '../SparkleIcon'
 import { useKeyboardLift } from '../../utils/use-keyboard-height'
+import { useMe } from '../../store/me-store'
 import {
   AI_INTERVIEW,
   type InterviewAnswers,
@@ -89,20 +90,13 @@ export default function AIInterview({ open, mode, tripId, onClose, onSubmit }: P
   const touchRef = useRef<{ x: number; y: number } | null>(null)
   const { height: keyboardHeight, bind: kbProps } = useKeyboardLift()
 
-  // ─── 配额：从云端查询剩余次数 ───
-  const [quota, setQuota] = useState<{ flash: number; pro: number }>({ flash: 0, pro: 0 })
+  // ─── 配额：消费 me-store 缓存（SWR：有缓存立即显示 + 打开时后台校正）───
+  const { quota: cachedQuota, refreshQuota } = useMe()
+  const quota = cachedQuota ?? { flash: 0, pro: 0 }
   useEffect(() => {
     if (!open) return
-    // @ts-ignore Taro.cloud
-    Taro.cloud.callFunction({ name: 'ai-plan-trip', data: { _mode: 'quota' } })
-      .then((res) => {
-        const r = res.result as { ok: boolean; flash: { remaining: number }; pro: { remaining: number } }
-        if (r?.ok) {
-          setQuota({ flash: r.flash.remaining, pro: r.pro.remaining })
-        }
-      })
-      .catch(() => { /* 查询失败时不阻塞用户 */ })
-  }, [open])
+    void refreshQuota()
+  }, [open, refreshQuota])
 
   // Mount: restore draft or reset
   useEffect(() => {
