@@ -87,4 +87,31 @@ npm run prepare
 - [docs/learn/](docs/learn/) — 面向初学者的项目学习手册（基础知识 / 前后端 / 功能详解 / 调试 等）。
 - [docs/superpowers/](docs/superpowers/) — 设计系统迁移的 specs、plans 与 frontend-design 资料。
 - [triplist-design/](triplist-design/) — 四主题设计稿来源。
+
+## 6. 项目级 Skills（`.claude/skills/`）
+
+仓库内置了三组开源 skills，所有克隆此仓库的用户可直接通过 `Skill` 工具调用：
+
+### Superpowers（obra/superpowers）
+结构化开发方法论，涵盖完整研发生命周期：
+- `using-superpowers` — 启动 bootstrap，每次会话开始时自动触发其他 skills
+- `brainstorming` — 写代码前先梳理需求与设计
+- `writing-plans` / `executing-plans` — 编写与执行任务计划
+- `subagent-driven-development` — 并行 subagent 分发执行
+- `test-driven-development` — TDD 流程
+- `systematic-debugging` — 系统性调试
+- `requesting-code-review` / `receiving-code-review` — Code Review 双向流程
+- `verification-before-completion` — 完成前强制验收
+- 以及 `dispatching-parallel-agents`、`finishing-a-development-branch`、`using-git-worktrees`、`writing-skills`
+
+### Frontend Design（Ilm-Alan/frontend-design）
+- `frontend-design` — 8 种审美锚点（Swiss / Industrial / Brutalist / Aurora Maximalism / Chaotic Maximalism / Retro-Futuristic / Organic / Lo-Fi），用于写 UI 时明确视觉方向，避免 AI 生成泛化风格
+
+### CloudBase 微信小程序（TencentCloudBase/skills）
+- `miniprogram-development` — 微信小程序开发（页面/组件/tabBar/发布/调试），含 CloudBase 集成参考
+- `cloud-functions` — 云函数开发（HTTP / 事件函数，部署与配置）
+- `cloudbase-wechat-integration` — CloudBase × 微信支付 / 授权集成
+- `no-sql-wx-mp-sdk` — 小程序端 CloudBase NoSQL SDK（CRUD / 聚合 / 分页 / 地理位置 / 安全规则）
+- `auth-wechat` — 微信小程序 CloudBase 鉴权
+- `cloudbase-guidelines` — CloudBase 使用总原则与 MCP 配置
 </content>
