@@ -34,7 +34,7 @@ function writeFeaturedCache(cards: TemplateCard[]): void {
 
 /**
  * 首页精选:featured=true,按 sortWeight 降序取前 N。
- * 返回 { cards, fromCache }:命中缓存则先把缓存交给调用方渲染,同时本调用仍会发起网络刷新。
+ * 拉取网络结果 → 写入 SWR 缓存 → 返回轻字段卡片。首屏立即渲染用 getFeaturedCache() 同步取缓存。
  */
 export async function listFeaturedTemplates(limit = 8): Promise<TemplateCard[]> {
   const res = await db().collection(COLL)
