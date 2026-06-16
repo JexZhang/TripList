@@ -1,8 +1,8 @@
 {
   "miniprogramRoot": "dist/",
   "cloudfunctionRoot": "cloudfunctions/",
-  "projectname": "行册",
-  "description": "旅行攻略+清单+地图+天气",
+  "projectname": "行册-AI旅行攻略",
+  "description": "AI 一键生成专属旅行攻略——输入目的地，智能规划每日行程、景点推荐、预算分配与行李清单。实时天气+地图导航，四种精美主题风格，支持多人协作编辑。让 AI 帮你做攻略，出发更省心。",
   "appid": "wx833348388eb83bc1",
   "setting": {
     "urlCheck": true,

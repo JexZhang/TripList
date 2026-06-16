@@ -9,7 +9,7 @@ export default defineAppConfig({
   window: {
     backgroundTextStyle: 'light',
     navigationBarBackgroundColor: '#f7f1e3',
-    navigationBarTitleText: '行册',
+    navigationBarTitleText: '行册-AI旅行攻略',
     navigationBarTextStyle: 'black'
   },
   permission: {
