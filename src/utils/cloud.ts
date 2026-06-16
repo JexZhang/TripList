@@ -74,6 +74,9 @@ export const cloud = {
   cloneTrip: (data: { sourceTripId: string; token: string }) =>
     call<typeof data, { newTripId: string }>('clone-trip', data),
 
+  cloneTemplate: (data: { templateId: string; startDate: string }) =>
+    call<typeof data, { newTripId: string }>('clone-template', data),
+
   joinCollab: (data: { tripId: string; token: string }) =>
     call<typeof data, { ok: boolean; alreadyOwner?: boolean; alreadyJoined?: boolean }>(
       'join-collab',
