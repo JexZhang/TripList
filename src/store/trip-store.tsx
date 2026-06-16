@@ -142,6 +142,11 @@ export function TripProvider({
   const deferredRemoteRef = useRef<Trip | null>(null)  // pendingRef 期间被丢的远端 doc, save 完成后补合并
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
   const seedWarningShownRef = useRef(false)  // 示例攻略警告只显示一次
+  const latestTripRef = useRef<Trip | null>(null)  // 始终指向最新 state.trip，供 deferred 合并避免用到过期闭包
+
+  // 把最新 state.trip 镜像到 ref：debounce 回调在 await 期间用户可能继续编辑，
+  // deferred 合并须以最新本地态为准，否则那批编辑会被旧闭包覆盖丢失
+  useEffect(() => { latestTripRef.current = state.trip }, [state.trip])
 
   // 初次拉 + watch 订阅
   useEffect(() => {
@@ -240,7 +245,7 @@ export function TripProvider({
         const deferred = deferredRemoteRef.current
         if (deferred) {
           deferredRemoteRef.current = null
-          const merged: Trip = { ...deferred, ...(state.trip || {}), ...{
+          const merged: Trip = { ...deferred, ...(latestTripRef.current || {}), ...{
             // 强制保留服务端独有的字段, 避免被本地 state 覆盖
             aiTaskId: deferred.aiTaskId,
             aiStatus: deferred.aiStatus,

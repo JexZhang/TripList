@@ -51,13 +51,10 @@ export default function Home() {
 
   const openidRef = useRef(openid)
   useEffect(() => { openidRef.current = openid }, [openid])
-  const lastLoadedAtRef = useRef(0)
   const didInitialShowRef = useRef(false)
 
   // A1：listMyTrips 服务端自取 OPENID，客户端无需等 ensure-user → 挂载即可并行发起
-  const loadTrips = useCallback(async (throttle = false) => {
-    if (throttle && Date.now() - lastLoadedAtRef.current < 2000) return
-    lastLoadedAtRef.current = Date.now()
+  const loadTrips = useCallback(async () => {
     try {
       const list = await listMyTrips(openidRef.current)
       setTrips([...SEED_TRIPS, ...list])
@@ -72,10 +69,11 @@ export default function Home() {
   // 挂载即并行发起（不等 openid）
   useEffect(() => { void loadTrips() }, [loadTrips])
 
-  // A4：useDidShow 在首次显示也会触发，跳过紧跟挂载的那一次，避免首进双拉
+  // A4：useDidShow 在首次显示也会触发，跳过紧跟挂载的那一次，避免首进双拉；
+  // 之后每次返回首页都刷新（不再节流，确保能看到详情页/他端的最新改动）
   useDidShow(() => {
     if (!didInitialShowRef.current) { didInitialShowRef.current = true; return }
-    void loadTrips(true)
+    void loadTrips()
   })
 
   // A5：仅在「有生成中的行程」翻转时开/关定时器，不再因 trips 变化每轮重建
