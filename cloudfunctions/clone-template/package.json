@@ -1,0 +1,9 @@
+{
+  "name": "clone-template",
+  "version": "1.0.0",
+  "description": "复制攻略模板到当前用户的 trips",
+  "main": "index.js",
+  "dependencies": {
+    "wx-server-sdk": "~3.0.0"
+  }
+}
