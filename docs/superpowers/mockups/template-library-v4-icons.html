@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>行册 · 攻略库 v4(自绘 SVG 图标,无 emoji)</title>
+<style>
+.t-tegami{
+  --bg:#FFF4E6;--bg-soft:#FFE9D1;--surface:#fff;--surface-2:#FFF9F1;
+  --ink:#2B1A10;--ink-2:#5A4338;--ink-3:#9B8378;--line:rgba(43,26,16,.08);--line-2:rgba(43,26,16,.14);
+  --accent:#FF7A2E;--accent-2:#FF9A4D;--accent-soft:#FFD3A8;--accent-bg:#FFEBD6;--leaf:#4FB286;--sun:#E0A019;--plum:#6B46C1;--coral:#FF5B5B;
+  --r-sm:8px;--r-md:11px;--r-lg:16px;--r-xl:22px;--r-pill:999px;
+  --shadow-sm:0 4px 14px rgba(255,122,46,.10);--shadow-md:0 12px 30px rgba(58,36,25,.10);--shadow-lg:0 20px 44px rgba(255,122,46,.16);
+  --font-display:"Noto Serif SC","Songti SC",serif;--font-body:"PingFang SC",-apple-system,sans-serif;--font-mono:"JetBrains Mono","SF Mono",monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#1F1B15;color:#EDE7DA;font-family:"PingFang SC",sans-serif;padding:44px 30px 90px;line-height:1.5}
+.head{max-width:1100px;margin:0 auto 32px}
+.head h1{font-size:27px;font-weight:800;letter-spacing:-.4px}
+.head .sub{color:#A79B86;margin-top:7px;font-size:13px;font-family:"JetBrains Mono",monospace}
+.head .note{margin-top:12px;font-size:13px;color:#C9BFA8;max-width:780px;line-height:1.7}
+.head .note b{color:#FFC247}
+.sec{max-width:1100px;margin:0 auto 46px}
+.sec-h{display:flex;align-items:baseline;gap:12px;margin-bottom:18px}
+.sec-h .no{font-family:"JetBrains Mono",monospace;font-size:12px;color:#857B68;letter-spacing:2px}
+.sec-h h2{font-size:18px;font-weight:700}
+.row{display:flex;gap:30px;flex-wrap:wrap;align-items:flex-start}
+.cap{width:326px}
+.cap .lab{font-size:12.5px;color:#BEB39C;margin-top:13px;line-height:1.65}
+.cap .lab b{color:#EDE7DA}
+
+/* icon base */
+.ic{display:inline-block;vertical-align:middle;fill:none;stroke:currentColor;stroke-width:1.7;
+    stroke-linecap:round;stroke-linejoin:round;flex:0 0 auto}
+
+.ph{width:326px;height:638px;border-radius:34px;overflow:hidden;position:relative;
+    background:var(--bg);box-shadow:0 22px 50px rgba(0,0,0,.45);font-family:var(--font-body)}
+.st{display:flex;justify-content:space-between;padding:13px 22px 7px;font-size:12px;color:var(--ink);font-weight:600}
+.scr{height:calc(100% - 36px);overflow:hidden;position:relative}
+
+/* LIBRARY */
+.lh{display:flex;justify-content:space-between;align-items:flex-end;padding:6px 22px 0}
+.lh .kic{font-family:var(--font-mono);font-size:10px;letter-spacing:3px;color:var(--ink-3)}
+.lh .tt{font-family:var(--font-display);font-size:26px;font-weight:800;color:var(--ink);margin-top:2px}
+.lh .av{width:32px;height:32px;border-radius:var(--r-pill);background:var(--accent-soft);margin-bottom:3px;
+        display:flex;align-items:center;justify-content:center;color:var(--accent)}
+.search{margin:16px 22px 0;display:flex;align-items:center;gap:9px;background:var(--surface);
+        border:1px solid var(--line);border-radius:var(--r-pill);padding:11px 16px;box-shadow:var(--shadow-sm);color:var(--ink-3)}
+.search .ph-t{font-size:13px}
+.dayseg{margin:14px 22px 0;display:flex;align-items:center;gap:10px}
+.dayseg .lb{display:flex;align-items:center;gap:4px;font-family:var(--font-mono);font-size:10px;color:var(--ink-3);letter-spacing:1px;flex:0 0 auto}
+.seg{flex:1;display:flex;background:var(--accent-bg);border-radius:var(--r-pill);padding:3px}
+.seg b{flex:1;text-align:center;font-family:var(--font-mono);font-size:12px;font-weight:600;color:var(--ink-2);padding:6px 0;border-radius:var(--r-pill)}
+.seg b.on{background:var(--accent);color:#fff;box-shadow:var(--shadow-sm)}
+.chips{display:flex;gap:7px;padding:12px 22px 2px;overflow:hidden}
+.chip{font-family:var(--font-mono);font-size:11px;border:1px solid var(--line-2);color:var(--ink-2);
+      padding:6px 12px;border-radius:var(--r-pill);white-space:nowrap;background:var(--surface);display:flex;gap:5px;align-items:center}
+.chip.on{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.cnt{font-family:var(--font-mono);font-size:10px;color:var(--ink-3);padding:12px 22px 6px;letter-spacing:.5px;display:flex;justify-content:space-between;align-items:center}
+.cnt .srt{color:var(--ink-2);display:flex;gap:3px;align-items:center}
+.cards{padding:0 22px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-lg);padding:15px 16px;margin-bottom:12px;box-shadow:var(--shadow-sm);position:relative}
+.card .badge{position:absolute;top:14px;right:14px;font-family:var(--font-mono);font-size:11px;font-weight:700;color:var(--accent);background:var(--accent-bg);padding:4px 9px;border-radius:var(--r-pill)}
+.card .nm{font-family:var(--font-display);font-size:18px;font-weight:800;color:var(--ink);line-height:1.25;padding-right:54px}
+.card .mt{font-family:var(--font-mono);font-size:10px;color:var(--ink-3);margin-top:7px;letter-spacing:.4px;display:flex;align-items:center;gap:6px}
+.card .dot{width:3px;height:3px;border-radius:50%;background:var(--ink-3);display:inline-block}
+.card .tg{display:flex;gap:6px;margin-top:11px}
+.card .tg span{font-size:10.5px;color:var(--ink-2);background:var(--surface-2);border:1px solid var(--line);padding:3px 9px;border-radius:var(--r-pill)}
+.card .route{margin-top:12px;display:flex;align-items:center;gap:6px;color:var(--ink-3);font-size:10px;font-family:var(--font-mono)}
+.card .route i{flex:1;height:1px;background:repeating-linear-gradient(90deg,var(--line-2) 0 4px,transparent 4px 8px)}
+
+/* READER */
+.rh{display:flex;justify-content:space-between;align-items:center;padding:6px 22px 0;color:var(--ink-2);font-size:13px}
+.rh .bk{display:flex;align-items:center;gap:4px}
+.rtag{display:flex;align-items:center;gap:5px;font-family:var(--font-mono);font-size:10px;letter-spacing:1px;color:var(--accent);border:1px solid var(--accent-soft);background:var(--accent-bg);padding:4px 10px;border-radius:var(--r-pill)}
+.rtitle{padding:14px 22px 0}
+.rtitle .ov{font-family:var(--font-mono);font-size:10px;letter-spacing:2px;color:var(--accent)}
+.rtitle .t{font-family:var(--font-display);font-size:27px;font-weight:800;color:var(--ink);line-height:1.18;margin-top:5px}
+.rmeta{display:flex;gap:16px;padding:12px 22px 0;font-family:var(--font-mono);font-size:11px;color:var(--ink-2)}
+.rmeta b{font-family:var(--font-display);font-size:15px;color:var(--ink);font-weight:800;margin-right:3px}
+.tabs{display:flex;gap:18px;padding:14px 22px 0;border-bottom:1px solid var(--line);margin-top:12px}
+.tabs b{display:flex;align-items:center;gap:5px;font-size:13.5px;color:var(--ink-3);padding-bottom:10px;font-weight:600;position:relative}
+.tabs b.on{color:var(--ink)}
+.tabs b.on:after{content:"";position:absolute;left:0;right:0;bottom:-1px;height:2px;background:var(--accent);border-radius:2px}
+.body{padding:14px 22px 0;height:296px;overflow:hidden}
+.dh{display:flex;align-items:baseline;gap:8px;margin:8px 0 4px}
+.dh .dn{font-family:var(--font-display);font-weight:800;font-size:15px;color:var(--ink)}
+.dh .dl{font-family:var(--font-mono);font-size:9px;color:var(--ink-3);letter-spacing:1px}
+.sp{display:flex;gap:11px;padding:8px 0 8px 4px;border-left:2px solid var(--line-2);margin-left:5px}
+.sp .tm{font-family:var(--font-mono);font-size:10px;color:var(--accent);width:36px;flex:0 0 auto;padding-top:1px}
+.sp .nm{font-size:13px;color:var(--ink-2)}
+.sp .nm small{display:block;color:var(--ink-3);font-size:10px;font-family:var(--font-mono);margin-top:2px}
+.map{height:170px;border-radius:var(--r-md);position:relative;overflow:hidden;border:1px solid var(--line);background:var(--surface-2);
+     background-image:linear-gradient(var(--line) 1px,transparent 1px),linear-gradient(90deg,var(--line) 1px,transparent 1px);background-size:26px 26px}
+.map .route2{position:absolute;left:30px;top:40px;width:220px;height:90px;border-left:2px dashed var(--accent);border-bottom:2px dashed var(--accent);opacity:.55}
+.pin{position:absolute;color:var(--accent)}
+.pin .num{position:absolute;left:0;right:0;top:5px;text-align:center;color:#fff;font-family:var(--font-mono);font-size:10px;font-weight:700}
+.maplist{margin-top:12px}
+.maplist .ml{display:flex;align-items:center;gap:10px;padding:7px 0;border-top:1px solid var(--line);font-size:12.5px;color:var(--ink-2)}
+.maplist .ml .n{width:20px;height:20px;border-radius:50%;background:var(--accent-bg);color:var(--accent);font-family:var(--font-mono);font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;flex:0 0 auto}
+.budtot{display:flex;align-items:baseline;gap:8px;padding:4px 0 14px}
+.budtot .v{font-family:var(--font-display);font-size:30px;font-weight:800;color:var(--ink)}
+.budtot .l{font-family:var(--font-mono);font-size:10px;color:var(--ink-3);letter-spacing:1px}
+.brow{margin-bottom:13px}
+.brow .bt{display:flex;justify-content:space-between;font-size:12px;color:var(--ink-2);margin-bottom:5px}
+.brow .bt span{display:flex;align-items:center;gap:6px}
+.brow .bt b{font-family:var(--font-mono);color:var(--ink)}
+.brow .bar{height:7px;border-radius:var(--r-pill);background:var(--accent-bg);overflow:hidden}
+.brow .bar i{display:block;height:100%;background:var(--accent);border-radius:var(--r-pill)}
+.brow.g2 .bar i{background:var(--leaf)}.brow.g3 .bar i{background:var(--sun)}.brow.g4 .bar i{background:var(--plum)}
+.pcat{font-family:var(--font-mono);font-size:10px;color:var(--ink-3);letter-spacing:1px;margin:12px 0 6px}
+.pit{display:flex;align-items:center;gap:10px;padding:6px 0;font-size:13px;color:var(--ink-2)}
+.pit .ck{width:18px;height:18px;border-radius:6px;border:1.5px solid var(--accent);color:var(--accent);display:flex;align-items:center;justify-content:center;flex:0 0 auto}
+.pgrid{display:flex;flex-wrap:wrap;gap:0 18px}
+.pgrid .pit{width:46%}
+.sticky{position:absolute;left:0;right:0;bottom:0;padding:14px 22px 18px;background:linear-gradient(transparent,var(--bg) 26%)}
+.lock{display:flex;align-items:center;justify-content:center;gap:5px;font-family:var(--font-mono);font-size:10px;color:var(--ink-3);margin-bottom:9px}
+.cta{display:flex;align-items:center;justify-content:center;gap:7px;background:var(--accent);color:#fff;text-align:center;padding:15px;border-radius:var(--r-lg);font-size:15px;font-weight:700;box-shadow:var(--shadow-lg)}
+
+/* icon swatch */
+.swatch{display:flex;flex-wrap:wrap;gap:14px;max-width:1100px;margin:0 auto}
+.sw{width:74px;text-align:center;color:#D8CFBC}
+.sw .box{height:54px;border:1px solid #3A352B;border-radius:12px;display:flex;align-items:center;justify-content:center;color:#F0E9DA;background:#2A251D}
+.sw .nm{font-family:"JetBrains Mono",monospace;font-size:10px;margin-top:6px;color:#9A8F7B}
+</style>
+</head>
+<body>
+
+<!-- ===== SVG SYMBOL SPRITE (24x24, stroke=currentColor) ===== -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+  <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5L21 21"/></symbol>
+  <symbol id="i-pin" viewBox="0 0 24 24"><path d="M12 21s7-5.2 7-11a7 7 0 10-14 0c0 5.8 7 11 7 11z"/><circle cx="12" cy="10" r="2.5"/></symbol>
+  <symbol id="i-tag" viewBox="0 0 24 24"><path d="M4 4h7l9 9-7 7-9-9V4z"/><circle cx="8" cy="8" r="1.3" fill="currentColor" stroke="none"/></symbol>
+  <symbol id="i-people" viewBox="0 0 24 24"><circle cx="9" cy="8" r="3"/><path d="M3.5 19a5.5 5.5 0 0111 0"/><path d="M16 5.5a3 3 0 010 5.8M15.5 13.5a5.5 5.5 0 015 5.5"/></symbol>
+  <symbol id="i-leaf" viewBox="0 0 24 24"><path d="M5 19c0-8 6-13 14-13 0 8-5 14-13 14-1 0-1 0-1-1z"/><path d="M6 18c4-4 7-6 10-7"/></symbol>
+  <symbol id="i-lock" viewBox="0 0 24 24"><rect x="5" y="10" width="14" height="10" rx="2.2"/><path d="M8 10V7a4 4 0 018 0v3"/></symbol>
+  <symbol id="i-bed" viewBox="0 0 24 24"><path d="M3 8v11M3 12h18v7M21 19v-5a3 3 0 00-3-3h-7v4"/><circle cx="7" cy="11" r="1.6"/></symbol>
+  <symbol id="i-bowl" viewBox="0 0 24 24"><path d="M3.5 11h17a8.5 8.5 0 01-17 0z"/><path d="M12 11V4M9 6.5C9 5 10 4 12 4s3 1 3 2.5"/></symbol>
+  <symbol id="i-ticket" viewBox="0 0 24 24"><path d="M4 7h16v3a2 2 0 000 4v3H4v-3a2 2 0 000-4V7z"/><path d="M14 7v10" stroke-dasharray="1.5 2.5"/></symbol>
+  <symbol id="i-transit" viewBox="0 0 24 24"><rect x="6" y="4" width="12" height="13" rx="2.5"/><path d="M6 11h12M9 17l-2 3M15 17l2 3"/><circle cx="9" cy="14" r="0.8" fill="currentColor" stroke="none"/><circle cx="15" cy="14" r="0.8" fill="currentColor" stroke="none"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7"/></symbol>
+  <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+  <symbol id="i-chevron" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></symbol>
+  <symbol id="i-sliders" viewBox="0 0 24 24"><path d="M4 7h10M18 7h2M4 17h2M10 17h10"/><circle cx="16" cy="7" r="2"/><circle cx="8" cy="17" r="2"/></symbol>
+  <symbol id="i-calendar" viewBox="0 0 24 24"><rect x="4" y="5" width="16" height="16" rx="2.5"/><path d="M4 9h16M8 3v4M16 3v4"/></symbol>
+  <symbol id="i-route" viewBox="0 0 24 24"><circle cx="6" cy="6" r="2.5"/><circle cx="18" cy="18" r="2.5"/><path d="M8.5 6H15a3 3 0 010 6H9a3 3 0 000 6h6.5"/></symbol>
+  <symbol id="i-coin" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M12 7v10M14.5 9.2h-3.2a1.6 1.6 0 000 3.2h1.8a1.6 1.6 0 010 3.2H9.5"/></symbol>
+  <symbol id="i-bag" viewBox="0 0 24 24"><path d="M6 8h12l-.7 12.2a1 1 0 01-1 .8H7.7a1 1 0 01-1-.8L6 8z"/><path d="M9 8V6a3 3 0 016 0v2"/></symbol>
+  <symbol id="i-mapfold" viewBox="0 0 24 24"><path d="M9 4L4 6v14l5-2 6 2 5-2V4l-5 2-6-2z"/><path d="M9 4v14M15 6v14"/></symbol>
+  <symbol id="i-list" viewBox="0 0 24 24"><path d="M8 7h11M8 12h11M8 17h11"/><circle cx="4.5" cy="7" r="1"/><circle cx="4.5" cy="12" r="1"/><circle cx="4.5" cy="17" r="1"/></symbol>
+  <symbol id="i-user" viewBox="0 0 24 24"><circle cx="12" cy="8.5" r="3.5"/><path d="M5.5 20a6.5 6.5 0 0113 0"/></symbol>
+</defs></svg>
+
+<div class="head">
+  <h1>行册 · 攻略库 v4 — 自绘 SVG 图标(零 emoji)</h1>
+  <div class="sub">24×24 单色线条 · stroke=currentColor · 跟主题变色 · 移植自 triplist-design/icons.jsx 范式</div>
+  <div class="note">所有 emoji 已换成<b>自绘线条图标</b>(下方有图标一览)。落地时收成统一 <b>&lt;Icon name&gt;</b> 组件,weapp 用 CSS mask 渲染、跟 token 变色。</div>
+</div>
+
+<!-- icon swatch -->
+<div class="sec">
+  <div class="sec-h"><span class="no">00</span><h2>自绘图标一览(这套替掉全部 emoji)</h2></div>
+  <div class="swatch">
+    <div class="sw"><div class="box"><svg class="ic" width="26" height="26"><use href="#i-search"/></svg></div><div class="nm">search</div></div>
+    <div class="sw"><div class="box"><svg class="ic" width="26" height="26"><use href="#i-pin"/></svg></div><div class="nm">pin</div></div>
+    <div class="sw"><div class="box"><svg class="ic" width="26" height="26"><use href="#i-tag"/></svg></div><div class="nm">tag</div></div>
+    <div class="sw"><div class="box"><svg class="ic" width="26" height="26"><use href="#i-people"/></svg></div><div class="nm">people</div></div>
+    <div class="sw"><div class="box"><svg class="ic" width="26" height="26"><use href="#i-leaf"/></svg></div><div class="nm">season</div></div>
+    <div class="sw"><div class="box"><svg class="ic" width="26" height="26"><use href="#i-calendar"/></svg></div><div class="nm">days</div></div>
+    <div class="sw"><div class="box"><svg class="ic" width="26" height="26"><use href="#i-lock"/></svg></div><div class="nm">lock</div></div>
+    <div class="sw"><div class="box"><svg class="ic" width="26" height="26"><use href="#i-route"/></svg></div><div class="nm">itinerary</div></div>
+    <div class="sw"><div class="box"><svg class="ic" width="26" height="26"><use href="#i-mapfold"/></svg></div><div class="nm">map</div></div>
+    <div class="sw"><div class="box"><svg class="ic" width="26" height="26"><use href="#i-coin"/></svg></div><div class="nm">budget</div></div>
+    <div class="sw"><div class="box"><svg class="ic" width="26" height="26"><use href="#i-bag"/></svg></div><div class="nm">packing</div></div>
+    <div class="sw"><div class="box"><svg class="ic" width="26" height="26"><use href="#i-bed"/></svg></div><div class="nm">hotel</div></div>
+    <div class="sw"><div class="box"><svg class="ic" width="26" height="26"><use href="#i-bowl"/></svg></div><div class="nm">meal</div></div>
+    <div class="sw"><div class="box"><svg class="ic" width="26" height="26"><use href="#i-ticket"/></svg></div><div class="nm">ticket</div></div>
+    <div class="sw"><div class="box"><svg class="ic" width="26" height="26"><use href="#i-transit"/></svg></div><div class="nm">transit</div></div>
+    <div class="sw"><div class="box"><svg class="ic" width="26" height="26"><use href="#i-plus"/></svg></div><div class="nm">plus</div></div>
+    <div class="sw"><div class="box"><svg class="ic" width="26" height="26"><use href="#i-sliders"/></svg></div><div class="nm">filter</div></div>
+    <div class="sw"><div class="box"><svg class="ic" width="26" height="26"><use href="#i-check"/></svg></div><div class="nm">check</div></div>
+  </div>
+</div>
+
+<!-- LIBRARY + READER -->
+<div class="sec">
+  <div class="sec-h"><span class="no">01</span><h2>攻略库 + 只读攻略(全部用自绘图标)</h2></div>
+  <div class="row">
+
+    <!-- library -->
+    <div class="cap">
+      <div class="ph t-tegami"><div class="st"><span>9:41</span><span>●●● 60%</span></div>
+        <div class="scr">
+          <div class="lh"><div><div class="kic">XINGCE LIBRARY</div><div class="tt">攻略库</div></div>
+            <div class="av"><svg class="ic" width="17" height="17"><use href="#i-user"/></svg></div></div>
+          <div class="search"><svg class="ic" width="16" height="16"><use href="#i-search"/></svg><span class="ph-t">搜城市、目的地、攻略名…</span></div>
+          <div class="dayseg"><span class="lb"><svg class="ic" width="12" height="12"><use href="#i-calendar"/></svg>天数</span>
+            <div class="seg"><b>不限</b><b>1</b><b>2</b><b class="on">3</b><b>4</b><b>5</b><b>6+</b></div></div>
+          <div class="chips">
+            <div class="chip on">全部</div>
+            <div class="chip"><svg class="ic" width="12" height="12"><use href="#i-pin"/></svg>城市</div>
+            <div class="chip"><svg class="ic" width="12" height="12"><use href="#i-tag"/></svg>主题</div>
+            <div class="chip"><svg class="ic" width="12" height="12"><use href="#i-people"/></svg>人群</div>
+            <div class="chip"><svg class="ic" width="12" height="12"><use href="#i-leaf"/></svg>季节</div>
+          </div>
+          <div class="cnt"><span>3 天 · 共 12 条</span><span class="srt"><svg class="ic" width="12" height="12"><use href="#i-sliders"/></svg>热度</span></div>
+          <div class="cards">
+            <div class="card"><span class="badge">3天</span>
+              <div class="nm">苏州慢行 · 园林与面</div>
+              <div class="mt">苏州<span class="dot"></span>华东<span class="dot"></span>14 个地点</div>
+              <div class="tg"><span>古镇</span><span>美食</span><span>citywalk</span></div>
+              <div class="route"><svg class="ic" width="13" height="13"><use href="#i-route"/></svg>拙政园<i></i>平江路<i></i>山塘街</div>
+            </div>
+            <div class="card"><span class="badge">3天</span>
+              <div class="nm">泉州 · 半城烟火半城仙</div>
+              <div class="mt">泉州<span class="dot"></span>华南<span class="dot"></span>11 个地点</div>
+              <div class="tg"><span>古城</span><span>寺庙</span><span>美食</span></div>
+              <div class="route"><svg class="ic" width="13" height="13"><use href="#i-route"/></svg>开元寺<i></i>西街<i></i>蟳埔村</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="lab"><b>库页</b>:搜索/天数/筛选/排序/路线全部换成线条图标,跟 token 变色。</div>
+    </div>
+
+    <!-- reader itinerary -->
+    <div class="cap">
+      <div class="ph t-tegami"><div class="st"><span>9:41</span><span>●●● 60%</span></div>
+        <div class="scr">
+          <div class="rh"><span class="bk"><svg class="ic" width="16" height="16" style="transform:scaleX(-1)"><use href="#i-chevron"/></svg>攻略库</span>
+            <span class="rtag"><svg class="ic" width="11" height="11"><use href="#i-lock"/></svg>只读样张</span></div>
+          <div class="rtitle"><div class="ov">3 DAYS · 苏州 · 华东</div><div class="t">苏州慢行 · 园林与面</div></div>
+          <div class="rmeta"><span><b>3</b>天</span><span><b>14</b>地点</span><span><b>¥1,280</b>预算</span><span><b>2</b>人</span></div>
+          <div class="tabs"><b class="on"><svg class="ic" width="15" height="15"><use href="#i-route"/></svg>行程</b><b><svg class="ic" width="15" height="15"><use href="#i-mapfold"/></svg>地图</b><b><svg class="ic" width="15" height="15"><use href="#i-coin"/></svg>开销</b><b><svg class="ic" width="15" height="15"><use href="#i-bag"/></svg>清单</b></div>
+          <div class="body">
+            <div class="dh"><span class="dn">第 1 天</span><span class="dl">拙政园一带</span></div>
+            <div class="sp"><span class="tm">09:00</span><span class="nm">拙政园 · 慢逛<small>门票 ¥70 · 建议 2h</small></span></div>
+            <div class="sp"><span class="tm">12:30</span><span class="nm">同得兴 · 枫镇大面<small>人均 ¥45</small></span></div>
+            <div class="sp"><span class="tm">14:30</span><span class="nm">忠王府 · 苏博本馆</span></div>
+            <div class="dh"><span class="dn">第 2 天</span><span class="dl">平江路</span></div>
+            <div class="sp"><span class="tm">10:00</span><span class="nm">平江历史街区</span></div>
+          </div>
+          <div class="sticky"><div class="lock"><svg class="ic" width="11" height="11"><use href="#i-lock"/></svg>样张不可编辑 · 复制后即为你自己的行程</div>
+            <div class="cta"><svg class="ic" width="17" height="17" style="stroke:#fff"><use href="#i-plus"/></svg>复制到我的行程</div></div>
+        </div>
+      </div>
+      <div class="lab"><b>只读 · 行程</b>:tab 带图标(行程/地图/开销/清单),只读 lock 标识,复制按钮带 plus 图标。</div>
+    </div>
+
+    <!-- reader budget -->
+    <div class="cap">
+      <div class="ph t-tegami"><div class="st"><span>9:41</span><span>●●● 60%</span></div>
+        <div class="scr">
+          <div class="rh"><span class="bk">‹ 攻略库</span><span class="rtag"><svg class="ic" width="11" height="11"><use href="#i-lock"/></svg>只读样张</span></div>
+          <div class="rtitle"><div class="ov">3 DAYS · 苏州 · 华东</div><div class="t">苏州慢行 · 园林与面</div></div>
+          <div class="rmeta"><span><b>3</b>天</span><span><b>14</b>地点</span><span><b>¥1,280</b>预算</span><span><b>2</b>人</span></div>
+          <div class="tabs"><b><svg class="ic" width="15" height="15"><use href="#i-route"/></svg>行程</b><b><svg class="ic" width="15" height="15"><use href="#i-mapfold"/></svg>地图</b><b class="on"><svg class="ic" width="15" height="15"><use href="#i-coin"/></svg>开销</b><b><svg class="ic" width="15" height="15"><use href="#i-bag"/></svg>清单</b></div>
+          <div class="body">
+            <div class="budtot"><span class="v">¥1,280</span><span class="l">人均预估 · 3 天</span></div>
+            <div class="brow"><div class="bt"><span><svg class="ic" width="14" height="14"><use href="#i-bed"/></svg>住宿</span><b>¥520</b></div><div class="bar"><i style="width:41%"></i></div></div>
+            <div class="brow g2"><div class="bt"><span><svg class="ic" width="14" height="14"><use href="#i-bowl"/></svg>餐饮</span><b>¥360</b></div><div class="bar"><i style="width:28%"></i></div></div>
+            <div class="brow g3"><div class="bt"><span><svg class="ic" width="14" height="14"><use href="#i-ticket"/></svg>门票</span><b>¥240</b></div><div class="bar"><i style="width:19%"></i></div></div>
+            <div class="brow g4"><div class="bt"><span><svg class="ic" width="14" height="14"><use href="#i-transit"/></svg>交通</span><b>¥160</b></div><div class="bar"><i style="width:12%"></i></div></div>
+          </div>
+          <div class="sticky"><div class="lock"><svg class="ic" width="11" height="11"><use href="#i-lock"/></svg>样张不可编辑 · 复制后即为你自己的行程</div>
+            <div class="cta"><svg class="ic" width="17" height="17" style="stroke:#fff"><use href="#i-plus"/></svg>复制到我的行程</div></div>
+        </div>
+      </div>
+      <div class="lab"><b>只读 · 开销</b>:分类带住宿/餐饮/门票/交通线条图标,占比条配色取自 token。</div>
+    </div>
+
+    <!-- reader packing -->
+    <div class="cap">
+      <div class="ph t-tegami"><div class="st"><span>9:41</span><span>●●● 60%</span></div>
+        <div class="scr">
+          <div class="rh"><span class="bk">‹ 攻略库</span><span class="rtag"><svg class="ic" width="11" height="11"><use href="#i-lock"/></svg>只读样张</span></div>
+          <div class="rtitle"><div class="ov">3 DAYS · 苏州 · 华东</div><div class="t">苏州慢行 · 园林与面</div></div>
+          <div class="rmeta"><span><b>3</b>天</span><span><b>14</b>地点</span><span><b>¥1,280</b>预算</span><span><b>2</b>人</span></div>
+          <div class="tabs"><b><svg class="ic" width="15" height="15"><use href="#i-route"/></svg>行程</b><b><svg class="ic" width="15" height="15"><use href="#i-mapfold"/></svg>地图</b><b><svg class="ic" width="15" height="15"><use href="#i-coin"/></svg>开销</b><b class="on"><svg class="ic" width="15" height="15"><use href="#i-bag"/></svg>清单</b></div>
+          <div class="body">
+            <div class="pcat">证件 · 必备</div>
+            <div class="pgrid"><div class="pit"><span class="ck"><svg class="ic" width="12" height="12"><use href="#i-check"/></svg></span>身份证</div><div class="pit"><span class="ck"><svg class="ic" width="12" height="12"><use href="#i-check"/></svg></span>充电宝</div></div>
+            <div class="pcat">衣物</div>
+            <div class="pgrid"><div class="pit"><span class="ck"><svg class="ic" width="12" height="12"><use href="#i-check"/></svg></span>薄外套</div><div class="pit"><span class="ck"><svg class="ic" width="12" height="12"><use href="#i-check"/></svg></span>步行鞋</div><div class="pit"><span class="ck"><svg class="ic" width="12" height="12"><use href="#i-check"/></svg></span>雨伞</div><div class="pit"><span class="ck"><svg class="ic" width="12" height="12"><use href="#i-check"/></svg></span>防晒</div></div>
+            <div class="pcat">电子</div>
+            <div class="pgrid"><div class="pit"><span class="ck"><svg class="ic" width="12" height="12"><use href="#i-check"/></svg></span>相机</div><div class="pit"><span class="ck"><svg class="ic" width="12" height="12"><use href="#i-check"/></svg></span>数据线</div></div>
+          </div>
+          <div class="sticky"><div class="lock"><svg class="ic" width="11" height="11"><use href="#i-lock"/></svg>样张不可编辑 · 复制后即为你自己的行程</div>
+            <div class="cta"><svg class="ic" width="17" height="17" style="stroke:#fff"><use href="#i-plus"/></svg>复制到我的行程</div></div>
+        </div>
+      </div>
+      <div class="lab"><b>只读 · 清单</b>:勾选用 check 线条图标,不再是 emoji ✓。</div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>
