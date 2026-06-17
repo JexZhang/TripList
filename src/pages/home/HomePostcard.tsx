@@ -2,6 +2,7 @@ import { View, Text } from '@tarojs/components'
 import AvatarEntry from '../../components/AvatarEntry'
 import TripPhaseChip from '../../components/TripPhaseChip'
 import HomeCardAIRow from '../../components/HomeCardAIRow'
+import AIGlowWrap from '../../components/AIGlowWrap'
 import HomeCreateTiles from './HomeCreateTiles'
 import HomeFeaturedRow from './HomeFeaturedRow'
 import { fmtDateShort } from '../../utils/format'
@@ -75,8 +76,8 @@ export default function HomePostcard({
             const phase = getTripPhase(t.startDate, t.endDate)
             const isPost = phase === 'post'
             return (
+              <AIGlowWrap key={t._id} active={ai === 'thinking'}>
               <View
-                key={t._id}
                 className={`hpp-card ${isPost ? 'hpp-card--post' : ''}`}
                 onClick={() => onOpenTrip(t)}
                 onLongPress={() => onLongPressTrip(t)}
@@ -90,6 +91,7 @@ export default function HomePostcard({
                   {phase === 'live' && <TripPhaseChip trip={t} className='hpp-card-phase' />}
                 </View>
               </View>
+              </AIGlowWrap>
             )
           })}
         </View>

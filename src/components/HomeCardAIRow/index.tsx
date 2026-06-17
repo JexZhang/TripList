@@ -6,9 +6,7 @@ export type HomeCardAIRowStatus = 'thinking' | 'ready' | 'error'
 
 interface Props {
   status: HomeCardAIRowStatus
-  /** thinking 文案的额外信息，如 "预计 30s" */
   hint?: string
-  onTap?: () => void
 }
 
 const CONFIG: Record<HomeCardAIRowStatus, { text: string; cls: string }> = {
@@ -17,13 +15,10 @@ const CONFIG: Record<HomeCardAIRowStatus, { text: string; cls: string }> = {
   error:    { text: 'AI 生成失败 · 点击重试', cls: 'hc-ai--error' },
 }
 
-export default function HomeCardAIRow({ status, hint, onTap }: Props) {
+export default function HomeCardAIRow({ status, hint }: Props) {
   const c = CONFIG[status]
   return (
-    <View
-      className={`hc-ai ${c.cls}`}
-      onClick={(e) => { e.stopPropagation(); onTap?.() }}
-    >
+    <View className={`hc-ai ${c.cls}`}>
       <View className='hc-ai-deco' />
       {status === 'thinking' && <View className='hc-ai-shine' />}
       <SparkleIcon size={22} className='hc-ai-icon' />

@@ -1,0 +1,53 @@
+.aiglow {
+  position: relative;
+  padding: 3px;
+  border-radius: calc(var(--r-lg) + 3px);
+  box-shadow: 0 0 20px 2px var(--accent-soft, rgba(255, 122, 46, 0.35));
+}
+
+/* 裁剪层：让旋转环不溢出外框 */
+.aiglow-clip {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* 旋转渐变环 */
+.aiglow-ring {
+  position: absolute;
+  width: 200%;
+  height: 200%;
+  top: -50%;
+  left: -50%;
+  background: conic-gradient(
+    from 0deg,
+    var(--accent, #FF7A2E),
+    var(--accent-2, #FF9A4D),
+    rgba(0, 0, 0, 0) 40%,
+    rgba(0, 0, 0, 0) 60%,
+    var(--accent, #FF7A2E)
+  );
+  animation: aiglow-spin 3.2s linear infinite;
+}
+
+/* children 要在环之上 */
+.aiglow > :not(.aiglow-clip) {
+  position: relative;
+  z-index: 1;
+}
+
+/* 列表行变体：减小圆角 */
+.aiglow--row {
+  border-radius: calc(var(--r-sm, 8px) + 3px);
+}
+.aiglow--row .aiglow-clip {
+  border-radius: inherit;
+}
+
+@keyframes aiglow-spin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
