@@ -9,7 +9,7 @@ import DailyChart from './DailyChart'
 import './index.scss'
 
 export default function BudgetView() {
-  const { state, dispatch } = useTripStore()
+  const { state, dispatch, readonly: ro } = useTripStore()
   const trip = state.trip!
   const [editSpot, setEditSpot] = useState<{ dayId: string; spot: Spot } | null>(null)
 
@@ -18,7 +18,7 @@ export default function BudgetView() {
   const hotelPct = buckets.find((b) => b.type === 'hotel')?.pct || 0
 
   return (
-    <ScrollView scrollY className='bv'>
+    <ScrollView scrollY className={`bv${ro ? ' is-ro' : ''}`}>
       {/* 1. 顶部总览 */}
       <View className='bv-head'>
         <View className='bv-head-l'>
@@ -64,7 +64,7 @@ export default function BudgetView() {
       {expensive && (
         <View
           className='bv-expensive'
-          onClick={() => setEditSpot({ dayId: expensive.dayId, spot: expensive.spot })}
+          onClick={ro ? undefined : () => setEditSpot({ dayId: expensive.dayId, spot: expensive.spot })}
         >
           <Text className='bv-exp-kicker'>本次最贵一笔</Text>
           <Text className='bv-exp-name'>{expensive.spot.name}</Text>
@@ -94,7 +94,7 @@ export default function BudgetView() {
                 <View
                   key={spot.id}
                   className='bv-detail-row'
-                  onClick={() => setEditSpot({ dayId, spot })}
+                  onClick={ro ? undefined : () => setEditSpot({ dayId, spot })}
                 >
                   <Text className='bv-detail-name'>{spot.name}</Text>
                   <Text className='bv-detail-price'>{fmtCurrency(spot.price || 0)}</Text>
@@ -105,20 +105,22 @@ export default function BudgetView() {
         })}
       </View>
 
-      <EditSpotSheet
-        open={!!editSpot}
-        spot={editSpot?.spot || null}
-        defaultCity={editSpot?.spot.city || trip.destinations?.[0]?.name}
-        onClose={() => setEditSpot(null)}
-        onSave={(patch) => {
-          if (!editSpot) return
-          dispatch({ type: 'UPDATE_SPOT', dayId: editSpot.dayId, spotId: editSpot.spot.id, patch })
-        }}
-        onDelete={() => {
-          if (!editSpot) return
-          dispatch({ type: 'DELETE_SPOT', dayId: editSpot.dayId, spotId: editSpot.spot.id })
-        }}
-      />
+      {!ro && (
+        <EditSpotSheet
+          open={!!editSpot}
+          spot={editSpot?.spot || null}
+          defaultCity={editSpot?.spot.city || trip.destinations?.[0]?.name}
+          onClose={() => setEditSpot(null)}
+          onSave={(patch) => {
+            if (!editSpot) return
+            dispatch({ type: 'UPDATE_SPOT', dayId: editSpot.dayId, spotId: editSpot.spot.id, patch })
+          }}
+          onDelete={() => {
+            if (!editSpot) return
+            dispatch({ type: 'DELETE_SPOT', dayId: editSpot.dayId, spotId: editSpot.spot.id })
+          }}
+        />
+      )}
     </ScrollView>
   )
 }
