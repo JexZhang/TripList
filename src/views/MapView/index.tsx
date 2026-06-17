@@ -6,7 +6,7 @@ import { useTheme } from '../../store/theme-store'
 import { MAPMODE_VARIANT } from './variants'
 import ModeBar, { type MapMode } from './ModeBar'
 import SpotMapSheet from './SpotMapSheet'
-import { collectLocated, dayColor, encodeMarkerId, decodeMarkerId } from './helpers'
+import { collectLocated, dayColor, encodeMarkerId, decodeMarkerId, truncateName } from './helpers'
 import type { Spot } from '../../types/trip'
 import './index.scss'
 
@@ -42,9 +42,12 @@ export default function MapView() {
   }, [trip.days, mode])
 
   const markers = useMemo(() => {
+    const isAll = mode === 'all'
     return located.map((p) => {
-      const label = mode === 'all' ? p.dayIdx + 1 : p.spotIdx + 1
       const color = dayColor(p.dayIdx)
+      // all 模式：天序号数字徽标（总览，保持整洁）
+      // 单天模式：直接显示地点名（截断防止过长），不带序号
+      const content = isAll ? String(p.dayIdx + 1) : truncateName(p.spot.name)
       return {
         id: encodeMarkerId(p.dayIdx, p.spotIdx),
         latitude: p.lat,
@@ -53,13 +56,13 @@ export default function MapView() {
         height: 1,
         anchor: { x: 0.5, y: 1 },
         callout: {
-          content: String(label),
+          content,
           color: '#FFFFFF',
-          fontSize: 14,
+          fontSize: isAll ? 14 : 13,
           bgColor: color,
-          padding: 10,
-          borderRadius: 999,
-          borderWidth: 3,
+          padding: isAll ? 10 : 8,
+          borderRadius: isAll ? 999 : 8,
+          borderWidth: isAll ? 3 : 2,
           borderColor: '#FFFFFF',
           display: 'ALWAYS' as const,
           textAlign: 'center' as const,
