@@ -54,7 +54,34 @@ function TripBody() {
   
   const t = state.trip
   const isOwner = t ? t._openid === openid : false
-  
+
+  // ── 覆盖当前用户的显示信息，绕过 trips 集合中的旧快照 ──
+  // 修复：用户编辑资料后，攻略头部/协作者列表仍显示旧昵称/头像
+  const displayTrip = t ? (() => {
+    let dt = t
+    // 当前用户是 owner → 用 me 的最新 nickname/avatar
+    if (isOwner && me) {
+      dt = { ...dt,
+        ownerNickname: me.nickname || dt.ownerNickname,
+        ownerAvatarUrl: me.avatarUrl || dt.ownerAvatarUrl,
+      }
+    }
+    // 当前用户在 collaborators 中 → 用 me 的最新 info
+    if (me && dt.collaborators?.length) {
+      const myIdx = dt.collaborators.findIndex(c => c.openid === openid)
+      if (myIdx >= 0) {
+        const updated = dt.collaborators.slice()
+        updated[myIdx] = {
+          ...updated[myIdx],
+          nickname: me.nickname || updated[myIdx].nickname,
+          avatarUrl: me.avatarUrl || updated[myIdx].avatarUrl,
+        }
+        dt = { ...dt, collaborators: updated }
+      }
+    }
+    return dt
+  })() : null
+
   shareRef.tripName = t?.name || ''
   
   // 进入 ready 状态首次自动弹 Preview
@@ -271,7 +298,7 @@ function TripBody() {
   return (
     <View className={themeCls}>
       <TripHeader
-        trip={t}
+        trip={displayTrip || t}
         isOwner={isOwner}
         aiStatus={t.aiStatus as 'generating' | 'ready' | 'error' | null | undefined}
         onAITap={handleAiButtonTap}
@@ -326,9 +353,9 @@ function TripBody() {
 
       <CollaboratorsSheet
         open={collabSheetOpen}
-        collaborators={t.collaborators || []}
-        ownerNickname={t.ownerNickname}
-        ownerAvatarUrl={t.ownerAvatarUrl}
+        collaborators={displayTrip?.collaborators || t.collaborators || []}
+        ownerNickname={displayTrip?.ownerNickname || t.ownerNickname}
+        ownerAvatarUrl={displayTrip?.ownerAvatarUrl || t.ownerAvatarUrl}
         onClose={() => setCollabSheetOpen(false)}
       />
 
