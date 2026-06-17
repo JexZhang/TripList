@@ -1,6 +1,7 @@
 import { useState } from 'react'
-import { Image, View, Text } from '@tarojs/components'
+import { Button, Image, View, Text } from '@tarojs/components'
 import Taro from '@tarojs/taro'
+import { version } from '../../../package.json'
 import { useMe } from '../../store/me-store'
 import { useTheme, VALID_THEMES, type ThemeName } from '../../store/theme-store'
 import { useThemeClass } from '../../utils/theme-class'
@@ -96,9 +97,15 @@ export default function Me() {
         )}
       </View>
 
-      <View className='me-section me-section--meta'>
-        <Text className='me-meta'>行册 · v1.0.0</Text>
-      </View>
+      {process.env.TARO_ENV === 'weapp' && (
+        <View className='me-section me-feedback-card'>
+          <Text className='me-feedback-version'>v{version}</Text>
+          <Text className='me-feedback-label'>意见反馈</Text>
+          <Text className='me-feedback-desc'>告诉我们你的想法，帮助行册变得更好</Text>
+          {/* @ts-ignore open-type="feedback" is weapp-only */}
+          <Button className='me-feedback-btn' openType='feedback' />
+        </View>
+      )}
 
       <ProfileEditSheet
         open={editOpen}
