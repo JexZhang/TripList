@@ -32,8 +32,8 @@
 }
 
 @keyframes pulse-glow {
-  0%, 100% { box-shadow: 0 16rpx 36rpx rgba(255, 122, 46, 0.40); }
-  50%      { box-shadow: 0 16rpx 44rpx rgba(255, 122, 46, 0.60); }
+  0%, 100% { box-shadow: 0 8rpx 24rpx rgba(107, 70, 193, 0.18); }
+  50%      { box-shadow: 0 12rpx 40rpx rgba(107, 70, 193, 0.45); }
 }
 
 @keyframes spin {

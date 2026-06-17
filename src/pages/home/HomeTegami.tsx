@@ -1,16 +1,15 @@
-import { View, Text } from '@tarojs/components'
 import { useMemo } from 'react'
-import BrandLogo from '../../components/BrandLogo'
-import TripPhaseChip from '../../components/TripPhaseChip'
+import { View, Text } from '@tarojs/components'
 import AvatarEntry from '../../components/AvatarEntry'
-import HomeAIBanner from '../../components/HomeAIBanner'
-import HomeBottomCTA from '../../components/HomeBottomCTA'
-import HomeArchiveSection from './HomeArchiveSection'
+import TripPhaseChip from '../../components/TripPhaseChip'
 import HomeCardAIRow from '../../components/HomeCardAIRow'
+import HomeCreateTiles from './HomeCreateTiles'
 import HomeFeaturedRow from './HomeFeaturedRow'
 import { fmtDateShort } from '../../utils/format'
 import { tripSummary } from '../../utils/trip-helpers'
+import { getTripPhase } from '../../utils/trip-phase'
 import type { HomeViewProps } from './shared'
+import { todayLabel } from './shared'
 import type { Trip } from '../../types/trip'
 import './styles/home-tegami.scss'
 
@@ -29,10 +28,10 @@ function aiStatusFor(t: Trip): 'thinking' | 'ready' | 'error' | null {
 }
 
 export default function HomeTegami({
-  trips, archivedTrips, loading, openid, onOpenTrip, onLongPressTrip, onNewTrip, onAITrip,
+  trips, loading, openid, onOpenTrip, onLongPressTrip, onNewTrip, onAITrip,
   featuredTemplates, onOpenTemplate, onOpenLibrary,
 }: HomeViewProps) {
-  const sized = useMemo(() => trips.map((t, i) => ({
+  const colored = useMemo(() => trips.map((t, i) => ({
     ...t,
     _c1: COLORS[i % COLORS.length][0],
     _c2: COLORS[i % COLORS.length][1],
@@ -40,57 +39,60 @@ export default function HomeTegami({
 
   return (
     <View className='ht'>
+      {/* 顶部极简栏：左日期 + 右头像 */}
       <View className='ht-head'>
-        <View className='ht-issue'>行册 · No. 012 · 2026 春</View>
-        <View className='ht-head-row'>
-          <BrandLogo size='lg' />
-          <AvatarEntry className='ht-avatar' />
-        </View>
-        <Text className='ht-tag'>你的旅行，值得被好好记录</Text>
+        <Text className='ht-date'>{todayLabel()}</Text>
+        <AvatarEntry className='ht-avatar' />
       </View>
 
-      <HomeAIBanner onTap={onAITrip} />
+      {/* 创建台 */}
+      <HomeCreateTiles onAITrip={onAITrip} onNewTrip={onNewTrip} />
 
+      {/* 旅人精选 */}
       <HomeFeaturedRow templates={featuredTemplates} onOpenTemplate={onOpenTemplate} onOpenLibrary={onOpenLibrary} />
 
       {loading && <View className='ht-loading'>加载中…</View>}
 
-      <View className='ht-stack'>
-        {sized.map((t, i) => {
-          const ai = aiStatusFor(t)
-          const isCollab = t._openid !== openid
-          return (
-            <View
-              key={t._id}
-              className={`ht-card ht-card-${i % 5}`}
-              onClick={() => onOpenTrip(t)}
-              onLongPress={() => onLongPressTrip(t)}
-              style={{
-                '--c1': t._c1, '--c2': t._c2,
-                animationDelay: `${i * 80}ms`,
-              } as React.CSSProperties}
-            >
-              <View className='ht-card-edge' />
-              <View className='ht-card-body'>
-                {ai && <HomeCardAIRow status={ai} />}
-                <Text className='ht-card-meta'>
-                  {fmtDateShort(t.startDate)} → {fmtDateShort(t.endDate)} · {tripSummary(t.startDate, t.endDate, t.pax)}
-                </Text>
-                <Text className='ht-card-name'>{t.name}</Text>
-                <TripPhaseChip trip={t} className='ht-card-phase' hidePre />
-                <View className='ht-card-foot'>
-                  {isCollab && <View className='ht-card-badge'>协作</View>}
+      {/* 我的行程 */}
+      <View className='ht-section'>
+        <View className='ht-section-h'>
+          <View className='ht-section-bar ht-section-bar--trips' />
+          <Text className='ht-section-t'>我的行程</Text>
+        </View>
+
+        <View className='ht-stack'>
+          {colored.map((t, i) => {
+            const ai = aiStatusFor(t)
+            const isCollab = t._openid !== openid
+            const phase = getTripPhase(t.startDate, t.endDate)
+            const isPost = phase === 'post'
+            return (
+              <View
+                key={t._id}
+                className={`ht-card ht-card-${i % 5} ${isPost ? 'ht-card--post' : ''}`}
+                onClick={() => onOpenTrip(t)}
+                onLongPress={() => onLongPressTrip(t)}
+                style={{
+                  '--c1': t._c1, '--c2': t._c2,
+                  animationDelay: `${i * 80}ms`,
+                } as React.CSSProperties}
+              >
+                <View className='ht-card-edge' />
+                <View className='ht-card-body'>
+                  {ai && <HomeCardAIRow status={ai} />}
+                  <Text className='ht-card-meta'>
+                    {fmtDateShort(t.startDate)} → {fmtDateShort(t.endDate)} · {tripSummary(t.startDate, t.endDate, t.pax)}
+                  </Text>
+                  <Text className='ht-card-name'>{t.name}</Text>
+                  {phase === 'live' && <TripPhaseChip trip={t} className='ht-card-phase' />}
+                  <View className='ht-card-foot'>
+                    {isCollab && <View className='ht-card-badge'>协作</View>}
+                  </View>
                 </View>
               </View>
-            </View>
-          )
-        })}
-      </View>
-
-      <HomeArchiveSection trips={archivedTrips} onOpenTrip={onOpenTrip} onLongPressTrip={onLongPressTrip} />
-
-      <View className='ht-cta'>
-        <HomeBottomCTA onAITap={onAITrip} onNewTap={onNewTrip} newLabel='+ 新建攻略' />
+            )
+          })}
+        </View>
       </View>
     </View>
   )

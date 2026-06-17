@@ -1,6 +1,6 @@
 .ht {
   min-height: 100vh;
-  padding: 32rpx 32rpx 120rpx;
+  padding: 32rpx 0 120rpx;
   box-sizing: border-box;
   background:
     radial-gradient(120% 60% at 100% 0%, rgba(255, 154, 77, 0.22) 0%, transparent 55%),
@@ -9,30 +9,20 @@
   animation: page-in 0.42s var(--ease-out) both;
 }
 
+/* ── 顶部极简栏 ── */
 .ht-head {
-  padding: 16rpx 8rpx 32rpx;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16rpx 32rpx 24rpx;
   animation: slide-up 0.5s var(--ease-out) both;
 }
-.ht-issue {
-  font-size: 22rpx;
-  color: var(--ink-3);
-  letter-spacing: 4rpx;
-  font-family: var(--font-mono);
-  margin-bottom: 16rpx;
-}
-.ht-head-row {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-}
-.ht-avatar { margin-top: 12rpx; }
-.ht-tag {
-  display: block;
-  margin-top: 14rpx;
+
+.ht-date {
   font-size: 24rpx;
+  font-family: var(--font-body);
   color: var(--ink-3);
-  letter-spacing: 3rpx;
-  font-family: var(--font-display);
+  letter-spacing: 2rpx;
 }
 
 .ht-loading {
@@ -42,11 +32,42 @@
   padding: 80rpx 0;
 }
 
+/* ── 分区标题 ── */
+.ht-section {
+  padding: 0 32rpx;
+}
+
+.ht-section-h {
+  display: flex;
+  align-items: center;
+  gap: 12rpx;
+  margin-bottom: 20rpx;
+}
+
+/* ── 侧边竖条 ── */
+.ht-section-bar {
+  width: 6rpx;
+  height: 32rpx;
+  border-radius: 3rpx;
+  flex-shrink: 0;
+}
+
+.ht-section-bar--trips {
+  background: linear-gradient(180deg, #6B46C1, #A78BFA);
+}
+
+.ht-section-t {
+  font-size: 32rpx;
+  font-weight: 700;
+  color: var(--ink);
+  font-family: var(--font-display, serif);
+}
+
+/* ── 行程卡列表 ── */
 .ht-stack {
   display: flex;
   flex-direction: column;
   gap: 0;
-  margin-top: 24rpx;
 }
 
 .ht-card {
@@ -60,31 +81,48 @@
   animation: slide-up 0.5s var(--ease-out) both;
   transition: transform 0.22s var(--ease-out);
 }
-.ht-card:first-child { margin-top: 0; }
+
+.ht-card:first-child {
+  margin-top: 0;
+}
+
 .ht-card-0 { transform: rotate(-0.6deg); }
 .ht-card-1 { transform: rotate(0.4deg); }
 .ht-card-2 { transform: rotate(-0.3deg); }
 .ht-card-3 { transform: rotate(0.6deg); }
 .ht-card-4 { transform: rotate(-0.4deg); }
+
 .ht-card:active {
   transform: rotate(0deg) scale(0.985);
   box-shadow: var(--shadow-lg);
 }
 
+/* 左侧渐变色条 */
 .ht-card-edge {
   position: absolute;
-  left: 0; top: 0; bottom: 0;
+  left: 0;
+  top: 0;
+  bottom: 0;
   width: 12rpx;
   background: linear-gradient(180deg, var(--c1), var(--c2));
 }
 
-.ht-card-body { position: relative; }
+/* 已结束行程：整卡淡化沉底 */
+.ht-card--post {
+  opacity: 0.45;
+}
+
+.ht-card-body {
+  position: relative;
+}
+
 .ht-card-meta {
   font-size: 22rpx;
   color: var(--ink-3);
   font-family: var(--font-mono);
   letter-spacing: 1rpx;
 }
+
 .ht-card-name {
   display: block;
   margin-top: 8rpx;
@@ -100,6 +138,7 @@
   display: flex;
   gap: 12rpx;
 }
+
 .ht-card-badge {
   padding: 4rpx 14rpx;
   border-radius: var(--r-pill);
@@ -108,8 +147,4 @@
   letter-spacing: 2rpx;
   background: linear-gradient(135deg, var(--accent), var(--coral));
   color: #fff;
-}
-
-.ht-cta {
-  margin-top: 24rpx;
 }

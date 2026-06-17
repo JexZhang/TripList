@@ -1,56 +1,24 @@
 .hm {
   min-height: 100vh;
-  padding: 32rpx 32rpx 120rpx;
+  padding: 0 0 120rpx;
   box-sizing: border-box;
   background: var(--bg);
   animation: page-in 0.42s var(--ease-out) both;
 }
 
-/* —— masthead —— */
-.hm-masthead { padding-top: 8rpx; }
-.hm-top {
+/* ── 顶部极简栏 ── */
+.hm-head {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  padding: 16rpx 32rpx 24rpx;
 }
-.hm-issueno {
-  font-size: 22rpx;
-  font-weight: 700;
-  font-family: var(--font-mono);
-  letter-spacing: 6rpx;
-  color: var(--ink);
-}
-.hm-title-row {
-  display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
-  margin-top: 32rpx;
-}
-.hm-meta-stack {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  gap: 4rpx;
-}
-.hm-meta {
-  font-size: 20rpx;
-  font-family: var(--font-mono);
+
+.hm-date {
+  font-size: 24rpx;
+  font-family: var(--font-body);
   color: var(--ink-3);
   letter-spacing: 2rpx;
-}
-.hm-rule {
-  height: 4rpx;
-  background: var(--ink);
-  margin: 24rpx 0 12rpx;
-}
-.hm-strap {
-  font-size: 18rpx;
-  letter-spacing: 8rpx;
-  font-family: var(--font-display);
-  color: var(--ink-2);
-  text-align: center;
-  padding-bottom: 32rpx;
-  border-bottom: 1rpx solid var(--line);
 }
 
 .hm-loading {
@@ -60,91 +28,88 @@
   padding: 80rpx 0;
 }
 
-/* —— Feature —— */
-.hm-feature {
-  margin-top: 36rpx;
-  padding-bottom: 32rpx;
-  border-bottom: 4rpx double var(--ink);
-  animation: slide-up 0.5s var(--ease-out) both;
-}
-.hm-feature-tag {
-  display: block;
-  font-size: 20rpx;
-  letter-spacing: 6rpx;
-  font-family: var(--font-display);
-  color: var(--accent);
-  margin-bottom: 12rpx;
-}
-.hm-feature-title {
-  display: block;
-  font-size: 60rpx;
-  font-weight: 900;
-  font-family: var(--font-display);
-  line-height: 1.05;
-  color: var(--ink);
-  margin-bottom: 16rpx;
-}
-.hm-feature-deck {
-  display: block;
-  font-size: 24rpx;
-  color: var(--ink-2);
-  margin-bottom: 24rpx;
-  line-height: 1.5;
-}
-.hm-feature-foot {
-  display: flex;
-  justify-content: space-between;
-  margin-top: 20rpx;
-  font-size: 22rpx;
-  font-family: var(--font-mono);
-  color: var(--ink-2);
-  letter-spacing: 2rpx;
+/* ── 分区标题 ── */
+.hm-section {
+  padding: 0 32rpx;
 }
 
-/* —— Index —— */
-.hm-index { margin-top: 32rpx; }
-.hm-index-head {
-  display: flex;
-  justify-content: space-between;
-  font-size: 22rpx;
-  font-family: var(--font-display);
-  letter-spacing: 4rpx;
-  color: var(--ink-3);
-  padding-bottom: 12rpx;
-  border-bottom: 1rpx solid var(--line);
-  margin-bottom: 16rpx;
-}
-.hm-index-row {
+.hm-section-h {
   display: flex;
   align-items: baseline;
   gap: 12rpx;
-  padding: 16rpx 0;
-  border-bottom: 1rpx solid var(--line);
+  margin-bottom: 20rpx;
+  padding-bottom: 12rpx;
+  border-bottom: 4rpx solid var(--ink);
 }
-.hm-index-no {
+
+.hm-section-t {
+  font-size: 32rpx;
+  font-weight: 900;
+  color: var(--ink);
+  font-family: var(--font-display);
+}
+
+.hm-section-sub {
+  font-size: 18rpx;
+  font-family: var(--font-mono);
+  letter-spacing: 4rpx;
+  color: var(--ink-3);
+}
+
+/* ── 行程列表（编辑风 index 样式） ── */
+.hm-list {
+  margin-top: 4rpx;
+}
+
+.hm-row {
+  display: flex;
+  gap: 20rpx;
+  padding: 24rpx 0;
+  border-bottom: 1rpx solid var(--line);
+  align-items: flex-start;
+  transition: opacity 0.15s;
+}
+
+.hm-row:active {
+  opacity: 0.6;
+}
+
+/* 已结束行程：整卡淡化沉底 */
+.hm-row--post {
+  opacity: 0.45;
+}
+
+.hm-row-no {
   font-size: 22rpx;
   font-family: var(--font-mono);
   color: var(--ink-3);
   letter-spacing: 2rpx;
+  padding-top: 6rpx;
 }
-.hm-index-name {
-  flex: 0 1 auto;
-  font-size: 28rpx;
+
+.hm-row-body {
+  flex: 1;
+  min-width: 0;
+}
+
+.hm-row-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+
+.hm-row-name {
+  font-size: 30rpx;
+  font-weight: 700;
   font-family: var(--font-display);
   color: var(--ink);
 }
-.hm-index-dots {
-  flex: 1;
-  border-bottom: 2rpx dotted var(--ink-3);
-  align-self: center;
-  margin: 0 12rpx;
-}
-.hm-index-date {
+
+.hm-row-meta {
+  display: block;
+  margin-top: 6rpx;
   font-size: 22rpx;
   font-family: var(--font-mono);
-  color: var(--ink-2);
-}
-
-.hm-cta {
-  margin-top: 24rpx;
+  color: var(--ink-3);
+  letter-spacing: 1rpx;
 }

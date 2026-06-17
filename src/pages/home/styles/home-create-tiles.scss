@@ -1,0 +1,114 @@
+/* ═══ 首页 · 创建台双 tile（4 主题共用骨架，CSS 变量换皮） ═══ */
+
+.hct {
+  display: flex;
+  gap: 20rpx;
+  padding: 0 32rpx;
+  margin-bottom: 32rpx;
+}
+
+.hct-tile {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16rpx;
+  padding: 40rpx 16rpx;
+  border-radius: var(--r-lg);
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.18s var(--ease-out), box-shadow 0.18s var(--ease-out);
+}
+
+.hct-tile:active {
+  transform: scale(0.97);
+}
+
+.hct-tile-icon-wrap {
+  width: 64rpx;
+  height: 64rpx;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.20);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  position: relative;
+  z-index: 1;
+}
+
+.hct-tile-label {
+  font-size: 28rpx;
+  font-weight: 700;
+  color: #fff;
+  letter-spacing: 2rpx;
+  position: relative;
+  z-index: 1;
+}
+
+.hct-tile-desc {
+  font-size: 22rpx;
+  color: rgba(255, 255, 255, 0.72);
+  letter-spacing: 1rpx;
+  position: relative;
+  z-index: 1;
+  margin-top: -4rpx;
+}
+
+/* ── AI 规划 tile：更大比例 + 强调色渐变 + 扫光 ── */
+.hct-tile--ai {
+  flex: 1.5;
+  background: linear-gradient(135deg, var(--plum) 0%, var(--accent) 100%);
+  box-shadow: 0 8rpx 24rpx rgba(107, 70, 193, 0.22);
+  animation: pulse-glow 3s ease-in-out infinite;
+  padding: 44rpx 20rpx;
+}
+
+/* 扫光 — 完整扫出右边界后再循环 */
+.hct-shine {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 50%;
+  background: linear-gradient(
+    100deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.08) 20%,
+    rgba(255, 255, 255, 0.38) 50%,
+    rgba(255, 255, 255, 0.08) 80%,
+    transparent 100%
+  );
+  animation: hct-sweep 3.2s ease-in-out infinite;
+  pointer-events: none;
+}
+
+@keyframes hct-sweep {
+  0%   { transform: translateX(-120%); }
+  70%  { transform: translateX(320%); }
+  100% { transform: translateX(320%); }
+}
+
+/* ── 手动新建 tile：深色底 ── */
+.hct-tile--new {
+  background: var(--ink);
+}
+
+/* ═══════════ 主题覆写 ═══════════ */
+
+/* ── 刊物：方角 + 粗阴影 ── */
+.theme-magazine .hct-tile {
+  border-radius: var(--r-lg);
+  box-shadow: var(--shadow-md);
+}
+
+.theme-magazine .hct-tile--ai {
+  animation: none;
+  box-shadow: var(--shadow-md);
+}
+
+/* ── 护照：虚线边框点缀 ── */
+.theme-postcard .hct-tile--new {
+  border: 2rpx dashed var(--line-2);
+}

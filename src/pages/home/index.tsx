@@ -218,16 +218,20 @@ export default function Home() {
     }
   }
 
-  // 首页分区：active (pre/live) + archived (post 折叠展示)
-  const { activeTrips, archivedTrips } = useMemo(() => {
-    const active = trips.filter((t) => getTripPhase(t.startDate, t.endDate) !== 'post')
-    const archived = trips.filter((t) => getTripPhase(t.startDate, t.endDate) === 'post')
-    return { activeTrips: active, archivedTrips: archived }
+  // 4.1 排序：live → pre → post；live/pre 按 startDate 升序，post 按 endDate 降序
+  const sortedTrips = useMemo(() => {
+    const phaseOrder = { live: 0, pre: 1, post: 2 }
+    return [...trips].sort((a, b) => {
+      const pa = getTripPhase(a.startDate, a.endDate)
+      const pb = getTripPhase(b.startDate, b.endDate)
+      if (phaseOrder[pa] !== phaseOrder[pb]) return phaseOrder[pa] - phaseOrder[pb]
+      if (pa === 'post') return b.endDate.localeCompare(a.endDate)
+      return a.startDate.localeCompare(b.startDate)
+    })
   }, [trips])
 
   const props: HomeViewProps = {
-    trips: activeTrips,
-    archivedTrips,
+    trips: sortedTrips,
     loading,
     openid,
     onOpenTrip: (t) => Taro.navigateTo({ url: `/pages/trip/index?id=${t._id}` }),

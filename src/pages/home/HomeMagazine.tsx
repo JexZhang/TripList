@@ -1,14 +1,14 @@
 import { View, Text } from '@tarojs/components'
-import BrandLogo from '../../components/BrandLogo'
-import TripPhaseChip from '../../components/TripPhaseChip'
 import AvatarEntry from '../../components/AvatarEntry'
-import HomeAIBanner from '../../components/HomeAIBanner'
-import HomeBottomCTA from '../../components/HomeBottomCTA'
-import HomeArchiveSection from './HomeArchiveSection'
+import TripPhaseChip from '../../components/TripPhaseChip'
 import HomeCardAIRow from '../../components/HomeCardAIRow'
-import MagFeatureCover from '../../components/MagFeatureCover'
+import HomeCreateTiles from './HomeCreateTiles'
 import HomeFeaturedRow from './HomeFeaturedRow'
+import { fmtDateShort } from '../../utils/format'
+import { tripSummary } from '../../utils/trip-helpers'
+import { getTripPhase } from '../../utils/trip-phase'
 import type { HomeViewProps } from './shared'
+import { todayLabel } from './shared'
 import type { Trip } from '../../types/trip'
 import './styles/home-magazine.scss'
 
@@ -20,101 +20,60 @@ function aiStatusFor(t: Trip): 'thinking' | 'ready' | 'error' | null {
 }
 
 export default function HomeMagazine({
-  trips, archivedTrips, loading, onOpenTrip, onLongPressTrip,
-  onNewTrip, onAITrip, onCoverLongPress,
+  trips, loading, onOpenTrip, onLongPressTrip, onNewTrip, onAITrip,
   featuredTemplates, onOpenTemplate, onOpenLibrary,
 }: HomeViewProps) {
-  const sortedUser = [...trips].sort((a, b) => (b.updatedAt ?? 0) - (a.updatedAt ?? 0))
-  const featured = sortedUser[0]
-  const rest = trips.filter((t) => t._id !== featured?._id)
-  const featAI = featured ? aiStatusFor(featured) : null
-  const destFull = featured?.destinations?.map((d) => d.name).join(' · ') || ''
-  const days = featured ? computeDays(featured.startDate, featured.endDate) : 0
-
   return (
     <View className='hm'>
-      <View className='hm-masthead'>
-        <View className='hm-top'>
-          <Text className='hm-issueno'>VOL. 012</Text>
-          <AvatarEntry className='hm-avatar' />
-        </View>
-        <View className='hm-title-row'>
-          <BrandLogo size='lg' />
-          <View className='hm-meta-stack'>
-            <Text className='hm-meta'>2026 · 春</Text>
-            <Text className='hm-meta'>{trips.length} 段旅程</Text>
-          </View>
-        </View>
-        <View className='hm-rule' />
-        <Text className='hm-strap'>EDITORIAL · TRAVEL · PERSONAL</Text>
+      {/* 顶部极简栏 */}
+      <View className='hm-head'>
+        <Text className='hm-date'>{todayLabel()}</Text>
+        <AvatarEntry className='hm-avatar' />
       </View>
 
-      <HomeAIBanner onTap={onAITrip} />
+      {/* 创建台 */}
+      <HomeCreateTiles onAITrip={onAITrip} onNewTrip={onNewTrip} />
 
+      {/* 旅人精选 */}
       <HomeFeaturedRow templates={featuredTemplates} onOpenTemplate={onOpenTemplate} onOpenLibrary={onOpenLibrary} />
 
       {loading && <View className='hm-loading'>加载中…</View>}
 
-      {featured && (
-        <View
-          className='hm-feature'
-          onClick={() => onOpenTrip(featured)}
-          onLongPress={() => onLongPressTrip(featured)}
-        >
-          {featAI && <HomeCardAIRow status={featAI} />}
-          <Text className='hm-feature-tag'>本期封面 / COVER STORY</Text>
-          <Text className='hm-feature-title'>{featured.name}</Text>
-          <TripPhaseChip trip={featured} className='hm-feature-phase' hidePre />
-          <Text className='hm-feature-deck'>
-            {destFull} · {featured.pax} 人 · {days} 天行程
-          </Text>
-          <MagFeatureCover
-            trip={featured}
-            onLongPress={() => onCoverLongPress?.(featured)}
-          />
-          <View className='hm-feature-foot'>
-            <Text>P. 01 — P. 28</Text>
-            <Text>→ 翻开</Text>
-          </View>
+      {/* 我的行程 */}
+      <View className='hm-section'>
+        <View className='hm-section-h'>
+          <Text className='hm-section-t'>我的行程</Text>
+          <Text className='hm-section-sub'>MY TRIPS</Text>
         </View>
-      )}
 
-      {rest.length > 0 && (
-        <View className='hm-index'>
-          <View className='hm-index-head'>
-            <Text>本期目录</Text>
-            <Text>INDEX</Text>
-          </View>
-          {rest.map((t, i) => {
-            const restAI = aiStatusFor(t)
+        <View className='hm-list'>
+          {trips.map((t, i) => {
+            const ai = aiStatusFor(t)
+            const phase = getTripPhase(t.startDate, t.endDate)
+            const isPost = phase === 'post'
             return (
               <View
                 key={t._id}
-                className='hm-index-row'
+                className={`hm-row ${isPost ? 'hm-row--post' : ''}`}
                 onClick={() => onOpenTrip(t)}
                 onLongPress={() => onLongPressTrip(t)}
               >
-                <Text className='hm-index-no'>P. {String(i + 2).padStart(2, '0')}</Text>
-                <Text className='hm-index-name'>{t.name}</Text>
-                <View className='hm-index-dots' />
-                <TripPhaseChip trip={t} className='hm-index-phase' hidePre />
-                <Text className='hm-index-date'>{t.startDate.slice(0, 7)}</Text>
-                {restAI && <HomeCardAIRow status={restAI} onTap={() => onOpenTrip(t)} />}
+                <Text className='hm-row-no'>{String(i + 1).padStart(2, '0')}</Text>
+                <View className='hm-row-body'>
+                  <View className='hm-row-top'>
+                    <Text className='hm-row-name'>{t.name}</Text>
+                    {phase === 'live' && <TripPhaseChip trip={t} className='hm-row-phase' />}
+                  </View>
+                  <Text className='hm-row-meta'>
+                    {fmtDateShort(t.startDate)} → {fmtDateShort(t.endDate)} · {tripSummary(t.startDate, t.endDate, t.pax)}
+                  </Text>
+                  {ai && <HomeCardAIRow status={ai} />}
+                </View>
               </View>
             )
           })}
         </View>
-      )}
-
-      <HomeArchiveSection trips={archivedTrips} onOpenTrip={onOpenTrip} onLongPressTrip={onLongPressTrip} />
-
-      <View className='hm-cta'>
-        <HomeBottomCTA onAITap={onAITrip} onNewTap={onNewTrip} newLabel='+ 发起新刊' />
       </View>
     </View>
   )
-}
-
-function computeDays(s: string, e: string): number {
-  return Math.max(1, Math.round((new Date(e).getTime() - new Date(s).getTime()) / 86400000) + 1)
 }

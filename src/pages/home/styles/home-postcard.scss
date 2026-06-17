@@ -1,30 +1,9 @@
 /* ==================================================================
    行册 · 护照主题首页 (Postcard / Passport)
-   设计语言：国际旅行证件 — 深蓝封面 + 奶白签证页 + 彩色印章
+   设计语言：奶白签证页 + 淡蓝网格 + 印章色
    ================================================================== */
 
-/* ── 局部 keyframes ── */
-@keyframes hpp-stamp-drop {
-  0%   { opacity: 0; transform: scale(1.6) rotate(-18deg); }
-  55%  { opacity: 1; transform: scale(0.96) rotate(2deg); }
-  100% { opacity: 1; transform: scale(1) rotate(var(--stamp-final-rotate, 0deg)); }
-}
-@keyframes hpp-cover-reveal {
-  from { opacity: 0; transform: translateY(-20rpx); }
-  to   { opacity: 1; transform: translateY(0); }
-}
-@keyframes hpp-page-slide {
-  from { opacity: 0; transform: translateY(32rpx); }
-  to   { opacity: 1; transform: translateY(0); }
-}
-@keyframes hpp-ai-pulse {
-  0%, 100% { box-shadow: 0 0 0 6rpx rgba(107, 70, 193, 0.35); }
-  50%      { box-shadow: 0 0 0 14rpx rgba(107, 70, 193, 0.12); }
-}
-
-/* ===========================
-   0. 页面容器
-   =========================== */
+/* ── 页面容器 ── */
 .hpp {
   min-height: 100vh;
   padding: 0 0 120rpx;
@@ -33,122 +12,21 @@
   animation: page-in 0.42s var(--ease-out) both;
 }
 
-.hpp-ai-banner {
-  padding: 24rpx 20rpx 0;
-}
-
-/* ===========================
-   1. 护照封面 — 深蓝 + guilloche + 金箔
-   =========================== */
-.hpp-cover {
-  position: relative;
-  background:
-    radial-gradient(ellipse 85% 55% at 50% 35%, rgba(255,255,255,0.07) 0%, transparent 100%),
-    linear-gradient(180deg, #1B2838 0%, #0F1923 82%, #0A1219 100%);
-  padding: 16rpx 28rpx 20rpx;
-  overflow: hidden;
-  animation: hpp-cover-reveal 0.6s var(--ease-out) both;
-}
-
-/* guilloche 防伪纹（双层交叉线） */
-.hpp-cover-guilloche {
-  position: absolute;
-  inset: 0;
-  background:
-    repeating-linear-gradient(
-      45deg,
-      transparent 0 26rpx,
-      rgba(200, 170, 90, 0.032) 26rpx 28rpx
-    ),
-    repeating-linear-gradient(
-      -45deg,
-      transparent 0 26rpx,
-      rgba(200, 170, 90, 0.024) 26rpx 28rpx
-    ),
-    repeating-linear-gradient(
-      0deg,
-      transparent 0 52rpx,
-      rgba(200, 170, 90, 0.018) 52rpx 54rpx
-    );
-  pointer-events: none;
-}
-
-.hpp-cover-inner {
-  position: relative;
-  z-index: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.hpp-cover-top {
-  width: 100%;
+/* ── 顶部极简栏 ── */
+.hpp-head {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 6rpx;
+  padding: 16rpx 28rpx 24rpx;
 }
 
-.hpp-cover-country {
-  font-size: 20rpx;
-  font-weight: 800;
-  letter-spacing: 10rpx;
-  font-family: var(--font-display);
-  color: #C8AA5A;
-  text-shadow: 0 2rpx 8rpx rgba(0,0,0,0.4);
+.hpp-date {
+  font-size: 24rpx;
+  font-family: var(--font-body);
+  color: var(--ink-3);
+  letter-spacing: 2rpx;
 }
 
-/* 头像在深色封面上的适配 */
-.hpp-avatar {
-  .avatar-entry-img {
-    border-color: rgba(200, 170, 90, 0.35);
-  }
-  .avatar-entry-fallback {
-    border: 2rpx solid rgba(200, 170, 90, 0.3);
-  }
-}
-
-.hpp-cover-emblem {
-  margin: 0 0 4rpx;
-  /* 护照封面只保留红印章，隐藏旁注文字 */
-  .brand-seal-side { display: none; }
-  .brand-seal {
-    gap: 0;
-  }
-  /* BrandLogo 内的 .brand-seal-mark 在深色背景上加深阴影 */
-  .brand-seal-mark {
-    box-shadow: 0 4rpx 16rpx rgba(0, 0, 0, 0.5);
-  }
-  .brand-seal-corner {
-    border-color: #fff;
-  }
-}
-
-.hpp-cover-type {
-  font-size: 26rpx;
-  font-weight: 900;
-  letter-spacing: 14rpx;
-  font-family: var(--font-display);
-  color: #D4B96A;
-  text-shadow:
-    0 2rpx 12rpx rgba(200, 170, 90, 0.25),
-    0 0 40rpx rgba(200, 170, 90, 0.08);
-  text-indent: 14rpx; /* 补偿 letter-spacing 末字偏移 */
-}
-
-.hpp-cover-no {
-  display: block;
-  text-align: center;
-  margin-top: 6rpx;
-  font-size: 16rpx;
-  font-family: var(--font-mono);
-  letter-spacing: 4rpx;
-  color: rgba(200, 170, 90, 0.5);
-}
-
-/* ===========================
-   2. 加载态
-   =========================== */
 .hpp-loading {
   text-align: center;
   font-size: 24rpx;
@@ -159,7 +37,7 @@
 }
 
 /* ===========================
-   3. 签证页 — 奶白纸 + 淡蓝网格 + 水印
+   签证页 — 奶白纸 + 淡蓝网格 + 水印
    =========================== */
 .hpp-page {
   position: relative;
@@ -174,6 +52,11 @@
     inset 0 2rpx 0 rgba(255, 255, 255, 0.8);
   overflow: hidden;
   animation: hpp-page-slide 0.55s var(--ease-out) 0.15s both;
+}
+
+@keyframes hpp-page-slide {
+  from { opacity: 0; transform: translateY(32rpx); }
+  to   { opacity: 1; transform: translateY(0); }
 }
 
 /* 淡蓝网格（签证页横线） */
@@ -288,220 +171,57 @@
   letter-spacing: 2rpx;
 }
 
-/* ===========================
-   4. 印章容器
-   =========================== */
+/* ── 行程卡列表 ── */
 .hpp-stamps {
   display: flex;
-  flex-wrap: wrap;
-  gap: 32rpx 28rpx;
-  justify-content: center;
-  align-items: flex-start;
-  padding: 20rpx 4rpx 16rpx;
-}
-
-/* ===========================
-   5. 单枚印章 — 双环 + ink-bleed
-   =========================== */
-.hpp-stamp {
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--stamp-color, var(--accent));
-  box-sizing: border-box;
-  /* 入场动画用全局 pop-in，不用 stamp-drop（避免与 inline rotate 冲突） */
-  animation: pop-in 0.5s var(--ease-spring) both;
-  transition: transform 0.2s var(--ease-out);
-}
-
-.hpp-stamp:active {
-  transform: scale(0.92) !important;
-}
-
-/* 外环（双环效果：本体 + ::after 内环） */
-.hpp-stamp-ring {
-  position: absolute;
-  inset: 0;
-  border: 5rpx solid var(--stamp-color, var(--accent));
-  border-radius: inherit;
-  opacity: 0.7;
-  pointer-events: none;
-}
-
-.hpp-stamp::after {
-  content: '';
-  position: absolute;
-  inset: 9rpx;
-  border: 2rpx solid var(--stamp-color, var(--accent));
-  border-radius: inherit;
-  opacity: 0.3;
-  pointer-events: none;
-}
-
-/* 印章面 — 半透纸张底色 */
-.hpp-stamp-face {
-  position: relative;
-  z-index: 1;
-  display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 4rpx;
-  width: 100%;
-  height: 100%;
-  padding: 16rpx 10rpx;
-  box-sizing: border-box;
-  background: rgba(255, 252, 240, 0.5);
-  border-radius: inherit;
+  gap: 0;
+  padding: 8rpx 0;
 }
 
-/* ── size 三档 ── */
-.hpp-stamp--sm { width: 152rpx; height: 152rpx; }
-.hpp-stamp--md { width: 216rpx; height: 216rpx; }
-.hpp-stamp--lg { width: 296rpx; height: 296rpx; }
-
-/* ── shape 三档 ── */
-.hpp-stamp--circle,
-.hpp-stamp--circle .hpp-stamp-ring,
-.hpp-stamp--circle::after {
-  border-radius: 50%;
-}
-.hpp-stamp--circle .hpp-stamp-ring {
-  border-style: dashed;
+.hpp-card {
+  padding: 24rpx 0;
+  border-top: 1rpx dashed var(--line);
+  position: relative;
+  animation: pop-in 0.5s var(--ease-spring) both;
+  transition: opacity 0.15s;
 }
 
-.hpp-stamp--oval,
-.hpp-stamp--oval .hpp-stamp-ring,
-.hpp-stamp--oval::after {
-  border-radius: 50% / 40%;
-}
-.hpp-stamp--oval .hpp-stamp-ring {
-  border-style: dashed;
+.hpp-card:first-child {
+  border-top: none;
 }
 
-.hpp-stamp--rect,
-.hpp-stamp--rect .hpp-stamp-ring,
-.hpp-stamp--rect::after {
-  border-radius: 16rpx;
-}
-.hpp-stamp--rect .hpp-stamp-ring {
-  border-style: solid;
-}
-
-/* ink-bleed 阴影 — 模拟墨水渗入纸张 */
-.hpp-stamp--circle,
-.hpp-stamp--oval {
-  box-shadow:
-    0 0 0 2rpx rgba(43, 31, 14, 0.04),
-    2rpx 3rpx 10rpx rgba(43, 31, 14, 0.07);
-}
-.hpp-stamp--rect {
-  box-shadow:
-    0 0 0 2rpx rgba(43, 31, 14, 0.04),
-    3rpx 4rpx 14rpx rgba(43, 31, 14, 0.09);
-}
-
-/* ── 印章内文字 ── */
-.hpp-stamp-name {
-  font-size: 22rpx;
-  font-weight: 800;
-  font-family: var(--font-display);
-  letter-spacing: 2rpx;
-  line-height: 1.15;
-  text-align: center;
-  color: var(--stamp-color, var(--accent));
-  display: -webkit-box;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 2;
-  overflow: hidden;
-  word-break: break-all;
-  max-width: 100%;
-  padding: 0 4rpx;
-  box-sizing: border-box;
-}
-
-.hpp-stamp-rule {
-  width: 48%;
-  height: 2rpx;
-  background: var(--stamp-color, var(--accent));
-  opacity: 0.28;
-  margin: 4rpx 0;
-  border-radius: 2rpx;
-}
-
-.hpp-stamp-date {
-  font-size: 17rpx;
-  font-family: var(--font-mono);
-  letter-spacing: 2rpx;
-  color: var(--stamp-color, var(--accent));
-  opacity: 0.8;
-}
-
-.hpp-stamp-days {
-  font-size: 15rpx;
-  font-family: var(--font-mono);
-  letter-spacing: 2rpx;
-  color: var(--stamp-color, var(--accent));
+.hpp-card:active {
   opacity: 0.6;
-  margin-top: 2rpx;
 }
 
-/* size 微调 */
-.hpp-stamp--sm .hpp-stamp-name {
-  font-size: 18rpx;
-  -webkit-line-clamp: 1;
-}
-.hpp-stamp--sm .hpp-stamp-face {
-  padding: 10rpx 8rpx;
-  gap: 2rpx;
-}
-.hpp-stamp--sm .hpp-stamp-rule { margin: 2rpx 0; }
-.hpp-stamp--sm .hpp-stamp-date { font-size: 15rpx; }
-.hpp-stamp--sm .hpp-stamp-days { font-size: 13rpx; }
-
-.hpp-stamp--lg .hpp-stamp-name {
-  font-size: 28rpx;
-  letter-spacing: 3rpx;
-}
-.hpp-stamp--lg .hpp-stamp-face {
-  padding: 24rpx 16rpx;
-  gap: 6rpx;
-}
-.hpp-stamp--lg .hpp-stamp-date { font-size: 20rpx; }
-.hpp-stamp--lg .hpp-stamp-days { font-size: 17rpx; }
-
-/* ===========================
-   6. AI 状态指示
-   =========================== */
-.hpp-stamp-aiglow {
-  position: absolute;
-  inset: -6rpx;
-  border-radius: inherit;
-  pointer-events: none;
-  animation: hpp-ai-pulse 2s ease-in-out infinite;
+/* 已结束行程：整卡淡化沉底 */
+.hpp-card--post {
+  opacity: 0.45;
 }
 
-.hpp-stamp-aibadge {
-  position: absolute;
-  top: -8rpx;
-  right: -8rpx;
-  width: 36rpx;
-  height: 36rpx;
-  background: var(--leaf, #3F6B43);
-  color: #fff;
-  border-radius: 50%;
-  font-size: 20rpx;
+.hpp-card-body {
+  position: relative;
+}
+
+.hpp-card-meta {
+  font-size: 22rpx;
+  font-family: var(--font-mono);
+  letter-spacing: 1rpx;
+  color: var(--ink-3);
+}
+
+.hpp-card-name {
+  display: block;
+  margin-top: 8rpx;
+  font-size: 34rpx;
   font-weight: 700;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 4rpx 12rpx rgba(63, 107, 67, 0.35);
+  font-family: var(--font-display);
+  color: var(--ink);
+  letter-spacing: 1rpx;
 }
 
-/* ===========================
-   7. 页脚 & CTA
-   =========================== */
+/* ── 页脚 ── */
 .hpp-page-foot {
   margin-top: 24rpx;
   padding-top: 16rpx;
@@ -512,9 +232,4 @@
   letter-spacing: 4rpx;
   color: var(--ink-3);
   opacity: 0.6;
-}
-
-.hpp-cta {
-  margin-top: 24rpx;
-  padding: 0 20rpx;
 }

@@ -54,7 +54,7 @@ export function getFeaturedCache(): TemplateCard[] | null {
 }
 
 /**
- * 攻略库查询。初期数据量小:服务端用 where 收敛天数/城市,其余多选维度(tags/audience/seasons)
+ * 旅人精选查询。初期数据量小:服务端用 where 收敛天数/城市,其余多选维度(tags/audience/seasons)
  * 与 keyword 拉回后客户端 OR/AND 精筛(见 template-filter)。
  */
 export async function listTemplates(q: TemplateQuery): Promise<TemplateCard[]> {

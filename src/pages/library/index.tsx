@@ -113,7 +113,7 @@ export default function LibraryPage() {
       )}
       {status === 'ready' && list.length === 0 && (
         <View className='lib-empty'>
-          <Text className='lib-empty-t'>没有符合条件的攻略</Text>
+          <Text className='lib-empty-t'>没有符合条件的内容</Text>
           <Text className='lib-empty-sub'>试着放宽天数或清空筛选</Text>
           {hasFilter && <View className='lib-empty-btn' onClick={clearAll}>清空筛选</View>}
         </View>

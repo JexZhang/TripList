@@ -1,53 +1,143 @@
+/* ═══ 首页 · 旅人精选横滑封面卡（4 主题共用骨架，CSS 变量换皮） ═══ */
+
 .home-featured {
-  padding: 24px 28px 8px;
+  padding: 24rpx 0 8rpx;
 }
 
 .home-featured-h {
   display: flex;
   align-items: baseline;
   justify-content: space-between;
-  margin-bottom: 16px;
+  padding: 0 32rpx;
+  margin-bottom: 20rpx;
+}
+
+.home-featured-title {
+  display: flex;
+  align-items: center;
+  gap: 12rpx;
+}
+
+/* ── 侧边竖条（基础透明，仅 tegami/minimal 主题激活） ── */
+.home-featured-bar {
+  width: 6rpx;
+  height: 32rpx;
+  border-radius: 3rpx;
+  flex-shrink: 0;
+  background: transparent;
+}
+
+.theme-tegami .home-featured-bar {
+  background: linear-gradient(180deg, #FF7A2E, #FFC247);
+}
+
+.theme-minimal .home-featured-bar {
+  background: var(--ink);
 }
 
 .home-featured-t {
-  font-size: 30px;
-  font-weight: 600;
+  font-size: 32rpx;
+  font-weight: 700;
   color: var(--ink);
   font-family: var(--font-display, serif);
 }
 
+.home-featured-sub {
+  font-size: 18rpx;
+  font-family: var(--font-mono);
+  letter-spacing: 3rpx;
+  color: var(--ink-3);
+  font-weight: 500;
+}
+
 .home-featured-more {
-  font-size: 24px;
+  font-size: 24rpx;
   color: var(--accent);
 }
 
 .home-featured-row {
   white-space: nowrap;
+  padding: 0 32rpx;
 }
 
 .home-featured-card {
   display: inline-block;
-  width: 300px;
-  margin-right: 16px;
-  padding: 20px;
-  border-radius: 16px;
+  width: 280rpx;
+  margin-right: 20rpx;
+  border-radius: var(--r-md);
+  overflow: hidden;
   background: var(--surface);
-  border: 1px solid var(--line);
+  box-shadow: var(--shadow-sm);
   vertical-align: top;
   white-space: normal;
+  transition: transform 0.18s var(--ease-out);
 }
 
-.home-featured-name {
+.home-featured-card:active {
+  transform: scale(0.97);
+}
+
+/* ── 封面区（渐变 + 城市名） ── */
+.hf-cover {
+  position: relative;
+  height: 200rpx;
+  padding: 20rpx;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  overflow: hidden;
+}
+
+/* 装饰圆（右下角半透） */
+.hf-cover-pat {
+  position: absolute;
+  right: -24rpx;
+  bottom: -24rpx;
+  width: 120rpx;
+  height: 120rpx;
+  border: 4rpx solid rgba(255, 255, 255, 0.22);
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.hf-cover-region {
   display: block;
-  font-size: 28px;
+  font-size: 18rpx;
+  color: #fff;
+  letter-spacing: 4rpx;
+  opacity: 0.85;
+  font-family: var(--font-mono);
+}
+
+.hf-cover-city {
+  display: block;
+  font-size: 48rpx;
+  font-weight: 800;
+  color: #fff;
+  font-family: var(--font-display);
+  text-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.25);
+  line-height: 1.1;
+}
+
+/* ── 底部白底信息区 ── */
+.hf-meta {
+  padding: 16rpx 18rpx;
+}
+
+.hf-meta-name {
+  display: block;
+  font-size: 24rpx;
   font-weight: 600;
   color: var(--ink);
-  line-height: 1.3;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-.home-featured-meta {
+.hf-meta-info {
   display: block;
-  margin-top: 10px;
-  font-size: 22px;
+  margin-top: 6rpx;
+  font-size: 20rpx;
   color: var(--ink-3);
 }
