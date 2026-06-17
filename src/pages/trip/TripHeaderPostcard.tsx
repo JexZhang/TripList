@@ -25,7 +25,7 @@ export default function TripHeaderPostcard({
         <View className='thpp-topbar'>
           <View className='thpp-back' onClick={onBack}>
             <Text className='thpp-back-icon'>‹</Text>
-            <Text className='thpp-back-label'>EXIT</Text>
+            <Text className='thpp-back-label'>返回</Text>
           </View>
           <Text className='thpp-eyebrow'>VISA / 签 证</Text>
           <View className='thpp-menu' onClick={onMenuTap}>⋯</View>
@@ -36,19 +36,19 @@ export default function TripHeaderPostcard({
             <Text className='thpp-name'>{trip.name}</Text>
             <View className='thpp-meta-grid'>
               <View className='thpp-meta-row'>
-                <Text className='thpp-meta-l'>FROM</Text>
+                <Text className='thpp-meta-l'>出发</Text>
                 <Text className='thpp-meta-v'>{startDate}</Text>
               </View>
               <View className='thpp-meta-row'>
-                <Text className='thpp-meta-l'>TO</Text>
+                <Text className='thpp-meta-l'>抵达</Text>
                 <Text className='thpp-meta-v'>{endDate}</Text>
               </View>
               <View className='thpp-meta-row'>
-                <Text className='thpp-meta-l'>DAYS</Text>
+                <Text className='thpp-meta-l'>天数</Text>
                 <Text className='thpp-meta-v'>{trip.days.length || 0}</Text>
               </View>
               <View className='thpp-meta-row'>
-                <Text className='thpp-meta-l'>PAX</Text>
+                <Text className='thpp-meta-l'>人数</Text>
                 <Picker
                   mode='selector'
                   range={PAX_OPTIONS}

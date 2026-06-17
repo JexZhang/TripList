@@ -21,7 +21,7 @@ export default function TripHeaderMinimal({
       <View className='thmin-bar'>
         <View className='thmin-back' onClick={onBack}>
           <Text className='thmin-back-icon'>‹</Text>
-          <Text className='thmin-back-label'>home</Text>
+          <Text className='thmin-back-label'>首页</Text>
         </View>
         <View className='thmin-menu' onClick={onMenuTap}>⋯</View>
       </View>

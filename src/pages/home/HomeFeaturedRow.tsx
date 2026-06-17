@@ -22,7 +22,6 @@ export default function HomeFeaturedRow({ templates, onOpenTemplate, onOpenLibra
         <View className='home-featured-title'>
           <View className='home-featured-bar' />
           <Text className='home-featured-t'>旅人精选</Text>
-          <Text className='home-featured-sub'>EDITORS&apos; PICKS</Text>
         </View>
         <Text className='home-featured-more' onClick={onOpenLibrary}>更多 ›</Text>
       </View>

@@ -54,7 +54,7 @@ function LiveChip({ trip, className }: { trip: Trip; className?: string }) {
   return (
     <View className={`tpc tpc--live ${className || ''}`}>
       <View className='tpc-live-dot' />
-      <Text className='tpc-live-tag'>LIVE</Text>
+      <Text className='tpc-live-tag'>进行中</Text>
       <Text className='tpc-live-sep'>·</Text>
       <Text className='tpc-live-name'>{label}</Text>
     </View>
@@ -81,13 +81,13 @@ function PostChip({ trip, className }: { trip: Trip; className?: string }) {
   return (
     <View className={`tpc tpc--post ${className || ''}`}>
       <View className='tpc-post-mark' />
-      <Text className='tpc-post-tag'>FILED</Text>
+      <Text className='tpc-post-tag'>已归档</Text>
       <Text className='tpc-post-sep'>·</Text>
       <Text className='tpc-post-v'>{days}</Text>
-      <Text className='tpc-post-l'>d</Text>
+      <Text className='tpc-post-l'>天</Text>
       <Text className='tpc-post-sep'>·</Text>
       <Text className='tpc-post-v'>{spotsCount}</Text>
-      <Text className='tpc-post-l'>spots</Text>
+      <Text className='tpc-post-l'>地点</Text>
       <Text className='tpc-post-sep'>·</Text>
       <Text className='tpc-post-v'>¥{totalCost.toLocaleString()}</Text>
     </View>

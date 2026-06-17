@@ -44,7 +44,6 @@ export default function HomeMagazine({
       <View className='hm-section'>
         <View className='hm-section-h'>
           <Text className='hm-section-t'>我的行程</Text>
-          <Text className='hm-section-sub'>MY TRIPS</Text>
         </View>
 
         <View className='hm-list'>

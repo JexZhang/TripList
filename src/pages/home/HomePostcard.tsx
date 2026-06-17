@@ -44,7 +44,7 @@ export default function HomePostcard({
       {/* 旅人精选 */}
       <HomeFeaturedRow templates={featuredTemplates} onOpenTemplate={onOpenTemplate} onOpenLibrary={onOpenLibrary} />
 
-      {loading && <View className='hpp-loading'>Stamping visas…</View>}
+      {loading && <View className='hpp-loading'>整理签证中…</View>}
 
       {/* 我的行程 — 签证页风格 */}
       <View className='hpp-page'>
@@ -54,11 +54,11 @@ export default function HomePostcard({
         <View className='hpp-page-head'>
           <View className='hpp-page-head-left'>
             <Text className='hpp-page-head-label'>VISAS</Text>
-            <Text className='hpp-page-head-sub'>签证页 · {trips.length} STAMPS</Text>
+            <Text className='hpp-page-head-sub'>签证页 · {trips.length} 枚</Text>
           </View>
           <View className='hpp-page-head-right'>
             <Text className='hpp-page-head-stat'>{totalDays}</Text>
-            <Text className='hpp-page-head-unit'>DAYS</Text>
+            <Text className='hpp-page-head-unit'>天</Text>
           </View>
         </View>
 

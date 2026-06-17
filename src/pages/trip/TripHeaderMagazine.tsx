@@ -22,7 +22,7 @@ export default function TripHeaderMagazine({
       <View className='thmg-topbar'>
         <View className='thmg-back' onClick={onBack}>
           <Text className='thmg-back-arrow'>←</Text>
-          <Text className='thmg-back-text'>BACK</Text>
+          <Text className='thmg-back-text'>返回</Text>
         </View>
         <Text className='thmg-issueno'>VOL. {issueNo}</Text>
         <View className='thmg-menu' onClick={onMenuTap}>⋯</View>
@@ -35,7 +35,7 @@ export default function TripHeaderMagazine({
         <View className='thmg-meta'>
           <Text>{startDate} → {endDate}</Text>
           <Text>·</Text>
-          <Text>{trip.days.length || 0} DAYS</Text>
+          <Text>{trip.days.length || 0} 天</Text>
           <Text>·</Text>
           <Picker
             mode='selector'
@@ -46,7 +46,7 @@ export default function TripHeaderMagazine({
               if (next !== trip.pax) onPaxChange(next)
             }}
           >
-            <Text className='thmg-pax-edit'>{trip.pax} PAX ▾</Text>
+            <Text className='thmg-pax-edit'>{trip.pax} 人 ▾</Text>
           </Picker>
         </View>
         {showAI && (

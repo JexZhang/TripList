@@ -76,7 +76,7 @@ function LiveBlock({
     <View className='tph-live'>
       <View className='tph-live-head'>
         <View className='tph-live-dot' />
-        <Text className='tph-live-tag'>LIVE</Text>
+        <Text className='tph-live-tag'>进行中</Text>
         <Text className='tph-live-time'>{now.format('HH:mm')}</Text>
         <Text className='tph-live-day'>{now.format('ddd').toUpperCase()}</Text>
       </View>
@@ -102,7 +102,7 @@ function LiveBlock({
         <View className='tph-live-next'>
           <View className='tph-live-next-head'>
             <View className='tph-live-next-head-left'>
-              <Text className='tph-live-next-tag'>NEXT</Text>
+              <Text className='tph-live-next-tag'>下一站</Text>
               <Text className='tph-live-next-time'>{ctx.nextSpot.time || '--:--'}</Text>
             </View>
             {ctx.nextSpot.lat && ctx.nextSpot.lng && (
@@ -157,19 +157,19 @@ function PostBlock({ trip }: { trip: Trip }) {
     <View className='tph-post'>
       <View className='tph-post-head'>
         <Text className='tph-post-mark'>○</Text>
-        <Text className='tph-post-tag'>ARCHIVED</Text>
+        <Text className='tph-post-tag'>已结束</Text>
         <Text className='tph-post-sep'>·</Text>
         <Text className='tph-post-title'>{trip.name}</Text>
       </View>
 
       <View className='tph-post-grid'>
-        <PostStat v={`${days}`} l='DAYS' delay={0} />
-        <PostStat v={`${spotsCount}`} l='SPOTS' delay={80} />
-        <PostStat v={`¥${formatCost(totalCost)}`} l='TOTAL' delay={160} />
+        <PostStat v={`${days}`} l='天' delay={0} />
+        <PostStat v={`${spotsCount}`} l='地点' delay={80} />
+        <PostStat v={`¥${formatCost(totalCost)}`} l='总计' delay={160} />
       </View>
 
       <View className='tph-rule' />
-      <Text className='tph-post-filed'>FILED · {filedAt}</Text>
+      <Text className='tph-post-filed'>已归档 · {filedAt}</Text>
     </View>
   )
 }

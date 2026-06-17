@@ -26,9 +26,9 @@ export default function ItinMagazine({
           <SpotCard key={s.id} spot={s} onClick={() => onSpotClick(s)} />
         ))}
         {activeDay.spots.length === 0 && (
-          <View className='itinmg-empty'>NO ITEMS YET</View>
+          <View className='itinmg-empty'>暂无地点</View>
         )}
-        <View className='itinmg-add' onClick={onAddSpot}>+ ADD SPOT</View>
+        <View className='itinmg-add' onClick={onAddSpot}>+ 添加地点</View>
       </View>
     </View>
   )
