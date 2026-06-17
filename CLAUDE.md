@@ -51,18 +51,19 @@ npm run prepare
 
 读写遵循不可变模式（reducer 始终 spread 返回新对象，禁止原地 mutate）。
 
-### 3.3. 数据流：CloudBase 为源 + 本地种子示例
+### 3.3. 数据流：CloudBase 为源 + 云端只读攻略库
 
 - **真实行程**：云数据库 `trips` 集合是唯一可信源。读取走 `getTrip` / `list-my-trips`，写入走 `update-trip` / `clone-trip` 等云函数（绕开客户端权限规则，让 owner 与协作者都能写）。封装在 [src/utils/db.ts](src/utils/db.ts) 与 [src/utils/cloud.ts](src/utils/cloud.ts)。
-- **示例攻略**：[src/data/seed-trips.ts](src/data/seed-trips.ts)（数据在 `seed-trips.json`）提供只读的演示行程，`isSeedTripId` 命中时直接从本地静态数据加载，不连云、不订阅 watch、编辑不落库（仅提示「复制后可编辑」）。复制示例用 `copyTripLocally`。
-- 注意：旧版的「`trips.json` 基线 + 本地 override」机制已移除（`src/utils/override.ts`、`openspec/` 规格均不再存在）。`src/data/trips.json` 仍在仓库中但已无代码引用，属遗留文件，不要据此推断数据流。
+- **攻略库（模板）**：云数据库 `trip_templates` 集合提供只读模板（安全规则全员可读、客户端禁写）。读取走 [src/utils/templates.ts](src/utils/templates.ts) 用小程序 SDK 直查 + Storage SWR 缓存（首页精选 `listFeaturedTemplates`、库页 `listTemplates`、详情 `getTemplate`）；复制走 `clone-template` 云函数（注入身份 + 按出发日 rebase 日期 + 写入 `trips`）。只读阅读页在 [src/pages/template/index.tsx](src/pages/template/index.tsx)，攻略库页在 [src/pages/library/index.tsx](src/pages/library/index.tsx)。前端不再含本地 seed 示例。
+- 注意：旧版的「本地 `seed-trips` 示例」与更早的「`trips.json` 基线 + 本地 override」机制均已移除（`src/data/seed-trips.*`、`src/utils/override.ts`、`openspec/` 规格均不再存在）。`src/data/trips.json` 仍在仓库中但已无代码引用，属遗留文件，不要据此推断数据流。
 
 ### 3.4. 云端能力
 
-[src/utils/cloud.ts](src/utils/cloud.ts) 封装云函数调用。[cloudfunctions/](cloudfunctions/) 现有 10 个函数：
+[src/utils/cloud.ts](src/utils/cloud.ts) 封装云函数调用。[cloudfunctions/](cloudfunctions/) 现有 11 个函数：
 - `ai-plan-trip` / `ai-task-sweeper` — AI 行程生成与异步任务清理（受用户 `plan` 的 AI 额度约束）
 - `amap-poi-search` / `amap-weather` — 高德 POI 搜索与天气（注意：当前高德套餐不支持境外 POI）
 - `clone-trip` / `update-trip` / `list-my-trips` / `ensure-user` — 行程 CRUD 与用户初始化
+- `clone-template` — 复制 `trip_templates` 模板到当前用户 `trips`（剥离模板字段 + 按出发日 rebase 日期）
 - `create-share-token` / `join-collab` — 分享令牌与协作加入
 
 修改云函数后需在云开发控制台/CLI 重新部署，本地构建不会带上它们。云环境 id 在 [src/app.tsx](src/app.tsx) 的 `wx.cloud.init` 中配置。
