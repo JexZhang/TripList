@@ -15,7 +15,7 @@ import type { PackViewProps } from './shared'
 import './index.scss'
 
 export default function PackingView() {
-  const { state, dispatch } = useTripStore()
+  const { state, dispatch, readonly: ro } = useTripStore()
   const trip = state.trip!
   const { theme } = useTheme()
   const [draftByCat, setDraftByCat] = useState<Record<string, string>>({})
@@ -63,13 +63,13 @@ export default function PackingView() {
   }
 
   return (
-    <View className='packing'>
+    <View className={`packing${ro ? ' is-ro' : ''}`}>
       {theme === 'tegami'   && <PackTegami   {...props} />}
       {theme === 'magazine' && <PackMagazine {...props} />}
       {theme === 'postcard' && <PackPostcard {...props} />}
       {theme === 'minimal'  && <PackMinimal  {...props} />}
 
-      <TemplateImport open={tplOpen} onClose={() => setTplOpen(false)} onImport={onImport} />
+      {!ro && <TemplateImport open={tplOpen} onClose={() => setTplOpen(false)} onImport={onImport} />}
     </View>
   )
 }

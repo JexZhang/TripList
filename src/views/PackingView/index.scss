@@ -1,3 +1,14 @@
 .packing {
   /* 子组件自带 padding */
 }
+
+/* ===== 只读模式 ===== */
+.is-ro {
+  .ptg-add-row,
+  .ptg-add-btn,
+  .pmg-add,
+  .ppp-add,
+  .ppp-add-btn,
+  .pmin-add,
+  .pmin-box--add { display: none !important; }
+}
