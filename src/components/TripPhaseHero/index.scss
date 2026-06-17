@@ -340,8 +340,7 @@
 
 .tph-post-grid {
   display: grid;
-  /* minmax(0,1fr)：避免"¥长金额"不可断行把列撑过 1fr 导致整卡超出屏幕 */
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: 1fr 1fr 1fr;
   gap: 20rpx;
   margin-top: 32rpx;
 }
@@ -349,7 +348,6 @@
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  min-width: 0;
   padding: 24rpx 20rpx;
   background: var(--surface-2);
   border-radius: var(--r-sm);
@@ -367,10 +365,6 @@
   color: var(--ink);
   letter-spacing: -1rpx;
   font-feature-settings: 'tnum';
-  max-width: 100%;
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
 }
 .tph-post-stat-l {
   font-family: var(--font-mono);
@@ -429,8 +423,9 @@
 .theme-minimal .tph {
   background: transparent;
   box-shadow: none;
-  padding-left: 0;
-  padding-right: 0;
+  /* 保留左右内边距：否则归档统计的大号数字(52rpx)紧贴屏幕边缘被切 */
+  padding-left: 32rpx;
+  padding-right: 32rpx;
 }
 .theme-minimal .tph--live {
   background: var(--ink);
