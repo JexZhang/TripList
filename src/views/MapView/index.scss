@@ -271,3 +271,6 @@
   font-size: 18rpx;
   opacity: 0.7;
 }
+
+/* ===== 只读模式 ===== */
+.is-ro .mv-locate-btn { display: none !important; }

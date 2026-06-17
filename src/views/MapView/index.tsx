@@ -28,7 +28,7 @@ const SheetContainer = forwardRef<SheetHandle, {}>(function SheetContainer(_prop
 })
 
 export default function MapView() {
-  const { state } = useTripStore()
+  const { state, readonly: ro } = useTripStore()
   const trip = state.trip!
   const { theme } = useTheme()
   const variant = MAPMODE_VARIANT[theme]
@@ -159,7 +159,7 @@ export default function MapView() {
   }, [])
 
   return (
-    <View className='mv'>
+    <View className={`mv${ro ? ' is-ro' : ''}`}>
       <ModeBar
         days={trip.days}
         mode={mode}
@@ -175,20 +175,22 @@ export default function MapView() {
           scale={viewport.scale}
           markers={markers as any}
           polyline={polyline as any}
-          onMarkerTap={handleTap}
-          onCalloutTap={handleTap}
+          onMarkerTap={ro ? () => {} : handleTap}
+          onCalloutTap={ro ? () => {} : handleTap}
           onRegionChange={handleRegionChange}
           onError={() => {}}
-          showLocation
+          showLocation={!ro}
           enableTraffic={false}
         />
-        <View className='mv-locate-btn' onClick={handleLocateMe}>
-          <View className='mv-locate-ring'>
-            <View className='mv-locate-dot' />
+        {!ro && (
+          <View className='mv-locate-btn' onClick={handleLocateMe}>
+            <View className='mv-locate-ring'>
+              <View className='mv-locate-dot' />
+            </View>
           </View>
-        </View>
+        )}
       </View>
-      <SheetContainer ref={sheetRef} />
+      {!ro && <SheetContainer ref={sheetRef} />}
     </View>
   )
 }
