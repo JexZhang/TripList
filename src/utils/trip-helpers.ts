@@ -84,26 +84,41 @@ export function planDayToDay(gd: GeneratedDay): Day {
 }
 
 /**
- * 按用户勾选的日期, 把 AI 生成的对应天合并进原 days 数组。
- * - existing 中未被选中的天保持不变
- * - 选中的天用 AI 版本替换(按 date 匹配)
- * - 若 AI 给的日期在 existing 中不存在(不该发生), 忽略
+ * 按用户勾选的地点索引，把 AI 生成方案合并进原 days 数组。
+ * selectedSpots: { [date]: number[] } — 该天被勾选的地点索引列表。
+ * - 某天索引列表为空 → 该天不变（用户放弃该天的 AI 方案）
+ * - 某天有勾选索引 → 该天 spots 替换为那几个 AI 地点（保留原 day id/weather）
  */
 export function mergePlanIntoDays(
   existing: Day[],
   plan: GeneratedPlan,
-  selectedDates: string[],
+  selectedSpots: Record<string, number[]>,
 ): Day[] {
-  const selectedSet = new Set(selectedDates)
   const aiByDate = new Map<string, GeneratedDay>()
   for (const gd of plan.days) aiByDate.set(gd.date, gd)
 
   return existing.map(d => {
-    if (!selectedSet.has(d.date)) return d
+    const indices = selectedSpots[d.date]
+    if (!indices || indices.length === 0) return d
     const gd = aiByDate.get(d.date)
     if (!gd) return d
-    const replaced = planDayToDay(gd)
-    // 保留原 day 的 id 和 weather, 只替换 spots
-    return { ...d, spots: replaced.spots }
+    const spots = indices
+      .filter(i => i >= 0 && i < gd.spots.length)
+      .map(i => {
+        const gs = gd.spots[i]
+        return {
+          id: uid(),
+          type: gs.type,
+          name: gs.name,
+          city: gs.city,
+          note: gs.note,
+          price: gs.price,
+          time: gs.time,
+          lat: gs.lat,
+          lng: gs.lng,
+          adcode: gs.adcode,
+        }
+      })
+    return { ...d, spots }
   })
 }

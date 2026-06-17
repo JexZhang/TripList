@@ -12,7 +12,7 @@ interface Props {
   /** trip 当前已有的 days, 用于检测冲突 (该天已有手动 spots). 可空表示新建场景 (一律视为无冲突) */
   existingDays?: Day[] | null
   onRegenerate: () => void
-  onApply: (selectedDates: string[]) => void
+  onApply: (selectedSpots: Record<string, number[]>) => void
   onDiscard: () => void
   onClose: () => void
 }
@@ -41,29 +41,50 @@ function getConflictDates(plan: GeneratedPlan, existingDays: Day[] | null | unde
   return conflicts
 }
 
+/** selectedSpots: { [date]: number[] } — 该天被选中的地点索引 */
+function buildFullSelection(plan: GeneratedPlan): Record<string, number[]> {
+  const sel: Record<string, number[]> = {}
+  for (const d of plan.days) {
+    sel[d.date] = d.spots.map((_, i) => i)
+  }
+  return sel
+}
+
+function totalSelected(sel: Record<string, number[]>): number {
+  return Object.values(sel).reduce((acc, arr) => acc + arr.length, 0)
+}
+
 export default function AIPlanPreview({
   open, plan, status, generating, existingDays, onRegenerate, onApply, onDiscard, onClose,
 }: Props) {
-  const [selected, setSelected] = useState<Set<string>>(new Set())
+  const [selected, setSelected] = useState<Record<string, number[]>>({})
 
-  // 当 plan 的日期集合变化时, 默认全选所有"已生成的天"
   const planDateKey = plan ? plan.days.map(d => d.date).join(',') : ''
   useEffect(() => {
-    if (!plan) { setSelected(new Set()); return }
-    setSelected(new Set(plan.days.map(d => d.date)))
+    if (!plan) { setSelected({}); return }
+    setSelected(buildFullSelection(plan))
   }, [planDateKey])
 
   if (!open || !plan) return null
 
   const unres = unresolvedCount(plan)
   const conflicts = getConflictDates(plan, existingDays)
-  const canApply = status === 'done' && selected.size > 0 && !generating
+  const spotCount = totalSelected(selected)
+  const canApply = status === 'done' && spotCount > 0 && !generating
 
-  const toggle = (date: string) => {
+  const toggleSpot = (date: string, idx: number) => {
     setSelected(prev => {
-      const next = new Set(prev)
-      if (next.has(date)) next.delete(date); else next.add(date)
-      return next
+      const cur = prev[date] ?? []
+      const next = cur.includes(idx) ? cur.filter(i => i !== idx) : [...cur, idx]
+      return { ...prev, [date]: next }
+    })
+  }
+
+  const toggleDay = (date: string, total: number) => {
+    setSelected(prev => {
+      const cur = prev[date] ?? []
+      const allOn = cur.length === total
+      return { ...prev, [date]: allOn ? [] : Array.from({ length: total }, (_, i) => i) }
     })
   }
 
@@ -73,38 +94,45 @@ export default function AIPlanPreview({
         <View className='aip-sheet' catchMove onClick={(e) => e.stopPropagation()}>
         <View className='aip-header'>
           <Text className='aip-title'>
-            AI 方案 {status === 'streaming' ? '· 生成中…' : status === 'done' ? '' : ''}
+            AI 方案 {status === 'streaming' ? '· 生成中…' : ''}
           </Text>
           <Text className='aip-close' onClick={onClose}>✕</Text>
         </View>
 
         {unres > 0 && (
           <View className='aip-warn'>
-            有 {unres} 个地点未给出坐标, 应用后可手动调整
+            有 {unres} 个地点未给出坐标，应用后可手动调整
           </View>
         )}
 
         <ScrollView scrollY className='aip-body'>
           {plan.days.map((d, di) => {
-            const on = selected.has(d.date)
+            const daySelected = selected[d.date] ?? []
+            const allOn = daySelected.length === d.spots.length
+            const someOn = daySelected.length > 0 && !allOn
             return (
               <View key={`d-${d.date}`} className='aip-day'>
-                <View className='aip-day-head' onClick={() => toggle(d.date)}>
-                  <View className={`aip-check ${on ? 'on' : ''}`}>{on ? '✓' : ''}</View>
-                  <Text className='aip-day-title'>Day {di + 1} · {d.date}</Text>
+                <View className='aip-day-head' onClick={() => toggleDay(d.date, d.spots.length)}>
+                  <View className={`aip-check ${allOn ? 'on' : ''} ${someOn ? 'half' : ''}`}>
+                    {allOn ? '✓' : someOn ? '—' : ''}
+                  </View>
+                  <Text className='aip-day-title'>第 {di + 1} 天 · {d.date}</Text>
                 </View>
-                {conflicts.has(d.date) && (
+                {conflicts.has(d.date) && daySelected.length > 0 && (
                   <View className='aip-day-conflict'>
-                    ⚠ 该天已有手动内容, 应用将覆盖
+                    ⚠ 该天已有手动内容，应用将覆盖
                   </View>
                 )}
                 {d.spots.map((s: GeneratedSpot, si) => {
+                  const on = daySelected.includes(si)
                   const noCoord = s.lat == null || s.lng == null
                   return (
                     <View
                       key={`s-${d.date}-${si}`}
-                      className={`aip-spot ${noCoord ? 'unresolved' : ''}`}
+                      className={`aip-spot ${noCoord ? 'unresolved' : ''} ${on ? '' : 'deselected'}`}
+                      onClick={() => toggleSpot(d.date, si)}
                     >
+                      <View className={`aip-spot-check ${on ? 'on' : ''}`}>{on ? '✓' : ''}</View>
                       <Text className='aip-spot-tag'>{TYPE_LABEL[s.type] || '·'}</Text>
                       <View className='aip-spot-body'>
                         <Text className='aip-spot-name'>{s.name}</Text>
@@ -123,10 +151,7 @@ export default function AIPlanPreview({
         </ScrollView>
 
         <View className='aip-actions'>
-          <View
-            className='aip-btn-discard'
-            onClick={onDiscard}
-          >舍弃</View>
+          <View className='aip-btn-discard' onClick={onDiscard}>舍弃</View>
           <View
             className={`aip-btn-regen ${generating ? 'disabled' : ''}`}
             onClick={() => !generating && onRegenerate()}
@@ -135,20 +160,21 @@ export default function AIPlanPreview({
             className={`aip-btn-apply ${canApply ? '' : 'disabled'}`}
             onClick={async () => {
               if (!canApply) return
-              const picked = Array.from(selected)
-              const conflictedPicked = picked.filter(d => conflicts.has(d))
-              if (conflictedPicked.length > 0) {
+              const conflictedDays = Object.entries(selected)
+                .filter(([date, idxs]) => idxs.length > 0 && conflicts.has(date))
+                .map(([date]) => date)
+              if (conflictedDays.length > 0) {
                 const res = await Taro.showModal({
                   title: '覆盖确认',
-                  content: `${conflictedPicked.join(', ')} 已有手动内容, 应用后会被覆盖, 继续?`,
+                  content: `${conflictedDays.join('、')} 已有手动内容，应用后会被覆盖，继续？`,
                   confirmText: '继续',
                   confirmColor: '#c43d3d',
                 })
                 if (!res.confirm) return
               }
-              onApply(picked)
+              onApply(selected)
             }}
-          >应用 {selected.size > 0 ? `(${selected.size} 天)` : ''}</View>
+          >应用 {spotCount > 0 ? `(${spotCount} 个地点)` : ''}</View>
         </View>
         </View>
       </View>

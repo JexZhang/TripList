@@ -181,12 +181,12 @@ function TripBody() {
     setTheaterMinimized(true)
   }
   
-  const handlePreviewApply = async (selectedDates: string[]) => {
+  const handlePreviewApply = async (selectedSpots: Record<string, number[]>) => {
     if (!t || !t.aiDraft) return
     try {
       const aiDraft = t.aiDraft as any
       const patch = mergeAIDraft(t, aiDraft)
-      const newDays = mergePlanIntoDays(t.days, aiDraft, selectedDates)
+      const newDays = mergePlanIntoDays(t.days, aiDraft, selectedSpots)
       await updateTrip(t._id, {
         ...patch,
         days: newDays,
