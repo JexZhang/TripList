@@ -3,7 +3,8 @@ import { View } from '@tarojs/components'
 import Taro, { useDidShow, useShareAppMessage } from '@tarojs/taro'
 import type { Trip } from '../../types/trip'
 import { listMyTrips, renameTrip, copyTripLocally, smartDeleteTrip, updateTrip } from '../../utils/db'
-import { SEED_TRIPS, isSeedTripId } from '../../data/seed-trips'
+import { listFeaturedTemplates, getFeaturedCache } from '../../utils/templates'
+import type { TemplateCard } from '../../types/template'
 import { getTripPhase } from '../../utils/trip-phase'
 import { useMe } from '../../store/me-store'
 import { useTheme } from '../../store/theme-store'
@@ -27,13 +28,13 @@ const STORAGE_KEY = 'home-trips-cache'  // 仅缓存网络列表部分（不含�
 export default function Home() {
   const themeCls = useThemeClass()
   const { theme } = useTheme()
-  // A2/A3：种子立即可见；命中缓存则一并显示，loading 仅表示「用户真实行程未就绪」
+  // A2/A3：命中缓存则立即显示，loading 仅表示「用户真实行程未就绪」
   const [trips, setTrips] = useState<Trip[]>(() => {
     try {
       const cached = Taro.getStorageSync(STORAGE_KEY) as Trip[] | ''
-      if (Array.isArray(cached) && cached.length) return [...SEED_TRIPS, ...cached]
+      if (Array.isArray(cached) && cached.length) return cached
     } catch { /* ignore */ }
-    return [...SEED_TRIPS]
+    return []
   })
   const [loading, setLoading] = useState<boolean>(() => {
     try {
@@ -48,6 +49,11 @@ export default function Home() {
   const [shareReady, setShareReady] = useState({ readonly: false, collab: false })
   const [coverTrip, setCoverTrip] = useState<Trip | null>(null)
   const [interviewOpen, setInterviewOpen] = useState(false)
+  // 云端精选模板：先回缓存即时渲染，挂载后并行刷新
+  const [featuredTemplates, setFeaturedTemplates] = useState<TemplateCard[]>(() => getFeaturedCache() || [])
+  useEffect(() => {
+    listFeaturedTemplates(8).then(setFeaturedTemplates).catch((e) => console.warn('[home] featured', e))
+  }, [])
 
   const openidRef = useRef(openid)
   useEffect(() => { openidRef.current = openid }, [openid])
@@ -57,7 +63,7 @@ export default function Home() {
   const loadTrips = useCallback(async () => {
     try {
       const list = await listMyTrips(openidRef.current)
-      setTrips([...SEED_TRIPS, ...list])
+      setTrips(list)
       setLoading(false)
       try { Taro.setStorageSync(STORAGE_KEY, list) } catch { /* ignore storage full */ }
     } catch (e) {
@@ -83,7 +89,7 @@ export default function Home() {
     const timer = setInterval(() => {
       listMyTrips(openidRef.current)
         .then((list) => {
-          setTrips([...SEED_TRIPS, ...list])
+          setTrips(list)
           try { Taro.setStorageSync(STORAGE_KEY, list) } catch { /* ignore */ }
         })
         .catch((e) => console.error('[home] ai polling failed', e))
@@ -228,13 +234,10 @@ export default function Home() {
     onLongPressTrip: (t) => setActionTrip(t),
     onNewTrip: () => Taro.navigateTo({ url: '/pages/new-trip/index' }),
     onAITrip: () => setInterviewOpen(true),
-    onCoverLongPress: (t) => {
-      if (isSeedTripId(t._id)) {
-        Taro.showToast({ title: '示例攻略不能改封面', icon: 'none' })
-        return
-      }
-      setCoverTrip(t)
-    },
+    onCoverLongPress: (t) => setCoverTrip(t),
+    featuredTemplates,
+    onOpenTemplate: (id) => Taro.navigateTo({ url: `/pages/template/index?id=${id}` }),
+    onOpenLibrary: () => Taro.navigateTo({ url: '/pages/library/index' }),
   }
 
   return (
@@ -247,7 +250,6 @@ export default function Home() {
       <TripActionSheet
         open={!!actionTrip}
         tripName={actionTrip?.name || ''}
-        actions={actionTrip && isSeedTripId(actionTrip._id) ? ['copy'] : undefined}
         onSelect={handleAction}
         onClose={() => setActionTrip(null)}
       />

@@ -7,7 +7,7 @@ import HomeAIBanner from '../../components/HomeAIBanner'
 import HomeBottomCTA from '../../components/HomeBottomCTA'
 import HomeArchiveSection from './HomeArchiveSection'
 import HomeCardAIRow from '../../components/HomeCardAIRow'
-import { isSeedTripId } from '../../data/seed-trips'
+import HomeFeaturedRow from './HomeFeaturedRow'
 import { fmtDateShort } from '../../utils/format'
 import { tripSummary } from '../../utils/trip-helpers'
 import type { HomeViewProps } from './shared'
@@ -30,6 +30,7 @@ function aiStatusFor(t: Trip): 'thinking' | 'ready' | 'error' | null {
 
 export default function HomeTegami({
   trips, archivedTrips, loading, openid, onOpenTrip, onLongPressTrip, onNewTrip, onAITrip,
+  featuredTemplates, onOpenTemplate, onOpenLibrary,
 }: HomeViewProps) {
   const sized = useMemo(() => trips.map((t, i) => ({
     ...t,
@@ -50,13 +51,14 @@ export default function HomeTegami({
 
       <HomeAIBanner onTap={onAITrip} />
 
+      <HomeFeaturedRow templates={featuredTemplates} onOpenTemplate={onOpenTemplate} onOpenLibrary={onOpenLibrary} />
+
       {loading && <View className='ht-loading'>加载中…</View>}
 
       <View className='ht-stack'>
         {sized.map((t, i) => {
           const ai = aiStatusFor(t)
-          const isCollab = t._openid !== openid && !isSeedTripId(t._id)
-          const isSeed = isSeedTripId(t._id)
+          const isCollab = t._openid !== openid
           return (
             <View
               key={t._id}
@@ -77,7 +79,6 @@ export default function HomeTegami({
                 <Text className='ht-card-name'>{t.name}</Text>
                 <TripPhaseChip trip={t} className='ht-card-phase' hidePre />
                 <View className='ht-card-foot'>
-                  {isSeed && <View className='ht-card-badge ht-card-badge-seed'>示例</View>}
                   {isCollab && <View className='ht-card-badge'>协作</View>}
                 </View>
               </View>

@@ -7,7 +7,7 @@ import HomeBottomCTA from '../../components/HomeBottomCTA'
 import HomeArchiveSection from './HomeArchiveSection'
 import HomeCardAIRow from '../../components/HomeCardAIRow'
 import MagFeatureCover from '../../components/MagFeatureCover'
-import { isSeedTripId } from '../../data/seed-trips'
+import HomeFeaturedRow from './HomeFeaturedRow'
 import type { HomeViewProps } from './shared'
 import type { Trip } from '../../types/trip'
 import './styles/home-magazine.scss'
@@ -22,10 +22,10 @@ function aiStatusFor(t: Trip): 'thinking' | 'ready' | 'error' | null {
 export default function HomeMagazine({
   trips, archivedTrips, loading, onOpenTrip, onLongPressTrip,
   onNewTrip, onAITrip, onCoverLongPress,
+  featuredTemplates, onOpenTemplate, onOpenLibrary,
 }: HomeViewProps) {
-  const userTrips = trips.filter((t) => !isSeedTripId(t._id))
-  const sortedUser = [...userTrips].sort((a, b) => (b.updatedAt ?? 0) - (a.updatedAt ?? 0))
-  const featured = sortedUser[0] ?? trips.find((t) => isSeedTripId(t._id))
+  const sortedUser = [...trips].sort((a, b) => (b.updatedAt ?? 0) - (a.updatedAt ?? 0))
+  const featured = sortedUser[0]
   const rest = trips.filter((t) => t._id !== featured?._id)
   const featAI = featured ? aiStatusFor(featured) : null
   const destFull = featured?.destinations?.map((d) => d.name).join(' · ') || ''
@@ -50,6 +50,8 @@ export default function HomeMagazine({
       </View>
 
       <HomeAIBanner onTap={onAITrip} />
+
+      <HomeFeaturedRow templates={featuredTemplates} onOpenTemplate={onOpenTemplate} onOpenLibrary={onOpenLibrary} />
 
       {loading && <View className='hm-loading'>加载中…</View>}
 

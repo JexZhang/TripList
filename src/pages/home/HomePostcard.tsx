@@ -6,6 +6,7 @@ import AvatarEntry from '../../components/AvatarEntry'
 import HomeAIBanner from '../../components/HomeAIBanner'
 import HomeBottomCTA from '../../components/HomeBottomCTA'
 import HomeArchiveSection from './HomeArchiveSection'
+import HomeFeaturedRow from './HomeFeaturedRow'
 import type { HomeViewProps } from './shared'
 import type { Trip } from '../../types/trip'
 import { getTripPhase } from '../../utils/trip-phase'
@@ -63,6 +64,7 @@ function tripDays(t: Trip): number {
 
 export default function HomePostcard({
   trips, archivedTrips, loading, onOpenTrip, onLongPressTrip, onNewTrip, onAITrip,
+  featuredTemplates, onOpenTemplate, onOpenLibrary,
 }: HomeViewProps) {
   const sized = useMemo(() => trips.map((t) => ({ ...t, _days: tripDays(t) })), [trips])
   const totalDays = sized.reduce((s, t) => s + t._days, 0)
@@ -91,6 +93,8 @@ export default function HomePostcard({
       <View className='hpp-ai-banner'>
         <HomeAIBanner onTap={onAITrip} />
       </View>
+
+      <HomeFeaturedRow templates={featuredTemplates} onOpenTemplate={onOpenTemplate} onOpenLibrary={onOpenLibrary} />
 
       {loading && <View className='hpp-loading'>Stamping visas…</View>}
 

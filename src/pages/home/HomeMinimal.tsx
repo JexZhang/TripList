@@ -6,6 +6,7 @@ import HomeAIBanner from '../../components/HomeAIBanner'
 import HomeBottomCTA from '../../components/HomeBottomCTA'
 import HomeArchiveSection from './HomeArchiveSection'
 import HomeCardAIRow from '../../components/HomeCardAIRow'
+import HomeFeaturedRow from './HomeFeaturedRow'
 import type { HomeViewProps } from './shared'
 import type { Trip } from '../../types/trip'
 import './styles/home-minimal.scss'
@@ -23,6 +24,7 @@ function tripDays(t: Trip): number {
 
 export default function HomeMinimal({
   trips, archivedTrips, loading, onOpenTrip, onLongPressTrip, onNewTrip, onAITrip,
+  featuredTemplates, onOpenTemplate, onOpenLibrary,
 }: HomeViewProps) {
   const totalDays = trips.reduce((s, t) => s + tripDays(t), 0)
 
@@ -47,6 +49,8 @@ export default function HomeMinimal({
       </View>
 
       <HomeAIBanner onTap={onAITrip} />
+
+      <HomeFeaturedRow templates={featuredTemplates} onOpenTemplate={onOpenTemplate} onOpenLibrary={onOpenLibrary} />
 
       {loading && <View className='hmin-loading'>加载中…</View>}
 
