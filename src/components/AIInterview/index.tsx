@@ -356,8 +356,10 @@ export default function AIInterview({ open, mode, tripId, onClose, onSubmit }: P
           className='aiv-sheet'
           catchMove
           style={{
-            transform: `translateY(-${keyboardHeight}px)`,
-            transition: 'transform 0.25s ease',
+            // 用 margin-bottom 抬升（mask 为 align-items:flex-end，等效上推）。
+            // 不能用 transform：sheet-up 入场动画(fill:both)会保留 translateY(0) 覆盖内联 transform。
+            marginBottom: `${keyboardHeight}px`,
+            transition: 'margin-bottom 0.25s ease',
           }}
           onClick={(e) => e.stopPropagation()}
           onTouchStart={onTouchStart}
