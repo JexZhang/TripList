@@ -16,6 +16,12 @@ function nightsLabel(dayCount: number): string {
   return `${dayCount}天${Math.max(0, dayCount - 1)}晚`
 }
 
+const CARD_GRADS: ReadonlyArray<[string, string]> = [
+  ['#FF7A2E', '#FF9A4D'],
+  ['#6B46C1', '#FF5B5B'],
+  ['#4FB286', '#FFC247'],
+]
+
 export default function LibraryPage() {
   const themeCls = useThemeClass()
   const [status, setStatus] = useState<Status>('loading')
@@ -25,7 +31,7 @@ export default function LibraryPage() {
   const [tags, setTags] = useState<string[]>([])
   const [audience, setAudience] = useState<AIAudience[]>([])
   const [seasons, setSeasons] = useState<string[]>([])
-  const [showMore, setShowMore] = useState(false)
+  const [showMore, setShowMore] = useState(true)  // 默认展开次级筛选，提升可见性
 
   // 服务端只按「天数」收敛(主筛选),其余维度客户端精筛
   const serverQuery: TemplateQuery = useMemo(() => {
@@ -66,18 +72,21 @@ export default function LibraryPage() {
         {keyword.length > 0 && <View onClick={() => setKeyword('')}><Icon name='close' size={18} color='var(--ink-3)' /></View>}
       </View>
 
-      {/* 天数主筛选(紧凑一排) */}
-      <ScrollView scrollX className='lib-days' showScrollbar={false}>
-        <View className={`lib-day-chip ${dayIdx < 0 ? 'on' : ''}`} onClick={() => setDayIdx(-1)}>不限</View>
-        {DAY_CHIPS.map((c, i) => (
-          <View key={c.label} className={`lib-day-chip ${dayIdx === i ? 'on' : ''}`} onClick={() => setDayIdx(i)}>{c.label}</View>
-        ))}
-        <View className='lib-day-more' onClick={() => setShowMore((v) => !v)}>
-          <Icon name='sliders' size={18} color={hasFilter ? 'var(--accent)' : 'var(--ink-3)'} />
+      {/* 筛选控制区 */}
+      <View className='lib-filter-bar'>
+        <ScrollView scrollX className='lib-days' showScrollbar={false}>
+          <View className={`lib-day-chip ${dayIdx < 0 ? 'on' : ''}`} onClick={() => setDayIdx(-1)}>不限</View>
+          {DAY_CHIPS.map((c, i) => (
+            <View key={c.label} className={`lib-day-chip ${dayIdx === i ? 'on' : ''}`} onClick={() => setDayIdx(i)}>{c.label}</View>
+          ))}
+        </ScrollView>
+        <View className='lib-filter-toggle' onClick={() => setShowMore((v) => !v)}>
+          <Icon name='sliders' size={20} color={hasFilter ? 'var(--accent)' : 'var(--ink-3)'} />
+          <Text className='lib-filter-toggle-text'>{showMore ? '收起' : '更多'}</Text>
         </View>
-      </ScrollView>
+      </View>
 
-      {/* 次级筛选(折叠) */}
+      {/* 次级筛选(玩法/人群/季节) */}
       {showMore && (
         <View className='lib-more'>
           <FilterRow icon='tag' title='玩法' options={TAG_OPTIONS} selected={tags} onToggle={(v) => toggle(tags, v, setTags)} />
@@ -112,23 +121,32 @@ export default function LibraryPage() {
       {status === 'ready' && list.length > 0 && (
         <ScrollView scrollY className='lib-scroll'>
           <View className='lib-grid'>
-            {list.map((c) => (
-              <View key={c._id} className='lib-card' onClick={() => Taro.navigateTo({ url: `/pages/template/index?id=${c._id}` })}>
-                <Text className='lib-card-name'>{c.name}</Text>
-                <View className='lib-card-meta'>
-                  <Icon name='pin' size={13} color='var(--ink-3)' />
-                  <Text>{c.city}</Text>
-                  <Text className='lib-card-dot'>·</Text>
-                  <Text>{nightsLabel(c.dayCount)}</Text>
-                </View>
-                <Text className='lib-card-sub'>{c.spotCount} 个地点</Text>
-                {c.tags?.length > 0 && (
-                  <View className='lib-card-tags'>
-                    {c.tags.slice(0, 3).map((t) => <Text key={t} className='lib-card-tag'>{t}</Text>)}
+            {list.map((c, i) => {
+              const g = CARD_GRADS[i % 3]
+              return (
+                <View key={c._id} className='lib-card'
+                  style={{ '--c1': g[0], '--c2': g[1], animationDelay: `${i * 60}ms` } as React.CSSProperties}
+                  onClick={() => Taro.navigateTo({ url: `/pages/template/index?id=${c._id}` })}>
+                  <View className='lib-card-ink' />
+                  <View className='lib-card-body'>
+                    <View className='lib-card-top'>
+                      <Text className='lib-card-name'>{c.name}</Text>
+                      <Text className='lib-card-days'>{nightsLabel(c.dayCount)}</Text>
+                    </View>
+                    <View className='lib-card-info'>
+                      <Text>{c.city}</Text>
+                      <View className='lib-card-dot' />
+                      <Text>{c.spotCount} 个精选地点</Text>
+                    </View>
+                    {c.tags?.length > 0 && (
+                      <View className='lib-card-tags'>
+                        {c.tags.slice(0, 3).map((t) => <Text key={t} className='lib-card-tag'>{t}</Text>)}
+                      </View>
+                    )}
                   </View>
-                )}
-              </View>
-            ))}
+                </View>
+              )
+            })}
           </View>
           <View className='lib-grid-pad' />
         </ScrollView>

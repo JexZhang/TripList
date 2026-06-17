@@ -90,7 +90,7 @@ export default function HomeTegami({
       <HomeArchiveSection trips={archivedTrips} onOpenTrip={onOpenTrip} onLongPressTrip={onLongPressTrip} />
 
       <View className='ht-cta'>
-        <HomeBottomCTA onAITap={onAITrip} onNewTap={onNewTrip} newLabel='+ 新建明信片' />
+        <HomeBottomCTA onAITap={onAITrip} onNewTap={onNewTrip} newLabel='+ 新建攻略' />
       </View>
     </View>
   )
