@@ -1,13 +1,7 @@
 import { View, Text } from '@tarojs/components'
 import type { Spot } from '../../types/trip'
 import { fmtCurrency } from '../../utils/format'
-
-const ICON: Record<string, string> = {
-  spot: '◉',
-  hotel: '🛏',
-  meal: '🍜',
-  transport: '🚄',
-}
+import Icon from '../../components/Icon'
 
 interface Props {
   spot: Spot
@@ -18,7 +12,9 @@ export default function SpotCard({ spot, onClick }: Props) {
   return (
     <View className='spot-card' onClick={onClick}>
       <View className='sc-head'>
-        <Text className='sc-icon'>{ICON[spot.type] || '◉'}</Text>
+        <View className='sc-icon'>
+          <Icon name={spot.type} color='var(--accent)' style={{ width: '34rpx', height: '34rpx' }} />
+        </View>
         <Text className='sc-time'>{spot.time || '—'}</Text>
         <Text className='sc-name'>{spot.name}</Text>
       </View>

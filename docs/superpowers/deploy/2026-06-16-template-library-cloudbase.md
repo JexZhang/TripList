@@ -10,12 +10,14 @@
 
 ```json
 {
-  "read": true,
+  "read": "auth != null",
   "write": false
 }
 ```
 
-2.2. 含义：全员可读，客户端禁写；写入仅经控制台/CLI 管理员通道。
+2.2. 含义：登录用户可读（小程序调用方都已自动鉴权，等价于全员可读），客户端一律禁写；写入仅经控制台/CLI 管理员通道（导入不受安全规则约束）。
+
+2.3. 注意：不要用「仅创建者可写」`"write": "doc._openid == auth.openid"`——那是用户自有数据（如 trips）的范式。攻略库是只读模板，套用该规则会允许任意客户端 add 新模板文档（插入时 doc._openid 即等于调用者 openid），污染公共库。故此处必须 `write: false`。
 
 3. 部署云函数 clone-template
 
@@ -25,9 +27,11 @@
 
 4. 导入初始数据
 
-4.1. 在 trip_templates 集合「导入」docs/superpowers/deploy/trip-templates-seed.json。
+4.1. 在 trip_templates 集合「导入」docs/superpowers/deploy/trip-templates-seed.json。注意：微信云开发控制台要求文件扩展名为 .json，但内容必须是 JSON Lines 格式（每行一个独立 JSON 对象，不是数组、不缩进）。本文件已是该格式，直接选它即可，勿改成数组或重新格式化。
 
-4.2. 导入后抽查：至少 1 条 featured=true，dayCount 与 days 长度一致。
+4.2. 冲突处理模式选「Insert」（新增），共导入 3 条文档。
+
+4.3. 导入后抽查：至少 1 条 featured=true，dayCount 与 days 长度一致。
 
 5. 联调验证
 
