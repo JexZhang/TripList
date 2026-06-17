@@ -1,6 +1,7 @@
 import { View, Text, Picker } from '@tarojs/components'
 import Taro from '@tarojs/taro'
 import AIBadge from '../../components/AIBadge'
+import Icon from '../../components/Icon'
 import CollaboratorsBar from '../../components/CollaboratorsBar'
 import type { TripHeaderViewProps } from './shared-header'
 import './styles/header-tegami.scss'
@@ -20,7 +21,8 @@ export default function TripHeaderTegami({
       <View style={{ height: `${statusBarHeight}px` }} />
       <View className='thtg-bar'>
         <View className='thtg-back' onClick={onBack}>
-          <Text className='thtg-back-label'>↩ 返回</Text>
+          <Icon name='arrow-left' size={24} />
+          <Text className='thtg-back-label'>返回</Text>
         </View>
         <Text className='thtg-issue'>HANDWRITTEN · 2026</Text>
         <View className='thtg-menu' onClick={onMenuTap}>⋯</View>
