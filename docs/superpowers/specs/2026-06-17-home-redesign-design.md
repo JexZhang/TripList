@@ -182,3 +182,20 @@
 10.3. 最近打开/智能排序。
 
 10.4. 季节自动推断。
+
+## 11. 设计稿引用（实现参照）
+
+11.1. 以下 HTML mockup 为 brainstorming 阶段产出，存于本地会话目录（`.superpowers/` 已 gitignore，不入版本控制，仅本地查看）。实现时以这些稿为视觉参照，避免偏差。
+
+11.2. 最权威的总参照是最终拼合稿，其余为各项决策的「选项对比」上下文，括注内为最终选定方案。
+
+11.3. 决策与设计稿对照
+
+| 设计稿 | 对应章节 | 内容与选定方案 |
+| --- | --- | --- |
+| [final-home-v2.html](.superpowers/brainstorm/45933-1781679345/content/final-home-v2.html) | 第 3、4 章（整体） | 最终拼合首页：左上留空、创建台双 tile、旅人精选横滑生成色卡、我的行程单一列表（仅 live 标签、已结束淡化沉底）、大陆示例、按时间排序。总参照。 |
+| [layout-skeleton.html](.superpowers/brainstorm/45933-1781679345/content/layout-skeleton.html) | 3.2 创建台 | 整体骨架三选一，选定方案 B（双入口并排 tile）。 |
+| [inspiration-v3.html](.superpowers/brainstorm/45933-1781679345/content/inspiration-v3.html) | 3.3 旅人精选 | 灵感版块布局对比，选定方案 E（灵感在创建台之下、我的行程之上，横滑封面卡）。 |
+| [coverless-cards.html](.superpowers/brainstorm/45933-1781679345/content/coverless-cards.html) | 3.3.2、4.3 取色 | 无封面卡片风格三选一，选定方案 A（生成色封面 + 大字目的地名）。 |
+
+11.4. 注意：设计稿用暖色近似「手紙」主题示意；四主题最终各自换皮，骨架与分区顺序以稿为准、配色字体质感按各主题 scss 实现（见第 7 章）。
