@@ -78,8 +78,14 @@
   box-shadow: var(--shadow-md);
   position: relative;
   overflow: hidden;
-  animation: slide-up 0.5s var(--ease-out) both;
+  /* 专用入场动画：结束帧不锁 opacity，避免 fill:both 覆盖 .ht-card--post 的淡化 */
+  animation: ht-card-in 0.5s var(--ease-out) both;
   transition: transform 0.22s var(--ease-out);
+}
+
+@keyframes ht-card-in {
+  from { opacity: 0; transform: translateY(40rpx); }
+  to   { transform: translateY(0); }
 }
 
 .ht-card:first-child {
@@ -107,10 +113,9 @@
   background: linear-gradient(180deg, var(--c1), var(--c2));
 }
 
-/* 已结束行程：整卡淡化沉底
- * !important 必须保留：slide-up 入场动画(fill:both)会保留 opacity:1 覆盖普通声明 */
+/* 已结束行程：整卡淡化沉底（ht-card-in 结束帧不锁 opacity，故此处可正常生效） */
 .ht-card--post {
-  opacity: 0.45 !important;
+  opacity: 0.45;
 }
 
 .ht-card-body {

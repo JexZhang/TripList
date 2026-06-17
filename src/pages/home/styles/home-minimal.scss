@@ -77,8 +77,7 @@
 
 /* 已结束行程：整卡淡化沉底 */
 .hmin-row--post {
-  /* !important：slide-up 动画(fill:both)保留 opacity:1 会覆盖此声明 */
-  opacity: 0.45 !important;
+  opacity: 0.45;
 }
 
 .hmin-row-no {
