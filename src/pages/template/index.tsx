@@ -1,7 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
-import { View, Text, Picker } from '@tarojs/components'
+import { View, Text } from '@tarojs/components'
 import Taro, { useRouter } from '@tarojs/taro'
-import dayjs from 'dayjs'
 import type { Template } from '../../types/template'
 import type { Trip } from '../../types/trip'
 import { getTemplate, cloneTemplate } from '../../utils/templates'
@@ -12,6 +11,7 @@ import ItineraryView from '../../views/ItineraryView'
 import BudgetView from '../../views/BudgetView'
 import PackingView from '../../views/PackingView'
 import MapView from '../../views/MapView'
+import CopySheet from '../../components/CopySheet'
 import Icon, { type IconName } from '../../components/Icon'
 import './index.scss'
 
@@ -51,7 +51,6 @@ export default function TemplatePage() {
   const [status, setStatus] = useState<'loading' | 'ready' | 'error'>('loading')
   const [tab, setTab] = useState<Tab>('itinerary')
   const [copyOpen, setCopyOpen] = useState(false)
-  const [startDate, setStartDate] = useState(dayjs().format('YYYY-MM-DD'))
   const [copying, setCopying] = useState(false)
 
   useEffect(() => {
@@ -66,7 +65,7 @@ export default function TemplatePage() {
     [tpl],
   )
 
-  const doCopy = async () => {
+  const doCopy = async (startDate: string) => {
     if (!tpl || copying) return
     setCopying(true)
     Taro.showLoading({ title: '复制中…' })
@@ -153,25 +152,15 @@ export default function TemplatePage() {
             <Icon name='plus' size={18} color='#fff' /><Text>复制到我的行程</Text>
           </View>
         </View>
-
-        {copyOpen && (
-          <View className='tpl-sheet-mask' onClick={() => !copying && setCopyOpen(false)}>
-            <View className='tpl-sheet' onClick={(e) => e.stopPropagation()}>
-              <Text className='tpl-sheet-title'>选择出发日期</Text>
-              <Picker mode='date' value={startDate} onChange={(e) => setStartDate(String(e.detail.value))}>
-                <View className='tpl-sheet-date'>
-                  <Text className='tpl-sheet-date-l'>出发</Text>
-                  <Text className='tpl-sheet-date-v'>{startDate}</Text>
-                </View>
-              </Picker>
-              <Text className='tpl-sheet-note'>共 {tpl.dayCount || tpl.days.length} 天,日期将自动顺延。</Text>
-              <View className={`tpl-sheet-go ${copying ? 'busy' : ''}`} onClick={doCopy}>
-                <Text>{copying ? '复制中…' : '确认复制'}</Text>
-              </View>
-            </View>
-          </View>
-        )}
       </View>
+
+      <CopySheet
+        open={copyOpen}
+        dayCount={tpl.dayCount || tpl.days.length}
+        onClose={() => setCopyOpen(false)}
+        onCopy={doCopy}
+        copying={copying}
+      />
     </TripProvider>
   )
 }

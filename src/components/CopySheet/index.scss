@@ -1,0 +1,31 @@
+.copy-sheet-mask {
+  position: fixed; inset: 0;
+  background: rgba(43, 26, 16, 0.45);
+  display: flex; align-items: flex-end;
+  z-index: 100;
+  animation: fade-in 0.22s var(--ease-out) both;
+}
+.copy-sheet {
+  width: 100%;
+  background: var(--bg);
+  color: var(--ink);
+  border-radius: var(--r-xl) var(--r-xl) 0 0;
+  padding: 36px 28px 48px;
+  animation: sheet-up 0.36s var(--ease-spring) both;
+  box-shadow: 0 -16rpx 48rpx rgba(43, 26, 16, 0.15);
+}
+.copy-sheet-title { font-size: 32px; font-weight: 600; }
+.copy-sheet-date {
+  display: flex; align-items: center; justify-content: space-between;
+  margin: 24px 0 12px; padding: 24px;
+  border-radius: var(--r-md); border: 1px solid var(--line);
+}
+.copy-sheet-date-l { color: var(--ink-3); font-size: 26px; }
+.copy-sheet-date-v { font-size: 30px; }
+.copy-sheet-note { font-size: 24px; color: var(--ink-3); }
+.copy-sheet-go {
+  margin-top: 28px; text-align: center;
+  padding: 18px 40px; border-radius: 999px;
+  background: var(--accent); color: #fff;
+}
+.copy-sheet-go.busy { opacity: 0.6; }
