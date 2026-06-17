@@ -1,7 +1,6 @@
 import Taro from '@tarojs/taro'
 import type { Trip, NewTripInput } from '../types/trip'
 import { cloud } from './cloud'
-import { isSeedTripId, getSeedTrip } from '../data/seed-trips'
 
 // @ts-ignore Taro.cloud 在 weapp 端可用
 const db = () => Taro.cloud.database()
@@ -88,9 +87,7 @@ export async function copyTripLocally(
   openid: string,
   me?: { nickname?: string; avatarUrl?: string },
 ): Promise<string> {
-  const src = isSeedTripId(sourceTripId)
-    ? getSeedTrip(sourceTripId)
-    : await getTrip(sourceTripId)
+  const src = await getTrip(sourceTripId)
   if (!src) throw new Error('source trip not found')
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars

@@ -3,7 +3,6 @@ import Taro from '@tarojs/taro'
 import dayjs from 'dayjs'
 import type { Trip, Day, Spot } from '../types/trip'
 import { getTrip, updateTrip } from '../utils/db'
-import { isSeedTripId, getSeedTrip } from '../data/seed-trips'
 
 function resyncDays(days: Day[]): Day[] {
   if (days.length === 0) return days
@@ -141,7 +140,6 @@ export function TripProvider({
   const pendingRef = useRef(false)
   const deferredRemoteRef = useRef<Trip | null>(null)  // pendingRef 期间被丢的远端 doc, save 完成后补合并
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
-  const seedWarningShownRef = useRef(false)  // 示例攻略警告只显示一次
   const latestTripRef = useRef<Trip | null>(null)  // 始终指向最新 state.trip，供 deferred 合并避免用到过期闭包
 
   // 把最新 state.trip 镜像到 ref：debounce 回调在 await 期间用户可能继续编辑，
@@ -150,18 +148,6 @@ export function TripProvider({
 
   // 初次拉 + watch 订阅
   useEffect(() => {
-    // 种子示例攻略：直接从本地静态数据加载，不连云端，不订阅 watch
-    if (isSeedTripId(tripId)) {
-      const seed = getSeedTrip(tripId)
-      if (seed) {
-        dispatch({ type: 'SET_TRIP', trip: seed })
-        lastSavedRef.current = JSON.stringify(seed)
-      } else {
-        dispatch({ type: 'ERROR', error: 'Trip not found' })
-      }
-      return
-    }
-
     let watcher: { close: () => void } | null = null
     getTrip(tripId).then(trip => {
       if (!trip) {
@@ -201,18 +187,6 @@ export function TripProvider({
   // 编辑 → 500ms debounce 保存
   useEffect(() => {
     if (!state.trip || state.loading) return
-    if (isSeedTripId(tripId)) {
-      // 示例攻略编辑不保存，仅提示一次
-      if (!seedWarningShownRef.current) {
-        seedWarningShownRef.current = true
-        Taro.showToast({
-          title: '示例攻略仅供展示,复制后可编辑',
-          icon: 'none',
-          duration: 2500,
-        })
-      }
-      return
-    }
 
     // 不在此处同步 JSON.stringify（避免每次按键都序列化整个 trip）。
     // 标记 pending 并防抖；真正的「是否变化」判断推迟到空闲 500ms 后在回调里做一次。

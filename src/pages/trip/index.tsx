@@ -20,7 +20,6 @@ import TripHeader from './TripHeader'
 import TripPhaseHero from '../../components/TripPhaseHero'
 import { buildShareMessage, shareRef, resetShareRef } from '../../utils/share'
 import { smartDeleteTrip, renameTrip, copyTripLocally, updateTrip } from '../../utils/db'
-import { isSeedTripId } from '../../data/seed-trips'
 import { mergePlanIntoDays } from '../../utils/trip-helpers'
 import { mergeAIDraft } from '../../utils/ai-apply'
 import type { ShareKind } from '../../utils/cloud'
@@ -225,10 +224,6 @@ function TripBody() {
       }, 650)
       return
     }
-    if (isSeedTripId(t._id)) {
-      Taro.showToast({ title: '示例攻略仅支持复制', icon: 'none' })
-      return
-    }
     if (action === 'delete') {
       const collabCount = (t.collaborators || []).length
       const title = isOwner ? '删除攻略？' : '退出协作？'
@@ -318,7 +313,6 @@ function TripBody() {
       <TripActionSheet
         open={actionOpen}
         tripName={t.name}
-        actions={isSeedTripId(t._id) ? ['copy'] : undefined}
         onSelect={handleAction}
         onClose={() => setActionOpen(false)}
       />
