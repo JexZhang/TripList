@@ -29,7 +29,7 @@ export default function DayTabsSpine({ days, activeId, onSelect, onLongPress, on
           ))}
           <View className='dt-add dt-add--spine' onClick={() => onAdd('back')}>
             <Text className='dt-add-spine-icon'>+</Text>
-            <Text className='dt-add-spine-label'>DAY</Text>
+            <Text className='dt-add-spine-label'>加一天</Text>
           </View>
         </View>
       </ScrollView>

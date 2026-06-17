@@ -8,7 +8,7 @@ export default function PackMinimal(props: PackViewProps) {
     <View className='pmin'>
       <View className='pmin-head'>
         <View className='pmin-head-left'>
-          <Text className='pmin-eyebrow'>PACKING</Text>
+          <Text className='pmin-eyebrow'>打包清单</Text>
           <Text className='pmin-progress'>{checkedCount} / {packing.length}</Text>
         </View>
         <View className='pmin-tpl' onClick={onOpenTemplate}>

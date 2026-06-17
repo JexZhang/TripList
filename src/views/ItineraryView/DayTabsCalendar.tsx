@@ -36,7 +36,7 @@ export default function DayTabsCalendar({ days, activeId, onSelect, onLongPress,
           })}
           <View className='dt-add dt-add--cal' onClick={() => onAdd('back')}>
             <Text className='dt-add-cal-icon'>+</Text>
-            <Text className='dt-add-cal-text'>NEW</Text>
+            <Text className='dt-add-cal-text'>加一天</Text>
           </View>
         </View>
       </ScrollView>

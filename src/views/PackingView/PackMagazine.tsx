@@ -36,7 +36,7 @@ export default function PackMagazine(props: PackViewProps) {
                 <Input
                   className='pmg-input'
                   value={draftByCat[cat.id] || ''}
-                  placeholder='ADD ITEM…'
+                  placeholder='加一项…'
                   onInput={(e) => onDraftChange(cat.id, e.detail.value)}
                   onConfirm={() => onAdd(cat.id)}
                   cursorSpacing={20}
