@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>行册 · 首页 AI 生成中状态 重设计演示</title>
+<style>
+  @property --ai-angle {
+    syntax: '<angle>';
+    inherits: false;
+    initial-value: 0deg;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: "PingFang SC", "Noto Sans SC", -apple-system, sans-serif;
+    background: #1c1c1e;
+    color: #eee;
+    padding: 32px 20px 80px;
+    line-height: 1.5;
+  }
+
+  /* ===== theme token sets (从 tokens.scss 同步, rpx/2 = px) ===== */
+  .theme-tegami {
+    --bg: #FFF4E6; --bg-soft: #FFE9D1; --surface: #FFFFFF; --surface-2: #FFF9F1;
+    --ink: #2B1A10; --ink-2: #5A4338; --ink-3: #9B8378;
+    --line: rgba(43,26,16,.08); --line-2: rgba(43,26,16,.14);
+    --accent: #FF7A2E; --accent-2: #FF9A4D; --accent-soft: #FFD3A8; --accent-bg: #FFEBD6;
+    --coral: #FF5B5B; --leaf: #4FB286; --plum: #6B46C1;
+    --r-sm: 8px; --r-md: 11px; --r-lg: 16px;
+    --font-display: "Noto Serif SC","Songti SC",serif;
+  }
+  .theme-magazine {
+    --bg: #F4F0E8; --bg-soft: #ECE6D6; --surface: #FFFFFF; --surface-2: #FAF7EF;
+    --ink: #111111; --ink-2: #3a3936; --ink-3: #80807a;
+    --line: rgba(17,17,17,.10); --line-2: rgba(17,17,17,.20);
+    --accent: #D62E2E; --accent-2: #FF3B3B; --accent-soft: #FFD9D9; --accent-bg: #FFEFEF;
+    --coral: #D62E2E; --leaf: #2a6b3a; --plum: #2a2a4a;
+    --r-sm: 0px; --r-md: 2px; --r-lg: 4px;
+    --font-display: "Playfair Display","Noto Serif SC",serif;
+  }
+  .theme-postcard {
+    --bg: #EFE6D5; --bg-soft: #E6DCC4; --surface: #FFFCF3; --surface-2: #F5EBD4;
+    --ink: #2B1F0E; --ink-2: #5a4422; --ink-3: #978565;
+    --line: rgba(43,31,14,.14); --line-2: rgba(43,31,14,.26);
+    --accent: #C13D2F; --accent-2: #E55C44; --accent-soft: #F0BFB6; --accent-bg: #F9E4DD;
+    --coral: #C13D2F; --leaf: #3F6B43; --plum: #344B7E;
+    --r-sm: 6px; --r-md: 8px; --r-lg: 10px;
+    --font-display: "Noto Serif SC","Songti SC",serif;
+  }
+  .theme-minimal {
+    --bg: #FAFAF8; --bg-soft: #F4F4F0; --surface: #FFFFFF; --surface-2: #F7F7F4;
+    --ink: #0F0F0E; --ink-2: #4a4a48; --ink-3: #9a9a96;
+    --line: rgba(15,15,14,.06); --line-2: rgba(15,15,14,.12);
+    --accent: #2B1A10; --accent-2: #5A4338; --accent-soft: #d8d5cf; --accent-bg: #f2efe9;
+    --coral: #c2473d; --leaf: #5e8a64; --plum: #5e5466;
+    --r-sm: 6px; --r-md: 10px; --r-lg: 14px;
+    --font-display: "PingFang SC","Noto Sans SC",sans-serif;
+  }
+
+  /* ===== page layout ===== */
+  h1 { font-size: 22px; margin-bottom: 6px; }
+  .sub { color: #999; font-size: 13px; margin-bottom: 28px; max-width: 760px; }
+  .sub b { color: #ffd28a; }
+
+  .theme-block { margin-bottom: 48px; }
+  .theme-name {
+    font-size: 15px; letter-spacing: 2px; color: #bbb;
+    border-left: 3px solid #ffd28a; padding-left: 10px; margin-bottom: 16px;
+  }
+  .row {
+    display: flex; flex-wrap: wrap; gap: 20px;
+  }
+  .cell { width: 280px; }
+  .cell-label {
+    font-size: 12px; color: #888; margin-bottom: 8px; font-weight: 600;
+  }
+  .cell-label .tag { color: #ffd28a; }
+
+  /* ===== stage = phone bg ===== */
+  .stage {
+    background: var(--bg);
+    border-radius: 14px;
+    padding: 18px;
+  }
+
+  /* ===== base trip card ===== */
+  .card {
+    position: relative;
+    background: var(--surface);
+    border-radius: var(--r-lg);
+    padding: 16px 16px 14px;
+    box-shadow: 0 6px 18px rgba(0,0,0,.10);
+    overflow: hidden;
+  }
+  .card-edge {
+    position: absolute; left: 0; top: 0; bottom: 0; width: 6px;
+    background: linear-gradient(180deg, var(--accent), var(--accent-2));
+  }
+  .card-body { padding-left: 6px; }
+  .card-meta { font-size: 12px; color: var(--ink-3); margin-bottom: 6px; }
+  .card-name {
+    font-size: 19px; font-weight: 700; color: var(--ink);
+    font-family: var(--font-display); margin-bottom: 12px;
+  }
+
+  /* inline AI row (current / ready / error states) */
+  .ai-row {
+    position: relative; display: flex; align-items: center; gap: 6px;
+    padding: 7px 10px; border-radius: var(--r-sm);
+    font-size: 12px; font-weight: 600; overflow: hidden;
+    background: linear-gradient(135deg, rgba(107,70,193,.10), rgba(255,122,46,.10));
+    color: var(--plum);
+  }
+  .ai-row .spark { flex-shrink: 0; }
+  .ai-row .txt { flex: 1; }
+  .ai-row .shine {
+    position: absolute; top: 0; bottom: 0; left: -60%; width: 60%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,.55), transparent);
+    animation: shimmer 2.6s linear infinite;
+  }
+  .dots { display: inline-flex; gap: 3px; }
+  .dot { width: 4px; height: 4px; border-radius: 50%; background: currentColor; animation: blink 1.2s ease-in-out infinite; }
+  .dot:nth-child(2){ animation-delay:.18s } .dot:nth-child(3){ animation-delay:.36s }
+
+  /* ===================================================================
+     方向 A · 流光描边
+     =================================================================== */
+  .glowA { position: relative; border-radius: calc(var(--r-lg) + 3px); padding: 3px; }
+  .glowA::before {
+    content: ""; position: absolute; inset: 0; border-radius: inherit; padding: 3px;
+    background: conic-gradient(from var(--ai-angle),
+       var(--accent), var(--accent-2), transparent 40%, transparent 60%, var(--accent));
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor; mask-composite: exclude;
+    animation: spinAngle 3.2s linear infinite;
+  }
+  .glowA::after {
+    content: ""; position: absolute; inset: -4px; border-radius: inherit; z-index: -1;
+    background: conic-gradient(from var(--ai-angle), var(--accent), var(--accent-2), transparent 55%, var(--accent));
+    filter: blur(12px); opacity: .45;
+    animation: spinAngle 3.2s linear infinite;
+  }
+  .glowA .card { box-shadow: none; }
+  .mini-tag {
+    display: inline-flex; align-items: center; gap: 5px;
+    font-size: 11px; font-weight: 600; color: var(--accent);
+    background: var(--accent-bg); padding: 4px 9px; border-radius: 999px;
+  }
+
+  /* ===================================================================
+     方向 B · 卡片底纹呼吸
+     =================================================================== */
+  .glowB .card::before {
+    content: ""; position: absolute; inset: 0; pointer-events: none;
+    background: linear-gradient(120deg,
+       var(--accent-bg) 0%, transparent 35%, transparent 65%, var(--accent-soft) 100%);
+    background-size: 220% 220%;
+    opacity: .55;
+    animation: drift 6s ease-in-out infinite, breathe 3.4s ease-in-out infinite;
+  }
+  .glowB .card { box-shadow: 0 6px 18px rgba(0,0,0,.08); }
+  .glowB .card-body { position: relative; z-index: 1; }
+
+  /* ===================================================================
+     方向 C · 描边 + 顶部进度光条
+     =================================================================== */
+  .glowC { position: relative; border-radius: calc(var(--r-lg) + 3px); padding: 3px; }
+  .glowC::before {
+    content: ""; position: absolute; inset: 0; border-radius: inherit; padding: 3px;
+    background: conic-gradient(from var(--ai-angle),
+       var(--accent), var(--accent-2), transparent 40%, transparent 60%, var(--accent));
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor; mask-composite: exclude;
+    animation: spinAngle 3.2s linear infinite;
+  }
+  .glowC .card { box-shadow: none; }
+  .progress {
+    position: relative; height: 4px; border-radius: 999px;
+    background: var(--accent-bg); overflow: hidden; margin-bottom: 12px;
+  }
+  .progress::after {
+    content: ""; position: absolute; top: 0; bottom: 0; left: -40%; width: 40%;
+    background: linear-gradient(90deg, transparent, var(--accent), var(--accent-2), transparent);
+    animation: track 1.6s ease-in-out infinite;
+  }
+
+  /* ===== animations ===== */
+  @keyframes spinAngle { to { --ai-angle: 360deg; } }
+  @keyframes shimmer { to { left: 120%; } }
+  @keyframes blink { 0%,100%{opacity:.3} 50%{opacity:1} }
+  @keyframes drift { 0%,100%{background-position:0% 0%} 50%{background-position:100% 100%} }
+  @keyframes breathe { 0%,100%{opacity:.35} 50%{opacity:.7} }
+  @keyframes track { 0%{left:-40%} 100%{left:100%} }
+
+  /* fallback: 不支持 @property 的浏览器用旋转伪元素兜底 */
+  @supports not (background: conic-gradient(from var(--ai-angle), red, blue)) {
+    .glowA::before, .glowA::after, .glowC::before { animation: none; background: var(--accent); }
+  }
+</style>
+</head>
+<body>
+  <h1>首页「AI 生成中」状态 · 重设计演示</h1>
+  <p class="sub">
+    每个主题一行，左起：<b>当前基线</b>（内嵌状态条） · <b>方向 A 流光描边</b> · <b>方向 B 卡片底纹呼吸</b> · <b>方向 C 描边+顶部进度光条</b>。
+    交互上三个方向都让<b>点击整张卡片 = 进入攻略详情页</b>（修复当前点状态栏无反应的问题）。
+    「就绪 / 失败」两态保持内嵌状态条不变（瞬时态）。
+  </p>
+
+  <!-- 模板：用 JS 注入四个主题，避免重复 -->
+  <div id="root"></div>
+
+<script>
+const THEMES = [
+  ['theme-tegami',   '手帖 TEGAMI'],
+  ['theme-magazine', '刊物 MAGAZINE'],
+  ['theme-postcard', '护照 POSTCARD'],
+  ['theme-minimal',  '极简 MINIMAL'],
+];
+
+const spark = '<span class="spark">✦</span>';
+const dots  = '<span class="dots"><span class="dot"></span><span class="dot"></span><span class="dot"></span></span>';
+
+function cardInner(extra='') {
+  return `
+    <div class="card">
+      <div class="card-edge"></div>
+      <div class="card-body">
+        ${extra}
+        <div class="card-meta">11/18 → 11/21 · 4 天 · 2 人</div>
+        <div class="card-name">京都四日 · 红叶巡礼</div>
+      </div>
+    </div>`;
+}
+
+function baseline() {
+  return `<div class="stage">
+    <div class="card">
+      <div class="card-edge"></div>
+      <div class="card-body">
+        <div class="ai-row"><div class="shine"></div>${spark}<span class="txt">AI 正在为你编排</span>${dots}</div>
+        <div class="card-meta">11/18 → 11/21 · 4 天 · 2 人</div>
+        <div class="card-name">京都四日 · 红叶巡礼</div>
+      </div>
+    </div>
+  </div>`;
+}
+
+function variantA() {
+  return `<div class="stage"><div class="glowA">${
+    cardInner(`<div class="mini-tag">${spark} AI 编排中${dots}</div><div style="height:10px"></div>`)
+  }</div></div>`;
+}
+
+function variantB() {
+  return `<div class="stage"><div class="glowB">${
+    cardInner(`<div class="mini-tag">${spark} AI 编排中${dots}</div><div style="height:10px"></div>`)
+  }</div></div>`;
+}
+
+function variantC() {
+  return `<div class="stage"><div class="glowC">
+    <div class="card">
+      <div class="card-edge"></div>
+      <div class="card-body">
+        <div class="progress"></div>
+        <div class="mini-tag">${spark} AI 编排中${dots}</div>
+        <div style="height:10px"></div>
+        <div class="card-meta">11/18 → 11/21 · 4 天 · 2 人</div>
+        <div class="card-name">京都四日 · 红叶巡礼</div>
+      </div>
+    </div>
+  </div></div>`;
+}
+
+const COLS = [
+  ['当前基线', baseline],
+  ['<span class="tag">方向 A</span> 流光描边', variantA],
+  ['<span class="tag">方向 B</span> 卡片底纹呼吸', variantB],
+  ['<span class="tag">方向 C</span> 描边+顶部进度光条', variantC],
+];
+
+const root = document.getElementById('root');
+root.innerHTML = THEMES.map(([cls, name]) => `
+  <div class="theme-block ${cls}">
+    <div class="theme-name">${name}</div>
+    <div class="row">
+      ${COLS.map(([label, fn]) => `
+        <div class="cell">
+          <div class="cell-label">${label}</div>
+          ${fn()}
+        </div>`).join('')}
+    </div>
+  </div>
+`).join('');
+</script>
+</body>
+</html>
