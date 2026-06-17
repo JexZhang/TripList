@@ -128,14 +128,28 @@ interface ContextValue {
   state: State
   dispatch: React.Dispatch<Action>
   openid: string
+  readonly: boolean
 }
 
 const Ctx = createContext<ContextValue | null>(null)
 
 export function TripProvider({
-  tripId, openid, children,
-}: { tripId: string; openid: string; children: ReactNode }) {
-  const [state, dispatch] = useReducer(reducer, { trip: null, loading: true, error: null })
+  tripId, openid, children, initialTrip, readonly: ro = false,
+}: {
+  tripId?: string
+  openid: string
+  children: ReactNode
+  initialTrip?: Trip
+  readonly?: boolean
+}) {
+  const [state, rawDispatch] = useReducer(reducer, {
+    trip: initialTrip ?? null,
+    loading: !initialTrip,
+    error: null,
+  })
+  const dispatch: React.Dispatch<Action> = ro
+    ? () => { /* readonly: no-op */ }
+    : rawDispatch
   const lastSavedRef = useRef<string>('')  // JSON 字串作为版本指纹
   const pendingRef = useRef(false)
   const deferredRemoteRef = useRef<Trip | null>(null)  // pendingRef 期间被丢的远端 doc, save 完成后补合并
@@ -146,8 +160,9 @@ export function TripProvider({
   // deferred 合并须以最新本地态为准，否则那批编辑会被旧闭包覆盖丢失
   useEffect(() => { latestTripRef.current = state.trip }, [state.trip])
 
-  // 初次拉 + watch 订阅
+  // 初次拉 + watch 订阅（只读模式跳过）
   useEffect(() => {
+    if (ro || !tripId) return
     let watcher: { close: () => void } | null = null
     getTrip(tripId).then(trip => {
       if (!trip) {
@@ -182,10 +197,11 @@ export function TripProvider({
     })
 
     return () => { watcher?.close() }
-  }, [tripId, openid])
+  }, [tripId, openid, ro])
 
-  // 编辑 → 500ms debounce 保存
+  // 编辑 → 500ms debounce 保存（只读模式跳过）
   useEffect(() => {
+    if (ro) return
     if (!state.trip || state.loading) return
 
     // 不在此处同步 JSON.stringify（避免每次按键都序列化整个 trip）。
@@ -235,7 +251,7 @@ export function TripProvider({
         }
       }
     }, 500)
-  }, [state.trip, state.loading, openid])
+  }, [state.trip, state.loading, openid, ro])
 
   // 卸载时清除未触发的 debounce 保存
   useEffect(() => {
@@ -244,7 +260,7 @@ export function TripProvider({
     }
   }, [])
 
-  const value = useMemo(() => ({ state, dispatch, openid }), [state, openid])
+  const value = useMemo(() => ({ state, dispatch, openid, readonly: ro }), [state, openid, ro])
 
   return (
     <Ctx.Provider value={value}>
