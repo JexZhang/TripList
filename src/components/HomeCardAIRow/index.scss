@@ -124,14 +124,9 @@
   border: 2rpx dashed var(--line-2);
 }
 .theme-postcard .hc-ai--thinking .hc-ai-icon { color: var(--accent); }
-.theme-postcard .hc-ai--thinking .hc-ai-deco {
-  display: block;
-  width: 48rpx; height: 32rpx;
-  border: 2rpx solid var(--accent);
-  border-radius: 999rpx;
-  flex-shrink: 0;
-}
-.theme-postcard .hc-ai--thinking .hc-ai-icon { display: none; }
+/* 原本隐藏星星、显示空椭圆（印章造型），但空椭圆像坏占位符。
+   改为正常显示星星图标，隐藏空椭圆。 */
+.theme-postcard .hc-ai--thinking .hc-ai-deco { display: none; }
 .theme-postcard .hc-ai--ready {
   background: var(--surface-2);
   border: 2rpx solid var(--accent);
