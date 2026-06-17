@@ -20,36 +20,7 @@
 .tpl-tab.on { color: var(--accent); }
 .tpl-tab-l { font-size: 24px; }
 
-.tpl-body { flex: 1; padding: 0 28px; }
-.tpl-body-pad { height: 40px; }
-
-.tpl-day { padding: 18px 0; border-bottom: 1px dashed var(--line); }
-.tpl-day-no { font-size: 28px; font-weight: 600; }
-.tpl-day-empty { color: var(--ink-3); font-size: 24px; }
-.tpl-spot { display: flex; align-items: center; gap: 12px; padding: 12px 0; }
-.tpl-spot-time { font-size: 22px; color: var(--ink-3); width: 80px; }
-.tpl-spot-name { flex: 1; font-size: 28px; }
-.tpl-spot-price { font-size: 24px; color: var(--accent); }
-
-.tpl-map-wrap, .tpl-map { width: 100%; height: 700px; }
-.tpl-map-empty, .tpl-pack-empty { padding: 80px 0; text-align: center; color: var(--ink-3); }
-
-.tpl-bud-head { display: flex; align-items: center; justify-content: space-between; padding: 24px 0; }
-.tpl-bud-cap { font-size: 24px; color: var(--ink-3); }
-.tpl-bud-total { display: block; font-size: 48px; font-weight: 700; }
-.tpl-bud-perpax { font-size: 24px; color: var(--ink-3); }
-.tpl-bud-donut { position: relative; width: 140px; height: 140px; border-radius: 50%; }
-.tpl-bud-donut-hole { position: absolute; inset: 28px; border-radius: 50%; background: var(--bg); }
-.tpl-bud-row { display: flex; align-items: center; gap: 12px; padding: 12px 0; }
-.tpl-bud-sw { width: 20px; height: 20px; border-radius: 6px; }
-.tpl-bud-label { flex: 1; font-size: 26px; }
-.tpl-bud-pct { font-size: 24px; color: var(--ink-3); width: 80px; text-align: right; }
-.tpl-bud-v { font-size: 26px; width: 140px; text-align: right; }
-
-.tpl-pack-group { padding: 16px 0; }
-.tpl-pack-cat { font-size: 26px; font-weight: 600; color: var(--accent); }
-.tpl-pack-row { display: flex; align-items: center; gap: 12px; padding: 10px 0; }
-.tpl-pack-label { font-size: 28px; }
+.tpl-body { flex: 1; overflow: hidden; }
 
 .tpl-cta { position: fixed; left: 0; right: 0; bottom: 0; padding: 16px 28px 40px; background: var(--bg); border-top: 1px solid var(--line); }
 .tpl-cta-hint { display: flex; align-items: center; gap: 8px; font-size: 22px; color: var(--ink-3); margin-bottom: 12px; }
