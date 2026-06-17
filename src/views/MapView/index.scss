@@ -123,7 +123,8 @@
  * C. 路线卡片条（九寨沟 seed-jzg）
  * ============================================ */
 .mv-route {
-  padding-top: 22rpx;
+  /* 选中项 translateY(-6rpx) 上移，需留足顶部空间，否则被横向 ScrollView 纵向裁切 */
+  padding-top: 36rpx;
   padding-bottom: 18rpx;
 }
 .mv-route-cell {
@@ -150,7 +151,8 @@
   border-radius: 14rpx;
   box-shadow: 0 3rpx 10rpx rgba(43, 26, 16, 0.08);
   min-width: 96rpx;
-  transition: transform 0.28s var(--ease-spring), box-shadow 0.28s var(--ease-out), background 0.28s var(--ease-out);
+  /* 用 ease-out 而非 ease-spring：避免上移过冲超出 ScrollView 顶边被裁切 */
+  transition: transform 0.28s var(--ease-out), box-shadow 0.28s var(--ease-out), background 0.28s var(--ease-out);
   vertical-align: middle;
 }
 .mv-route-all { margin-right: 4rpx; }
