@@ -59,6 +59,7 @@ exports.main = async (event) => {
   const now = Date.now()
   const created = await db.collection(TRIPS).add({
     data: {
+      _openid: OPENID,
       ...rest,
       days,
       startDate: s,

@@ -48,6 +48,7 @@ exports.main = async (event, context) => {
   const now = Date.now()
   const created = await db.collection('trips').add({
     data: {
+      _openid: OPENID,
       ...rest,
       ownerOpenid: OPENID,
       ownerNickname: me.nickname || '行册旅人',
