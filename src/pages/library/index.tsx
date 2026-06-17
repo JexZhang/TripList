@@ -53,6 +53,21 @@ export default function LibraryPage() {
 
   useEffect(() => { void load() }, [load])
 
+  // 下拉刷新：不切 status（避免列表卸载），用独立 refreshing 控制刷新动画
+  const [refreshing, setRefreshing] = useState(false)
+  const onRefresh = useCallback(async () => {
+    setRefreshing(true)
+    try {
+      const cards = await listTemplates(serverQuery)
+      setRaw(cards)
+      setStatus('ready')
+    } catch (e) {
+      console.error('[library] refresh failed', e)
+    } finally {
+      setRefreshing(false)
+    }
+  }, [serverQuery])
+
   const clientQuery: TemplateQuery = { tags, audience, seasons, keyword }
   const list = useMemo(() => filterTemplates(raw, clientQuery), [raw, tags, audience, seasons, keyword])
 
@@ -119,7 +134,13 @@ export default function LibraryPage() {
         </View>
       )}
       {status === 'ready' && list.length > 0 && (
-        <ScrollView scrollY className='lib-scroll'>
+        <ScrollView
+          scrollY
+          className='lib-scroll'
+          refresherEnabled
+          refresherTriggered={refreshing}
+          onRefresherRefresh={() => { void onRefresh() }}
+        >
           <View className='lib-grid'>
             {list.map((c, i) => {
               const g = CARD_GRADS[i % 3]

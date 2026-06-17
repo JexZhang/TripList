@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { View } from '@tarojs/components'
-import Taro, { useDidShow, useShareAppMessage } from '@tarojs/taro'
+import Taro, { useDidShow, useShareAppMessage, usePullDownRefresh } from '@tarojs/taro'
 import type { Trip } from '../../types/trip'
 import { listMyTrips, renameTrip, copyTripLocally, smartDeleteTrip, updateTrip } from '../../utils/db'
 import { listFeaturedTemplates, getFeaturedCache } from '../../utils/templates'
@@ -80,6 +80,12 @@ export default function Home() {
   useDidShow(() => {
     if (!didInitialShowRef.current) { didInitialShowRef.current = true; return }
     void loadTrips()
+  })
+
+  // 顶部下拉刷新：重载行程 + 配额
+  usePullDownRefresh(() => {
+    Promise.all([loadTrips(), refreshQuota?.()].filter(Boolean))
+      .finally(() => Taro.stopPullDownRefresh())
   })
 
   // A5：仅在「有生成中的行程」翻转时开/关定时器，不再因 trips 变化每轮重建

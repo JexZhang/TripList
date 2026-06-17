@@ -1,6 +1,12 @@
 @import './styles/tokens.scss';
 @import './styles/animations.scss';
 
+/* ===== 页面根容器统一裁掉横向溢出 =====
+   修复：手帖卡片轻微旋转(transform: rotate)使四角戳出屏幕，
+   触发整页横向橡皮筋回弹、露出底层背景。page{overflow-x:hidden}
+   在 iOS weapp 拦不住，需在页面根容器(均带 theme-tokens)上裁剪。 */
+.theme-tokens { overflow-x: hidden; }
+
 /* ===== 全局按压反馈 ===== */
 button { transition: transform 0.18s var(--ease-out), box-shadow 0.22s var(--ease-out), opacity 0.18s ease; }
 button:active:not([disabled]) { transform: scale(0.96); }
