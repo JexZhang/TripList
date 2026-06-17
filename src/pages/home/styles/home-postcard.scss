@@ -197,7 +197,8 @@
 
 /* 已结束行程：整卡淡化沉底 */
 .hpp-card--post {
-  opacity: 0.45;
+  /* !important：pop-in 动画(fill:both)保留 opacity:1 会覆盖此声明 */
+  opacity: 0.45 !important;
 }
 
 .hpp-card-body {

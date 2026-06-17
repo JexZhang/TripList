@@ -107,9 +107,10 @@
   background: linear-gradient(180deg, var(--c1), var(--c2));
 }
 
-/* 已结束行程：整卡淡化沉底 */
+/* 已结束行程：整卡淡化沉底
+ * !important 必须保留：slide-up 入场动画(fill:both)会保留 opacity:1 覆盖普通声明 */
 .ht-card--post {
-  opacity: 0.45;
+  opacity: 0.45 !important;
 }
 
 .ht-card-body {
