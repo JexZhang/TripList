@@ -17,7 +17,7 @@ import type { ItinViewProps } from './shared'
 import './index.scss'
 
 export default function ItineraryView() {
-  const { state, dispatch } = useTripStore()
+  const { state, dispatch, readonly: ro } = useTripStore()
   const trip = state.trip!
   const { theme } = useTheme()
   const [activeDayId, setActiveDayId] = useState<string>(trip.days[0]?.id || '')
@@ -30,6 +30,8 @@ export default function ItineraryView() {
   if (!activeDay) {
     return <View className='itinerary-empty'>没有日程,点 [+] 加一天</View>
   }
+
+  const noop = () => {}
 
   const addDay = (position: 'front' | 'back' = 'back') => {
     const last = trip.days[trip.days.length - 1]
@@ -101,21 +103,21 @@ export default function ItineraryView() {
     activeDayIdx,
     fallbackDestination: trip.destinations?.[0] || null,
     onSelectDay: setActiveDayId,
-    onLongPressDay: longPressDay,
-    onAddDay: addDay,
-    onSpotClick: (s) => setEditSpot({ dayId: activeDay.id, spot: s }),
-    onAddSpot: () => setSearchOpen(true),
-    onWeatherUpdate: (w) => dispatch({ type: 'UPDATE_DAY', dayId: activeDay.id, patch: { weather: w } }),
+    onLongPressDay: ro ? noop : longPressDay,
+    onAddDay: ro ? noop : addDay,
+    onSpotClick: ro ? noop : (s) => setEditSpot({ dayId: activeDay.id, spot: s }),
+    onAddSpot: ro ? noop : () => setSearchOpen(true),
+    onWeatherUpdate: ro ? noop : (w) => dispatch({ type: 'UPDATE_DAY', dayId: activeDay.id, patch: { weather: w } }),
   }
 
   return (
-    <View className='itinerary'>
+    <View className={`itinerary${ro ? ' is-ro' : ''}`}>
       <DayTabs
         days={trip.days}
         activeId={activeDayId}
         onSelect={setActiveDayId}
-        onLongPress={longPressDay}
-        onAdd={addDay}
+        onLongPress={ro ? noop : longPressDay}
+        onAdd={ro ? noop : addDay}
       />
 
       {theme === 'tegami'   && <ItinTegami   {...viewProps} />}
@@ -123,26 +125,30 @@ export default function ItineraryView() {
       {theme === 'postcard' && <ItinPostcard {...viewProps} />}
       {theme === 'minimal'  && <ItinMinimal  {...viewProps} />}
 
-      <SpotSearch
-        open={searchOpen}
-        defaultCity={activeDay.spots[0]?.city || trip.destinations?.[0]?.name}
-        onClose={() => setSearchOpen(false)}
-        onSelect={handleAddSpot}
-      />
-      <EditSpotSheet
-        open={!!editSpot}
-        spot={editSpot?.spot || null}
-        defaultCity={activeDay.spots[0]?.city || trip.destinations?.[0]?.name}
-        onClose={() => setEditSpot(null)}
-        onSave={(patch) => {
-          if (!editSpot) return
-          dispatch({ type: 'UPDATE_SPOT', dayId: editSpot.dayId, spotId: editSpot.spot.id, patch })
-        }}
-        onDelete={() => {
-          if (!editSpot) return
-          dispatch({ type: 'DELETE_SPOT', dayId: editSpot.dayId, spotId: editSpot.spot.id })
-        }}
-      />
+      {!ro && (
+        <SpotSearch
+          open={searchOpen}
+          defaultCity={activeDay.spots[0]?.city || trip.destinations?.[0]?.name}
+          onClose={() => setSearchOpen(false)}
+          onSelect={handleAddSpot}
+        />
+      )}
+      {!ro && (
+        <EditSpotSheet
+          open={!!editSpot}
+          spot={editSpot?.spot || null}
+          defaultCity={activeDay.spots[0]?.city || trip.destinations?.[0]?.name}
+          onClose={() => setEditSpot(null)}
+          onSave={(patch) => {
+            if (!editSpot) return
+            dispatch({ type: 'UPDATE_SPOT', dayId: editSpot.dayId, spotId: editSpot.spot.id, patch })
+          }}
+          onDelete={() => {
+            if (!editSpot) return
+            dispatch({ type: 'DELETE_SPOT', dayId: editSpot.dayId, spotId: editSpot.spot.id })
+          }}
+        />
+      )}
     </View>
   )
 }

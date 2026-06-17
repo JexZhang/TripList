@@ -110,3 +110,11 @@
   font-family: var(--font-mono);
 }
 
+/* ===== 只读模式 ===== */
+.is-ro {
+  .dt-add { display: none !important; }
+  .itintg-add,
+  .itinmg-add,
+  .itinpp-add,
+  .itinmin-add { display: none !important; }
+}
