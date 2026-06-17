@@ -146,7 +146,15 @@
 | 开销 | 预算/花费汇总 | 只读,不可记账 |
 | 清单 | 打包清单项 | 只读,不可勾选/增删 |
 
-5.2.3. 复用策略:优先复用 ItineraryView / MapView / BudgetView / PackingView 的展示层,通过 readonly 模式(或只读包装)隐藏交互控件,避免重写四套 UI。
+5.2.3. 复用策略(2026-06-17 确认,方案 A):必须复用真实的 ItineraryView / MapView / BudgetView / PackingView,内容与真实攻略逐像素一致(含地点描述、每日预算图表+明细、地图分 day 标签),仅去掉编辑入口。落地:
+
+5.2.3.1. TripProvider 增加可选 initialTrip + readonly(默认不传,真实 trip 页零影响);传 initialTrip 时直接初始化 state、跳过 getTrip/watch/防抖保存,readonly 写进 context 且 dispatch 在只读态 no-op。
+
+5.2.3.2. 四个视图 index 分发器读 readonly:只读时不渲染交互弹层(SpotSearch/EditSpotSheet/打包输入/地图编辑 sheet),并给根节点加 is-ro 类;各视图 index.scss 用 .is-ro 隐藏「+ 添加」等按钮(只改 4 个 scss,不动 22 个变体)。
+
+5.2.3.3. template/index.tsx 删除自写的 .tpl-itin/.tpl-bud/.tpl-map/.tpl-pack 简化版,改用 <TripProvider initialTrip={tpl as Trip} readonly> 包裹真实四视图,保留模板外壳(顶栏/样板·只读/底部复制 CTA/复制 sheet)。
+
+5.2.3.4. 废弃说明:初版(Task 10)的 .tpl-* 简化重写被用户否决(展示太简化,无复制欲望),且其满宽 flex 子项带 padding 但非 border-box 导致横向溢出;改用真实视图后一并消除。
 
 5.2.4. 顶部「样板 · 只读」标识 + 锁定图标;底部常驻 sticky「+ 复制到我的行程」+ 锁定说明行,贯穿四个 Tab。
 
