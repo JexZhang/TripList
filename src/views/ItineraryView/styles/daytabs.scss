@@ -406,11 +406,12 @@
 /* ============ D. simple（极简文字） ============ */
 .dt--simple { padding: 24rpx; }
 .dt-track--simple {
-  justify-content: space-between;
-  gap: 16rpx;
+  justify-content: flex-start;
+  gap: 24rpx;
 }
 .dt-item--simple {
-  flex: 1 1 0;
+  /* 固定宽度（不再 flex:1 拉伸铺满），与其他主题一致：超出可横向滑动 */
+  flex: 0 0 auto;
   min-width: 80rpx;
   flex-direction: column;
   align-items: center;
