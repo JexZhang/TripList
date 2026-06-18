@@ -61,6 +61,15 @@ export default function HomeTegami({
           <Text className='ht-section-t'>我的行程</Text>
         </View>
 
+        {colored.length === 0 && !loading && (
+          <View className='ht-empty'>
+            <Text className='ht-empty-icon'>✉</Text>
+            <Text className='ht-empty-title'>还没有信件</Text>
+            <Text className='ht-empty-hint'>试试「AI 规划」让行程自动生成</Text>
+            <Text className='ht-empty-hint'>也可以逛逛「旅人精选」找找灵感</Text>
+          </View>
+        )}
+
         <View className='ht-stack'>
           {colored.map((t, i) => {
             const ai = aiStatusFor(t)

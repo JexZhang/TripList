@@ -46,6 +46,15 @@ export default function HomeMagazine({
           <Text className='hm-section-t'>我的行程</Text>
         </View>
 
+        {trips.length === 0 && !loading && (
+          <View className='hm-empty'>
+            <Text className='hm-empty-icon'>№</Text>
+            <Text className='hm-empty-title'>第一期尚未发行</Text>
+            <Text className='hm-empty-hint'>点击「AI 规划」让 AI 编排你的创刊号</Text>
+            <Text className='hm-empty-hint'>或从「旅人精选」克隆一个模板</Text>
+          </View>
+        )}
+
         <View className='hm-list'>
           {trips.map((t, i) => {
             const ai = aiStatusFor(t)

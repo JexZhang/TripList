@@ -66,12 +66,13 @@ export default function HomePostcard({
           <View className='hpp-empty'>
             <Text className='hpp-empty-icon'>○</Text>
             <Text className='hpp-empty-text'>尚无签证</Text>
-            <Text className='hpp-empty-hint'>创建第一个旅行，盖上第一枚印章</Text>
+            <Text className='hpp-empty-hint'>用「AI 规划」一键生成行程</Text>
+            <Text className='hpp-empty-hint'>或从「旅人精选」挑选模板开始</Text>
           </View>
         )}
 
         <View className='hpp-stamps'>
-          {trips.map((t) => {
+          {trips.map((t, i) => {
             const ai = aiStatusFor(t)
             const isCollab = t._openid !== openid
             const phase = getTripPhase(t.startDate, t.endDate)
@@ -83,6 +84,7 @@ export default function HomePostcard({
                 onClick={() => onOpenTrip(t)}
                 onLongPress={() => onLongPressTrip(t)}
               >
+                <Text className='hpp-card-visa'>VISA-{String(i + 1).padStart(3, '0')}</Text>
                 <View className='hpp-card-body'>
                   {ai && <HomeCardAIRow status={ai} />}
                   <Text className='hpp-card-meta'>

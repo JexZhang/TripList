@@ -49,6 +49,15 @@ export default function HomeMinimal({
           <Text className='hmin-section-t'>我的行程</Text>
         </View>
 
+        {trips.length === 0 && !loading && (
+          <View className='hmin-empty'>
+            <Text className='hmin-empty-icon'>∅</Text>
+            <Text className='hmin-empty-title'>暂无行程</Text>
+            <Text className='hmin-empty-hint'>「AI 规划」帮你一键生成完整行程</Text>
+            <Text className='hmin-empty-hint'>「旅人精选」有更多模板可供参考</Text>
+          </View>
+        )}
+
         <View className='hmin-list'>
           {trips.map((t, i) => {
             const ai = aiStatusFor(t)

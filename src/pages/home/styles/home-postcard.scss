@@ -167,7 +167,7 @@
 .hpp-empty-hint {
   font-size: 22rpx;
   color: var(--ink-3);
-  margin-top: 12rpx;
+  margin-top: 8rpx;
   letter-spacing: 2rpx;
 }
 
@@ -175,21 +175,29 @@
 .hpp-stamps {
   display: flex;
   flex-direction: column;
-  gap: 0;
+  gap: 16rpx;
   padding: 8rpx 0;
 }
 
 .hpp-card {
-  padding: 24rpx 0;
+  padding: 24rpx 16rpx;
   background: var(--surface);
-  border-top: 1rpx dashed var(--line);
+  border: 2rpx dashed rgba(43, 31, 14, 0.28);
   position: relative;
   animation: pop-in 0.5s var(--ease-spring) both;
   transition: opacity 0.15s;
 }
 
-.hpp-card:first-child {
-  border-top: none;
+/* 签证编号（右上角） */
+.hpp-card-visa {
+  position: absolute;
+  top: 12rpx;
+  right: 16rpx;
+  font-size: 18rpx;
+  color: rgba(43, 31, 14, 0.18);
+  font-family: var(--font-mono);
+  letter-spacing: 2rpx;
+  pointer-events: none;
 }
 
 .hpp-card:active {

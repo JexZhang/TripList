@@ -56,17 +56,52 @@
   color: var(--ink-3);
 }
 
+/* ── 空态 ── */
+.hm-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 48rpx 16rpx 36rpx;
+}
+
+.hm-empty-icon {
+  font-size: 80rpx;
+  color: #d0d0d0;
+  line-height: 1;
+  font-family: var(--font-display, serif);
+  font-weight: 900;
+  margin-bottom: 16rpx;
+}
+
+.hm-empty-title {
+  font-size: 30rpx;
+  font-weight: 900;
+  color: var(--ink);
+  font-family: var(--font-display, serif);
+}
+
+.hm-empty-hint {
+  font-size: 22rpx;
+  color: var(--ink-3);
+  margin-top: 8rpx;
+  letter-spacing: 1rpx;
+  font-family: var(--font-body);
+}
+
 /* ── 行程列表（编辑风 index 样式） ── */
 .hm-list {
   margin-top: 4rpx;
+  display: flex;
+  flex-direction: column;
+  gap: 12rpx;
 }
 
 .hm-row {
   display: flex;
   gap: 20rpx;
-  padding: 24rpx 0;
+  padding: 24rpx 16rpx;
   background: var(--surface);
-  border-bottom: 1rpx solid var(--line);
+  border-radius: var(--r-sm);
   align-items: flex-start;
   transition: opacity 0.15s;
 }
