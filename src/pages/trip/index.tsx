@@ -25,6 +25,7 @@ import { mergeAIDraft } from '../../utils/ai-apply'
 import type { ShareKind } from '../../utils/cloud'
 import type { AIPreferences } from '../../types/trip'
 import { newAITaskId, fireAITask } from '../../utils/ai-task'
+import { consumeCachedTrip } from '../../utils/navigation-cache'
 import './index.scss'
 
 type ViewKey = 'itinerary' | 'budget' | 'packing' | 'map'
@@ -409,11 +410,14 @@ export default function TripPage() {
     }
   })
 
+  // 消费首页缓存的 Trip 快照，仅用一次
+  const [initialTrip] = useState(() => consumeCachedTrip(tripId))
+
   if (!tripId) return <View className='trip-empty'>缺少 trip id</View>
   if (!openid) return <View className='trip-empty'>登录中...</View>
 
   return (
-    <TripProvider tripId={tripId} openid={openid}>
+    <TripProvider tripId={tripId} openid={openid} initialTrip={initialTrip}>
       <TripBody />
     </TripProvider>
   )

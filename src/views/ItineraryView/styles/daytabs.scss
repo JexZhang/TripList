@@ -36,8 +36,9 @@
 }
 
 /* ============ A. ticket（票根撕口 · 信笺主题） ============ */
-.dt--ticket { padding: 16rpx 24rpx; }
+.dt--ticket { padding: 0; }
 .dt-track--ticket {
+  padding: 16rpx 24rpx;
   gap: 16rpx;
   justify-content: space-between;
 }
@@ -404,8 +405,9 @@
 }
 
 /* ============ D. simple（极简文字） ============ */
-.dt--simple { padding: 24rpx; }
+.dt--simple { padding: 0; }
 .dt-track--simple {
+  padding: 24rpx;
   justify-content: flex-start;
   gap: 24rpx;
 }

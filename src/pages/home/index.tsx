@@ -16,6 +16,7 @@ import AIInterview, { type AIInterviewSubmit } from '../../components/AIIntervie
 import { createTripAndFireAI } from '../../utils/ai-task'
 import { buildShareMessage, shareRef, resetShareRef } from '../../utils/share'
 import type { ShareKind } from '../../utils/cloud'
+import { cacheTripForNavigation } from '../../utils/navigation-cache'
 import HomeTegami from './HomeTegami'
 import HomeMagazine from './HomeMagazine'
 import HomePostcard from './HomePostcard'
@@ -254,7 +255,7 @@ export default function Home() {
     trips: sortedTrips,
     loading,
     openid,
-    onOpenTrip: (t) => Taro.navigateTo({ url: `/pages/trip/index?id=${t._id}` }),
+    onOpenTrip: (t) => { cacheTripForNavigation(t); Taro.navigateTo({ url: `/pages/trip/index?id=${t._id}` }) },
     onLongPressTrip: (t) => setActionTrip(t),
     onNewTrip: () => Taro.navigateTo({ url: '/pages/new-trip/index' }),
     onAITrip: () => setInterviewOpen(true),
