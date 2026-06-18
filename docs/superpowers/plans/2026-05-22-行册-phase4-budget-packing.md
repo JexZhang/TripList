@@ -1,4 +1,4 @@
-# 行册 Phase 4 · 开销 + 清单 view Implementation Plan
+# 行迹 Phase 4 · 开销 + 清单 view Implementation Plan
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
@@ -578,7 +578,7 @@ git commit -m "feat(trip): wire BudgetView and PackingView"
 
 - [ ] **Step 5.1:** 确认无 import 引用
 ```bash
-cd /Users/jinchi/Documents/行册
+cd /Users/jinchi/Documents/行迹
 grep -rn "from.*override" src/ 2>/dev/null
 grep -rn "override\.ts" src/ 2>/dev/null
 ```

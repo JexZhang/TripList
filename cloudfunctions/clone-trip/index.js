@@ -51,7 +51,7 @@ exports.main = async (event, context) => {
       _openid: OPENID,
       ...rest,
       ownerOpenid: OPENID,
-      ownerNickname: me.nickname || '行册旅人',
+      ownerNickname: me.nickname || '行迹旅人',
       ownerAvatarUrl: me.avatarUrl || '',
       collaborators: [],
       collaboratorOpenids: [],

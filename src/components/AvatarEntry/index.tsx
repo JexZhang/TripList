@@ -10,7 +10,7 @@ interface Props {
 export default function AvatarEntry({ className }: Props) {
   const { me } = useMe()
   const hasAvatar = !!me?.avatarUrl
-  const needSetup = !me || (!me.avatarUrl && (!me.nickname || me.nickname === '行册旅人'))
+  const needSetup = !me || (!me.avatarUrl && (!me.nickname || me.nickname === '行迹旅人'))
 
   const onTap = () => {
     Taro.navigateTo({ url: '/pages/me/index' })

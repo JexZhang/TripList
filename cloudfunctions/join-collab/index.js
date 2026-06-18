@@ -42,7 +42,7 @@ exports.main = async (event, context) => {
     data: {
       collaborators: _.push([{
         openid: OPENID,
-        nickname: user.nickname || '行册旅人',
+        nickname: user.nickname || '行迹旅人',
         avatarUrl: user.avatarUrl || '',
         role: 'editor',
         joinedAt: now,

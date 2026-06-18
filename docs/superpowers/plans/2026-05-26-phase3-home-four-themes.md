@@ -65,7 +65,7 @@
 
 Run:
 ```bash
-cd /Users/jinchi/Documents/行册 && git status && git log --oneline -10
+cd /Users/jinchi/Documents/行迹 && git status && git log --oneline -10
 ```
 Expected: 工作树干净；近期 commits 含 Phase 1 (theme / me / AvatarEntry) + Phase 2 (BrandLogo / AIBadge / AIInterview / Theater / StatusBar / HomeCardAIRow / ProfileForm)
 
@@ -755,7 +755,7 @@ export default function HomeTegami({
   return (
     <View className='ht'>
       <View className='ht-head'>
-        <View className='ht-issue'>行册 · No. 012 · 2026 春</View>
+        <View className='ht-issue'>行迹 · No. 012 · 2026 春</View>
         <View className='ht-head-row'>
           <BrandLogo size='lg' />
           <AvatarEntry className='ht-avatar' />
@@ -1319,7 +1319,7 @@ export default function HomePostcard({
           })}
         </View>
 
-        <Text className='hpp-watermark'>行册</Text>
+        <Text className='hpp-watermark'>行迹</Text>
       </View>
 
       <View className='hpp-cta'>
@@ -1857,7 +1857,7 @@ export default function Home() {
   useShareAppMessage((options) => {
     const kind = (options as { target?: { dataset?: { kind?: ShareKind } } })?.target?.dataset?.kind
     const picked = kind ? shareRef.byKind[kind] : null
-    return picked || { title: '行册 · 旅行攻略册', path: '/pages/home/index' }
+    return picked || { title: '行迹 · 旅行攻略册', path: '/pages/home/index' }
   })
 
   const handleCoverPicked = async (fileIDOrNull: string | null) => {
@@ -2061,9 +2061,9 @@ Expected: 仅 trip 详情页 + AILoadingBar 组件自身 + 可能的 share 页
 
 | 主题 | 验证点 |
 | --- | --- |
-| 手帖 tegami | masthead 上方 `行册 · No.012 · 2026 春` 单行；BrandLogo + AvatarEntry 左右排；trip 卡堆叠错位 `rotate(-0.6deg)` 等可见；卡片 hover 摆正 |
+| 手帖 tegami | masthead 上方 `行迹 · No.012 · 2026 春` 单行；BrandLogo + AvatarEntry 左右排；trip 卡堆叠错位 `rotate(-0.6deg)` 等可见；卡片 hover 摆正 |
 | 刊物 magazine | 双线分割（hairline + double）；feature 大标题 60rpx 衬线；photoframe 封面 16:10；目录 dotted 引线 `P.02 ... 2026-04` |
-| 护照 postcard | 斜纹纸纹背景；护照封面区 `XING CE · PASSPORT`；盖戳按天数缩放（最长的最大）；右下方水印 `行册` 极淡 |
+| 护照 postcard | 斜纹纸纹背景；护照封面区 `XING CE · PASSPORT`；盖戳按天数缩放（最长的最大）；右下方水印 `行迹` 极淡 |
 | 极简 minimal | hairline 极淡；行式 list；不显眼 `01 / 02 / 03` 序号；几乎无阴影 |
 
 - [ ] **Step 3: 共用功能矩阵**

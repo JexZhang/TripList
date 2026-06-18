@@ -1,4 +1,4 @@
-# 行册 Phase 3 · 攻略详情页 + Spot 编辑 + L1 同步 Implementation Plan
+# 行迹 Phase 3 · 攻略详情页 + Spot 编辑 + L1 同步 Implementation Plan
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
@@ -228,7 +228,7 @@ export function useTripStore() {
 
 - [ ] **Step 1.2:** 类型检查
 ```bash
-cd /Users/jinchi/Documents/行册
+cd /Users/jinchi/Documents/行迹
 npx tsc --noEmit
 ```
 
@@ -1232,7 +1232,7 @@ export default function TripPage() {
     // @ts-ignore Taro.cloud
     Taro.cloud.callFunction({
       name: 'ensure-user',
-      data: { nickname: '行册旅人', avatarUrl: '' }
+      data: { nickname: '行迹旅人', avatarUrl: '' }
     }).then((r: { result: { openid: string } }) => setOpenid(r.result.openid))
   }, [])
 
@@ -1334,7 +1334,7 @@ export default defineAppConfig({
   window: {
     backgroundTextStyle: 'light',
     navigationBarBackgroundColor: '#f7f1e3',
-    navigationBarTitleText: '行册',
+    navigationBarTitleText: '行迹',
     navigationBarTextStyle: 'black',
   },
   lazyCodeLoading: 'requiredComponents',

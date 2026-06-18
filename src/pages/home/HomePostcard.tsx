@@ -49,7 +49,7 @@ export default function HomePostcard({
       {/* 我的行程 — 签证页风格 */}
       <View className='hpp-page'>
         <View className='hpp-page-grid' />
-        <Text className='hpp-page-watermark'>行册</Text>
+        <Text className='hpp-page-watermark'>行迹</Text>
 
         <View className='hpp-page-head'>
           <View className='hpp-page-head-left'>

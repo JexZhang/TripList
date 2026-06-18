@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## 1. 项目概述
 
-**行册** 是一个基于 Taro 4.2 + React 18 + TypeScript 的多端旅行规划小程序，目标平台以微信小程序为主，同时支持 H5、支付宝、字节、QQ、京东、百度、鸿蒙 Hybrid。后端使用腾讯云开发（CloudBase）：数据存储在云数据库 `trips` 集合，业务逻辑放在云函数，并通过实时 `watch` 支持多人协作。AI 行程规划、高德 POI / 天气等能力均经由云函数代理。
+**行迹** 是一个基于 Taro 4.2 + React 18 + TypeScript 的多端旅行规划小程序，目标平台以微信小程序为主，同时支持 H5、支付宝、字节、QQ、京东、百度、鸿蒙 Hybrid。后端使用腾讯云开发（CloudBase）：数据存储在云数据库 `trips` 集合，业务逻辑放在云函数，并通过实时 `watch` 支持多人协作。AI 行程规划、高德 POI / 天气等能力均经由云函数代理。
 
 ## 2. 常用命令
 

@@ -834,7 +834,7 @@ const handleAiCreate = async (data: AIInterviewSubmit) => {
         pax: data.pax,
         name: data.name,
         ownerOpenid: me.openid,
-        ownerNickname: me.nickname || '行册旅人',
+        ownerNickname: me.nickname || '行迹旅人',
         ownerAvatarUrl: me.avatarUrl || '',
       },
       data.preferences,

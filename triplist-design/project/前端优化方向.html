@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=1280">
-<title>行册 · 前端优化方向</title>
+<title>行迹 · 前端优化方向</title>
 <style>
   :root {
     --bg: #FFF4E6;
@@ -1551,12 +1551,12 @@
   <section class="cover" data-screen-label="01 Cover">
     <div>
       <div class="cover-meta">
-        <span>行册 · 设计研讨</span>
+        <span>行迹 · 设计研讨</span>
         <span>提案 / DIRECTIONS</span>
         <span>2026 · 春</span>
       </div>
       <h1 class="cover-title">前端优化的<br><em>十个方向</em></h1>
-      <p class="cover-sub">在你提的 5 个之上，再延伸 5 个我觉得对"行册"这个产品本身（旅行 × 杂志 × AI）特别有杠杆的方向。每个方向都配示意图、影响力评估和实现成本，最后给一个推荐优先级矩阵。</p>
+      <p class="cover-sub">在你提的 5 个之上，再延伸 5 个我觉得对"行迹"这个产品本身（旅行 × 杂志 × AI）特别有杠杆的方向。每个方向都配示意图、影响力评估和实现成本，最后给一个推荐优先级矩阵。</p>
     </div>
     <div class="cover-side">
       <div class="cover-stat-row">
@@ -1603,7 +1603,7 @@
       <div class="audit-card">
         <span class="audit-tag weak">视觉一致性</span>
         <h4>图标全是 emoji</h4>
-        <p>tab 名是文字、分类用 emoji（📋💰🎒）、AI 按钮用 ✨ — 体系不统一，且 emoji 在不同平台渲染差异大、不"行册"。</p>
+        <p>tab 名是文字、分类用 emoji（📋💰🎒）、AI 按钮用 ✨ — 体系不统一，且 emoji 在不同平台渲染差异大、不"行迹"。</p>
       </div>
     </div>
   </section>
@@ -1802,7 +1802,7 @@
           <h3>肌理与<em>装饰元素</em>系统</h3>
           <p class="dir-deck">让数字界面带一点"纸感、印章感、票根感"。</p>
 
-          <p>"行册"这个名字本身就在暗示一种纸质载体的气质。但当前的 UI 是<b>干净的圆角卡片 + 渐变</b>，肌理感非常弱（只有 itinerary 的票根 tab 表达出来一点）。可以系统性加一层"<span class="marker">装饰图层</span>"：</p>
+          <p>"行迹"这个名字本身就在暗示一种纸质载体的气质。但当前的 UI 是<b>干净的圆角卡片 + 渐变</b>，肌理感非常弱（只有 itinerary 的票根 tab 表达出来一点）。可以系统性加一层"<span class="marker">装饰图层</span>"：</p>
 
           <ul class="dir-list">
             <li><b>纸纹底</b> — 给 surface 加非常淡的噪点/纤维纹理（<code style="font-family:var(--mono);font-size:12px">background-image</code> SVG noise）。</li>
@@ -2015,8 +2015,8 @@
         </div>
 
         <div class="dir-body">
-          <h3>首页：从<em>列表</em>到<em>旅行册</em></h3>
-          <p class="dir-deck">"行册"这个名字值得一个比"一列卡片"更有想象力的首页。</p>
+          <h3>首页：从<em>列表</em>到<em>旅行迹</em></h3>
+          <p class="dir-deck">"行迹"这个名字值得一个比"一列卡片"更有想象力的首页。</p>
 
           <p>现在的首页就是一个垂直的 trip 卡片列表 — 功能上没毛病，但完全没有"打开一本册子"的感觉。建议从下面 3 个隐喻里选一个深做（或做成主题切换的一部分）：</p>
 
@@ -2026,7 +2026,7 @@
             <li><b>C · 世界地图</b> — 一张极简地图作为主背景，trips 是地图上的 pin，点 pin 弹出 trip 卡片浮窗。"年度回顾"自然落地。</li>
           </ul>
 
-          <p>无论选哪个，都建议把<b>主页头部</b>从"行册 · 你的旅行，值得被好好记录"这种标语，改成<span class="marker">期刊式 masthead</span>：「行册 · No. 12 · 2026 春 · 共 5 段旅程」 — 让用户感到"我在写自己的杂志"。</p>
+          <p>无论选哪个，都建议把<b>主页头部</b>从"行迹 · 你的旅行，值得被好好记录"这种标语，改成<span class="marker">期刊式 masthead</span>：「行迹 · No. 12 · 2026 春 · 共 5 段旅程」 — 让用户感到"我在写自己的杂志"。</p>
         </div>
 
         <div style="display: flex; gap: 12px">
@@ -2061,7 +2061,7 @@
               <div class="phone-notch"></div>
               <div class="passport">
                 <div class="passport-head">
-                  <div class="l1">行册 PASSPORT</div>
+                  <div class="l1">行迹 PASSPORT</div>
                   <div class="l2">XC · 2026 · No. 012</div>
                 </div>
                 <div class="stamp" style="top: 90px; left: 14px">
@@ -2391,7 +2391,7 @@
           <p>现在的 ShareTypeSheet 只提供"只读分享 / 协作分享"两个文本分享 path。建议在此之上加一个杀手级功能：<span class="marker">"生成旅行海报"</span> — 一张 9:16 的精美图，可保存到相册、发朋友圈：</p>
 
           <ul class="dir-list">
-            <li><b>海报内容</b> — 目的地名（大）+ 日期 + 行册 logo + 几个核心数字（spots / km / 花费）+ 小程序码。</li>
+            <li><b>海报内容</b> — 目的地名（大）+ 日期 + 行迹 logo + 几个核心数字（spots / km / 花费）+ 小程序码。</li>
             <li><b>风格变体</b> — 提供 3 种风格（电影海报 / 明信片 / 杂志封面），用户选。</li>
             <li><b>实现</b> — 微信小程序的 canvas API 或 wxml-to-canvas，本质就是把一个 wxml 渲染成图。</li>
             <li><b>触发时机</b> — 旅行结束自动弹"为这段旅程生成海报？"；也可以在分享菜单常驻入口。</li>
@@ -2406,7 +2406,7 @@
 
         <div class="mock-stack">
           <div class="poster">
-            <div class="poster-brand">行册 · No.012</div>
+            <div class="poster-brand">行迹 · No.012</div>
             <div class="poster-name">北京<br>五日</div>
             <div class="poster-sub">2026 · 04.26 → 04.30</div>
             <div class="poster-stat-row">
@@ -2481,7 +2481,7 @@
       <div class="audit-card">
         <span class="audit-tag" style="background: var(--ink); color: white">第 2 步 · 一两周内</span>
         <h4>01 + 06 + 10</h4>
-        <p>4 主题切换 + 首页重构（选 1 个隐喻）+ 海报生成器。这三个一起做能立住"行册的视觉品牌"，并撬动社交分享。</p>
+        <p>4 主题切换 + 首页重构（选 1 个隐喻）+ 海报生成器。这三个一起做能立住"行迹的视觉品牌"，并撬动社交分享。</p>
       </div>
       <div class="audit-card">
         <span class="audit-tag miss">第 3 步 · 慢慢做</span>
@@ -2493,7 +2493,7 @@
 
   <!-- footer -->
   <div class="footer">
-    <span>行册 · 前端优化方向提案 · v1</span>
+    <span>行迹 · 前端优化方向提案 · v1</span>
     <span>10 DIRECTIONS · 5 USER · 5 NEW · <b>SELECT NEXT →</b></span>
   </div>
 

@@ -150,7 +150,7 @@ const [editOpen, setEditOpen] = useState(false)
     />
     <View className='me-profile-text'>
       <Text className='me-profile-nickname'>
-        {me?.nickname && me.nickname !== '行册旅人' ? me.nickname : '点击编辑昵称'}
+        {me?.nickname && me.nickname !== '行迹旅人' ? me.nickname : '点击编辑昵称'}
       </Text>
     </View>
     <View className='me-profile-edit' onClick={() => setEditOpen(true)}>

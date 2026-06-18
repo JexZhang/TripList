@@ -59,7 +59,7 @@
 
 Run:
 ```bash
-cd /Users/jinchi/Documents/行册 && git status && git log --oneline -10
+cd /Users/jinchi/Documents/行迹 && git status && git log --oneline -10
 ```
 Expected: 工作树干净；近期 commits 含 Phase 3 home 四主题 + Phase 2 AIBadge
 

@@ -207,7 +207,7 @@ if (!activeDay) return <View>没有选中的日期</View>
 
 ---
 
-## 行册中遇到过的 Bug 类型
+## 行迹中遇到过的 Bug 类型
 
 ### Bug 1：键盘遮住搜索框（已修复）
 

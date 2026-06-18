@@ -106,7 +106,7 @@ git commit -m "feat(types): add owner nickname/avatar to Trip"
   const u = (fresh && fresh.data) || {}
   return {
     openid: OPENID,
-    nickname: u.nickname || nickname || '行册旅人',
+    nickname: u.nickname || nickname || '行迹旅人',
     avatarUrl: u.avatarUrl || avatarUrl || '',
   }
 }
@@ -140,7 +140,7 @@ exports.main = async (event, context) => {
     await db.collection('users').add({
       data: {
         _id: OPENID,
-        nickname: nickname || '行册旅人',
+        nickname: nickname || '行迹旅人',
         avatarUrl: avatarUrl || '',
         createdAt: now,
         lastSeenAt: now,
@@ -152,7 +152,7 @@ exports.main = async (event, context) => {
   const u = (fresh && fresh.data) || {}
   return {
     openid: OPENID,
-    nickname: u.nickname || nickname || '行册旅人',
+    nickname: u.nickname || nickname || '行迹旅人',
     avatarUrl: u.avatarUrl || avatarUrl || '',
   }
 }
@@ -205,12 +205,12 @@ export function MeProvider({ children }: { children: ReactNode }) {
       // @ts-ignore Taro.cloud
       const r = await Taro.cloud.callFunction({
         name: 'ensure-user',
-        data: { nickname: '行册旅人', avatarUrl: '' },
+        data: { nickname: '行迹旅人', avatarUrl: '' },
       })
       const result = (r as any).result || {}
       setMe({
         openid: result.openid,
-        nickname: result.nickname || '行册旅人',
+        nickname: result.nickname || '行迹旅人',
         avatarUrl: result.avatarUrl || '',
       })
     } catch (e) {
@@ -317,7 +317,7 @@ useEffect(() => {
   // @ts-ignore Taro.cloud
   Taro.cloud.callFunction({
     name: 'ensure-user',
-    data: { nickname: '行册旅人', avatarUrl: '' }
+    data: { nickname: '行迹旅人', avatarUrl: '' }
   }).then((r: any) => setOpenid(r.result.openid))
 }, [])
 ```
@@ -347,7 +347,7 @@ const tripId = await createTrip(input)
 
 ```tsx
 input.ownerOpenid = openid
-input.ownerNickname = me?.nickname || '行册旅人'
+input.ownerNickname = me?.nickname || '行迹旅人'
 input.ownerAvatarUrl = me?.avatarUrl || ''
 const tripId = await createTrip(input)
 ```
@@ -509,7 +509,7 @@ useEffect(() => {
   // @ts-ignore Taro.cloud
   Taro.cloud.callFunction({
     name: 'ensure-user',
-    data: { nickname: '行册旅人', avatarUrl: '' }
+    data: { nickname: '行迹旅人', avatarUrl: '' }
   }).then((r: any) => {
     setOpenid(r.result.openid)
   }).catch(e => {

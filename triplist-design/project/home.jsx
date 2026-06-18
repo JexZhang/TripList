@@ -21,12 +21,12 @@ function HomeScreen({ theme, logoStyle, magCover, onOpenTrip, onNewTrip, onAI, a
 }
 
 /* ─────────────────────────────────────────────────────
-   行册 logo 多方案（重做）
+   行迹 logo 多方案（重做）
    logoStyle: seal | masthead | script | spine | bigtype
    ───────────────────────────────────────────────────── */
 function BrandLogo({ style = 'seal', size = 'lg', theme = 'tegami' }) {
   if (style === 'seal') {
-    // 钤印：红方章 + 反白衬线"行册" + 旁注小字
+    // 钤印：红方章 + 反白衬线“行迹” + 旁注小字
     return (
       <div className={`brand brand--seal brand--${theme}`}>
         <div className="brand-seal-mark">
@@ -64,10 +64,10 @@ function BrandLogo({ style = 'seal', size = 'lg', theme = 'tegami' }) {
   }
 
   if (style === 'script') {
-    // 钢笔签名风：手写感"行册" + 下划波浪 + 小印
+    // 钢笔签名风：手写感“行迹” + 下划波浪 + 小印
     return (
       <div className={`brand brand--script brand--${theme}`}>
-        <div className="brand-sc-mark">行册</div>
+        <div className="brand-sc-mark">行迹</div>
         <svg className="brand-sc-flourish" viewBox="0 0 120 18" preserveAspectRatio="none">
           <path d="M 0 9 Q 20 0 40 9 T 80 9 T 120 9" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round"/>
           <circle cx="118" cy="9" r="2.2" fill="currentColor"/>
@@ -82,7 +82,7 @@ function BrandLogo({ style = 'seal', size = 'lg', theme = 'tegami' }) {
   }
 
   if (style === 'spine') {
-    // 书脊：上下双线 + VOL + 行册 + 装订标记
+    // 书脊：上下双线 + VOL + 行迹 + 装订标记
     return (
       <div className={`brand brand--spine brand--${theme}`}>
         <div className="brand-sp-double"><span></span><span></span></div>
@@ -100,7 +100,7 @@ function BrandLogo({ style = 'seal', size = 'lg', theme = 'tegami' }) {
       <div className={`brand brand--bigtype brand--${theme}`}>
         <div className="brand-bt-bar"></div>
         <div className="brand-bt-row">
-          <h1 className="brand-bt-cn">行册</h1>
+          <h1 className="brand-bt-cn">行迹</h1>
           <div className="brand-bt-side">
             <span className="brand-bt-no">N°012</span>
             <span className="brand-bt-yr">2026</span>
@@ -115,7 +115,7 @@ function BrandLogo({ style = 'seal', size = 'lg', theme = 'tegami' }) {
   }
 
   // fallback
-  return <div className={`brand brand--seal brand--${theme}`}>行册</div>;
+  return <div className={`brand brand--seal brand--${theme}`}>行迹</div>;
 }
 
 /* ─────────────────────────────────────────────────────
@@ -151,7 +151,7 @@ function HomeTegami({ onOpenTrip, onNewTrip, aiStatus, aiTripId, logoStyle }) {
   return (
     <div className="home-tegami">
       <header className="ht-head">
-        <div className="ht-issue">行册 · No. 012 · 2026 春</div>
+        <div className="ht-issue">行迹 · No. 012 · 2026 春</div>
         <BrandLogo style={logoStyle} size="lg" theme="tegami" />
         <p className="ht-tag">你的旅行，值得被好好记录</p>
       </header>
@@ -403,7 +403,7 @@ function HomePostcard({ onOpenTrip, onNewTrip, aiStatus, aiTripId, logoStyle }) 
           })}
         </div>
 
-        <div className="hpp-watermark">行册</div>
+        <div className="hpp-watermark">行迹</div>
 
         {/* 底部小情报区 */}
         <div className="hpp-info">

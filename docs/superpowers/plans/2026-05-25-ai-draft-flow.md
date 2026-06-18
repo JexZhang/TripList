@@ -934,7 +934,7 @@ export default function NewTrip() {
     try {
       const input = buildNewTrip({ name, pax, startDate: dates.start, endDate: dates.end, destinations })
       input.ownerOpenid = openid
-      input.ownerNickname = me?.nickname || '行册旅人'
+      input.ownerNickname = me?.nickname || '行迹旅人'
       input.ownerAvatarUrl = me?.avatarUrl || ''
       const tripId = await createTrip(input)
       Taro.showToast({ title: '已创建', icon: 'success' })
@@ -955,7 +955,7 @@ export default function NewTrip() {
       // 1. 用空 days 创建 trip
       const input = buildNewTrip({ name, pax, startDate: dates.start, endDate: dates.end, destinations })
       input.ownerOpenid = openid
-      input.ownerNickname = me?.nickname || '行册旅人'
+      input.ownerNickname = me?.nickname || '行迹旅人'
       input.ownerAvatarUrl = me?.avatarUrl || ''
       const tripId = await createTrip(input)
 
@@ -1298,7 +1298,7 @@ git commit -m "feat(trip): 草稿流 - watch trip.aiStatus 驱动 UI, 自动弹 
 运行:
 
 ```bash
-grep -rn "AILoading\|AITaskFab" /Users/jinchi/Documents/行册/src/ | grep -v "AILoadingBar"
+grep -rn "AILoading\|AITaskFab" /Users/jinchi/Documents/行迹/src/ | grep -v "AILoadingBar"
 ```
 
 预期输出: **无**。如果还有任何引用 (import / JSX / 类型), 回到对应文件删掉。

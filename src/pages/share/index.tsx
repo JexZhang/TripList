@@ -23,7 +23,7 @@ export default function SharePage() {
 
   // 阻止转发泄漏 token
   useShareAppMessage(() => ({
-    title: '行册 · 旅行攻略册',
+    title: '行迹 · 旅行攻略册',
     path: '/pages/home/index',
   }))
 

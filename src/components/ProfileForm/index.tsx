@@ -32,13 +32,13 @@ export default function ProfileForm({
   kbProps,
 }: Props) {
   const [nickname, setNickname] = useState(
-    initialNickname && initialNickname !== '行册旅人' ? initialNickname : '',
+    initialNickname && initialNickname !== '行迹旅人' ? initialNickname : '',
   )
   const [avatarUrl, setAvatarUrl] = useState(initialAvatarUrl || '')
   const [submitting, setSubmitting] = useState(false)
 
   useEffect(() => {
-    setNickname(initialNickname && initialNickname !== '行册旅人' ? initialNickname : '')
+    setNickname(initialNickname && initialNickname !== '行迹旅人' ? initialNickname : '')
     setAvatarUrl(initialAvatarUrl || '')
   }, [initialNickname, initialAvatarUrl])
 

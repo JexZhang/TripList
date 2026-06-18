@@ -368,7 +368,7 @@ git commit -m "feat(ai-plan): model alias mapping + callChat"
 - [ ] **Step 1: 写文件**
 
 ```js
-const SYSTEM_PROMPT = `你是"行册"小程序的旅行规划助手。任务: 为用户生成一份可直接落地的行程 JSON。
+const SYSTEM_PROMPT = `你是“行迹”小程序的旅行规划助手。任务: 为用户生成一份可直接落地的行程 JSON。
 
 【输出格式 — 必须严格遵守】
 只输出一个合法 JSON 对象, 不要任何解释、前后缀、代码块标记。结构:
@@ -1651,7 +1651,7 @@ const handleAiApply = async (selectedDates: string[]) => {
       destinations,
     })
     input.ownerOpenid = openid
-    input.ownerNickname = me?.nickname || '行册旅人'
+    input.ownerNickname = me?.nickname || '行迹旅人'
     input.ownerAvatarUrl = me?.avatarUrl || ''
     // 新建场景: 选中的天用 AI, 未选中的天保持 seedDays(空)
     const selectedSet = new Set(selectedDates)

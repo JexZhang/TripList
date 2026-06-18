@@ -1,4 +1,4 @@
-# 行册 Phase 5 · 分享 + L1 协作 Implementation Plan
+# 行迹 Phase 5 · 分享 + L1 协作 Implementation Plan
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
@@ -139,7 +139,7 @@ export async function smartDeleteTrip(trip: Trip, openid: string): Promise<'leav
 
 - [ ] **Step 1.5:** 类型检查
 ```bash
-cd /Users/jinchi/Documents/行册
+cd /Users/jinchi/Documents/行迹
 npx tsc --noEmit
 ```
 
@@ -605,7 +605,7 @@ export default defineAppConfig({
   window: {
     backgroundTextStyle: 'light',
     navigationBarBackgroundColor: '#f7f1e3',
-    navigationBarTitleText: '行册',
+    navigationBarTitleText: '行迹',
     navigationBarTextStyle: 'black',
   },
   lazyCodeLoading: 'requiredComponents',
@@ -710,7 +710,7 @@ useShareAppMessage(() => {
     }
   }
   return {
-    title: '行册 · 旅行攻略册',
+    title: '行迹 · 旅行攻略册',
     path: '/pages/home/index',
   }
 })
@@ -836,7 +836,7 @@ const onSelectShareKind = async (kind: ShareKind) => {
 
 useShareAppMessage(() => {
   if (sharePayload) return sharePayload
-  return { title: t ? `行册 · ${t.name}` : '行册', path: '/pages/home/index' }
+  return { title: t ? `行迹 · ${t.name}` : '行迹', path: '/pages/home/index' }
 })
 ```
 
@@ -893,7 +893,7 @@ import { useShareAppMessage } from '@tarojs/taro'
 - [ ] **Step 9.2:** 在 SharePage 组件内（开头）加
 ```tsx
 useShareAppMessage(() => ({
-  title: '行册 · 旅行攻略册',
+  title: '行迹 · 旅行攻略册',
   path: '/pages/home/index',
 }))
 ```

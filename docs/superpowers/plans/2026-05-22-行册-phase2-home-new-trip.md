@@ -1,4 +1,4 @@
-# 行册 Phase 2 · 首页 + 新建攻略 Implementation Plan
+# 行迹 Phase 2 · 首页 + 新建攻略 Implementation Plan
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
@@ -12,7 +12,7 @@
 
 ## 0. 前置条件
 
-- **0.1** Phase 1 已完成验收（[2026-05-22-行册-phase1-cloud-skeleton.md](./2026-05-22-行册-phase1-cloud-skeleton.md) §14 全 ✅）
+- **0.1** Phase 1 已完成验收（[2026-05-22-行迹-phase1-cloud-skeleton.md](./2026-05-22-行迹-phase1-cloud-skeleton.md) §14 全 ✅）
 - **0.2** 当前用户已在云开发 `users` 集合有一条记录（首次启动会 ensure-user）
 - **0.3** 微信开发者工具能正常运行 dev:weapp watch
 
@@ -154,7 +154,7 @@ export type NewTripInput = Omit<Trip, '_id' | '_openid' | 'createdAt' | 'updated
 
 - [ ] **Step 1.2:** TypeScript 类型检查
 ```bash
-cd /Users/jinchi/Documents/行册
+cd /Users/jinchi/Documents/行迹
 npx tsc --noEmit
 ```
 
@@ -862,7 +862,7 @@ git commit -m "feat(component): add TripActionSheet (long-press menu)"
 - [ ] **Step 8.1:** `src/pages/home/index.config.ts`
 ```ts
 export default definePageConfig({
-  navigationBarTitleText: '行册',
+  navigationBarTitleText: '行迹',
   navigationBarBackgroundColor: '#f7f1e3',
   navigationBarTextStyle: 'black',
 })
@@ -892,7 +892,7 @@ export default function Home() {
     // @ts-ignore Taro.cloud
     Taro.cloud.callFunction({
       name: 'ensure-user',
-      data: { nickname: '行册旅人', avatarUrl: '' }
+      data: { nickname: '行迹旅人', avatarUrl: '' }
     }).then((r: { result: { openid: string } }) => {
       setOpenid(r.result.openid)
     }).catch(e => {
@@ -967,7 +967,7 @@ export default function Home() {
   return (
     <View className='home theme-tegami'>
       <View className='home-head'>
-        <Text className='home-brand'>行册</Text>
+        <Text className='home-brand'>行迹</Text>
         <Text className='home-sub'>旅行攻略 · 清单 · 地图</Text>
       </View>
 
@@ -1179,7 +1179,7 @@ export default function NewTrip() {
     // @ts-ignore Taro.cloud
     Taro.cloud.callFunction({
       name: 'ensure-user',
-      data: { nickname: '行册旅人', avatarUrl: '' }
+      data: { nickname: '行迹旅人', avatarUrl: '' }
     }).then((r: { result: { openid: string } }) => setOpenid(r.result.openid))
   }, [])
 
@@ -1378,7 +1378,7 @@ export default defineAppConfig({
   window: {
     backgroundTextStyle: 'light',
     navigationBarBackgroundColor: '#f7f1e3',
-    navigationBarTitleText: '行册',
+    navigationBarTitleText: '行迹',
     navigationBarTextStyle: 'black',
   },
   lazyCodeLoading: 'requiredComponents',
@@ -1387,7 +1387,7 @@ export default defineAppConfig({
 
 - [ ] **Step 10.2:** 删除旧的 index 页
 ```bash
-rm -rf /Users/jinchi/Documents/行册/src/pages/index
+rm -rf /Users/jinchi/Documents/行迹/src/pages/index
 ```
 
 - [ ] **Step 10.3:** 类型检查（确认没有残留 import）
@@ -1419,7 +1419,7 @@ git commit -m "refactor(routes): replace single index page with home + new-trip"
 
 - [ ] **Step 11.1:** 打开微信开发者工具，编译最新代码
 
-- [ ] **Step 11.2:** 首屏看到 home 页：标题"行册" + 副标 + 空态文案 + 底部 [+ 新建攻略] 按钮
+- [ ] **Step 11.2:** 首屏看到 home 页：标题"行迹" + 副标 + 空态文案 + 底部 [+ 新建攻略] 按钮
 
 - [ ] **Step 11.3:** 点 [+ 新建攻略] → 跳到 new-trip 页
 

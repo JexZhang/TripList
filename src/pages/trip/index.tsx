@@ -402,7 +402,7 @@ export default function TripPage() {
     const kind = (options as { target?: { dataset?: { kind?: ShareKind } } })?.target?.dataset?.kind
     const picked = kind ? shareRef.byKind[kind] : null
     return picked || {
-      title: shareRef.tripName ? `行册 · ${shareRef.tripName}` : '行册',
+      title: shareRef.tripName ? `行迹 · ${shareRef.tripName}` : '行迹',
       path: '/pages/home/index',
     }
   })

@@ -305,7 +305,7 @@ export default function Me() {
     />
     <View className='me-profile-text'>
       <Text className='me-profile-nickname'>
-        {me?.nickname && me.nickname !== '行册旅人' ? me.nickname : '点击编辑昵称'}
+        {me?.nickname && me.nickname !== '行迹旅人' ? me.nickname : '点击编辑昵称'}
       </Text>
     </View>
     <View className='me-profile-edit' onClick={() => setEditOpen(true)}>
@@ -328,7 +328,7 @@ ProfileForm 仍由 ProfileEditSheet 内部使用，无需 me 页直接 import。
 
 ```tsx
       <View className='me-section me-section--meta'>
-        <Text className='me-meta'>行册 · v1.0.0</Text>
+        <Text className='me-meta'>行迹 · v1.0.0</Text>
       </View>
 
       <ProfileEditSheet

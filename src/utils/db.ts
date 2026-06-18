@@ -101,7 +101,7 @@ export async function copyTripLocally(
     ...rest,
     name: `${name} · 副本`,
     ownerOpenid: openid,
-    ownerNickname: me?.nickname || '行册旅人',
+    ownerNickname: me?.nickname || '行迹旅人',
     ownerAvatarUrl: me?.avatarUrl || '',
     collaborators: [],
   }

@@ -65,7 +65,7 @@ exports.main = async (event) => {
       startDate: s,
       endDate,
       ownerOpenid: OPENID,
-      ownerNickname: me.nickname || '行册旅人',
+      ownerNickname: me.nickname || '行迹旅人',
       ownerAvatarUrl: me.avatarUrl || '',
       collaborators: [],
       collaboratorOpenids: [],

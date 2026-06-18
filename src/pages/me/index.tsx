@@ -56,7 +56,7 @@ export default function Me() {
           />
           <View className='me-profile-text'>
             <Text className='me-profile-nickname'>
-              {me?.nickname && me.nickname !== '行册旅人' ? me.nickname : '点击编辑昵称'}
+              {me?.nickname && me.nickname !== '行迹旅人' ? me.nickname : '点击编辑昵称'}
             </Text>
           </View>
           <View className='me-profile-edit' onClick={() => setEditOpen(true)}>
@@ -104,7 +104,7 @@ export default function Me() {
         <View className='me-section me-feedback-card'>
           <Text className='me-feedback-version'>v{version}</Text>
           <Text className='me-feedback-label'>意见反馈</Text>
-          <Text className='me-feedback-desc'>告诉我们你的想法，帮助行册变得更好</Text>
+          <Text className='me-feedback-desc'>告诉我们你的想法，帮助行迹变得更好</Text>
           {/* @ts-ignore open-type="feedback" is weapp-only */}
           <Button className='me-feedback-btn' openType='feedback' />
         </View>

@@ -51,7 +51,7 @@
 
 - [ ] **Step 1: 确认仓库干净**
 
-Run: `cd /Users/jinchi/Documents/行册 && git status`
+Run: `cd /Users/jinchi/Documents/行迹 && git status`
 Expected: working tree clean（或仅未追踪的 `triplist-design/`）；若有其他未提交改动先 stash
 
 - [ ] **Step 2: 跑一次 H5 dev 确认基线可用**
@@ -76,7 +76,7 @@ Expected: 编译成功；浏览器打开 `http://localhost:10086`，首页正常
 Create `src/styles/animations.scss`：
 
 ```scss
-/* ===== 行册 · 全局 keyframes ===== */
+/* ===== 行迹 · 全局 keyframes ===== */
 
 @keyframes page-in {
   from { opacity: 0; transform: translateY(16rpx); }
@@ -188,7 +188,7 @@ Create `src/styles/tokens.scss`：
 
 ```scss
 /* ====================================================================
-   行册 · 四主题 design tokens
+   行迹 · 四主题 design tokens
    - page 根：缺省值（兼容 root-portal）
    - .theme-tokens：root-portal 子树兜底，挂在弹层/modal 根
    - .theme-{name}：实际四主题
@@ -400,7 +400,7 @@ Edit `src/app.scss`：
   ```scss
   @import './styles/tokens.scss';
   ```
-- 删除 L1–L92（`/* ===== 行册 · 全局设计 token... */` 起到 `.theme-tokens { ... }` 块尾）
+- 删除 L1–L92（`/* ===== 行迹 · 全局设计 token... */` 起到 `.theme-tokens { ... }` 块尾）
 - 保留 `/* ===== 全局按压反馈 ===== */` 起及后续 ProfileSetupModal 样式
 
 最终 `src/app.scss` 顶部应是：
@@ -483,7 +483,7 @@ exports.main = async (event, context) => {
     await db.collection('users').add({
       data: {
         _id: OPENID,
-        nickname: nickname || '行册旅人',
+        nickname: nickname || '行迹旅人',
         avatarUrl: avatarUrl || '',
         theme: safeTheme || null,
         createdAt: now,
@@ -496,7 +496,7 @@ exports.main = async (event, context) => {
   const u = (fresh && fresh.data) || {}
   return {
     openid: OPENID,
-    nickname: u.nickname || nickname || '行册旅人',
+    nickname: u.nickname || nickname || '行迹旅人',
     avatarUrl: u.avatarUrl || avatarUrl || '',
     theme: u.theme || null,
   }
@@ -580,7 +580,7 @@ const refresh = async () => {
     const result = (r as any).result || {}
     setMe({
       openid: result.openid,
-      nickname: result.nickname || '行册旅人',
+      nickname: result.nickname || '行迹旅人',
       avatarUrl: result.avatarUrl || '',
       theme: (result.theme as ThemeName) || null,
     })
@@ -795,7 +795,7 @@ function App({ children }: PropsWithChildren<any>) {
         await wx.cloud.callFunction({
           name: 'ensure-user',
           data: {
-            nickname: profile.data.nickName || '行册旅人',
+            nickname: profile.data.nickName || '行迹旅人',
             avatarUrl: profile.data.avatarUrl || '',
           },
         })
@@ -928,7 +928,7 @@ export default defineAppConfig({
   window: {
     backgroundTextStyle: 'light',
     navigationBarBackgroundColor: '#f7f1e3',
-    navigationBarTitleText: '行册',
+    navigationBarTitleText: '行迹',
     navigationBarTextStyle: 'black',
   },
   lazyCodeLoading: 'requiredComponents',
@@ -971,13 +971,13 @@ export default function Me() {
   const themeCls = useThemeClass('me')
   const { me, refresh } = useMe()
   const { theme, setTheme } = useTheme()
-  const [nickname, setNickname] = useState(me?.nickname && me.nickname !== '行册旅人' ? me.nickname : '')
+  const [nickname, setNickname] = useState(me?.nickname && me.nickname !== '行迹旅人' ? me.nickname : '')
   const [avatarUrl, setAvatarUrl] = useState(me?.avatarUrl || '')
   const [saving, setSaving] = useState(false)
 
   useEffect(() => {
     if (me) {
-      setNickname(me.nickname && me.nickname !== '行册旅人' ? me.nickname : '')
+      setNickname(me.nickname && me.nickname !== '行迹旅人' ? me.nickname : '')
       setAvatarUrl(me.avatarUrl || '')
     }
   }, [me])
@@ -1061,7 +1061,7 @@ export default function Me() {
       </View>
 
       <View className='me-section me-section--meta'>
-        <Text className='me-meta'>行册 · v1.0.0</Text>
+        <Text className='me-meta'>行迹 · v1.0.0</Text>
       </View>
     </View>
   )
@@ -1253,7 +1253,7 @@ interface Props {
 export default function AvatarEntry({ className }: Props) {
   const { me } = useMe()
   const hasAvatar = !!me?.avatarUrl
-  const needSetup = !me || (!me.avatarUrl && (!me.nickname || me.nickname === '行册旅人'))
+  const needSetup = !me || (!me.avatarUrl && (!me.nickname || me.nickname === '行迹旅人'))
 
   const onTap = () => {
     Taro.navigateTo({ url: '/pages/me/index' })
@@ -1339,7 +1339,7 @@ Edit `src/pages/home/index.tsx`：
   ```tsx
   <View className='home-head'>
     <View className='home-head-text'>
-      <Text className='home-brand'>行册</Text>
+      <Text className='home-brand'>行迹</Text>
       <Text className='home-sub'>你的旅行，值得被好好记录</Text>
     </View>
     <AvatarEntry className='home-head-avatar' />

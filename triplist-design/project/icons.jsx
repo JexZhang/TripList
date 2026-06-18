@@ -1,5 +1,5 @@
 /* eslint-disable react/prop-types */
-// icons.jsx — 行册统一图标库
+// icons.jsx — 行迹统一图标库
 // 单色线条 + 可选填充层，统一 24×24 viewBox，stroke 由 currentColor 控制
 
 function Icon({ name, size = 22, stroke = 1.7, fill = false, style = {}, ...rest }) {

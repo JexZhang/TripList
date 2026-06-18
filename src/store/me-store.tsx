@@ -53,7 +53,7 @@ export function MeProvider({ children }: { children: ReactNode }) {
       const result = (r as { result?: Record<string, unknown> }).result || {}
       setMe({
         openid: result.openid as string,
-        nickname: (result.nickname as string) || '行册旅人',
+        nickname: (result.nickname as string) || '行迹旅人',
         avatarUrl: (result.avatarUrl as string) || '',
         theme: (result.theme as ThemeName) || null,
         plan: (result.plan as 'free' | 'pro') || 'free',
@@ -70,7 +70,7 @@ export function MeProvider({ children }: { children: ReactNode }) {
   // 首次启动自动弹一次：用户还没设置过 nickname/avatar 且本次启动未跳过
   useEffect(() => {
     if (!me) return
-    const needSetup = (!me.nickname || me.nickname === '行册旅人') && !me.avatarUrl
+    const needSetup = (!me.nickname || me.nickname === '行迹旅人') && !me.avatarUrl
     if (!needSetup) return
     if (sessionSkipped) return
     setSetupOpen(true)

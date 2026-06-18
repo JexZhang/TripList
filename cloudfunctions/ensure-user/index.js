@@ -2,7 +2,7 @@ const cloud = require('wx-server-sdk')
 cloud.init({ env: cloud.DYNAMIC_CURRENT_ENV })
 
 const VALID_THEMES = ['tegami', 'magazine', 'postcard', 'minimal']
-const PLACEHOLDER_NICKNAME = '行册旅人'
+const PLACEHOLDER_NICKNAME = '行迹旅人'
 
 exports.main = async (event, context) => {
   const { OPENID } = cloud.getWXContext()

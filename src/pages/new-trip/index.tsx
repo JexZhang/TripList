@@ -33,7 +33,7 @@ export default function NewTrip() {
     try {
       const input = buildNewTrip({ name, pax, startDate: dates.start, endDate: dates.end, destinations })
       input.ownerOpenid = openid
-      input.ownerNickname = me?.nickname || '行册旅人'
+      input.ownerNickname = me?.nickname || '行迹旅人'
       input.ownerAvatarUrl = me?.avatarUrl || ''
       const tripId = await createTrip(input)
       Taro.showToast({ title: '已创建', icon: 'success' })

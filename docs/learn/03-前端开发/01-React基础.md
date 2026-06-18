@@ -1,6 +1,6 @@
 # 第三章 · React 基础
 
-React 是行册前端的核心框架。本章用行册里的真实代码讲解 React 最重要的几个概念。
+React 是行迹前端的核心框架。本章用行迹里的真实代码讲解 React 最重要的几个概念。
 
 ---
 
@@ -25,7 +25,7 @@ function App() {
 }
 ```
 
-行册的组件树（简化版）：
+行迹的组件树（简化版）：
 
 ```
 TripPage
@@ -63,7 +63,7 @@ function SpotCard({ spot }: { spot: Spot }) {
 <SpotCard spot={{ id: '1', name: '玄武湖', price: 0 }} />
 ```
 
-行册里的真实例子——`SpotSearch` 组件接受这些 props：
+行迹里的真实例子——`SpotSearch` 组件接受这些 props：
 
 ```tsx
 // src/components/SpotSearch/index.tsx
@@ -110,7 +110,7 @@ function Counter() {
 }
 ```
 
-行册里到处都在用 useState：
+行迹里到处都在用 useState：
 
 ```tsx
 // src/components/SpotSearch/index.tsx
@@ -142,7 +142,7 @@ useEffect(() => {
 - `[keyword]` — `keyword` 变化时执行
 - 不传 — 每次渲染都执行（一般不这么用）
 
-行册里的搜索防抖：
+行迹里的搜索防抖：
 
 ```tsx
 // src/components/SpotSearch/index.tsx
@@ -187,7 +187,7 @@ if (!trip) return <View>未找到攻略</View>
 return <View>...</View>
 ```
 
-行册里 `SpotSearch` 的条件渲染：
+行迹里 `SpotSearch` 的条件渲染：
 
 ```tsx
 if (!open) return null  // open=false 时不渲染任何东西
@@ -223,7 +223,7 @@ const days = ['Day 1', 'Day 2', 'Day 3']
 ))}
 ```
 
-行册里渲染攻略列表：
+行迹里渲染攻略列表：
 
 ```tsx
 // src/pages/home/index.tsx
@@ -264,7 +264,7 @@ const days = ['Day 1', 'Day 2', 'Day 3']
 Hook 是以 `use` 开头的函数，封装可复用的逻辑：
 
 ```tsx
-// 行册的 useTripStore —— 获取攻略状态
+// 行迹的 useTripStore —— 获取攻略状态
 const { state, dispatch } = useTripStore()
 
 // 怎么定义的（简化）：
@@ -289,7 +289,7 @@ React 函数组件的「一生」：
 3. 卸载（Unmount）← useEffect 的清理函数在这里执行
 ```
 
-行册里的例子——攻略详情页加载数据：
+行迹里的例子——攻略详情页加载数据：
 
 ```tsx
 // src/store/trip-store.tsx
@@ -335,7 +335,7 @@ const handleTap = useCallback((e) => {
 
 ## 核心概念总结
 
-| 概念 | 用途 | 行册里的例子 |
+| 概念 | 用途 | 行迹里的例子 |
 |------|------|------------|
 | `useState` | 组件内部状态 | `searchOpen`, `keyword`, `results` |
 | `useEffect` | 副作用（请求、监听） | 搜索防抖、数据库监听 |

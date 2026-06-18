@@ -9,7 +9,7 @@
 现状(已经核对代码):
 
 1. **首页**(`src/pages/home/index.tsx`)调 `listMyTrips`/`watchMyTrips`,这俩 client-side 查询条件已经是 `_openid == me OR collaborators.openid == me`,数据层意图正确
-2. 但 trips 集合的 wxcloud 安全规则(`docs/superpowers/plans/2026-05-22-行册-phase1-cloud-skeleton.md` 第 11.3 步)写的是:
+2. 但 trips 集合的 wxcloud 安全规则(`docs/superpowers/plans/2026-05-22-行迹-phase1-cloud-skeleton.md` 第 11.3 步)写的是:
    ```
    doc._openid == auth.openid || (doc.collaborators != null && 'auth.openid' in doc.collaborators.openid)
    ```
@@ -113,7 +113,7 @@ export interface Trip {
 // 现状返回 { openid }, 改为:
 return {
   openid: OPENID,
-  nickname: userDoc.nickname || event.nickname || '行册旅人',
+  nickname: userDoc.nickname || event.nickname || '行迹旅人',
   avatarUrl: userDoc.avatarUrl || event.avatarUrl || '',
 }
 ```

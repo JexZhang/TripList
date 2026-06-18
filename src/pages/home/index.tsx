@@ -126,7 +126,7 @@ export default function Home() {
           pax: data.pax,
           name: data.name,
           ownerOpenid: me.openid,
-          ownerNickname: me.nickname || '行册旅人',
+          ownerNickname: me.nickname || '行迹旅人',
           ownerAvatarUrl: me.avatarUrl || '',
         },
         data.preferences,
@@ -208,7 +208,7 @@ export default function Home() {
   useShareAppMessage((options) => {
     const kind = (options as { target?: { dataset?: { kind?: ShareKind } } })?.target?.dataset?.kind
     const picked = kind ? shareRef.byKind[kind] : null
-    return picked || { title: '行册-AI旅行攻略', path: '/pages/home/index' }
+    return picked || { title: '行迹-AI旅行攻略', path: '/pages/home/index' }
   })
 
   const handleCoverPicked = async (fileIDOrNull: string | null) => {

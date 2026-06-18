@@ -1,4 +1,4 @@
-# 行册 Phase 1 · 云端骨架 Implementation Plan
+# 行迹 Phase 1 · 云端骨架 Implementation Plan
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
@@ -25,7 +25,7 @@
 ## 1. 文件结构概览
 
 ```
-行册/
+行迹/
 ├── project.config.json          ← 修改：加 cloudfunctionRoot
 ├── package.json                 ← 修改：加 nanoid / dayjs
 ├── .gitignore                   ← 修改：忽略 cloudfunctions/**/node_modules
@@ -53,7 +53,7 @@
 │       ├── index.js
 │       └── package.json
 └── docs/superpowers/plans/
-    └── 2026-05-22-行册-phase1-cloud-skeleton.md   ← 本文件
+    └── 2026-05-22-行迹-phase1-cloud-skeleton.md   ← 本文件
 ```
 
 ---
@@ -65,7 +65,7 @@
 
 - [ ] **Step 1.1:** 进入项目目录
 ```bash
-cd /Users/jinchi/Documents/行册
+cd /Users/jinchi/Documents/行迹
 ```
 
 - [ ] **Step 1.2:** 安装 `nanoid` 和 `dayjs`
@@ -100,7 +100,7 @@ git commit -m "chore: add nanoid and dayjs deps"
 {
   "miniprogramRoot": "./dist",
   "cloudfunctionRoot": "./cloudfunctions/",
-  "projectname": "行册",
+  "projectname": "行迹",
   "description": "旅行攻略+清单+地图+天气",
   "appid": "wx833348388eb83bc1",
   "setting": {
@@ -117,8 +117,8 @@ git commit -m "chore: add nanoid and dayjs deps"
 
 - [ ] **Step 2.2:** 创建 `cloudfunctions/` 目录占位
 ```bash
-mkdir -p /Users/jinchi/Documents/行册/cloudfunctions
-touch /Users/jinchi/Documents/行册/cloudfunctions/.gitkeep
+mkdir -p /Users/jinchi/Documents/行迹/cloudfunctions
+touch /Users/jinchi/Documents/行迹/cloudfunctions/.gitkeep
 ```
 
 - [ ] **Step 2.3:** 添加 `.gitignore` 忽略 cloud function 依赖产物
@@ -146,7 +146,7 @@ git commit -m "feat(cloud): point project.config to cloudfunctions/"
 
 - [ ] **Step 3.1:** 先读现状
 ```bash
-cat /Users/jinchi/Documents/行册/src/app.ts
+cat /Users/jinchi/Documents/行迹/src/app.ts
 ```
 
 记录现有 `App({ ... })` 或 `Component({ ... })` 的结构。
@@ -183,7 +183,7 @@ async onLaunch() {
       await wx.cloud.callFunction({
         name: 'ensure-user',
         data: {
-          nickname: profile.data.nickName || '行册旅人',
+          nickname: profile.data.nickName || '行迹旅人',
           avatarUrl: profile.data.avatarUrl || '',
         }
       })
@@ -198,7 +198,7 @@ async onLaunch() {
 
 - [ ] **Step 3.4:** 启动 dev 编译，确认无构建报错
 ```bash
-cd /Users/jinchi/Documents/行册
+cd /Users/jinchi/Documents/行迹
 npm run dev:weapp
 ```
 
@@ -262,7 +262,7 @@ exports.main = async (event, context) => {
     await db.collection('users').add({
       data: {
         _id: OPENID,
-        nickname: nickname || '行册旅人',
+        nickname: nickname || '行迹旅人',
         avatarUrl: avatarUrl || '',
         createdAt: now,
         lastSeenAt: now,
@@ -364,7 +364,7 @@ exports.main = async (event, context) => {
 
 - [ ] **Step 5.3:** 安装依赖
 ```bash
-cd /Users/jinchi/Documents/行册/cloudfunctions/amap-poi-search
+cd /Users/jinchi/Documents/行迹/cloudfunctions/amap-poi-search
 npm install
 cd -
 ```
@@ -446,7 +446,7 @@ exports.main = async (event, context) => {
 
 - [ ] **Step 6.3:** 安装依赖 + 部署
 ```bash
-cd /Users/jinchi/Documents/行册/cloudfunctions/amap-weather && npm install && cd -
+cd /Users/jinchi/Documents/行迹/cloudfunctions/amap-weather && npm install && cd -
 ```
 微信开发者工具中右键该目录 → 上传并部署。
 
@@ -522,7 +522,7 @@ exports.main = async (event, context) => {
 
 - [ ] **Step 7.3:** 安装依赖 + 部署
 ```bash
-cd /Users/jinchi/Documents/行册/cloudfunctions/create-share-token && npm install && cd -
+cd /Users/jinchi/Documents/行迹/cloudfunctions/create-share-token && npm install && cd -
 ```
 微信开发者工具中右键 → 上传并部署。
 
@@ -613,7 +613,7 @@ exports.main = async (event, context) => {
 
 - [ ] **Step 8.3:** 安装依赖 + 部署
 ```bash
-cd /Users/jinchi/Documents/行册/cloudfunctions/clone-trip && npm install && cd -
+cd /Users/jinchi/Documents/行迹/cloudfunctions/clone-trip && npm install && cd -
 ```
 微信开发者工具中右键 → 上传并部署。
 
@@ -690,7 +690,7 @@ exports.main = async (event, context) => {
     data: {
       collaborators: _.push([{
         openid: OPENID,
-        nickname: user.nickname || '行册旅人',
+        nickname: user.nickname || '行迹旅人',
         avatarUrl: user.avatarUrl || '',
         role: 'editor',
         joinedAt: now,
@@ -710,7 +710,7 @@ exports.main = async (event, context) => {
 
 - [ ] **Step 9.3:** 安装依赖 + 部署
 ```bash
-cd /Users/jinchi/Documents/行册/cloudfunctions/join-collab && npm install && cd -
+cd /Users/jinchi/Documents/行迹/cloudfunctions/join-collab && npm install && cd -
 ```
 微信开发者工具中右键 → 上传并部署。
 
@@ -793,7 +793,7 @@ export const cloud = {
 
 - [ ] **Step 10.2:** 跑一次类型检查
 ```bash
-cd /Users/jinchi/Documents/行册
+cd /Users/jinchi/Documents/行迹
 npx tsc --noEmit
 ```
 
@@ -950,7 +950,7 @@ __verifyCloud()
 - [ ] **Step 13.5:** 验证通过后清理临时验证代码
 
 ```bash
-rm /Users/jinchi/Documents/行册/src/utils/_dev-verify.ts
+rm /Users/jinchi/Documents/行迹/src/utils/_dev-verify.ts
 ```
 
 并把 `src/app.ts` 中的 `import './utils/_dev-verify'` 删掉。

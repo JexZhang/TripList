@@ -63,7 +63,7 @@
 
 - [ ] **Step 1: 确认 Phase 1 已合并且无遗留改动**
 
-Run: `cd /Users/jinchi/Documents/行册 && git status && git log --oneline -5`
+Run: `cd /Users/jinchi/Documents/行迹 && git status && git log --oneline -5`
 Expected: 工作树干净；最新若干 commit 含 Phase 1 的 "feat(theme)" / "feat(me)" / "feat(home): AvatarEntry"
 
 - [ ] **Step 2: 确认 Phase 1 文件已就位**
@@ -105,7 +105,7 @@ export default defineAppConfig({
   window: {
     backgroundTextStyle: 'light',
     navigationBarBackgroundColor: '#f7f1e3',
-    navigationBarTitleText: '行册',
+    navigationBarTitleText: '行迹',
     navigationBarTextStyle: 'black',
   },
   lazyCodeLoading: 'requiredComponents',
@@ -1737,13 +1737,13 @@ export default function ProfileForm({
   onSubmit,
 }: Props) {
   const [nickname, setNickname] = useState(
-    initialNickname && initialNickname !== '行册旅人' ? initialNickname : '',
+    initialNickname && initialNickname !== '行迹旅人' ? initialNickname : '',
   )
   const [avatarUrl, setAvatarUrl] = useState(initialAvatarUrl || '')
   const [submitting, setSubmitting] = useState(false)
 
   useEffect(() => {
-    setNickname(initialNickname && initialNickname !== '行册旅人' ? initialNickname : '')
+    setNickname(initialNickname && initialNickname !== '行迹旅人' ? initialNickname : '')
     setAvatarUrl(initialAvatarUrl || '')
   }, [initialNickname, initialAvatarUrl])
 

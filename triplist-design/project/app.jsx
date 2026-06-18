@@ -1,5 +1,5 @@
 /* eslint-disable react/prop-types, no-undef */
-// app.jsx — 行册 prototype 主应用
+// app.jsx — 行迹 prototype 主应用
 
 const { useState, useEffect, useRef } = React;
 
