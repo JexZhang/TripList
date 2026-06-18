@@ -268,6 +268,7 @@ export default function AIInterview({ open, mode, tripId, onClose, onSubmit }: P
       )
     }
     if (isCreate && stepIdx === 1) {
+      const datesReady = !!answers.startDate && !!answers.endDate
       return (
         <View className='aiv-step'>
           <Text className='aiv-q'>{STEP_TITLES.dates}</Text>
@@ -277,7 +278,7 @@ export default function AIInterview({ open, mode, tripId, onClose, onSubmit }: P
           />
           <View className='aiv-foot'>
             <View className='aiv-back' onClick={handleBack}>← 上一步</View>
-            <View className='aiv-next' onClick={handleNext}>下一步 →</View>
+            <View className={`aiv-next${datesReady ? '' : ' disabled'}`} onClick={datesReady ? handleNext : undefined}>下一步 →</View>
           </View>
         </View>
       )

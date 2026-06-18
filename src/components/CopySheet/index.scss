@@ -22,6 +22,7 @@
 }
 .copy-sheet-date-l { color: var(--ink-3); font-size: 26px; }
 .copy-sheet-date-v { font-size: 30px; }
+.copy-sheet-date-placeholder { color: var(--muted, #aaa); }
 .copy-sheet-note { font-size: 24px; color: var(--ink-3); }
 .copy-sheet-go {
   margin-top: 28px; text-align: center;
@@ -29,3 +30,4 @@
   background: var(--accent); color: #fff;
 }
 .copy-sheet-go.busy { opacity: 0.6; }
+.copy-sheet-go.disabled { opacity: 0.4; pointer-events: none; }

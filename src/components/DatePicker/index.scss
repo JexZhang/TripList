@@ -31,6 +31,10 @@
   font-weight: 700;
   color: var(--ink);
 }
+.dp-placeholder {
+  color: var(--muted, #aaa);
+  font-weight: 400;
+}
 
 .dp-arrow {
   font-size: 32rpx;

@@ -15,8 +15,8 @@ export default function NewTrip() {
   const [name, setName] = useState('')
   const [pax, setPax] = useState(2)
   const [dates, setDates] = useState({
-    start: dayjs().format('YYYY-MM-DD'),
-    end: dayjs().add(2, 'day').format('YYYY-MM-DD'),
+    start: '',
+    end: '',
   })
   const [destinations, setDestinations] = useState<Destination[]>([])
   const PAX_OPTIONS = Array.from({ length: 99 }, (_, i) => `${i + 1} 人`)
@@ -25,7 +25,7 @@ export default function NewTrip() {
   const openid = me?.openid || ''
   const [submitting, setSubmitting] = useState(false)
 
-  const canSubmit = !!name.trim() && !!openid && pax >= 1 && !dayjs(dates.end).isBefore(dates.start)
+  const canSubmit = !!name.trim() && !!openid && !!dates.start && !!dates.end && pax >= 1 && !dayjs(dates.end).isBefore(dates.start)
 
   const submit = async () => {
     if (!canSubmit || submitting) return

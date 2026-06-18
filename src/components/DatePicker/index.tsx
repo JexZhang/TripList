@@ -17,17 +17,17 @@ export default function DatePicker({ value, onChange }: Props) {
     <View className='date-picker'>
       <Picker
         mode='date'
-        value={value.start}
-        end={value.end}
+        value={value.start || ''}
+        end={value.end || undefined}
         onChange={e => {
           const start = String(e.detail.value)
           // 起始日晚于结束日时，把结束日一并顶到起始日，保证 start <= end
-          onChange({ start, end: start > value.end ? start : value.end })
+          onChange({ start, end: (!value.end || start > value.end) ? start : value.end })
         }}
       >
         <View className='dp-field'>
           <Text className='dp-label'>起</Text>
-          <Text className='dp-value'>{fmtDate(value.start)}</Text>
+          <Text className={`dp-value${value.start ? '' : ' dp-placeholder'}`}>{value.start ? fmtDate(value.start) : '选择出发'}</Text>
         </View>
       </Picker>
 
@@ -35,17 +35,17 @@ export default function DatePicker({ value, onChange }: Props) {
 
       <Picker
         mode='date'
-        value={value.end}
-        start={value.start}
+        value={value.end || ''}
+        start={value.start || undefined}
         onChange={e => {
           const end = String(e.detail.value)
           // 结束日早于起始日时回钳到起始日
-          onChange({ ...value, end: end < value.start ? value.start : end })
+          onChange({ ...value, end: (value.start && end < value.start) ? value.start : end })
         }}
       >
         <View className='dp-field'>
           <Text className='dp-label'>止</Text>
-          <Text className='dp-value'>{fmtDate(value.end)}</Text>
+          <Text className={`dp-value${value.end ? '' : ' dp-placeholder'}`}>{value.end ? fmtDate(value.end) : '选择返回'}</Text>
         </View>
       </Picker>
     </View>

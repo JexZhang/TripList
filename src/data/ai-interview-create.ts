@@ -1,4 +1,3 @@
-import dayjs from 'dayjs'
 import type { Destination, AIPreferences } from '../types/trip'
 
 export type CreateStepId = 'dest' | 'dates' | 'pax' | 'prefs' | 'name'
@@ -31,8 +30,8 @@ export const STEP_SKIP_HINT: Partial<Record<CreateStepId, string>> = {
 export function emptyCreateAnswers(): CreateAnswers {
   return {
     destinations: [],
-    startDate: dayjs().format('YYYY-MM-DD'),
-    endDate: dayjs().add(2, 'day').format('YYYY-MM-DD'),
+    startDate: '',
+    endDate: '',
     pax: 2,
     preferences: { audience: [], modelAlias: 'DeepSeek-V4-Flash' },
     name: '',
