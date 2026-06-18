@@ -76,7 +76,7 @@ export default function HomePostcard({
             const phase = getTripPhase(t.startDate, t.endDate)
             const isPost = phase === 'post'
             return (
-              <AIGlowWrap key={t._id} active={ai === 'thinking'}>
+              <AIGlowWrap key={t._id} active={ai === 'thinking'} className='aiglow--row'>
               <View
                 className={`hpp-card ${isPost ? 'hpp-card--post' : ''}`}
                 onClick={() => onOpenTrip(t)}

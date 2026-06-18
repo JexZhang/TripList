@@ -181,6 +181,7 @@
 
 .hpp-card {
   padding: 24rpx 0;
+  background: var(--surface);
   border-top: 1rpx dashed var(--line);
   position: relative;
   animation: pop-in 0.5s var(--ease-spring) both;

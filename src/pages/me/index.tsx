@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Button, Image, View, Text } from '@tarojs/components'
+import { Button, Image, View, Text, ScrollView } from '@tarojs/components'
 import Taro from '@tarojs/taro'
 import { version } from '../../../package.json'
 import { useMe } from '../../store/me-store'
@@ -34,8 +34,15 @@ export default function Me() {
   const { me, refresh } = useMe()
   const { theme, setTheme } = useTheme()
   const [editOpen, setEditOpen] = useState(false)
-  const [pendingTheme, setPendingTheme] = useState<ThemeName | null>(null)
-  const dirty = pendingTheme !== null && pendingTheme !== theme
+  const [selected, setSelected] = useState<ThemeName | null>(null)
+  const pending = selected !== null && selected !== theme
+
+  function applyTheme() {
+    if (!selected || selected === theme) return
+    setTheme(selected)
+    Taro.showToast({ title: '已切换主题', icon: 'success' })
+    setSelected(null)
+  }
 
   return (
     <View className={themeCls}>
@@ -60,39 +67,35 @@ export default function Me() {
 
       <View className='me-section'>
         <Text className='me-section-title'>主题</Text>
-        <View className='me-theme-grid'>
-          {VALID_THEMES.map((name) => {
-            const isCurrent = name === theme && pendingTheme === null
-            const isPending = name === pendingTheme
-            return (
-              <View
-                key={name}
-                className={`me-theme-card ${isCurrent ? 'is-current' : ''} ${isPending ? 'is-pending' : ''}`}
-                onClick={() => {
-                  if (name === theme) setPendingTheme(null)
-                  else setPendingTheme(name)
-                }}
-              >
-                <Image className='me-theme-thumb' src={THEME_THUMB[name]} mode='aspectFit' />
-                <Text className='me-theme-name-zh'>{THEME_LABELS[name].zh}</Text>
-                <Text className='me-theme-name-en'>{THEME_LABELS[name].en}</Text>
-                {isCurrent && <View className='me-theme-badge me-theme-badge--current'>当前</View>}
-                {isPending && <View className='me-theme-badge me-theme-badge--pending'>待应用</View>}
-              </View>
-            )
-          })}
-        </View>
-
-        {dirty && pendingTheme && (
-          <View
-            className='me-theme-apply'
-            onClick={() => {
-              setTheme(pendingTheme)
-              setPendingTheme(null)
-              Taro.showToast({ title: '已切换主题', icon: 'success' })
-            }}
-          >
-            应用「{THEME_LABELS[pendingTheme].zh}」主题
+        <ScrollView scrollX className='me-theme-scroll' showScrollbar={false}>
+          <View className='me-theme-track'>
+            {VALID_THEMES.map((name) => {
+              const isActive = selected === name
+              const isCurrent = name === theme && selected === null
+              return (
+                <View
+                  key={name}
+                  className={
+                    `me-theme-slide` +
+                    (isCurrent ? ' is-current' : '') +
+                    (isActive ? ' is-active' : '')
+                  }
+                  onClick={() => setSelected(name)}
+                >
+                  <Image className='me-theme-preview-img' src={THEME_THUMB[name]} mode='aspectFit' />
+                  <View className='me-theme-info'>
+                    <Text className='me-theme-name'>{THEME_LABELS[name].zh}</Text>
+                    <Text className='me-theme-desc'>{THEME_LABELS[name].en}</Text>
+                  </View>
+                  {isCurrent && <View className='me-theme-badge'>当前</View>}
+                </View>
+              )
+            })}
+          </View>
+        </ScrollView>
+        {pending && (
+          <View className='me-theme-apply' onClick={applyTheme}>
+            应用「{THEME_LABELS[selected!].zh}」主题
           </View>
         )}
       </View>

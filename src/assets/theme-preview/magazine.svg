@@ -1,23 +1,27 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 260">
-  <rect width="200" height="260" fill="#F4F0E8"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 280">
+  <rect width="200" height="280" fill="#F4F0E8"/>
+  
+  <!-- AI Banner（简化） -->
+  <rect x="14" y="16" width="172" height="40" rx="10" fill="#D62E2E" opacity="0.12" stroke="#D62E2E" stroke-width="1"/>
+  <circle cx="32" cy="36" r="8" fill="#D62E2E" opacity="0.8"/>
+  <text x="46" y="34" font-family="sans-serif" font-size="9" fill="#B82424" font-weight="600">AI 规划行程</text>
+  <text x="172" y="38" font-family="sans-serif" font-size="12" fill="#D62E2E">›</text>
+  
   <!-- 双线刊头 -->
-  <line x1="14" y1="20" x2="186" y2="20" stroke="#111" stroke-width="2"/>
-  <text x="14" y="40" font-family="serif" font-weight="900" font-size="22" fill="#111" letter-spacing="2">XING/CE</text>
-  <line x1="14" y1="50" x2="186" y2="50" stroke="#111" stroke-width="0.8"/>
+  <line x1="14" y1="70" x2="186" y2="70" stroke="#111" stroke-width="1.5"/>
+  <text x="14" y="88" font-family="serif" font-weight="900" font-size="18" fill="#111" letter-spacing="2">XING/CE</text>
+  <line x1="14" y1="96" x2="186" y2="96" stroke="#111" stroke-width="0.6"/>
+  
   <!-- 红色色块 -->
-  <rect x="14" y="64" width="172" height="80" fill="#D62E2E"/>
-  <text x="22" y="106" font-family="serif" font-size="14" font-weight="700" fill="#FFFFFF" letter-spacing="2">ISSUE 01</text>
-  <text x="22" y="128" font-family="serif" font-size="10" fill="#FFFFFF" letter-spacing="3" opacity="0.85">FEATURE / TRAVEL</text>
-  <!-- 目录 -->
-  <line x1="14" y1="158" x2="186" y2="158" stroke="#111" stroke-width="0.6"/>
-  <text x="14" y="174" font-family="serif" font-size="10" fill="#111" letter-spacing="2">01 · 行 程</text>
-  <text x="186" y="174" font-family="monospace" font-size="10" fill="#111" text-anchor="end">P.02</text>
-  <line x1="14" y1="180" x2="186" y2="180" stroke="#111" stroke-width="0.4" opacity="0.5"/>
-  <text x="14" y="196" font-family="serif" font-size="10" fill="#111" letter-spacing="2">02 · 开 销</text>
-  <text x="186" y="196" font-family="monospace" font-size="10" fill="#111" text-anchor="end">P.08</text>
-  <line x1="14" y1="202" x2="186" y2="202" stroke="#111" stroke-width="0.4" opacity="0.5"/>
-  <text x="14" y="218" font-family="serif" font-size="10" fill="#111" letter-spacing="2">03 · 行 装</text>
-  <text x="186" y="218" font-family="monospace" font-size="10" fill="#111" text-anchor="end">P.14</text>
+  <rect x="14" y="108" width="172" height="50" fill="#D62E2E"/>
+  <text x="22" y="130" font-family="serif" font-size="12" font-weight="700" fill="#FFFFFF" letter-spacing="2">ISSUE 01</text>
+  <text x="22" y="146" font-family="serif" font-size="9" fill="#FFFFFF" letter-spacing="3" opacity="0.85">FEATURE / TRAVEL</text>
+  
+  <!-- 目录（简化） -->
+  <line x1="14" y1="172" x2="186" y2="172" stroke="#111" stroke-width="0.5"/>
+  <text x="14" y="186" font-family="serif" font-size="9" fill="#111" letter-spacing="2">01 · 行 程</text>
+  <text x="186" y="186" font-family="monospace" font-size="9" fill="#111" text-anchor="end">P.02</text>
+  
   <!-- 底注 -->
-  <text x="100" y="244" font-family="serif" font-size="10" fill="#444" text-anchor="middle" letter-spacing="3">MAGAZINE</text>
+  <text x="100" y="264" font-family="serif" font-size="9" fill="#444" text-anchor="middle" letter-spacing="3">MAGAZINE</text>
 </svg>

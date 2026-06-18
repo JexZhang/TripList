@@ -33,57 +33,93 @@
   margin-bottom: 24rpx;
 }
 
-/* 主题选择 */
-.me-theme-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 14rpx;
+/* ── 主题走马灯 ── */
+.me-theme-scroll {
+  width: 100%;
+  white-space: nowrap;
 }
-.me-theme-card {
+.me-theme-track {
+  display: inline-flex;
+  gap: 20rpx;
+  padding: 8rpx 4rpx 16rpx;
+}
+.me-theme-slide {
   position: relative;
-  padding: 12rpx 10rpx;
-  border-radius: var(--r-md);
+  width: 420rpx;
+  flex-shrink: 0;
+  border-radius: var(--r-lg);
   background: var(--surface-2);
-  border: 2rpx solid transparent;
+  border: 3rpx solid transparent;
   overflow: hidden;
-  transition: border-color 0.18s var(--ease-out), transform 0.18s var(--ease-out);
+  transition: border-color 0.22s var(--ease-out), box-shadow 0.22s var(--ease-out), transform 0.18s var(--ease-out);
 }
-.me-theme-card:active { transform: scale(0.98); }
-.me-theme-card.is-current {
+.me-theme-slide:active { transform: scale(0.97); }
+.me-theme-slide.is-current {
   border-color: var(--accent);
+  box-shadow: 0 4rpx 24rpx -8rpx var(--accent-soft);
 }
-.me-theme-card.is-pending {
+.me-theme-slide.is-active {
   border-color: var(--accent);
   border-style: dashed;
 }
-.me-theme-thumb {
+.me-theme-preview-img {
   width: 100%;
-  aspect-ratio: 5 / 6.5;
-  border-radius: var(--r-sm);
-  margin-bottom: 10rpx;
-  overflow: hidden;
-  position: relative;
+  aspect-ratio: 5 / 7;
   display: block;
   background: var(--surface);
 }
-.me-theme-thumb image,
-.me-theme-thumb Image {
-  width: 100%;
-  height: 100%;
-  display: block;
-  overflow: hidden;
+.me-theme-info {
+  padding: 16rpx 20rpx 20rpx;
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
 }
-
-.me-theme-name-zh {
-  display: block;
-  font-size: 24rpx;
-  font-weight: 600;
+.me-theme-name {
+  font-size: 28rpx;
+  font-weight: 700;
   color: var(--ink);
   font-family: var(--font-display);
-  text-align: center;
+  display: block;
 }
-.me-theme-name-en {
-  display: none;
+.me-theme-desc {
+  font-size: 18rpx;
+  font-family: var(--font-mono);
+  color: var(--ink-3);
+  letter-spacing: 2rpx;
+  display: block;
+}
+.me-theme-badge {
+  position: absolute;
+  top: 16rpx;
+  right: 16rpx;
+  font-size: 18rpx;
+  padding: 4rpx 14rpx;
+  border-radius: 20rpx;
+  background: var(--accent);
+  color: #fff;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+/* 应用按钮 */
+.me-theme-apply {
+  margin-top: 20rpx;
+  padding: 20rpx;
+  text-align: center;
+  background: var(--accent);
+  color: #fff;
+  border-radius: var(--r-md);
+  font-size: 28rpx;
+  font-weight: 700;
+  font-family: var(--font-display);
+  letter-spacing: 2rpx;
+  animation: apply-in 0.22s var(--ease-out) both;
+  transition: transform 0.18s var(--ease-out);
+}
+.me-theme-apply:active { transform: scale(0.98); }
+@keyframes apply-in {
+  from { opacity: 0; transform: translateY(12rpx); }
+  to   { opacity: 1; transform: translateY(0); }
 }
 
 /* 意见反馈卡片 */
@@ -178,33 +214,4 @@
 }
 .me-profile-edit:active { transform: scale(0.94); }
 
-/* 主题 badge + 应用按钮 */
-.me-theme-badge {
-  position: absolute;
-  top: 8rpx;
-  right: 8rpx;
-  width: 16rpx;
-  height: 16rpx;
-  padding: 0;
-  border-radius: 50%;
-  font-size: 0;
-}
-.me-theme-badge--current {
-  background: var(--accent);
-}
-.me-theme-badge--pending {
-  background: transparent;
-  border: 2rpx dashed var(--accent);
-}
-.me-theme-apply {
-  margin-top: 24rpx;
-  padding: 20rpx;
-  text-align: center;
-  background: var(--accent);
-  color: #fff;
-  border-radius: var(--r-md);
-  font-size: 28rpx;
-  font-weight: 600;
-  transition: transform 0.18s var(--ease-out);
-}
-.me-theme-apply:active { transform: scale(0.98); }
+

@@ -1,11 +1,14 @@
+/* ── AIGlowWrap ──────────────────────────────────
+   padding 撑出 8px 灯带间隙，clip 层裁剪旋转渐变 */
 .aiglow {
   position: relative;
-  padding: 3px;
-  border-radius: calc(var(--r-lg) + 3px);
+  z-index: 2;
+  padding: 8px;
+  border-radius: calc(var(--r-lg) + 8px);
   box-shadow: 0 0 20px 2px var(--accent-soft, rgba(255, 122, 46, 0.35));
 }
 
-/* 裁剪层：让旋转环不溢出外框 */
+/* 裁剪层：裁剪旋转环不溢出 */
 .aiglow-clip {
   position: absolute;
   inset: 0;
@@ -15,36 +18,43 @@
   z-index: 0;
 }
 
-/* 旋转渐变环 */
+/* 旋转渐变环：缺角圆（弧段 ≈ 1/3，其余透明） */
 .aiglow-ring {
   position: absolute;
-  width: 200%;
-  height: 200%;
-  top: -50%;
-  left: -50%;
+  width: 360%;
+  height: 360%;
+  top: -130%;
+  left: -130%;
+  border-radius: 50%;
   background: conic-gradient(
     from 0deg,
-    var(--accent, #FF7A2E),
-    var(--accent-2, #FF9A4D),
-    rgba(0, 0, 0, 0) 40%,
-    rgba(0, 0, 0, 0) 60%,
-    var(--accent, #FF7A2E)
+    transparent 0deg,
+    var(--glow-c2, var(--accent-2, #FF9A4D)) 30deg,
+    var(--glow-c1, var(--accent, #FF7A2E)) 60deg,
+    var(--glow-c2, var(--accent-2, #FF9A4D)) 90deg,
+    transparent 120deg,
+    transparent 360deg
   );
   animation: aiglow-spin 3.2s linear infinite;
 }
 
-/* children 要在环之上 */
-.aiglow > :not(.aiglow-clip) {
+/* 卡片内容在环之上 */
+.aiglow > view {
   position: relative;
   z-index: 1;
 }
+/* clip 层保持绝对定位 */
+.aiglow > .aiglow-clip {
+  position: absolute;
+  z-index: 0;
+}
 
-/* 列表行变体：减小圆角 */
+/* 列表行变体：方形圆角（匹配方形卡片） */
 .aiglow--row {
-  border-radius: calc(var(--r-sm, 8px) + 3px);
+  border-radius: 0;
 }
 .aiglow--row .aiglow-clip {
-  border-radius: inherit;
+  border-radius: 0;
 }
 
 @keyframes aiglow-spin {

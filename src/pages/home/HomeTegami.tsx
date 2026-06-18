@@ -68,7 +68,7 @@ export default function HomeTegami({
             const phase = getTripPhase(t.startDate, t.endDate)
             const isPost = phase === 'post'
             return (
-              <AIGlowWrap key={t._id} active={ai === 'thinking'}>
+              <AIGlowWrap key={t._id} active={ai === 'thinking'} ringColor={t._c1} ringColor2={t._c2}>
               <View
                 className={`ht-card ht-card-${i % 5} ${isPost ? 'ht-card--post' : ''}`}
                 onClick={() => onOpenTrip(t)}
@@ -76,9 +76,10 @@ export default function HomeTegami({
                 style={{
                   '--c1': t._c1, '--c2': t._c2,
                   animationDelay: `${i * 80}ms`,
+                  ...(ai === 'thinking' && { marginTop: '4rpx' }),
                 } as React.CSSProperties}
               >
-                <View className='ht-card-edge' />
+                <View className={`ht-card-edge${ai === 'thinking' ? ' ht-card-edge--hidden' : ''}`} />
                 <View className='ht-card-body'>
                   {ai && <HomeCardAIRow status={ai} />}
                   <Text className='ht-card-meta'>

@@ -111,6 +111,12 @@
   bottom: 0;
   width: 12rpx;
   background: linear-gradient(180deg, var(--c1), var(--c2));
+  transition: opacity 0.3s var(--ease-out);
+}
+
+/* AI 生成时彩条淡出，颜色移交给旋转灯带 */
+.ht-card-edge--hidden {
+  opacity: 0;
 }
 
 /* 已结束行程：整卡淡化沉底（ht-card-in 结束帧不锁 opacity，故此处可正常生效） */
