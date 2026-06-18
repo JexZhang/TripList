@@ -23,7 +23,7 @@ function tripDays(t: Trip): number {
 }
 
 export default function HomeMinimal({
-  trips, loading, onOpenTrip, onLongPressTrip, onNewTrip, onAITrip,
+  trips, loading, openid, onOpenTrip, onLongPressTrip, onNewTrip, onAITrip,
   featuredTemplates, onOpenTemplate, onOpenLibrary,
 }: HomeViewProps) {
   return (
@@ -52,6 +52,7 @@ export default function HomeMinimal({
         <View className='hmin-list'>
           {trips.map((t, i) => {
             const ai = aiStatusFor(t)
+            const isCollab = t._openid !== openid
             const phase = getTripPhase(t.startDate, t.endDate)
             const isPost = phase === 'post'
             return (
@@ -66,6 +67,7 @@ export default function HomeMinimal({
                   <View className='hmin-row-top'>
                     <Text className='hmin-row-name'>{t.name}</Text>
                     {phase === 'live' && <TripPhaseChip trip={t} className='hmin-phase' />}
+                    {isCollab && <View className='hmin-row-badge'>协作</View>}
                     <Text className='hmin-row-arrow'>›</Text>
                   </View>
                   <View className='hmin-row-meta'>

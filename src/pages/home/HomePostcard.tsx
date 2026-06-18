@@ -25,7 +25,7 @@ function tripDays(t: Trip): number {
 }
 
 export default function HomePostcard({
-  trips, loading, onOpenTrip, onLongPressTrip, onNewTrip, onAITrip,
+  trips, loading, openid, onOpenTrip, onLongPressTrip, onNewTrip, onAITrip,
   featuredTemplates, onOpenTemplate, onOpenLibrary,
 }: HomeViewProps) {
   const totalDays = trips.reduce((s, t) => s + tripDays(t), 0)
@@ -73,6 +73,7 @@ export default function HomePostcard({
         <View className='hpp-stamps'>
           {trips.map((t) => {
             const ai = aiStatusFor(t)
+            const isCollab = t._openid !== openid
             const phase = getTripPhase(t.startDate, t.endDate)
             const isPost = phase === 'post'
             return (
@@ -89,6 +90,7 @@ export default function HomePostcard({
                   </Text>
                   <Text className='hpp-card-name'>{t.name}</Text>
                   {phase === 'live' && <TripPhaseChip trip={t} className='hpp-card-phase' />}
+                  {isCollab && <View className='hpp-card-badge'>协作</View>}
                 </View>
               </View>
               </AIGlowWrap>

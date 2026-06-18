@@ -21,7 +21,7 @@ function aiStatusFor(t: Trip): 'thinking' | 'ready' | 'error' | null {
 }
 
 export default function HomeMagazine({
-  trips, loading, onOpenTrip, onLongPressTrip, onNewTrip, onAITrip,
+  trips, loading, openid, onOpenTrip, onLongPressTrip, onNewTrip, onAITrip,
   featuredTemplates, onOpenTemplate, onOpenLibrary,
 }: HomeViewProps) {
   return (
@@ -49,6 +49,7 @@ export default function HomeMagazine({
         <View className='hm-list'>
           {trips.map((t, i) => {
             const ai = aiStatusFor(t)
+            const isCollab = t._openid !== openid
             const phase = getTripPhase(t.startDate, t.endDate)
             const isPost = phase === 'post'
             return (
@@ -63,6 +64,7 @@ export default function HomeMagazine({
                   <View className='hm-row-top'>
                     <Text className='hm-row-name'>{t.name}</Text>
                     {phase === 'live' && <TripPhaseChip trip={t} className='hm-row-phase' />}
+                    {isCollab && <View className='hm-row-badge'>协作</View>}
                   </View>
                   <Text className='hm-row-meta'>
                     {fmtDateShort(t.startDate)} → {fmtDateShort(t.endDate)} · {tripSummary(t.startDate, t.endDate, t.pax)}

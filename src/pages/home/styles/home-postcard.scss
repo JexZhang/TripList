@@ -222,6 +222,18 @@
   letter-spacing: 1rpx;
 }
 
+.hpp-card-badge {
+  display: inline-block;
+  margin-top: 10rpx;
+  padding: 2rpx 14rpx;
+  border-radius: var(--r-pill);
+  font-size: 20rpx;
+  font-weight: 700;
+  letter-spacing: 2rpx;
+  background: var(--coral);
+  color: #fff;
+}
+
 /* ── 页脚 ── */
 .hpp-page-foot {
   margin-top: 24rpx;

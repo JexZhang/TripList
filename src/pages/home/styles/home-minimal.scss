@@ -110,6 +110,18 @@
   color: var(--ink-3);
 }
 
+.hmin-row-badge {
+  padding: 2rpx 12rpx;
+  border-radius: var(--r-pill);
+  font-size: 18rpx;
+  font-weight: 700;
+  letter-spacing: 2rpx;
+  background: var(--coral);
+  color: #fff;
+  flex-shrink: 0;
+  align-self: center;
+}
+
 .hmin-row-meta {
   display: flex;
   gap: 8rpx;
