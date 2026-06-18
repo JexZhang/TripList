@@ -23,12 +23,25 @@ exports.main = async (event) => {
   const { OPENID } = cloud.getWXContext()
   if (!OPENID) throw new Error('OPENID missing')
 
-  const { tripId, patch } = event || {}
-  if (!tripId || !patch || typeof patch !== 'object') {
-    throw new Error('tripId and patch required')
-  }
+  const { tripId, patch, action } = event || {}
+  if (!tripId) throw new Error('tripId required')
 
   const db = cloud.database()
+  const _ = db.command
+
+  // action=get: 协作者通过云函数读取攻略详情（绕过客户端安全规则）
+  if (action === 'get') {
+    const trip = await db.collection('trips').doc(tripId).get().catch(() => null)
+    if (!trip || !trip.data) throw new Error('trip not found')
+    const isOwner = trip.data._openid === OPENID
+    const isCollab = (trip.data.collaboratorOpenids || []).includes(OPENID)
+    if (!isOwner && !isCollab) throw new Error('forbidden')
+    return { ok: true, trip: trip.data }
+  }
+
+  if (!patch || typeof patch !== 'object') {
+    throw new Error('patch required')
+  }
   const trip = await db.collection('trips').doc(tripId).get().catch(() => null)
   if (!trip || !trip.data) throw new Error('trip not found')
 
@@ -37,6 +50,20 @@ exports.main = async (event) => {
   const isCollab = collabIds.includes(OPENID)
   if (!isOwner && !isCollab) {
     throw new Error('forbidden: not owner or collaborator')
+  }
+
+  // 协作者退出协作（云函数绕过客户端安全规则）
+  if (patch.__leaveCollab) {
+    if (isOwner) throw new Error('owner 不能退出自己的攻略')
+    await db.collection('trips').doc(tripId).update({
+      data: {
+        collaborators: _.pull({ openid: OPENID }),
+        collaboratorOpenids: _.pull(OPENID),
+        updatedAt: Date.now(),
+        updatedBy: OPENID,
+      }
+    })
+    return { ok: true, left: true }
   }
 
   const cleaned = {}
