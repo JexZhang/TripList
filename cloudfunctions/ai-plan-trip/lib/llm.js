@@ -1,40 +1,76 @@
 const axios = require('axios')
 
-// alias → provider + model + env 字段映射
-// provider 标记: deepseek 系列在多轮 tool calling 中和 thinking 模式不兼容,
-// 必须显式关闭 thinking, 否则会出现 "must pass reasoning_content" 死循环或静默挂死
-const MODEL_ALIASES = {
-  'DeepSeek-V4-PRO': {
-    provider: 'deepseek',
-    endpoint: () => 'https://api.deepseek.com/v1/chat/completions',
-    model: () => process.env.DEEPSEEK_PRO_MODEL,
-    auth: () => `Bearer ${process.env.DEEPSEEK_API_KEY}`,
+// ═══════════════════════════════════════════════════════════════════════
+// 可配置 LLM 层 — 通过云函数环境变量切换 provider / 模型 / thinking 模式
+// ═══════════════════════════════════════════════════════════════════════
+//
+// LLM_PROVIDER     : 'cloudbase' (默认) | 'deepseek'
+// LLM_THINKING     : 'disabled'  (默认) | 'enabled'
+//
+// 每个 provider 独立的 endpoint / auth / model 名, 互不干扰.
+// thinking 开启时: 请求体带 thinking 参数, 返回值含 reasoning_content,
+//                  调用方必须在下一轮 messages 里原样回传 reasoning_content.
+// thinking 关闭时: 不带 thinking 参数, 返回值无 reasoning_content.
+
+const PROVIDER = (process.env.LLM_PROVIDER || 'cloudbase').toLowerCase()
+const THINKING = (process.env.LLM_THINKING || 'disabled').toLowerCase() === 'enabled'
+
+// ─── Provider 配置 ───────────────────────────────────────────────────
+const PROVIDERS = {
+  cloudbase: {
+    endpoint: () =>
+      `${process.env.TCB_AI_BASE_URL || 'https://cloud1-d3gb6mt7red446466.api.tcloudbasegateway.com/v1/ai/cloudbase'}/chat/completions`,
+    auth: () => `Bearer ${process.env.TCB_AI_API_KEY}`,
+    models: {
+      'DeepSeek-V4-PRO':   () => process.env.TCB_AI_PRO_MODEL   || 'deepseek-v4-pro-202606',
+      'DeepSeek-V4-Flash': () => process.env.TCB_AI_FLASH_MODEL || 'deepseek-v4-flash-202605',
+    },
   },
-  'DeepSeek-V4-Flash': {
-    provider: 'deepseek',
+  deepseek: {
     endpoint: () => 'https://api.deepseek.com/v1/chat/completions',
-    model: () => process.env.DEEPSEEK_FLASH_MODEL,
     auth: () => `Bearer ${process.env.DEEPSEEK_API_KEY}`,
+    models: {
+      'DeepSeek-V4-PRO':   () => process.env.DEEPSEEK_PRO_MODEL   || 'deepseek-chat',
+      'DeepSeek-V4-Flash': () => process.env.DEEPSEEK_FLASH_MODEL || 'deepseek-chat',
+    },
   },
 }
 
+// ─── Alias → 具体配置 ──────────────────────────────────────────────────
 function resolveAlias(modelAlias) {
-  const cfg = MODEL_ALIASES[modelAlias]
-  if (!cfg) throw new Error(`Unknown modelAlias: ${modelAlias}`)
-  const model = cfg.model()
-  if (!model) throw new Error(`Model name not configured for alias ${modelAlias}`)
-  return { endpoint: cfg.endpoint(), model, auth: cfg.auth(), provider: cfg.provider }
+  const prov = PROVIDERS[PROVIDER]
+  if (!prov) throw new Error(`未知 LLM_PROVIDER: ${PROVIDER} (可选: ${Object.keys(PROVIDERS).join(', ')})`)
+  const modelFn = prov.models[modelAlias]
+  if (!modelFn) throw new Error(`Unknown modelAlias: ${modelAlias}`)
+  const model = modelFn()
+  if (!model) throw new Error(`Model name not configured for alias ${modelAlias} on provider ${PROVIDER}`)
+  return { endpoint: prov.endpoint(), model, auth: prov.auth(), provider: PROVIDER, thinking: THINKING }
+}
+
+// 暴露给外部 (pingMode 诊断用)
+const MODEL_ALIASES = {
+  'DeepSeek-V4-PRO':   { provider: PROVIDER, model: () => PROVIDERS[PROVIDER]?.models['DeepSeek-V4-PRO']?.() },
+  'DeepSeek-V4-Flash': { provider: PROVIDER, model: () => PROVIDERS[PROVIDER]?.models['DeepSeek-V4-Flash']?.() },
 }
 
 async function callChat({ modelAlias, messages, tools, responseFormat }) {
-  const { endpoint, model, auth, provider } = resolveAlias(modelAlias)
+  const { endpoint, model, auth, provider, thinking } = resolveAlias(modelAlias)
 
   const body = {
     model,
-    messages,  // 按 DeepSeek 文档: thinking + tool calling 时, reasoning_content 必须原样在 messages 里, 不能剥
+    messages,
     temperature: 0.5,
     max_tokens: 8192,
   }
+
+  // thinking 模式可配置: V4 的 thinking 与 tool calling 不兼容,
+  // 开启后必须在 messages 里原样回传 reasoning_content, 否则死循环.
+  if (thinking) {
+    body.thinking = { type: 'enabled' }
+  } else {
+    body.thinking = { type: 'disabled' }
+  }
+
   if (tools && tools.length > 0) {
     body.tools = tools
     // 显式开启并行 tool calling: 让模型在同一轮里批量发出多个 search_poi,
@@ -43,7 +79,7 @@ async function callChat({ modelAlias, messages, tools, responseFormat }) {
   }
   if (responseFormat) body.response_format = responseFormat
 
-  console.log(`[llm:req] model=${model} provider=${provider} msgs=${messages.length} tools=${tools ? tools.length : 0} rf=${!!responseFormat}`)
+  console.log(`[llm:req] model=${model} provider=${provider} thinking=${thinking} msgs=${messages.length} tools=${tools ? tools.length : 0} rf=${!!responseFormat}`)
 
   // reasoning 模型 + 长 context 单次可能跑 60s+, 给到 130s; SCF 软超时 540s 仍有充足余量
   const PER_CALL_TIMEOUT_MS = 130_000
@@ -106,4 +142,4 @@ async function callChat({ modelAlias, messages, tools, responseFormat }) {
   return { msg, usage }
 }
 
-module.exports = { callChat, MODEL_ALIASES }
+module.exports = { callChat, MODEL_ALIASES, PROVIDER, THINKING }

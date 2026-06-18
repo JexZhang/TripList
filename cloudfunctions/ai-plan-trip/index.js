@@ -1,7 +1,7 @@
 const cloud = require('wx-server-sdk')
 cloud.init({ env: cloud.DYNAMIC_CURRENT_ENV })
 
-const { callChat, MODEL_ALIASES } = require('./lib/llm')
+const { callChat, MODEL_ALIASES, PROVIDER, THINKING } = require('./lib/llm')
 const { buildMessages, retryPrompt, isDestEmpty } = require('./lib/prompts')
 const { TOOLS_SCHEMA, executeTool } = require('./lib/tools')
 const { validatePlan } = require('./lib/validate')
@@ -128,9 +128,11 @@ async function pingMode(event) {
     return { ok: false, stage: 'config', error: `未知 alias: ${modelAlias}`, knownAliases: Object.keys(MODEL_ALIASES) }
   }
   const envReport = {
-    DEEPSEEK_PRO_MODEL: !!process.env.DEEPSEEK_PRO_MODEL,
-    DEEPSEEK_FLASH_MODEL: !!process.env.DEEPSEEK_FLASH_MODEL,
+    LLM_PROVIDER: PROVIDER,
+    LLM_THINKING: THINKING,
+    TCB_AI_API_KEY: !!process.env.TCB_AI_API_KEY,
     DEEPSEEK_API_KEY: !!process.env.DEEPSEEK_API_KEY,
+    resolvedModel: aliasCfg.model(),
   }
 
   // 2. 真实调用 (1 轮, 不带 tools, 短 prompt)
@@ -402,14 +404,18 @@ async function runLoop({ taskId, tripId, tripContext, preferences, previousResul
           })
         }
 
-        // 按 DeepSeek 文档: 工具调用轮次, 必须把整条 assistant message 原样回传
-        // (含 reasoning_content), 否则下一轮 400. 等价于 messages.append(choices[0].message)
-        messages.push({
+        // thinking 开启时: 每条 assistant 消息必须带 reasoning_content (即使为空),
+        // 否则 DeepSeek 下一轮 400 "must pass reasoning_content".
+        // thinking 关闭时: 不需要此字段.
+        const assistantMsg = {
           role: 'assistant',
           content: msg.content || '',
-          reasoning_content: msg.reasoning_content || '',
           tool_calls: toolCalls,
-        })
+        }
+        if (THINKING) {
+          assistantMsg.reasoning_content = msg.reasoning_content || ''
+        }
+        messages.push(assistantMsg)
         // 真正执行的 (并行执行, 加速 tool 阶段)
         const execResults = await Promise.all(executable.map(async (tc) => {
           let args = {}
