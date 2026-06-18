@@ -23,6 +23,7 @@ export async function listMyTrips(_openid: string): Promise<Trip[]> {
 
 /**
  * 获取一条 trip。返回 null 仅代表文档不存在；其它错误(网络/权限)抛出。
+ * owner 走客户端 doc().get() 直读；协作者被安全规则拒绝后自动回退到云函数。
  */
 export async function getTrip(tripId: string): Promise<Trip | null> {
   try {
@@ -30,9 +31,22 @@ export async function getTrip(tripId: string): Promise<Trip | null> {
     if (!res || !res.data) return null
     return res.data as Trip
   } catch (e: any) {
-    // 微信云数据库 "document not found" 的 errCode 为 -502005
+    // 文档不存在
     if (e && (e.errCode === -502005 || /not.*exist|not.*found/i.test(e.errMsg || ''))) {
       return null
+    }
+    // 权限被拒 → 可能是协作者，走云函数回退
+    if (e && (e.errCode === -502003 || /permission|SecurityRule/i.test(e.errMsg || ''))) {
+      try {
+        const r = await (Taro as any).cloud.callFunction({
+          name: 'update-trip',
+          data: { tripId, action: 'get' },
+        })
+        const trip = r?.result?.trip
+        return trip || null
+      } catch {
+        return null
+      }
     }
     console.error('[getTrip]', tripId, e)
     throw e
@@ -71,10 +85,17 @@ export async function renameTrip(tripId: string, newName: string, openid: string
 }
 
 /**
- * 删除一条 trip（仅 owner 调用，权限规则会兜底）
+ * 删除一条 trip（仅 owner 调用）
+ * 使用 where 替代 doc，查询条件包含 _openid 以满足安全规则子集检查
  */
 export async function deleteTrip(tripId: string): Promise<void> {
-  await db().collection(TRIPS).doc(tripId).remove({})
+  const res = await (db().collection(TRIPS) as any).where({
+    _id: tripId,
+    _openid: '{openid}',
+  }).remove()
+  if (res?.stats?.removed === 0) {
+    throw new Error('删除失败（无权限或记录不存在）')
+  }
 }
 
 /**
@@ -115,18 +136,17 @@ export async function copyTripLocally(
  */
 export async function smartDeleteTrip(trip: Trip, openid: string): Promise<'leave' | 'delete'> {
   if (trip._openid === openid) {
-    await db().collection(TRIPS).doc(trip._id).remove({})
+    // 使用 where 替代 doc，查询条件包含 _openid 以满足安全规则子集检查
+    const res = await (db().collection(TRIPS) as any).where({
+      _id: trip._id,
+      _openid: '{openid}',
+    }).remove()
+    if (res?.stats?.removed === 0) {
+      throw new Error('删除失败（无权限或记录不存在）')
+    }
     return 'delete'
   }
-  // 非 owner：退出协作
-  const _ = (Taro as any).cloud.database().command
-  await db().collection(TRIPS).doc(trip._id).update({
-    data: {
-      collaborators: _.pull({ openid }),
-      collaboratorOpenids: _.pull(openid),
-      updatedAt: Date.now(),
-      updatedBy: openid,
-    }
-  })
+  // 非 owner：通过云函数退出协作（云函数不受客户端安全规则限制）
+  await cloud.updateTrip({ tripId: trip._id, patch: { __leaveCollab: true } })
   return 'leave'
 }
