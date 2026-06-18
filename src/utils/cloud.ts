@@ -74,6 +74,11 @@ export const cloud = {
   cloneTrip: (data: { sourceTripId: string; token: string }) =>
     call<typeof data, { newTripId: string }>('clone-trip', data),
 
+  previewShareTrip: (data: { sourceTripId: string; token: string }) =>
+    call<{ sourceTripId: string; token: string; action: string }, { ok: boolean; trip: Record<string, unknown> }>(
+      'clone-trip', { ...data, action: 'preview' },
+    ),
+
   cloneTemplate: (data: { templateId: string; startDate: string }) =>
     call<typeof data, { newTripId: string }>('clone-template', data),
 
@@ -81,6 +86,11 @@ export const cloud = {
     call<typeof data, { ok: boolean; alreadyOwner?: boolean; alreadyJoined?: boolean }>(
       'join-collab',
       data,
+    ),
+
+  previewCollabTrip: (data: { tripId: string; token: string }) =>
+    call<{ tripId: string; token: string; action: string }, { ok: boolean; trip: Record<string, unknown> }>(
+      'join-collab', { ...data, action: 'preview' },
     ),
 
   updateTrip: (data: { tripId: string; patch: Record<string, unknown> }) =>

@@ -180,9 +180,18 @@ export default function Home() {
       const confirmText = isOwner ? '删除' : '退出'
       const res = await Taro.showModal({ title, content, confirmText, confirmColor: '#c43d3d' })
       if (res.confirm) {
-        const performed = await smartDeleteTrip(t, openid)
-        setTrips((prev) => prev.filter((x) => x._id !== t._id))
-        Taro.showToast({ title: performed === 'delete' ? '已删除' : '已退出', icon: 'success' })
+        try {
+          const performed = await smartDeleteTrip(t, openid)
+          setTrips((prev) => {
+            const next = prev.filter((x) => x._id !== t._id)
+            try { Taro.setStorageSync(STORAGE_KEY, next) } catch { /* ignore */ }
+            return next
+          })
+          Taro.showToast({ title: performed === 'delete' ? '已删除' : '已退出', icon: 'success' })
+        } catch (e: any) {
+          console.error('[home] delete/leave failed', e)
+          Taro.showToast({ title: e?.message || '操作失败，请重试', icon: 'none' })
+        }
       }
     }
   }
@@ -194,8 +203,8 @@ export default function Home() {
       shareRef.byKind[kind] = { title: payload.title, path: payload.path }
       setShareReady((prev) => ({ ...prev, [kind]: true }))
     } catch (e) {
-      console.error('[share]', e)
-      Taro.showToast({ title: '生成分享失败', icon: 'error' })
+      console.error('[prepareShare] failed', kind, e)
+      Taro.showToast({ title: '生成分享失败', icon: 'none' })
     }
   }
 
@@ -206,9 +215,14 @@ export default function Home() {
   }
 
   useShareAppMessage((options) => {
-    const kind = (options as { target?: { dataset?: { kind?: ShareKind } } })?.target?.dataset?.kind
+    // Taro 中 data-kind 可能丢失，优先用 dataset，fallback 到模块级 lastKind
+    const dsKind = (options as { target?: { dataset?: { kind?: ShareKind } } })?.target?.dataset?.kind
+    const kind = dsKind || shareRef.lastKind
     const picked = kind ? shareRef.byKind[kind] : null
-    return picked || { title: '行迹-AI旅行攻略', path: '/pages/home/index' }
+    if (picked) return picked
+    // fallback：至少显示攻略名称
+    const name = shareRef.tripName || 'AI旅行攻略'
+    return { title: `行迹 · ${name}`, path: '/pages/home/index' }
   })
 
   const handleCoverPicked = async (fileIDOrNull: string | null) => {

@@ -32,9 +32,11 @@ export async function buildShareMessage(
 export const shareRef: {
   byKind: { readonly: { title: string; path: string } | null; collab: { title: string; path: string } | null }
   tripName: string
+  lastKind: ShareKind | null
 } = {
   byKind: { readonly: null, collab: null },
   tripName: '',
+  lastKind: null,
 }
 
 export function resetShareRef(tripName = '') {

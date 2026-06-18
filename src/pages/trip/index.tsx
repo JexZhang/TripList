@@ -399,7 +399,9 @@ export default function TripPage() {
 
   // 用户点 <Button open-type="share"> 时 WeChat 触发,根据 button dataset.kind 选 payload
   useShareAppMessage((options) => {
-    const kind = (options as { target?: { dataset?: { kind?: ShareKind } } })?.target?.dataset?.kind
+    // Taro 中 data-kind 可能丢失，优先用 dataset，fallback 到模块级 lastKind
+    const dsKind = (options as { target?: { dataset?: { kind?: ShareKind } } })?.target?.dataset?.kind
+    const kind = dsKind || shareRef.lastKind
     const picked = kind ? shareRef.byKind[kind] : null
     return picked || {
       title: shareRef.tripName ? `行迹 · ${shareRef.tripName}` : '行迹',

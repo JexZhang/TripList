@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { View, Text, Button, RootPortal } from '@tarojs/components'
 import type { ShareKind } from '../../utils/cloud'
 import { useTheme } from '../../store/theme-store'
+import { shareRef } from '../../utils/share'
 import './index.scss'
 
 interface Props {
@@ -40,7 +41,7 @@ export default function ShareTypeSheet({ open, onClose, prepare, ready }: Props)
         openType={isReady ? 'share' : undefined}
         data-kind={kind}
         disabled={!isReady}
-        onClick={isReady ? onClose : undefined}
+        onClick={isReady ? () => { shareRef.lastKind = kind; onClose() } : undefined}
       >
         <Text className='sts-item-title'>{title}</Text>
         <Text className='sts-item-desc'>{desc}</Text>

@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react'
 import { View, Text } from '@tarojs/components'
 import Taro, { useRouter, useShareAppMessage } from '@tarojs/taro'
 import { cloud, type ShareKind } from '../../utils/cloud'
-import { getTrip } from '../../utils/db'
 import { fmtDateShort } from '../../utils/format'
 import { tripSummary } from '../../utils/trip-helpers'
 import { useThemeClass } from '../../utils/theme-class'
@@ -28,17 +27,26 @@ export default function SharePage() {
   }))
 
   useEffect(() => {
-    if (!tripId) {
-      setError('链接缺少 tripId')
+    if (!tripId || !token) {
+      setError('链接不完整')
       setLoading(false)
       return
     }
-    getTrip(tripId).then(t => {
+    // 两种类型都通过 token 云函数获取预览（接收者不是 owner/协作者，无法直读）
+    const fetchTrip = kind === 'readonly'
+      ? cloud.previewShareTrip({ sourceTripId: tripId, token })
+      : cloud.previewCollabTrip({ tripId, token })
+    fetchTrip.then(r => {
+      const t = r.trip as unknown as Trip
       if (!t) setError('攻略不存在或已被删除')
       else setTrip(t)
       setLoading(false)
+    }).catch(e => {
+      console.error('[share] fetch trip', e)
+      setError((e as Error)?.message || '加载失败')
+      setLoading(false)
     })
-  }, [tripId])
+  }, [tripId, token, kind])
 
   const accept = async () => {
     if (!trip || acting) return
