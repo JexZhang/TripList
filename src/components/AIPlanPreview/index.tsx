@@ -135,7 +135,10 @@ export default function AIPlanPreview({
                       <View className={`aip-spot-check ${on ? 'on' : ''}`}>{on ? '✓' : ''}</View>
                       <Text className='aip-spot-tag'>{TYPE_LABEL[s.type] || '·'}</Text>
                       <View className='aip-spot-body'>
-                        <Text className='aip-spot-name'>{s.name}</Text>
+                        <View className='aip-spot-name-row'>
+                          <Text className='aip-spot-name'>{s.name}</Text>
+                          {noCoord && <Text className='aip-no-coord'>未定位</Text>}
+                        </View>
                         {s.time && <Text className='aip-spot-time'>{s.time}</Text>}
                         {s.note && <Text className='aip-spot-note'>{s.note}</Text>}
                         {typeof s.price === 'number' && s.price > 0 && (

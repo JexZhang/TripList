@@ -1,0 +1,100 @@
+2026-06-18 17:24:17.884
+START RequestId: ec9e7b79-b7c0-4207-91e2-10b7ebb0c7ab
+2026-06-18 17:24:17.885
+Event RequestId: ec9e7b79-b7c0-4207-91e2-10b7ebb0c7ab
+2026-06-18 17:24:18.186
+2026-06-18T09:24:18.185Z	ec9e7b79-b7c0-4207-91e2-10b7ebb0c7ab	[trace +47ms] run:start {"modelAlias":"DeepSeek-V4-Flash","tripName":"旅行攻略 2026-10-01"}
+2026-06-18 17:24:18.284
+2026-06-18T09:24:18.283Z	ec9e7b79-b7c0-4207-91e2-10b7ebb0c7ab	[messages:init] 2924 chars, 2 msgs
+2026-06-18 17:24:18.327
+2026-06-18T09:24:18.326Z	ec9e7b79-b7c0-4207-91e2-10b7ebb0c7ab	[trace +189ms] turn:1:request {"messagesCount":2}
+2026-06-18 17:24:18.425
+2026-06-18T09:24:18.425Z	ec9e7b79-b7c0-4207-91e2-10b7ebb0c7ab	[llm:req] model=deepseek-v4-flash-202605 provider=cloudbase thinking=false msgs=2 tools=2 rf=false
+2026-06-18 17:24:21.146
+2026-06-18T09:24:21.144Z	ec9e7b79-b7c0-4207-91e2-10b7ebb0c7ab	[llm:res] ok attempt=1 status=200 ms=2719 bodyLen=761
+2026-06-18 17:24:21.146
+2026-06-18T09:24:21.145Z	ec9e7b79-b7c0-4207-91e2-10b7ebb0c7ab	[trace +3008ms] turn:1:response {"usage":{"prompt_tokens":1728,"completion_tokens":115,"total_tokens":1843,"prompt_tokens_details":{"cached_tokens":0},"completion_tokens_details":{"reasoning_tokens":0}},"contentLen":26,"contentPreview":"我来先搜索大兴安岭地区10月初的旅游攻略和景点信息。","reasoningLen":0,"reasoningPreview":"","toolCalls":[{"name":"web_search","args":"{\"query\": \"大兴安岭 10月 旅游攻略 秋季 景点推荐\"}"},{"name":"web_search","args":"{\"query\": \"大兴安岭地区 必去景点 漠河 北极村\"}"}]}
+2026-06-18 17:24:21.566
+2026-06-18T09:24:21.565Z	ec9e7b79-b7c0-4207-91e2-10b7ebb0c7ab	[trace +3428ms] turn:1:tool:web_search {"args":{"query":"大兴安岭地区 必去景点 漠河 北极村"},"elapsedMs":362,"resultPreview":"[{\"title\":\"大兴安岭地周末去哪玩最好,大兴安岭地带孩子、家庭、情侣周末游玩好去处 -自驾游推荐_车主指南\",\"url\":\"https://m.icauto.com.cn/trip/hot_704.html\",\"summary\":\"大兴安岭地周末去哪玩最好,大兴安岭地带孩子、家庭、情侣周末游玩好去处\\n更新时间:2025-07-24\\n22:02:36\\n整理:车主指南\\n关于大兴安岭地周末必去好去处,本站推荐10个地方,分别是北极村、漠河、北极村旅游风景区、中国最北点、九曲十八湾自然风景区、龙江第一湾风景区、北山森林公园、鹿鼎山、大兴安岭五六火灾纪念馆、观音山,详细信息查看下表。\\n组图推荐1:北极村\\n类型5A景区\\n地区大兴安岭地区漠河市\\n热度10.4万人近期来过\\n【简介】北极村位于大兴安岭地区漠河市,是中国最北边的村庄,因为接近北极而得名。\\n【地址】大兴安岭地区漠河市北极村旅游风景区,(0457)8966999\\n【标签】适合冬天游玩可以滑雪适合夏天游玩看雪景可赏夜景24小时可赏雾凇可以赏雪避暑适合老人可以看星空\\n【网友印象】评论1:逆光拍摄效果出片;圣诞村的滑...[+3246]"}
+2026-06-18 17:24:21.583
+2026-06-18T09:24:21.583Z	ec9e7b79-b7c0-4207-91e2-10b7ebb0c7ab	[trace +3446ms] turn:1:tool:web_search {"args":{"query":"大兴安岭 10月 旅游攻略 秋季 景点推荐"},"elapsedMs":382,"resultPreview":"[{\"title\":\"大兴安岭9月旅游_大兴安岭9月旅游攻略_大兴安岭9月旅游景点推荐-大兴安岭本地宝\",\"url\":\"http://dxal.bendibao.com/tour/9yue/\",\"summary\":\"大兴安岭9月旅游\\n9月份是最适合旅游的季节,不冷不热,不干不燥,阳光温热,岁月静好,尤其适合出去旅游散心。大兴安岭9月份适合去哪里旅游呢?可以选择去黄山看日出,西湖赏秋月,也可以去丽江放慢脚步遗忘时光......总之走出去寻找秋天的色彩,看大自然的彩色变换。下面一起来看看大兴安岭9月旅游好去处推荐吧!\"},{\"title\":\"兴安10月旅游_兴安10月旅游攻略_兴安10月旅游景点推荐-兴安本地宝\",\"url\":\"http://xam.bendibao.com/tour/10yue/\",\"summary\":\"兴安10月旅游\\n10月份秋高气爽,是旅游的黄金季节,炎热的酷暑正在逐渐消退,秋日的美景正在祖国大地上悄然出现,五彩斑斓,令人遐想...兴安十月份适合去哪旅游呢?小编为您介绍兴安10月旅游好去处,一起去感受一个浪漫唯五色之秋,赶快早早预订好度假计划吧。\"},{\"titl...[+1690]"}
+2026-06-18 17:24:21.681
+2026-06-18T09:24:21.681Z	ec9e7b79-b7c0-4207-91e2-10b7ebb0c7ab	[trace +3544ms] turn:2:request {"messagesCount":5}
+2026-06-18 17:24:21.732
+2026-06-18T09:24:21.732Z	ec9e7b79-b7c0-4207-91e2-10b7ebb0c7ab	[llm:req] model=deepseek-v4-flash-202605 provider=cloudbase thinking=false msgs=5 tools=2 rf=false
+2026-06-18 17:24:24.166
+2026-06-18T09:24:24.166Z	ec9e7b79-b7c0-4207-91e2-10b7ebb0c7ab	[llm:res] ok attempt=1 status=200 ms=2434 bodyLen=671
+2026-06-18 17:24:24.166
+2026-06-18T09:24:24.166Z	ec9e7b79-b7c0-4207-91e2-10b7ebb0c7ab	[trace +6029ms] turn:2:response {"usage":{"prompt_tokens":5562,"completion_tokens":98,"total_tokens":5660,"cache_read_tokens":1664,"prompt_tokens_details":{"cached_tokens":1664},"completion_tokens_details":{"reasoning_tokens":0}},"contentLen":57,"contentPreview":"很好，我获取了大兴安岭地区（主要是漠河、北极村、北红村）的秋季旅游信息。现在我来搜索更多具体的景点和餐饮住宿信息。","reasoningLen":0,"reasoningPreview":"","toolCalls":[{"name":"web_search","args":"{\"query\": \"漠河 北极村 北红村 秋季 7天 行程路线 2025\"}"}]}
+2026-06-18 17:24:24.547
+2026-06-18T09:24:24.547Z	ec9e7b79-b7c0-4207-91e2-10b7ebb0c7ab	[trace +6410ms] turn:2:tool:web_search {"args":{"query":"漠河 北极村 北红村 秋季 7天 行程路线 2025"},"elapsedMs":335,"resultPreview":"[{\"title\":\"漠河旅游2-6人小团/北极村纯玩3日游/跟圣诞老人打卡拍照\",\"url\":\"https://www.cncn.com/xianlu/886605679574\",\"summary\":\"跟团游\\n漠河-北红村-北极村3日深度纯玩小包团24小时咨询预定电话:155\\n4663\\n9962(电话号码通微信号)费用包含:1.住房:均为独立卫浴的标准双人间或三人间*北红村一晚(特色农家院火炕)*北极村一晚(特色农家院)2.用车:*首末两天接送机场/火车站接送;行程期间旅游用车;3.门票:*九曲十八弯+湿地公园,龙江第一湾+乌苏里浅滩,北极村,鄂温克使鹿部落4.用餐*北红村早餐,北极村早餐5.导游:*全程司兼导,简单讲解\"},{\"title\":\"漠河北极村北红村圣诞村5日-和朋友来中国之北看一场极地风光吧的相关推荐_欣欣旅游\",\"url\":\"https://www.cncn.com/xianlu/886605575802/relate\",\"summary\":\"★★漠河+北极村+北红村+圣诞村5日\\n24小时咨询电话:15546639962(电话同微信)\\n★漠河,祖国的北疆,那...[+2193]"}
+2026-06-18 17:24:24.641
+2026-06-18T09:24:24.641Z	ec9e7b79-b7c0-4207-91e2-10b7ebb0c7ab	[trace +6504ms] turn:3:request {"messagesCount":7}
+2026-06-18 17:24:24.724
+2026-06-18T09:24:24.723Z	ec9e7b79-b7c0-4207-91e2-10b7ebb0c7ab	[llm:req] model=deepseek-v4-flash-202605 provider=cloudbase thinking=false msgs=7 tools=2 rf=false
+2026-06-18 17:24:27.633
+2026-06-18T09:24:27.631Z	ec9e7b79-b7c0-4207-91e2-10b7ebb0c7ab	[llm:res] ok attempt=1 status=200 ms=2907 bodyLen=1065
+2026-06-18 17:24:27.633
+2026-06-18T09:24:27.631Z	ec9e7b79-b7c0-4207-91e2-10b7ebb0c7ab	[trace +9494ms] turn:3:response {"usage":{"prompt_tokens":7431,"completion_tokens":253,"total_tokens":7684,"cache_read_tokens":5632,"prompt_tokens_details":{"cached_tokens":5632},"completion_tokens_details":{"reasoning_tokens":0}},"contentLen":58,"contentPreview":"现在我来批量搜索所有需要的POI信息。根据攻略，大兴安岭地区主要景点在漠河市、北极村、北红村一带。让我搜索这些地点。","reasoningLen":0,"reasoningPreview":"","toolCalls":[{"name":"search_poi","args":"{\"city\": \"漠河\", \"keyword\": \"漠河机场\", \"category\": \"spot\"}"},{"name":"search_poi","args":"{\"city\": \"漠河\", \"keyword\": \"九曲十八弯湿地公园\", \"category\": \"spot\"}"},{"name":"search_poi","args":"{\"city\": \"漠河\", \"keyword\": \"白桦林\", \"category\": \"spot\"}"}]}
+2026-06-18 17:24:28.986
+2026-06-18T09:24:28.986Z	ec9e7b79-b7c0-4207-91e2-10b7ebb0c7ab	[trace +10849ms] turn:3:tool:search_poi {"args":{"city":"漠河","keyword":"白桦林","category":"spot"},"elapsedMs":1311,"resultPreview":"{\"error\":\"search_poi 未在 \\\"漠河\\\" 找到 \\\"白桦林\\\" 的精确匹配, 请省略 lat/lng/adcode 字段\"}"}
+2026-06-18 17:24:29.226
+2026-06-18T09:24:29.226Z	ec9e7b79-b7c0-4207-91e2-10b7ebb0c7ab	[trace +11089ms] turn:3:tool:search_poi {"args":{"city":"漠河","keyword":"漠河机场","category":"spot"},"elapsedMs":1552,"resultPreview":"{\"error\":\"search_poi 未在 \\\"漠河\\\" 找到 \\\"漠河机场\\\" 的精确匹配, 请省略 lat/lng/adcode 字段\"}"}
+2026-06-18 17:24:29.380
+2026-06-18T09:24:29.380Z	ec9e7b79-b7c0-4207-91e2-10b7ebb0c7ab	[trace +11243ms] turn:3:tool:search_poi {"args":{"city":"漠河","keyword":"九曲十八弯湿地公园","category":"spot"},"elapsedMs":1705,"resultPreview":"{\"error\":\"search_poi 未在 \\\"漠河\\\" 找到 \\\"九曲十八弯湿地公园\\\" 的精确匹配, 请省略 lat/lng/adcode 字段\"}"}
+2026-06-18 17:24:29.462
+2026-06-18T09:24:29.462Z	ec9e7b79-b7c0-4207-91e2-10b7ebb0c7ab	[trace +11325ms] turn:4:request {"messagesCount":11}
+2026-06-18 17:24:29.511
+2026-06-18T09:24:29.511Z	ec9e7b79-b7c0-4207-91e2-10b7ebb0c7ab	[llm:req] model=deepseek-v4-flash-202605 provider=cloudbase thinking=false msgs=11 tools=2 rf=false
+2026-06-18 17:24:32.594
+2026-06-18T09:24:32.591Z	ec9e7b79-b7c0-4207-91e2-10b7ebb0c7ab	[llm:res] ok attempt=1 status=200 ms=3080 bodyLen=1042
+2026-06-18 17:24:32.594
+2026-06-18T09:24:32.591Z	ec9e7b79-b7c0-4207-91e2-10b7ebb0c7ab	[trace +14454ms] turn:4:response {"usage":{"prompt_tokens":7826,"completion_tokens":238,"total_tokens":8064,"cache_read_tokens":7680,"prompt_tokens_details":{"cached_tokens":7680},"completion_tokens_details":{"reasoning_tokens":0}},"contentLen":40,"contentPreview":"看起来漠河地区（大兴安岭地区）的POI在高德地图上数据有限。让我试试其他关键词。","reasoningLen":0,"reasoningPreview":"","toolCalls":[{"name":"search_poi","args":"{\"city\": \"漠河\", \"keyword\": \"北极村\", \"category\": \"spot\"}"},{"name":"search_poi","args":"{\"city\": \"漠河\", \"keyword\": \"龙江第一湾\", \"category\": \"spot\"}"},{"name":"search_poi","args":"{\"city\": \"漠河\", \"keyword\": \"北红村\", \"category\": \"spot\"}"}]}
+2026-06-18 17:24:32.870
+2026-06-18T09:24:32.870Z	ec9e7b79-b7c0-4207-91e2-10b7ebb0c7ab	[trace +14733ms] turn:4:tool:search_poi {"args":{"city":"漠河","keyword":"龙江第一湾","category":"spot"},"elapsedMs":238,"resultPreview":"{\"error\":\"search_poi 未在 \\\"漠河\\\" 找到 \\\"龙江第一湾\\\" 的精确匹配, 请省略 lat/lng/adcode 字段\"}"}
+2026-06-18 17:24:32.923
+2026-06-18T09:24:32.923Z	ec9e7b79-b7c0-4207-91e2-10b7ebb0c7ab	[trace +14786ms] turn:4:tool:search_poi {"args":{"city":"漠河","keyword":"北极村","category":"spot"},"elapsedMs":292,"resultPreview":"{\"error\":\"search_poi 未在 \\\"漠河\\\" 找到 \\\"北极村\\\" 的精确匹配, 请省略 lat/lng/adcode 字段\"}"}
+2026-06-18 17:24:32.930
+2026-06-18T09:24:32.929Z	ec9e7b79-b7c0-4207-91e2-10b7ebb0c7ab	[trace +14792ms] turn:4:tool:search_poi {"args":{"city":"漠河","keyword":"北红村","category":"spot"},"elapsedMs":297,"resultPreview":"{\"error\":\"search_poi 未在 \\\"漠河\\\" 找到 \\\"北红村\\\" 的精确匹配, 请省略 lat/lng/adcode 字段\"}"}
+2026-06-18 17:24:33.034
+2026-06-18T09:24:33.032Z	ec9e7b79-b7c0-4207-91e2-10b7ebb0c7ab	[trace +14895ms] turn:5:request {"messagesCount":15}
+2026-06-18 17:24:33.082
+2026-06-18T09:24:33.082Z	ec9e7b79-b7c0-4207-91e2-10b7ebb0c7ab	[llm:req] model=deepseek-v4-flash-202605 provider=cloudbase thinking=false msgs=15 tools=2 rf=false
+2026-06-18 17:24:36.618
+2026-06-18T09:24:36.616Z	ec9e7b79-b7c0-4207-91e2-10b7ebb0c7ab	[llm:res] ok attempt=1 status=200 ms=3534 bodyLen=1130
+2026-06-18 17:24:36.618
+2026-06-18T09:24:36.616Z	ec9e7b79-b7c0-4207-91e2-10b7ebb0c7ab	[trace +18479ms] turn:5:response {"usage":{"prompt_tokens":8203,"completion_tokens":279,"total_tokens":8482,"cache_read_tokens":8064,"prompt_tokens_details":{"cached_tokens":8064},"completion_tokens_details":{"reasoning_tokens":0}},"contentLen":125,"contentPreview":"看起来大兴安岭地区（漠河市）的POI在高德地图上数据覆盖不全。根据工具规则，中国境内地点写入JSON前需要用search_poi获取lat/lng，但如果工具返回error，则应该省略lat/lng/adcode字段。让我再尝试搜索一些可能有的数据。","reasoningLen":0,"reasoningPreview":"","toolCalls":[{"name":"search_poi","args":"{\"city\": \"漠河\", \"keyword\": \"漠河\", \"category\": \"spot\"}"},{"name":"search_poi","args":"{\"city\": \"漠河\", \"keyword\": \"漠河火车站\", \"category\": \"spot\"}"},{"name":"search_poi","args":"{\"city\": \"漠河\", \"keyword\": \"漠河市区 餐厅\", \"category\": \"meal\"}"}]}
+2026-06-18 17:24:36.903
+2026-06-18T09:24:36.903Z	ec9e7b79-b7c0-4207-91e2-10b7ebb0c7ab	[trace +18766ms] turn:5:tool:search_poi {"args":{"city":"漠河","keyword":"漠河火车站","category":"spot"},"elapsedMs":239,"resultPreview":"{\"error\":\"search_poi 未在 \\\"漠河\\\" 找到 \\\"漠河火车站\\\" 的精确匹配, 请省略 lat/lng/adcode 字段\"}"}
+2026-06-18 17:24:36.939
+2026-06-18T09:24:36.939Z	ec9e7b79-b7c0-4207-91e2-10b7ebb0c7ab	[trace +18802ms] turn:5:tool:search_poi {"args":{"city":"漠河","keyword":"漠河市区 餐厅","category":"meal"},"elapsedMs":275,"resultPreview":"{\"error\":\"search_poi 未在 \\\"漠河\\\" 找到 \\\"漠河市区 餐厅\\\" 的精确匹配, 请省略 lat/lng/adcode 字段\"}"}
+2026-06-18 17:24:37.004
+2026-06-18T09:24:37.004Z	ec9e7b79-b7c0-4207-91e2-10b7ebb0c7ab	[trace +18867ms] turn:5:tool:search_poi {"args":{"city":"漠河","keyword":"漠河","category":"spot"},"elapsedMs":340,"resultPreview":"{\"error\":\"search_poi 未在 \\\"漠河\\\" 找到 \\\"漠河\\\" 的精确匹配, 请省略 lat/lng/adcode 字段\"}"}
+2026-06-18 17:24:37.104
+2026-06-18T09:24:37.104Z	ec9e7b79-b7c0-4207-91e2-10b7ebb0c7ab	[trace +18967ms] turn:6:request {"messagesCount":19}
+2026-06-18 17:24:37.147
+2026-06-18T09:24:37.147Z	ec9e7b79-b7c0-4207-91e2-10b7ebb0c7ab	[llm:req] model=deepseek-v4-flash-202605 provider=cloudbase thinking=false msgs=19 tools=2 rf=false
+2026-06-18 17:24:50.796
+2026-06-18T09:24:50.792Z	ec9e7b79-b7c0-4207-91e2-10b7ebb0c7ab	[llm:res] ok attempt=1 status=200 ms=13645 bodyLen=5520
+2026-06-18 17:24:50.796
+2026-06-18T09:24:50.792Z	ec9e7b79-b7c0-4207-91e2-10b7ebb0c7ab	[trace +32655ms] turn:6:response {"usage":{"prompt_tokens":8622,"completion_tokens":1828,"total_tokens":10450,"cache_read_tokens":8448,"prompt_tokens_details":{"cached_tokens":8448},"completion_tokens_details":{"reasoning_tokens":0}},"contentLen":4164,"contentPreview":"高德地图对大兴安岭漠河地区的数据确实有限。根据规则，当search_poi返回error时，应省略lat/lng/adcode字段。我现在已有足够信息来规划7天的行程。让我输出最终的JSON。\n\n根据攻略信息，10月初是大兴安岭秋季尾声，景色很美。行程规划如下：\n- Day1 (10/1): 抵达漠河，市区游览\n- Day2 (10/2): 九曲十八弯 → 白桦林 → 龙江第一湾 → 乌苏里浅滩 → 北红村\n- Day3 (10/3): 北红村 → 北极村\n- Day4 (10/4): 北极村游览\n- Day5 (10/5): 北极村 → 漠河市区，松苑公园、五六火灾纪念馆\n- Day6 (10/6): 漠河周边深度游\n- Day7 (10/7): 返程\n\n{\"days\":[{\"date\":\"2026-10-01\",\"spots\":[{\"type\":\"transport\",\"name\":\"...[+3764]","reasoningLen":0,"reasoningPreview":"","toolCalls":[]}
+2026-06-18 17:24:50.849
+2026-06-18T09:24:50.849Z	ec9e7b79-b7c0-4207-91e2-10b7ebb0c7ab	[trace +32712ms] final:validate {"ok":false,"error":"JSON.parse 失败: Unexpected token 高 in JSON at position 0","finalPreview":"高德地图对大兴安岭漠河地区的数据确实有限。根据规则，当search_poi返回error时，应省略lat/lng/adcode字段。我现在已有足够信息来规划7天的行程。让我输出最终的JSON。\n\n根据攻略信息，10月初是大兴安岭秋季尾声，景色很美。行程规划如下：\n- Day1 (10/1): 抵达漠河，市区游览\n- Day2 (10/2): 九曲十八弯 → 白桦林 → 龙江第一湾 → 乌苏里浅滩 → 北红村\n- Day3 (10/3): 北红村 → 北极村\n- Day4 (10/4): 北极村游览\n- Day5 (10/5): 北极村 → 漠河市区，松苑公园、五六火灾纪念馆\n- Day6 (10/6): 漠河周边深度游\n- Day7 (10/7): 返程\n\n{\"days\":[{\"date\":\"2026-10-01\",\"spots\":[{\"type\":\"transport\",\"name\":\"漠河古莲机场\",\"city\":\"漠河\",\"note\":\"抵达漠河，建议提前预订接机\",\"time\":\"12:00\"},{\"type\":\"meal\",\"name\":\"漠河县城铁锅炖\",\"city\":\"漠河\",\"note\":\"品尝正宗东北铁锅炖，人均约80元\",\"price\":80,\"time\":\"13:00\"},{\"type\":\"spot\",\"name\":\"松苑公园\",\"city\":\"漠河\",\"no...[+3564]"}
+2026-06-18 17:24:50.945
+2026-06-18T09:24:50.943Z	ec9e7b79-b7c0-4207-91e2-10b7ebb0c7ab	[trace +32806ms] retry:request {"reason":"JSON.parse 失败: Unexpected token 高 in JSON at position 0"}
+2026-06-18 17:24:50.984
+2026-06-18T09:24:50.984Z	ec9e7b79-b7c0-4207-91e2-10b7ebb0c7ab	[llm:req] model=deepseek-v4-flash-202605 provider=cloudbase thinking=false msgs=20 tools=0 rf=true
+2026-06-18 17:25:03.682
+2026-06-18T09:25:03.679Z	ec9e7b79-b7c0-4207-91e2-10b7ebb0c7ab	[llm:res] ok attempt=1 status=200 ms=12695 bodyLen=8053
+2026-06-18 17:25:03.682
+2026-06-18T09:25:03.680Z	ec9e7b79-b7c0-4207-91e2-10b7ebb0c7ab	[trace +45543ms] retry:validate {"ok":true,"retryPreview":"{\n  \"days\": [\n    {\n      \"date\": \"2026-10-01\",\n      \"spots\": [\n        {\n          \"type\": \"transport\",\n          \"name\": \"漠河机场\",\n          \"city\": \"漠河\",\n          \"note\": \"抵达漠河，建议租车或包车游玩\",\n          \"time\": \"12:00\"\n        },\n        {\n          \"type\": \"meal\",\n          \"name\": \"漠河铁锅炖\",\n          \"city\": \"漠河\",\n          \"note\": \"品尝当地特色铁锅炖鱼\",\n          \"price\": 100,\n          \"time\": \"13:00\"\n        },\n        {\n          \"type\": \"spot\",\n          \"name\": \"九曲十八弯湿地公园\",\n          \"city\": \"漠河\",\n          \"note\": \"登观景台俯瞰湿地秋色\",\n          \"time\": \"15:00\"\n        },\n        {\n          \"type\": \"ho...[+5907]"}
+2026-06-18 17:25:03.902
+Response RequestId: ec9e7b79-b7c0-4207-91e2-10b7ebb0c7ab RetMsg:
+{
+  "ok": true,
+  "tripWritten": true
+}
+2026-06-18 17:25:03.902
+END RequestId: ec9e7b79-b7c0-4207-91e2-10b7ebb0c7ab
+2026-06-18 17:25:03.902
+Report RequestId: ec9e7b79-b7c0-4207-91e2-10b7ebb0c7ab Duration: 46014ms Memory: 256MB MemUsage: 32.191406MB

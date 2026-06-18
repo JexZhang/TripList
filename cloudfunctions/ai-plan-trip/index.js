@@ -377,9 +377,10 @@ async function runLoop({ taskId, tripId, tripContext, preferences, previousResul
       })
 
       if (toolCalls.length > 0) {
-        // 单轮 tool_calls 数量上限: 防止模型一次性发出 14 个 search_poi 把高德 QPS 打爆.
-        // 超出的部分用 short-circuit 的 tool 响应敷衍掉, 让下一轮 LLM 自己分批.
-        const MAX_TOOL_CALLS_PER_TURN = 8
+        // 单轮 tool_calls 数量上限: 防止模型一次性发出过多 search_poi 把高德 QPS 打爆.
+        // 免费版高德地图 QPS ~3, 设为 3 保证稳定; 超出的部分用 short-circuit 的 tool 响应敷衍掉,
+        // 让下一轮 LLM 自己分批. 关闭 parallel_tool_calls 后模型通常会每轮发 1-2 个.
+        const MAX_TOOL_CALLS_PER_TURN = 3
         // 同时 (name, args) 去重: 重复调用直接复用首次结果
         const seenKey = new Map()  // key → first tool_call_id
         const executable = []
@@ -443,7 +444,7 @@ async function runLoop({ taskId, tripId, tripContext, preferences, previousResul
               const dupResult = resultByCallId.get(sc.dupOf)
               content = JSON.stringify(dupResult != null ? dupResult : { error: '与本轮另一调用重复' })
             } else {
-              content = JSON.stringify({ error: `单轮 tool_calls 超过 ${MAX_TOOL_CALLS_PER_TURN} 个上限, 此调用被跳过, 请下一轮再发` })
+              content = JSON.stringify({ skipped: true, error: `本轮调用数已达上限(${MAX_TOOL_CALLS_PER_TURN}), 此条被跳过。下轮只补发被跳过的, 不要添加新搜索, 信息够了就直接输出最终 JSON。` })
             }
           }
           messages.push({

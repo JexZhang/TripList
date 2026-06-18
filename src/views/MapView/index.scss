@@ -7,7 +7,7 @@
 
 .mv-modebar {
   white-space: nowrap;
-  padding: 16rpx 32rpx 12rpx;
+  padding: 24rpx 32rpx 12rpx;
   flex-shrink: 0;
 }
 
@@ -124,7 +124,7 @@
  * ============================================ */
 .mv-route {
   /* 选中项 translateY(-6rpx) 上移，需留足顶部空间，否则被横向 ScrollView 纵向裁切 */
-  padding-top: 36rpx;
+  padding-top: 48rpx;
   padding-bottom: 18rpx;
 }
 .mv-route-cell {
@@ -181,8 +181,7 @@
 }
 .mv-route-item.on {
   background: var(--c);
-  transform: translateY(-6rpx);
-  box-shadow: 0 10rpx 22rpx -4rpx rgba(0, 0, 0, 0.28);
+  box-shadow: 0 12rpx 28rpx -4rpx rgba(0, 0, 0, 0.35);
 }
 .mv-route-item.on .mv-route-no,
 .mv-route-item.on .mv-route-date,

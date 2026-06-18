@@ -53,12 +53,18 @@ function isLikelyOverseas(city) {
   return OVERSEAS_HINTS.some(c => city.includes(c))
 }
 
-// 启发式: amap 把"莫斯科红场"匹配到了"汕尾市红场"这类乌龙. 若所有命中都来自一个
-// 完全不沾边的城市, 说明高德兜底瞎匹配, 直接当作未命中.
+// 检查 POI 结果是否和查询城市相关.
+// 高德的 cityname 返回地级行政区(如"大兴安岭地区"), 而用户可能传县级市名(如"漠河").
+// 高德返回的 district(adname) 包含区县名(如"漠河市"), 用它做兜底匹配.
 function looksMismatched(city, results) {
   if (!city || !results.length) return false
-  // 全部命中都不包含查询城市的任一字 → 兜底匹配
-  return !results.some(p => p.city && city.split('').some(ch => p.city.includes(ch)))
+  const chars = city.split('')
+  return !results.some(p => {
+    if (p.city && chars.some(ch => p.city.includes(ch))) return true
+    if (p.district && chars.some(ch => p.district.includes(ch))) return true
+    if (p.address && chars.some(ch => p.address.includes(ch))) return true
+    return false
+  })
 }
 
 async function searchPoi({ city, keyword }) {
@@ -80,6 +86,7 @@ async function searchPoi({ city, keyword }) {
       name: p.name,
       address: p.address,
       city: p.city,
+      district: p.district,
       lat: p.lat,
       lng: p.lng,
       adcode: p.adcode,

@@ -73,9 +73,9 @@ async function callChat({ modelAlias, messages, tools, responseFormat }) {
 
   if (tools && tools.length > 0) {
     body.tools = tools
-    // 显式开启并行 tool calling: 让模型在同一轮里批量发出多个 search_poi,
-    // 避免一个景点查一轮、5 天行程撞 MAX_TURNS 上限.
-    body.parallel_tool_calls = true
+    // 高德地图 QPS 有限制, 关闭并行调用避免限流.
+    // 模型会每轮发少量 search_poi, 虽然多几轮但更稳定.
+    body.parallel_tool_calls = false
   }
   if (responseFormat) body.response_format = responseFormat
 

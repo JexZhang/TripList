@@ -72,8 +72,18 @@
   background: rgba(0,0,0,0.04);
   transition: opacity 0.15s;
 }
-.aip-spot.unresolved { background: rgba(0,0,0,0.02); opacity: 0.55; }
+.aip-spot.unresolved { background: rgba(0,0,0,0.02); }
 .aip-spot.deselected { opacity: 0.35; }
+.aip-spot.deselected .aip-spot-tag { opacity: 0.45; }
+.aip-no-coord {
+  font-size: 20rpx;
+  color: #a06b1a;
+  background: #fff4e0;
+  padding: 2rpx 10rpx;
+  border-radius: 6rpx;
+  margin-left: 10rpx;
+  flex-shrink: 0;
+}
 .aip-spot-check {
   width: 32rpx; height: 32rpx;
   border: 2rpx solid currentColor;
@@ -104,6 +114,7 @@
   flex-shrink: 0;
 }
 .aip-spot-body { flex: 1; display: flex; flex-direction: column; }
+.aip-spot-name-row { display: flex; align-items: center; flex-wrap: wrap; }
 .aip-spot-name { font-size: 28rpx; font-weight: 600; }
 .aip-spot-time { font-size: 22rpx; opacity: 0.55; margin-top: 4rpx; }
 .aip-spot-note { font-size: 24rpx; opacity: 0.7; margin-top: 4rpx; line-height: 1.4; }

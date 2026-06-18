@@ -34,6 +34,7 @@ exports.main = async (event, context) => {
       name: p.name || '',
       address: p.address || '',
       city: p.cityname || '',
+      district: p.adname || '',
       adcode: p.adcode || '',
       lat: lat || 0,
       lng: lng || 0,

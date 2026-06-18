@@ -41,7 +41,7 @@ type Spot = {
   * 然后规划好整个行程的所有候选 spot 名(暂不写最终 JSON), 在**同一轮**里一次性并发发出"每个 spot 一个 search_poi", 不要一个查完再查下一个
   * 拿到批量候选后, 你来做语义判别: 从每个 search_poi 的候选列表里挑出正确的那个, 把它的 lat/lng/adcode 原样抄进最终 Spot
   * 一次生成总轮数目标: web_search 1 轮 + search_poi 批量 1-2 轮 + 输出 JSON 1 轮 ≈ 3-4 轮搞定
-- 单轮 tool_calls 数量上限 8 个, 不要超过; 不要重复发出相同 (name, args) 的调用
+- 单轮 tool_calls 数量上限 3 个, 不要超过; 不要重复发出相同 (name, args) 的调用
 - 中国境内地点: 写入最终 JSON 前必须用 search_poi 拿到 lat/lng 并语义匹配, 不要编造坐标
 - 境外地点 (非中国大陆/港澳台): 直接省略 lat/lng/adcode 三个字段, 不要尝试用 search_poi 查 — 一定查不到, 浪费轮次
 - web_search 总共最多用 3 次
