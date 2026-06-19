@@ -11,6 +11,8 @@ interface StartParams {
     startDate: string
     endDate: string
     pax: number
+    /** 用户是否在 AI 表单中主动填写了攻略名称 */
+    userNamed: boolean
   }
   preferences: AIPreferences
   previousResult?: GeneratedPlan
@@ -104,6 +106,7 @@ export async function createTripAndFireAI(
       startDate: input.startDate,
       endDate: input.endDate,
       pax: input.pax,
+      userNamed: !!user,
     },
     preferences,
   })

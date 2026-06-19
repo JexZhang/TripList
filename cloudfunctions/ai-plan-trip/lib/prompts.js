@@ -66,13 +66,9 @@ function isDestEmpty(destinations) {
   return !destinations || !Array.isArray(destinations) || destinations.length === 0
 }
 
-function isNamePlaceholder(name) {
-  return !name || name === 'AI 生成中…' || name === '未命名攻略' || !name.trim()
-}
-
 function baseUserPrompt(tripContext, preferences) {
   const emptyDest = isDestEmpty(tripContext.destinations)
-  const emptyName = isNamePlaceholder(tripContext.name)
+  const emptyName = !tripContext.userNamed
   const dests = emptyDest ? '(未指定)' : (tripContext.destinations || []).map(d => d.name).join('、')
   const audience = (preferences.audience || []).join('、') || '不限'
 
@@ -128,4 +124,4 @@ function retryPrompt(error) {
   return `上次返回不是合法的目标格式: ${error}。请只输出符合 Output 类型的合法 JSON, 不要任何其他文字。`
 }
 
-module.exports = { buildMessages, retryPrompt, isDestEmpty, isNamePlaceholder }
+module.exports = { buildMessages, retryPrompt, isDestEmpty }

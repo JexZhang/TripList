@@ -24,6 +24,17 @@
 }
 .aip-title { font-size: 32rpx; font-weight: 700; }
 .aip-close { font-size: 36rpx; opacity: 0.6; padding: 8rpx 16rpx; }
+.aip-name-row {
+  margin-bottom: 16rpx;
+  padding: 16rpx 16rpx;
+  background: rgba(0, 0, 0, 0.04);
+  border-radius: 12rpx;
+}
+.aip-name-text {
+  font-size: 32rpx;
+  font-weight: 700;
+  color: var(--ink, #2c2c2c);
+}
 .aip-warn {
   background: rgba(196, 61, 61, 0.12);
   color: #c43d3d;

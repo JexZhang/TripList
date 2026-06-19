@@ -128,6 +128,7 @@ function TripBody() {
           startDate: t.startDate,
           endDate: t.endDate,
           pax: t.pax,
+          userNamed: true, // enrich 流程: 攻略已有名称, 不需要 AI 命名
         },
         preferences: prefs,
       })
@@ -182,7 +183,7 @@ function TripBody() {
     setTheaterMinimized(true)
   }
   
-  const handlePreviewApply = async (selectedSpots: Record<string, number[]>) => {
+  const handlePreviewApply = async (selectedSpots: Record<string, number[]>, name: string) => {
     if (!t || !t.aiDraft) return
     try {
       const aiDraft = t.aiDraft as any
@@ -190,6 +191,7 @@ function TripBody() {
       const newDays = mergePlanIntoDays(t.days, aiDraft, selectedSpots)
       await updateTrip(t._id, {
         ...patch,
+        name, // 始终以用户在预览中编辑的名称为准
         days: newDays,
         aiTaskId: null,
         aiStatus: null,
@@ -198,6 +200,7 @@ function TripBody() {
       }, openid)
       dispatch({ type: 'UPDATE_TRIP', patch: {
         ...patch,
+        name,
         days: newDays,
         aiTaskId: null,
         aiStatus: null,
@@ -383,6 +386,7 @@ function TripBody() {
         status={t.aiStatus === 'ready' ? 'done' : 'pending'}
         generating={t.aiStatus === 'generating'}
         existingDays={t.days}
+        tripName={t.name}
         onRegenerate={handlePreviewRegenerate}
         onApply={handlePreviewApply}
         onDiscard={handlePreviewDiscard}

@@ -16,7 +16,7 @@ interface AIDraftLite extends GeneratedPlan {
  * 把云函数返回的 aiDraft 中的 name / recommendedDestinations 合并到 trip patch。
  * - days 始终覆盖
  * - 仅当 trip 无目的地时写入 recommendedDestinations
- * - 仅当 trip 名是占位符时写入 AI 命名
+ * - 仅当 draft 中携带了 name 时写入（云函数只在用户未命名时才在 draft 中加入 name）
  */
 export function mergeAIDraft(trip: Trip, draft: AIDraftLite): Partial<Trip> {
   const patch: Partial<Trip> = {
@@ -33,11 +33,8 @@ export function mergeAIDraft(trip: Trip, draft: AIDraftLite): Partial<Trip> {
       lng: 0,
     }))
   }
-  const isPlaceholderName = !trip.name || trip.name === 'AI 生成中…'
-  if (isPlaceholderName && draft.name) {
+  if (draft.name) {
     patch.name = draft.name
-  } else if (isPlaceholderName && !draft.name) {
-    patch.name = '未命名攻略'
   }
   return patch
 }

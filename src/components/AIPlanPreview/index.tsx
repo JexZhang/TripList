@@ -11,8 +11,10 @@ interface Props {
   generating: boolean
   /** trip 当前已有的 days, 用于检测冲突 (该天已有手动 spots). 可空表示新建场景 (一律视为无冲突) */
   existingDays?: Day[] | null
+  /** trip 当前名称, 作为草稿名称的兜底显示 */
+  tripName: string
   onRegenerate: () => void
-  onApply: (selectedSpots: Record<string, number[]>) => void
+  onApply: (selectedSpots: Record<string, number[]>, name: string) => void
   onDiscard: () => void
   onClose: () => void
 }
@@ -55,9 +57,13 @@ function totalSelected(sel: Record<string, number[]>): number {
 }
 
 export default function AIPlanPreview({
-  open, plan, status, generating, existingDays, onRegenerate, onApply, onDiscard, onClose,
+  open, plan, status, generating, existingDays, tripName, onRegenerate, onApply, onDiscard, onClose,
 }: Props) {
   const [selected, setSelected] = useState<Record<string, number[]>>({})
+
+  // 显示名称: draft.name 优先, 否则 tripName
+  const draftName = plan ? (plan as { name?: string }).name : undefined
+  const displayName = draftName ?? tripName
 
   const planDateKey = plan ? plan.days.map(d => d.date).join(',') : ''
   useEffect(() => {
@@ -97,6 +103,10 @@ export default function AIPlanPreview({
             AI 方案 {status === 'streaming' ? '· 生成中…' : ''}
           </Text>
           <Text className='aip-close' onClick={onClose}>✕</Text>
+        </View>
+
+        <View className='aip-name-row'>
+          <Text className='aip-name-text'>{displayName}</Text>
         </View>
 
         {unres > 0 && (
@@ -175,7 +185,7 @@ export default function AIPlanPreview({
                 })
                 if (!res.confirm) return
               }
-              onApply(selected)
+              onApply(selected, displayName)
             }}
           >应用 {spotCount > 0 ? `(${spotCount} 个地点)` : ''}</View>
         </View>
