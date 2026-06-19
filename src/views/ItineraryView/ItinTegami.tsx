@@ -1,6 +1,7 @@
 import { View, Text } from '@tarojs/components'
 import DayHeader from './DayHeader'
 import SpotCard from './SpotCard'
+import { sortSpotsByTime } from './shared'
 import type { ItinViewProps } from './shared'
 import './styles/body-tegami.scss'
 
@@ -21,7 +22,7 @@ export default function ItinTegami({
       </View>
 
       <View className='itintg-spots'>
-        {activeDay.spots.map((s) => (
+        {sortSpotsByTime(activeDay.spots).map((s) => (
           <SpotCard key={s.id} spot={s} onClick={() => onSpotClick(s)} />
         ))}
         {activeDay.spots.length === 0 && (

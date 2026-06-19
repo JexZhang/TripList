@@ -1,6 +1,7 @@
 import { View, Text } from '@tarojs/components'
 import DayHeader from './DayHeader'
 import SpotCard from './SpotCard'
+import { sortSpotsByTime } from './shared'
 import type { ItinViewProps } from './shared'
 import './styles/body-postcard.scss'
 
@@ -23,7 +24,7 @@ export default function ItinPostcard({
         </View>
 
         <View className='itinpp-spots'>
-          {activeDay.spots.map((s) => (
+          {sortSpotsByTime(activeDay.spots).map((s) => (
             <SpotCard key={s.id} spot={s} onClick={() => onSpotClick(s)} />
           ))}
           {activeDay.spots.length === 0 && (
