@@ -22,6 +22,7 @@ export interface ItinViewProps {
   onLongPressDay: (dayId: string, dayIdx: number) => void
   onAddDay: (position: 'front' | 'back') => void
   onSpotClick: (spot: Spot) => void
+  onSpotLongPress: (spot: Spot) => void
   onAddSpot: () => void
   onWeatherUpdate: (w: Day['weather']) => void
 }

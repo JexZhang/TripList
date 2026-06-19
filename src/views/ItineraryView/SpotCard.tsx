@@ -6,11 +6,12 @@ import Icon from '../../components/Icon'
 interface Props {
   spot: Spot
   onClick: () => void
+  onLongPress?: () => void
 }
 
-export default function SpotCard({ spot, onClick }: Props) {
+export default function SpotCard({ spot, onClick, onLongPress }: Props) {
   return (
-    <View className='spot-card' onClick={onClick}>
+    <View className='spot-card' onClick={onClick} onLongPress={onLongPress}>
       <View className='sc-head'>
         <View className='sc-icon'>
           <Icon name={spot.type} color='var(--accent)' style={{ width: '34rpx', height: '34rpx' }} />

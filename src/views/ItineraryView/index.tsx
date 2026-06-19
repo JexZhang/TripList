@@ -97,6 +97,20 @@ export default function ItineraryView() {
     dispatch({ type: 'ADD_SPOT', dayId: activeDay.id, spot })
   }
 
+  const longPressSpot = async (spot: Spot) => {
+    try {
+      const res = await Taro.showActionSheet({
+        alertText: spot.name,
+        itemList: ['删除地点'],
+      })
+      if (res.tapIndex === 0) {
+        dispatch({ type: 'DELETE_SPOT', dayId: activeDay.id, spotId: spot.id })
+      }
+    } catch {
+      // 用户取消
+    }
+  }
+
   const viewProps: ItinViewProps = {
     trip,
     activeDay,
@@ -106,6 +120,7 @@ export default function ItineraryView() {
     onLongPressDay: ro ? noop : longPressDay,
     onAddDay: ro ? noop : addDay,
     onSpotClick: ro ? noop : (s) => setEditSpot({ dayId: activeDay.id, spot: s }),
+    onSpotLongPress: ro ? noop : longPressSpot,
     onAddSpot: ro ? noop : () => setSearchOpen(true),
     onWeatherUpdate: ro ? noop : (w) => dispatch({ type: 'UPDATE_DAY', dayId: activeDay.id, patch: { weather: w } }),
   }

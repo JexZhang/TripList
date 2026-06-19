@@ -7,7 +7,7 @@ import './styles/body-magazine.scss'
 
 export default function ItinMagazine({
   activeDay, activeDayIdx, fallbackDestination,
-  onSpotClick, onAddSpot, onWeatherUpdate,
+  onSpotClick, onSpotLongPress, onAddSpot, onWeatherUpdate,
 }: ItinViewProps) {
   return (
     <View className='itinmg'>
@@ -24,7 +24,7 @@ export default function ItinMagazine({
 
       <View className='itinmg-spots'>
         {sortSpotsByTime(activeDay.spots).map((s) => (
-          <SpotCard key={s.id} spot={s} onClick={() => onSpotClick(s)} />
+          <SpotCard key={s.id} spot={s} onClick={() => onSpotClick(s)} onLongPress={() => onSpotLongPress(s)} />
         ))}
         {activeDay.spots.length === 0 && (
           <View className='itinmg-empty'>暂无地点</View>

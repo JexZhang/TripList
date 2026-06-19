@@ -7,7 +7,7 @@ import './styles/body-postcard.scss'
 
 export default function ItinPostcard({
   activeDay, activeDayIdx, fallbackDestination,
-  onSpotClick, onAddSpot, onWeatherUpdate,
+  onSpotClick, onSpotLongPress, onAddSpot, onWeatherUpdate,
 }: ItinViewProps) {
   return (
     <View className='itinpp'>
@@ -25,7 +25,7 @@ export default function ItinPostcard({
 
         <View className='itinpp-spots'>
           {sortSpotsByTime(activeDay.spots).map((s) => (
-            <SpotCard key={s.id} spot={s} onClick={() => onSpotClick(s)} />
+            <SpotCard key={s.id} spot={s} onClick={() => onSpotClick(s)} onLongPress={() => onSpotLongPress(s)} />
           ))}
           {activeDay.spots.length === 0 && (
             <View className='itinpp-empty'>这一天还没有地点</View>

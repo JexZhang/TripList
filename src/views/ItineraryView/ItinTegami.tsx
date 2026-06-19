@@ -7,7 +7,7 @@ import './styles/body-tegami.scss'
 
 export default function ItinTegami({
   activeDay, activeDayIdx, fallbackDestination,
-  onSpotClick, onAddSpot, onWeatherUpdate,
+  onSpotClick, onSpotLongPress, onAddSpot, onWeatherUpdate,
 }: ItinViewProps) {
   return (
     <View className='itintg'>
@@ -23,7 +23,7 @@ export default function ItinTegami({
 
       <View className='itintg-spots'>
         {sortSpotsByTime(activeDay.spots).map((s) => (
-          <SpotCard key={s.id} spot={s} onClick={() => onSpotClick(s)} />
+          <SpotCard key={s.id} spot={s} onClick={() => onSpotClick(s)} onLongPress={() => onSpotLongPress(s)} />
         ))}
         {activeDay.spots.length === 0 && (
           <View className='itintg-empty'>这一天还没有地点</View>

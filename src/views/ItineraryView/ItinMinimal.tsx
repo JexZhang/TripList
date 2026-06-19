@@ -7,7 +7,7 @@ import './styles/body-minimal.scss'
 
 export default function ItinMinimal({
   activeDay, activeDayIdx, fallbackDestination,
-  onSpotClick, onAddSpot, onWeatherUpdate,
+  onSpotClick, onSpotLongPress, onAddSpot, onWeatherUpdate,
 }: ItinViewProps) {
   return (
     <View className='itinmin'>
@@ -23,7 +23,7 @@ export default function ItinMinimal({
 
       <View className='itinmin-spots'>
         {sortSpotsByTime(activeDay.spots).map((s) => (
-          <SpotCard key={s.id} spot={s} onClick={() => onSpotClick(s)} />
+          <SpotCard key={s.id} spot={s} onClick={() => onSpotClick(s)} onLongPress={() => onSpotLongPress(s)} />
         ))}
         {activeDay.spots.length === 0 && (
           <View className='itinmin-empty'>—</View>
