@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { View } from '@tarojs/components'
+import { View, Canvas } from '@tarojs/components'
 import Taro, { useDidShow, useShareAppMessage, usePullDownRefresh } from '@tarojs/taro'
 import type { Trip } from '../../types/trip'
 import { listMyTrips, renameTrip, copyTripLocally, smartDeleteTrip, updateTrip } from '../../utils/db'
@@ -15,6 +15,7 @@ import CoverPicker from '../../components/CoverPicker'
 import AIInterview, { type AIInterviewSubmit } from '../../components/AIInterview'
 import { createTripAndFireAI } from '../../utils/ai-task'
 import { buildShareMessage, shareRef, resetShareRef } from '../../utils/share'
+import { renderShareCard, buildShareTitle } from '../../utils/share-card'
 import type { ShareKind } from '../../utils/cloud'
 import { cacheTripForNavigation } from '../../utils/navigation-cache'
 import HomeTegami from './HomeTegami'
@@ -200,8 +201,13 @@ export default function Home() {
   const prepareShare = async (kind: ShareKind) => {
     if (!shareTrip) return
     try {
-      const payload = await buildShareMessage(shareTrip._id, shareTrip.name, kind)
-      shareRef.byKind[kind] = { title: payload.title, path: payload.path }
+      // 渲染分享卡片图片（两种 kind 共用同一张图）
+      if (!shareRef.byKind.readonly && !shareRef.byKind.collab) {
+        shareRef.imageUrl = await renderShareCard(shareTrip)
+      }
+      const title = buildShareTitle(shareTrip, kind)
+      const payload = await buildShareMessage(shareTrip._id, title, kind, shareRef.imageUrl)
+      shareRef.byKind[kind] = payload
       setShareReady((prev) => ({ ...prev, [kind]: true }))
     } catch (e) {
       console.error('[prepareShare] failed', kind, e)
@@ -300,6 +306,9 @@ export default function Home() {
           void handleAiCreate(data)
         }}
       />
+
+      {/* 隐藏 Canvas，用于生成分享卡片图片 */}
+      <Canvas type="2d" className="share-card-canvas" />
     </View>
   )
 }

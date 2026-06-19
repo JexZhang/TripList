@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { View } from '@tarojs/components'
+import { View, Canvas } from '@tarojs/components'
 import Taro, { useRouter, useShareAppMessage } from '@tarojs/taro'
 import { TripProvider, useTripStore } from '../../store/trip-store'
 import { useMe } from '../../store/me-store'
@@ -19,6 +19,7 @@ import { draftKeyEnrich } from '../../components/AIInterview'
 import TripHeader from './TripHeader'
 import TripPhaseHero from '../../components/TripPhaseHero'
 import { buildShareMessage, shareRef, resetShareRef } from '../../utils/share'
+import { renderShareCard, buildShareTitle } from '../../utils/share-card'
 import { smartDeleteTrip, renameTrip, copyTripLocally, updateTrip } from '../../utils/db'
 import { mergePlanIntoDays } from '../../utils/trip-helpers'
 import { mergeAIDraft } from '../../utils/ai-apply'
@@ -290,8 +291,13 @@ function TripBody() {
       return
     }
     try {
-      const payload = await buildShareMessage(t._id, t.name, kind)
-      shareRef.byKind[kind] = { title: payload.title, path: payload.path }
+      // 渲染分享卡片图片（两种 kind 共用同一张图）
+      if (!shareRef.byKind.readonly && !shareRef.byKind.collab) {
+        shareRef.imageUrl = await renderShareCard(t)
+      }
+      const title = buildShareTitle(t, kind)
+      const payload = await buildShareMessage(t._id, title, kind, shareRef.imageUrl)
+      shareRef.byKind[kind] = payload
       setShareReady(prev => ({ ...prev, [kind]: true }))
     } catch (e) {
       console.error('[buildShareMessage failed]', kind, e)
@@ -392,6 +398,9 @@ function TripBody() {
         onDiscard={handlePreviewDiscard}
         onClose={() => setAiPreviewOpen(false)}
       />
+
+      {/* 隐藏 Canvas，用于生成分享卡片图片 */}
+      <Canvas type="2d" className="share-card-canvas" />
     </View>
   )
 }

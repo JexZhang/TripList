@@ -1,24 +1,27 @@
 import { cloud, type ShareKind } from './cloud'
 
-interface SharePayload {
+export interface SharePayload {
   title: string
   path: string
+  imageUrl?: string
   kind: ShareKind
 }
 
 /**
- * 调云函数生成 token,构造分享卡片参数
+ * 调云函数生成 token,构造分享卡片参数。
+ * title 由调用方通过 buildShareTitle 生成后传入。
  */
 export async function buildShareMessage(
   tripId: string,
-  tripName: string,
+  title: string,
   kind: ShareKind,
+  imageUrl?: string,
 ): Promise<SharePayload> {
   const { token } = await cloud.createShareToken({ tripId, kind })
-  const prefix = kind === 'readonly' ? '只读分享' : '邀请协作'
   return {
-    title: `${prefix} · ${tripName}`,
+    title,
     path: `/pages/share/index?token=${token}&kind=${kind}&tripId=${tripId}`,
+    imageUrl,
     kind,
   }
 }
@@ -30,17 +33,20 @@ export async function buildShareMessage(
  * 页面用 options.target.dataset.kind 从 byKind 取对应 payload 返回.
  */
 export const shareRef: {
-  byKind: { readonly: { title: string; path: string } | null; collab: { title: string; path: string } | null }
+  byKind: { readonly: SharePayload | null; collab: SharePayload | null }
   tripName: string
   lastKind: ShareKind | null
+  imageUrl?: string
 } = {
   byKind: { readonly: null, collab: null },
   tripName: '',
   lastKind: null,
+  imageUrl: undefined,
 }
 
 export function resetShareRef(tripName = '') {
   shareRef.byKind.readonly = null
   shareRef.byKind.collab = null
   shareRef.tripName = tripName
+  shareRef.imageUrl = undefined
 }
