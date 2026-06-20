@@ -100,10 +100,12 @@ export default function AIPlanPreview({
         <View className='aip-sheet' catchMove onClick={(e) => e.stopPropagation()}>
         <View className='aip-header'>
           <Text className='aip-title'>
-            AI 方案 {status === 'streaming' ? '· 生成中…' : ''}
+            AI 生成方案 {status === 'streaming' ? '· 生成中…' : ''}
           </Text>
           <Text className='aip-close' onClick={onClose}>✕</Text>
         </View>
+
+        <Text className='aip-disclaimer'>内容由 AI 生成，可能存在偏差，建议核实后再使用</Text>
 
         <View className='aip-name-row'>
           <Text className='aip-name-text'>{displayName}</Text>

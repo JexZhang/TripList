@@ -106,6 +106,7 @@ export default function ProfileForm({
           type='nickname'
           placeholder='点击可使用微信昵称'
           value={nickname}
+          maxlength={20}
           onInput={(e) => setNickname(e.detail.value)}
           onBlur={(e) => { if (e.detail.value) setNickname(e.detail.value) }}
           {...(kbProps ?? { adjustPosition: false as const })}

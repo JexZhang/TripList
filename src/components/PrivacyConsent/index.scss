@@ -1,0 +1,63 @@
+.pc-mask {
+  position: fixed;
+  left: 0; right: 0; top: 0; bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 2000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.pc-card {
+  width: 88%;
+  max-width: 640rpx;
+  background: #fff;
+  border-radius: 24rpx;
+  padding: 40rpx 32rpx 32rpx;
+  box-sizing: border-box;
+}
+.pc-title {
+  font-size: 34rpx;
+  font-weight: 700;
+  display: block;
+  margin-bottom: 24rpx;
+  text-align: center;
+}
+.pc-body {
+  margin-bottom: 32rpx;
+}
+.pc-text {
+  display: block;
+  font-size: 26rpx;
+  color: #333;
+  line-height: 1.6;
+}
+.pc-text-gap {
+  margin-top: 16rpx;
+}
+.pc-item {
+  display: block;
+  font-size: 26rpx;
+  color: #333;
+  line-height: 1.8;
+  padding-left: 8rpx;
+}
+.pc-actions {
+  display: flex;
+  gap: 20rpx;
+}
+.pc-btn {
+  flex: 1;
+  text-align: center;
+  padding: 22rpx 0;
+  font-size: 30rpx;
+  font-weight: 600;
+  border-radius: 16rpx;
+}
+.pc-btn-disagree {
+  background: #f4f4f6;
+  color: #666;
+}
+.pc-btn-agree {
+  background: #2c2c2c;
+  color: #fff;
+}

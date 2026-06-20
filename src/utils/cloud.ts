@@ -95,4 +95,7 @@ export const cloud = {
 
   updateTrip: (data: { tripId: string; patch: Record<string, unknown> }) =>
     call<typeof data, { ok: boolean }>('update-trip', data),
+
+  deleteAccount: () =>
+    call<Record<string, never>, { ok: boolean }>('delete-account', {}),
 }

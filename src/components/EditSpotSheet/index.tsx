@@ -117,7 +117,8 @@ export default function EditSpotSheet({ open, spot, defaultCity, onClose, onSave
               value={draft.price != null ? String(draft.price) : ''}
               onInput={e => {
                 const v = e.detail.value
-                set('price', v ? parseInt(v, 10) || 0 : undefined)
+                const n = v ? parseInt(v, 10) || 0 : undefined
+                set('price', n != null ? Math.max(0, Math.min(n, 999999)) : undefined)
               }}
               {...kbProps}
             />
@@ -131,7 +132,7 @@ export default function EditSpotSheet({ open, spot, defaultCity, onClose, onSave
               placeholder='交通方式 / 注意事项 / 等等...'
               value={draft.note || ''}
               onInput={e => set('note', e.detail.value)}
-              maxlength={500}
+              maxlength={200}
               autoHeight
               showConfirmBar={false}
               {...kbProps}
@@ -147,7 +148,10 @@ export default function EditSpotSheet({ open, spot, defaultCity, onClose, onSave
                 type='number'
                 placeholder='1'
                 value={draft.nights != null ? String(draft.nights) : ''}
-                onInput={e => set('nights', parseInt(e.detail.value, 10) || undefined)}
+                onInput={e => {
+                  const n = parseInt(e.detail.value, 10) || undefined
+                  set('nights', n != null ? Math.max(1, Math.min(n, 30)) : undefined)
+                }}
                 {...kbProps}
               />
             </View>
@@ -162,6 +166,7 @@ export default function EditSpotSheet({ open, spot, defaultCity, onClose, onSave
                   className='es-input'
                   placeholder='高铁 / 飞机 / 自驾...'
                   value={draft.mode || ''}
+                  maxlength={30}
                   onInput={e => set('mode', e.detail.value)}
                   {...kbProps}
                 />
@@ -172,6 +177,7 @@ export default function EditSpotSheet({ open, spot, defaultCity, onClose, onSave
                   className='es-input'
                   placeholder='起点'
                   value={draft.from || ''}
+                  maxlength={50}
                   onInput={e => set('from', e.detail.value)}
                   {...kbProps}
                 />
@@ -182,6 +188,7 @@ export default function EditSpotSheet({ open, spot, defaultCity, onClose, onSave
                   className='es-input'
                   placeholder='终点'
                   value={draft.to || ''}
+                  maxlength={50}
                   onInput={e => set('to', e.detail.value)}
                   {...kbProps}
                 />

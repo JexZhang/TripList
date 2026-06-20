@@ -1,13 +1,16 @@
 const cloud = require('wx-server-sdk')
 const axios = require('axios')
+const { requireOpenid } = require('../_shared/auth-helper')
+const { validateAdcode } = require('../_shared/input-guard')
 
 cloud.init({ env: cloud.DYNAMIC_CURRENT_ENV })
 
 exports.main = async (event, context) => {
+  requireOpenid()
   const { adcode } = event || {}
-  if (!adcode) {
-    throw new Error('adcode required')
-  }
+  const adCheck = validateAdcode(adcode)
+  if (!adCheck.ok) throw new Error(adCheck.error)
+  const cleanAdcode = adCheck.clean
 
   const key = process.env.AMAP_KEY
   if (!key) {
@@ -15,7 +18,7 @@ exports.main = async (event, context) => {
   }
 
   const res = await axios.get('https://restapi.amap.com/v3/weather/weatherInfo', {
-    params: { key, city: adcode, extensions: 'all' },
+    params: { key, city: cleanAdcode, extensions: 'all' },
     timeout: 8000,
   })
 

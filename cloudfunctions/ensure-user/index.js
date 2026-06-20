@@ -1,6 +1,9 @@
 const cloud = require('wx-server-sdk')
 cloud.init({ env: cloud.DYNAMIC_CURRENT_ENV })
 
+const { checkText, checkImage, recordCheck } = require('../_shared/content-security')
+const { validateNickname } = require('../_shared/input-guard')
+
 const VALID_THEMES = ['tegami', 'magazine', 'postcard', 'minimal']
 const PLACEHOLDER_NICKNAME = '行迹旅人'
 
@@ -17,6 +20,16 @@ exports.main = async (event, context) => {
   const hasNickname = typeof nickname === 'string' && nickname.trim() && nickname !== PLACEHOLDER_NICKNAME
   const hasAvatarUrl = typeof avatarUrl === 'string' && avatarUrl.trim()
 
+  // ── 昵称校验 + 内容审核 ──
+  let cleanNickname = nickname
+  if (hasNickname) {
+    const nickVal = validateNickname(nickname)
+    if (!nickVal.ok) throw new Error(nickVal.error)
+    cleanNickname = nickVal.clean
+    const nickCheck = await checkText(cleanNickname, OPENID, 1) // scene=1 资料
+    if (!nickCheck.pass) throw new Error('昵称包含违规内容，请修改')
+  }
+
   const db = cloud.database()
   const now = Date.now()
 
@@ -24,7 +37,7 @@ exports.main = async (event, context) => {
 
   if (existing && existing.data) {
     const updateData = { lastSeenAt: now }
-    if (hasNickname) updateData.nickname = nickname
+    if (hasNickname) updateData.nickname = cleanNickname
     if (hasAvatarUrl) updateData.avatarUrl = avatarUrl
     if (safeTheme !== undefined) updateData.theme = safeTheme
     await db.collection('users').doc(OPENID).update({ data: updateData })
@@ -32,7 +45,7 @@ exports.main = async (event, context) => {
     await db.collection('users').add({
       data: {
         _id: OPENID,
-        nickname: hasNickname ? nickname : PLACEHOLDER_NICKNAME,
+        nickname: hasNickname ? cleanNickname : PLACEHOLDER_NICKNAME,
         avatarUrl: hasAvatarUrl ? avatarUrl : '',
         theme: safeTheme || null,
         plan: 'free',
@@ -40,6 +53,12 @@ exports.main = async (event, context) => {
         lastSeenAt: now,
       },
     })
+  }
+
+  // ── 头像异步审核（不阻塞写入） ──
+  if (hasAvatarUrl) {
+    const { traceId } = await checkImage(avatarUrl, OPENID, 1)
+    if (traceId) await recordCheck(traceId, 'users', OPENID, 'avatarUrl')
   }
 
   // ── 资料变更时，同步刷新关联 trips 中的冗余副本 ──

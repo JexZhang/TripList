@@ -1,0 +1,9 @@
+{
+  "name": "delete-account",
+  "version": "1.0.0",
+  "description": "delete user account and all associated data",
+  "main": "index.js",
+  "dependencies": {
+    "wx-server-sdk": "~3.0.0"
+  }
+}

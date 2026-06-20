@@ -99,6 +99,7 @@ export default function SpotSearch({ open, defaultCity, onClose, onSelect }: Pro
           placeholder='搜索地点,例:德基广场 / 玄武湖'
           value={keyword}
           onInput={e => setKeyword(e.detail.value)}
+          maxlength={50}
           focus
           {...kbProps}
         />

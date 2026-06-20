@@ -6,6 +6,8 @@ const { buildMessages, retryPrompt, isDestEmpty } = require('./lib/prompts')
 const { TOOLS_SCHEMA, executeTool } = require('./lib/tools')
 const { validatePlan } = require('./lib/validate')
 const { createTask, updateTask, getTripLight, finalizeTrip } = require('./lib/task-store')
+const { checkText } = require('../_shared/content-security')
+const { validateFreeText } = require('../_shared/input-guard')
 
 // 开启 parallel_tool_calls + prompt 引导批量并发后, 正常 3-5 轮即可结束.
 // 12 轮做硬上限, 撞到就软降级(下面)而非直接 fail.
@@ -215,6 +217,15 @@ async function planMode(event) {
   if (!preferences.modelAlias) throw new Error('缺少 modelAlias')
   if (!MODEL_ALIASES[preferences.modelAlias]) {
     throw new Error(`未知模型: ${preferences.modelAlias}`)
+  }
+
+  // ── freeText 内容审核 ──
+  if (preferences.freeText) {
+    const ftVal = validateFreeText(preferences.freeText)
+    if (!ftVal.ok) throw new Error(ftVal.error)
+    preferences.freeText = ftVal.clean
+    const ftCheck = await checkText(ftVal.clean, OPENID, 2) // scene=2
+    if (!ftCheck.pass) throw new Error('偏好描述包含违规内容')
   }
 
   // 单用户并发限制: 同时最多 2 个 pending/streaming 任务, 防止脚本刷请求消耗 token

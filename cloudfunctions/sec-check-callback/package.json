@@ -1,0 +1,9 @@
+{
+  "name": "sec-check-callback",
+  "version": "1.0.0",
+  "description": "receive mediaCheckAsync async results from WeChat",
+  "main": "index.js",
+  "dependencies": {
+    "wx-server-sdk": "~3.0.0"
+  }
+}

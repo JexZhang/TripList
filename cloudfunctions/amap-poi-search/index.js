@@ -1,13 +1,16 @@
 const cloud = require('wx-server-sdk')
 const axios = require('axios')
+const { requireOpenid } = require('../_shared/auth-helper')
+const { validateSearchKw } = require('../_shared/input-guard')
 
 cloud.init({ env: cloud.DYNAMIC_CURRENT_ENV })
 
 exports.main = async (event, context) => {
+  requireOpenid()
   const { keyword, city } = event || {}
-  if (!keyword || !String(keyword).trim()) {
-    return { results: [] }
-  }
+  const kwCheck = validateSearchKw(keyword)
+  if (!kwCheck.ok) return { results: [] }
+  const cleanKw = kwCheck.clean
 
   const key = process.env.AMAP_KEY
   if (!key) {
@@ -17,7 +20,7 @@ exports.main = async (event, context) => {
   const res = await axios.get('https://restapi.amap.com/v5/place/text', {
     params: {
       key,
-      keywords: keyword,
+      keywords: cleanKw,
       region: city || '',
       page_size: 20,
     },

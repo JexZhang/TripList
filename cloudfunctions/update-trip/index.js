@@ -1,6 +1,9 @@
 const cloud = require('wx-server-sdk')
 cloud.init({ env: cloud.DYNAMIC_CURRENT_ENV })
 
+const { checkText } = require('../_shared/content-security')
+const { validateTripName, validateSpotName, validateSpotNote } = require('../_shared/input-guard')
+
 const ALLOWED_FIELDS = [
   'name',
   'pax',
@@ -76,6 +79,50 @@ exports.main = async (event) => {
   }
   cleaned.updatedAt = Date.now()
   cleaned.updatedBy = OPENID
+
+  // ── 内容审核：仅审核实际变更的文本字段 ──
+  if (cleaned.name !== undefined) {
+    const nameVal = validateTripName(cleaned.name)
+    if (!nameVal.ok) throw new Error(nameVal.error)
+    if (cleaned.name !== (trip.data.name || '')) {
+      const nameCheck = await checkText(nameVal.clean, OPENID, 1) // scene=1 资料
+      if (!nameCheck.pass) throw new Error(nameCheck.reason)
+      cleaned.name = nameVal.clean
+    }
+  }
+
+  if (cleaned.days !== undefined && Array.isArray(cleaned.days)) {
+    const existingDays = trip.data.days || []
+    const existingSpotMap = new Map()
+    for (const d of existingDays) {
+      for (const s of (d.spots || [])) {
+        if (s._id) existingSpotMap.set(s._id, s)
+      }
+    }
+    for (const day of cleaned.days) {
+      for (const spot of (day.spots || [])) {
+        const existing = spot._id ? existingSpotMap.get(spot._id) : null
+        if (spot.name !== undefined) {
+          const spotNameVal = validateSpotName(spot.name)
+          if (!spotNameVal.ok) throw new Error(spotNameVal.error)
+          spot.name = spotNameVal.clean
+          if (!existing || spot.name !== existing.name) {
+            const spotNameCheck = await checkText(spotNameVal.clean, OPENID, 2)
+            if (!spotNameCheck.pass) throw new Error(spotNameCheck.reason)
+          }
+        }
+        if (spot.note !== undefined) {
+          const spotNoteVal = validateSpotNote(spot.note)
+          if (!spotNoteVal.ok) throw new Error(spotNoteVal.error)
+          spot.note = spotNoteVal.clean
+          if (!existing || spot.note !== (existing.note || '')) {
+            const noteCheck = await checkText(spotNoteVal.clean || '', OPENID, 2)
+            if (!noteCheck.pass) throw new Error(noteCheck.reason)
+          }
+        }
+      }
+    }
+  }
 
   // aiDraft/aiTaskId/aiStatus/aiError 写 null 是有意的 (清空草稿), 直接 update 走 dot-path 没问题
   // 因为它们的字段原本就是顶层标量/对象, 不存在嵌套, 不会有上一次"result=null"那种 502001 bug

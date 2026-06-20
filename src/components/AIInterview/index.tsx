@@ -315,6 +315,7 @@ export default function AIInterview({ open, mode, tripId, onClose, onSubmit }: P
             className='aiv-input'
             value={answers.name}
             placeholder='例：京都 · 晚秋四日'
+            maxlength={50}
             {...kbProps}
             onInput={(e) => setAnswers((a) => ({ ...a, name: e.detail.value }))}
           />

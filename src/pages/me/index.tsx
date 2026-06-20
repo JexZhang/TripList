@@ -5,6 +5,7 @@ import { version } from '../../../package.json'
 import { useMe } from '../../store/me-store'
 import { useTheme, VALID_THEMES, type ThemeName } from '../../store/theme-store'
 import { useThemeClass } from '../../utils/theme-class'
+import { cloud } from '../../utils/cloud'
 import ProfileEditSheet from '../../components/ProfileEditSheet'
 import PencilIcon from '../../components/PencilIcon'
 import tegamiThumb   from '../../assets/theme-preview/tegami.svg'
@@ -109,6 +110,34 @@ export default function Me() {
           <Button className='me-feedback-btn' openType='feedback' />
         </View>
       )}
+
+      {/* 账号注销 */}
+      <View className='me-danger-zone'>
+        <View
+          className='me-delete-account'
+          onClick={async () => {
+            const res = await Taro.showModal({
+              title: '注销账号',
+              content: '注销后将删除你的所有攻略和数据，此操作不可撤销。确认注销？',
+              confirmText: '确认注销',
+              confirmColor: '#c43d3d',
+            })
+            if (!res.confirm) return
+            try {
+              const result = await cloud.deleteAccount()
+              if (!result?.ok) {
+                Taro.showToast({ title: '部分数据清理失败，请重试', icon: 'none' })
+                return
+              }
+              Taro.clearStorageSync()
+              Taro.showToast({ title: '已注销', icon: 'success' })
+              setTimeout(() => Taro.reLaunch({ url: '/pages/home/index' }), 1000)
+            } catch {
+              Taro.showToast({ title: '注销失败，请重试', icon: 'none' })
+            }
+          }}
+        >注销账号</View>
+      </View>
 
       <ProfileEditSheet
         open={editOpen}

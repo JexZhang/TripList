@@ -1,6 +1,8 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState, ReactNode } from 'react'
 import Taro from '@tarojs/taro'
+import { View, Text } from '@tarojs/components'
 import ProfileSetupModal from '../components/ProfileSetupModal'
+import PrivacyConsent from '../components/PrivacyConsent'
 
 export type ThemeName = 'tegami' | 'magazine' | 'postcard' | 'minimal'
 
@@ -18,10 +20,15 @@ interface Ctx {
   openProfileSetup: () => void
   quota: { flash: number; pro: number } | null
   refreshQuota: () => Promise<void>
+  /** 是否已同意隐私政策 */
+  consented: boolean
+  /** 重新弹出隐私政策弹窗（用于受限页面引导） */
+  reopenPrivacy: () => void
 }
 
 const MeContext = createContext<Ctx | null>(null)
 
+const PRIVACY_KEY = 'privacyConsentedAt'
 const SKIP_KEY = 'profileSetupSkippedAt'
 // 本次启动跳过标记（仅当次会话有效，重启后再判定一次）
 let sessionSkipped = false
@@ -30,6 +37,8 @@ export function MeProvider({ children }: { children: ReactNode }) {
   const [me, setMe] = useState<Me | null>(null)
   const [setupOpen, setSetupOpen] = useState(false)
   const [quota, setQuota] = useState<{ flash: number; pro: number } | null>(null)
+  const [consented, setConsented] = useState(false)
+  const [privacyOpen, setPrivacyOpen] = useState(false)
 
   // 懒加载：首次需要时才拉配额（不在启动时拉，避免不用 AI 的用户冷启动多一次云调用）
   const refreshQuota = useCallback(async () => {
@@ -64,7 +73,14 @@ export function MeProvider({ children }: { children: ReactNode }) {
   }, [])
 
   useEffect(() => {
-    refresh()
+    // 检查隐私政策同意状态
+    const agreed = Taro.getStorageSync(PRIVACY_KEY)
+    if (agreed) {
+      setConsented(true)
+      refresh() // 已同意时才拉用户数据
+    } else {
+      setPrivacyOpen(true)
+    }
   }, [])
 
   // 首次启动自动弹一次：用户还没设置过 nickname/avatar 且本次启动未跳过
@@ -92,21 +108,45 @@ export function MeProvider({ children }: { children: ReactNode }) {
   }
 
   const openProfileSetup = useCallback(() => setSetupOpen(true), [])
+  const reopenPrivacy = useCallback(() => setPrivacyOpen(true), [])
+
+  const handleAgree = () => {
+    Taro.setStorageSync(PRIVACY_KEY, Date.now())
+    setConsented(true)
+    setPrivacyOpen(false)
+    refresh() // 同意后再拉用户数据
+  }
+  const handleDisagree = () => {
+    setPrivacyOpen(false)
+  }
 
   const value = useMemo(
-    () => ({ me, refresh, openProfileSetup, quota, refreshQuota }),
-    [me, refresh, openProfileSetup, quota, refreshQuota],
+    () => ({ me, refresh, openProfileSetup, quota, refreshQuota, consented, reopenPrivacy }),
+    [me, refresh, openProfileSetup, quota, refreshQuota, consented],
   )
 
   return (
     <MeContext.Provider value={value}>
-      {children}
+      {consented ? children : (
+        <View style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100vh', flexDirection: 'column', padding: '0 48rpx' }}>
+          <Text style={{ fontSize: '28rpx', color: '#999', textAlign: 'center', lineHeight: '1.6' }}>需同意隐私政策后使用</Text>
+          <View
+            style={{ marginTop: '32rpx', padding: '20rpx 48rpx', background: '#2c2c2c', color: '#fff', borderRadius: '16rpx', fontSize: '28rpx' }}
+            onClick={reopenPrivacy}
+          >查看隐私政策</View>
+        </View>
+      )}
       <ProfileSetupModal
         open={setupOpen}
         initialNickname={me?.nickname}
         initialAvatarUrl={me?.avatarUrl}
         onClose={handleClose}
         onSubmit={handleSubmit}
+      />
+      <PrivacyConsent
+        open={privacyOpen}
+        onAgree={handleAgree}
+        onDisagree={handleDisagree}
       />
     </MeContext.Provider>
   )
