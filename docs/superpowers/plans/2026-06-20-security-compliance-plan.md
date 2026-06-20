@@ -11,7 +11,7 @@
 
 | 文件 | 要点 |
 |------|------|
-| `cloudfunctions/_shared/content-security.js` | `checkText(content, openid, scene)` + `checkImage(mediaUrl, openid, scene)` + `recordCheck(traceId, collection, docId, field)`；降级放行；截断 2500 字 |
+| `cloudfunctions/_shared/content-security.js` | `checkText` + `checkImage` + `recordCheck`；降级放行；截断 2500 字。`recordCheck` 实现：写入 `sec_check_records` 集合，文档结构 `{ _id: traceId, collection, docId, field, createdAt: Date.now() }` |
 | `cloudfunctions/_shared/input-guard.js` | `sanitizeText(text, maxLen)` 内核 + 12 个 validator（见 spec 2.3 节）；返回 `{ ok, clean?, error? }` |
 | `cloudfunctions/_shared/auth-helper.js` | `requireOpenid()` + `requireTripOwner(db, tripId, openid)` + `requireTripAccess(db, tripId, openid)` |
 
@@ -76,7 +76,13 @@
 
 - 引入 `checkText` + `checkImage` + `validateNickname`
 - 昵称：`validateNickname` → `checkText(nickname, OPENID, scene=1)` → risky 抛错
-- 头像：`checkImage(avatarUrl, OPENID, scene=1)` 异步发起，`recordCheck(traceId, 'users', docId, 'avatarUrl')`，不阻塞写入
+- 头像异步审核流程：
+  ```
+  const { traceId } = await checkImage(avatarUrl, OPENID, 1)
+  if (traceId) await recordCheck(traceId, 'users', OPENID, 'avatarUrl')
+  ```
+  其中用户文档 `_id` 即为 OPENID；`traceId` 为 null 时（降级放行）跳过 recordCheck
+- 不阻塞写入
 
 ---
 
@@ -85,10 +91,11 @@
 **依赖**：Task 1（_shared）  
 **产出**：1 个云函数修改
 
-- 引入 `checkText` + 各 validator
+- 引入 `checkText` + `validateTripName` / `validateSpotName` / `validateSpotNote`
 - 仅审核**实际变更的文本字段**（对比 patch 与现有 trip）
 - `patch.name` → `validateTripName` + `checkText(scene=1)`
-- `patch.days` 中每个变更的 spot：`name` → `validateSpotName` + `checkText(scene=2)`；`note` → `validateSpotNote` + `checkText(scene=2)`
+- `patch.days` 变更 diff 策略：按 `spot._id` 匹配新旧 spot（无 `_id` 视为新增，新增一律审核）；仅对比 `name`、`note` 字段，值相同则跳过；删除 spot 不触发审核
+- 对变更的 spot：`name` → `validateSpotName` + `checkText(scene=2)`；`note` → `validateSpotNote` + `checkText(scene=2)`
 - 非文本变更（拖拽排序、日期、pax）不触发审核
 
 ---
@@ -113,6 +120,8 @@
 - 解析 `wxa_media_check` 消息体
 - risky → 根据 `sec_check_records` 查找资源 → 清空对应字段（头像/封面）
 - 记录日志
+
+**部署前置**：在云开发控制台创建 `sec_check_records` 集合，安全规则设为「仅管理端可读写」
 
 ---
 
@@ -177,6 +186,16 @@ Task 3 (前端校验)   — 独立，可并行
 
 ---
 
+## 部署顺序
+
+参见设计规格 §8.1：
+1. 部署 `delete-account`（新云函数）
+2. 部署 `sec-check-callback`（新云函数）
+3. 重新部署所有被修改的云函数：`ensure-user`, `update-trip`, `ai-plan-trip`, `amap-poi-search`, `amap-weather`
+   （`_shared` 目录随这些函数一起上传，无需单独部署）
+
+---
+
 ## 验证清单
 
 - [ ] 编译通过（`npm run build:weapp`）
@@ -187,3 +206,6 @@ Task 3 (前端校验)   — 独立，可并行
 - [ ] 隐私弹窗首次启动弹出
 - [ ] 注销流程：确认 → 删除数据 → 清 storage → 回到首页
 - [ ] AIPlanPreview 标题显示"AI 生成方案" + 免责小字
+- [ ] 云开发控制台：`sec_check_records` 集合已创建，安全规则设为仅管理端可读写
+- [ ] 微信后台 → 消息推送 URL 已指向 `sec-check-callback` 云函数 HTTP 触发地址
+- [ ] 微信后台 → 安全中心 → 内容安全 API 已开通
