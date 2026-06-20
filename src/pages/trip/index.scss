@@ -54,11 +54,3 @@
   animation: fade-in 0.32s var(--ease-out) both;
 }
 
-/* 分享卡片生成用隐藏 Canvas */
-.share-card-canvas {
-  position: fixed;
-  left: -9999px;
-  top: -9999px;
-  width: 500px;
-  height: 400px;
-}

@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { View, Canvas } from '@tarojs/components'
+import { View } from '@tarojs/components'
 import Taro, { useDidShow, useShareAppMessage, usePullDownRefresh } from '@tarojs/taro'
 import type { Trip } from '../../types/trip'
 import { listMyTrips, renameTrip, copyTripLocally, smartDeleteTrip, updateTrip } from '../../utils/db'
@@ -209,9 +209,10 @@ export default function Home() {
       const payload = await buildShareMessage(shareTrip._id, title, kind, shareRef.imageUrl)
       shareRef.byKind[kind] = payload
       setShareReady((prev) => ({ ...prev, [kind]: true }))
-    } catch (e) {
+    } catch (e: any) {
+      const msg = e?.message || String(e)
       console.error('[prepareShare] failed', kind, e)
-      Taro.showToast({ title: '生成分享失败', icon: 'none' })
+      Taro.showToast({ title: msg.length > 20 ? msg.slice(0, 20) : msg, icon: 'none', duration: 3000 })
     }
   }
 
@@ -307,8 +308,7 @@ export default function Home() {
         }}
       />
 
-      {/* 隐藏 Canvas，用于生成分享卡片图片 */}
-      <Canvas type="2d" className="share-card-canvas" />
+      
     </View>
   )
 }

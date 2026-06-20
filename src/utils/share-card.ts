@@ -29,8 +29,17 @@ function djb2(s: string): number {
   return Math.abs(h)
 }
 
+/** HSL → hex RGB，微信 Canvas addColorStop 不支持 HSL 字符串 */
 function hsl(h: number, s: number, l: number): string {
-  return `hsl(${Math.round(h)}, ${Math.round(s)}%, ${Math.round(l)}%)`
+  s /= 100
+  l /= 100
+  const a = s * Math.min(l, 1 - l)
+  const f = (n: number) => {
+    const k = (n + h / 30) % 12
+    const color = l - a * Math.max(-1, Math.min(k - 3, 9 - k, 1))
+    return Math.round(color * 255).toString(16).padStart(2, '0')
+  }
+  return `#${f(0)}${f(8)}${f(4)}`
 }
 
 /** 分享卡片确定性取色：同一目的地颜色永远一致 */
@@ -90,35 +99,27 @@ export function buildShareTitle(trip: Trip, kind: 'readonly' | 'collab'): string
   return `一起来规划「${name}」吧`
 }
 
-// ─── Canvas 渲染 ────────────────────────────────────
+// ─── Canvas 渲染（离屏 Canvas，无需页面放置 <Canvas> 元素）─────────
 
 const W = 500
 const H = 400
 
-async function getCanvasNode(): Promise<any> {
-  return new Promise((resolve) => {
-    Taro.createSelectorQuery()
-      .select('.share-card-canvas')
-      .fields({ node: true, size: true })
-      .exec((res: any) => {
-        resolve(res?.[0]?.node ?? null)
-      })
-  })
-}
-
 /**
- * 渲染分享卡片到隐藏 Canvas,返回临时图片路径。
- * 在 prepareShare 阶段调用,此时用户已看到 "准备中..." loading。
+ * 渲染分享卡片到离屏 Canvas，返回临时图片路径。
+ * 在 prepareShare 阶段调用，此时用户已看到"准备中..." loading。
+ *
+ * 使用 Taro.createOffscreenCanvas（微信官方 API），不需要页面中放置
+ * <Canvas> 元素，彻底规避真机上 Canvas 不被渲染 / 找不到节点的问题。
  */
 export async function renderShareCard(trip: Trip): Promise<string> {
-  const canvas = await getCanvasNode()
-  if (!canvas) throw new Error('share-card canvas not found')
-
   const dpr = Taro.getWindowInfo().pixelRatio
-  canvas.width = W * dpr
-  canvas.height = H * dpr
+  const canvasW = W * dpr
+  const canvasH = H * dpr
 
-  const ctx = canvas.getContext('2d')
+  // 创建离屏 2D canvas（微信官方 API，不需要 DOM 节点）
+  const canvas = Taro.createOffscreenCanvas({ type: '2d', width: canvasW, height: canvasH })
+  // Taro 类型定义不区分 2D/WebGL，实际运行时 type:'2d' 返回 CanvasRenderingContext2D
+  const ctx = canvas.getContext('2d') as unknown as CanvasRenderingContext2D
   ctx.scale(dpr, dpr)
 
   const [c1, c2] = shareCardColors(trip)
@@ -170,15 +171,19 @@ export async function renderShareCard(trip: Trip): Promise<string> {
   ctx.textBaseline = 'top'
   ctx.fillText(metaText(trip), 48, lineY + 16)
 
-  // ── 导出临时文件 ──
+  // ── 导出临时文件（canvas 参数适用于 type="2d" 和离屏 canvas）──
   return new Promise((resolve, reject) => {
     Taro.canvasToTempFilePath(
       {
-        canvas,
+        // OffscreenCanvas 与 Canvas 在 Taro 类型定义中不兼容，但运行时均可用
+        canvas: canvas as unknown as Taro.Canvas,
         fileType: 'png',
         quality: 1,
-        success: (res: any) => resolve(res.tempFilePath),
-        fail: (err: any) => reject(err),
+        success: (res) => resolve(res.tempFilePath),
+        fail: (err) => {
+          console.error('[canvasToTempFilePath fail]', JSON.stringify(err))
+          reject(new Error(`export failed: ${err?.errMsg || JSON.stringify(err)}`))
+        },
       },
     )
   })
