@@ -38,3 +38,25 @@ export async function uploadCover(localPath: string, openid: string): Promise<st
   })
   return (r as { fileID: string }).fileID
 }
+
+/**
+ * 上传头像到云存储，返回 cloud:// fileID。
+ * chooseAvatar 返回的是本地临时路径（仅本机可用），必须上传到云存储
+ * 才能让其他设备（协作者/owner）正常显示。
+ */
+export async function uploadAvatar(localPath: string): Promise<string> {
+  const ts = Date.now()
+  const rand = Math.random().toString(36).slice(2, 8)
+  const cloudPath = `avatars/${ts}_${rand}.jpg`
+  // @ts-ignore Taro.cloud.uploadFile
+  const r = await Taro.cloud.uploadFile({
+    cloudPath,
+    filePath: localPath,
+  })
+  return (r as { fileID: string }).fileID
+}
+
+/** 判断 URL 是否为云存储 fileID（cloud:// 协议） */
+export function isCloudUrl(url: string): boolean {
+  return url.startsWith('cloud://')
+}

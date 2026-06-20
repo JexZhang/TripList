@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { View, Text, Button, Input, Image } from '@tarojs/components'
 import Taro from '@tarojs/taro'
+import { uploadAvatar, isCloudUrl } from '../../utils/cover'
 
 interface KbBind {
   adjustPosition: false
@@ -35,6 +36,7 @@ export default function ProfileForm({
     initialNickname && initialNickname !== '行迹旅人' ? initialNickname : '',
   )
   const [avatarUrl, setAvatarUrl] = useState(initialAvatarUrl || '')
+  const [avatarUploading, setAvatarUploading] = useState(false)
   const [submitting, setSubmitting] = useState(false)
 
   useEffect(() => {
@@ -42,9 +44,25 @@ export default function ProfileForm({
     setAvatarUrl(initialAvatarUrl || '')
   }, [initialNickname, initialAvatarUrl])
 
-  const onChooseAvatar = (e: { detail?: { avatarUrl?: string } }) => {
+  const onChooseAvatar = async (e: { detail?: { avatarUrl?: string } }) => {
     const url = e?.detail?.avatarUrl
-    if (url) setAvatarUrl(url)
+    if (!url) return
+    // 已经是云存储 URL，无需重复上传
+    if (isCloudUrl(url)) {
+      setAvatarUrl(url)
+      return
+    }
+    // 本地临时路径，上传到云存储（仅本机可用，其他设备无法访问）
+    setAvatarUploading(true)
+    try {
+      const cloudUrl = await uploadAvatar(url)
+      setAvatarUrl(cloudUrl)
+    } catch (err) {
+      console.error('[ProfileForm] avatar upload failed', err)
+      Taro.showToast({ title: '头像上传失败', icon: 'none' })
+    } finally {
+      setAvatarUploading(false)
+    }
   }
 
   const handleSubmit = async () => {
@@ -53,8 +71,8 @@ export default function ProfileForm({
       Taro.showToast({ title: '请输入昵称', icon: 'none' })
       return
     }
-    if (!avatarUrl) {
-      Taro.showToast({ title: '请选择头像', icon: 'none' })
+    if (!avatarUrl || avatarUploading) {
+      Taro.showToast({ title: avatarUploading ? '头像上传中…' : '请选择头像', icon: 'none' })
       return
     }
     setSubmitting(true)
@@ -76,17 +94,20 @@ export default function ProfileForm({
         onChooseAvatar={onChooseAvatar}
       >
         <Image className='psm-avatar' src={avatarUrl || DEFAULT_AVATAR} mode='aspectFill' />
-        <Text className='psm-avatar-hint'>{avatarUrl ? '点击更换头像' : '点击选择微信头像'}</Text>
+        <Text className='psm-avatar-hint'>
+          {avatarUploading ? '上传中…' : avatarUrl ? '点击更换头像' : '点击选择微信头像'}
+        </Text>
       </Button>
 
       <View className='psm-field'>
         <Text className='psm-label'>昵称</Text>
         <Input
           className='psm-input'
-          type='text'
-          placeholder='请输入昵称'
+          type='nickname'
+          placeholder='点击可使用微信昵称'
           value={nickname}
           onInput={(e) => setNickname(e.detail.value)}
+          onBlur={(e) => { if (e.detail.value) setNickname(e.detail.value) }}
           {...(kbProps ?? { adjustPosition: false as const })}
         />
       </View>
@@ -96,10 +117,10 @@ export default function ProfileForm({
           <View className='psm-btn psm-btn-skip' onClick={onSecondary}>{secondaryLabel}</View>
         )}
         <View
-          className={`psm-btn psm-btn-primary ${submitting ? 'is-disabled' : ''}`}
-          onClick={submitting ? undefined : handleSubmit}
+          className={`psm-btn psm-btn-primary ${submitting || avatarUploading ? 'is-disabled' : ''}`}
+          onClick={submitting || avatarUploading ? undefined : handleSubmit}
         >
-          {submitting ? '保存中…' : submitLabel}
+          {avatarUploading ? '上传中…' : submitting ? '保存中…' : submitLabel}
         </View>
       </View>
     </>
