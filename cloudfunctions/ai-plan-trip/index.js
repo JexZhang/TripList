@@ -6,8 +6,8 @@ const { buildMessages, retryPrompt, isDestEmpty } = require('./lib/prompts')
 const { TOOLS_SCHEMA, executeTool } = require('./lib/tools')
 const { validatePlan } = require('./lib/validate')
 const { createTask, updateTask, getTripLight, finalizeTrip } = require('./lib/task-store')
-const { checkText } = require('../_shared/content-security')
-const { validateFreeText } = require('../_shared/input-guard')
+const { checkText } = require('./_shared/content-security')
+const { validateFreeText } = require('./_shared/input-guard')
 
 // 开启 parallel_tool_calls + prompt 引导批量并发后, 正常 3-5 轮即可结束.
 // 12 轮做硬上限, 撞到就软降级(下面)而非直接 fail.

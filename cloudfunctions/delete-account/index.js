@@ -1,7 +1,7 @@
 const cloud = require('wx-server-sdk')
 cloud.init({ env: cloud.DYNAMIC_CURRENT_ENV })
 
-const { requireOpenid } = require('../_shared/auth-helper')
+const { requireOpenid } = require('./_shared/auth-helper')
 
 /**
  * delete-account: 注销账号并删除所有关联数据

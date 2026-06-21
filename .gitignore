@@ -11,3 +11,5 @@ node_modules/
 # Cloud functions
 cloudfunctions/**/node_modules/
 cloudfunctions/**/package-lock.json
+# _shared 复制到各函数目录内（部署用），不提交
+cloudfunctions/*/_shared/

@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { View } from '@tarojs/components'
+import { View, Text } from '@tarojs/components'
 import Taro, { useDidShow, useShareAppMessage, usePullDownRefresh } from '@tarojs/taro'
 import type { Trip } from '../../types/trip'
 import { listMyTrips, renameTrip, copyTripLocally, smartDeleteTrip, updateTrip } from '../../utils/db'
@@ -9,6 +9,7 @@ import { getTripPhase } from '../../utils/trip-phase'
 import { useMe } from '../../store/me-store'
 import { useTheme } from '../../store/theme-store'
 import { useThemeClass } from '../../utils/theme-class'
+import PrivacyConsent from '../../components/PrivacyConsent'
 import TripActionSheet, { type TripAction } from '../../components/TripActionSheet'
 import ShareTypeSheet from '../../components/ShareTypeSheet'
 import CoverPicker from '../../components/CoverPicker'
@@ -44,7 +45,7 @@ export default function Home() {
       return !(Array.isArray(cached) && cached.length)
     } catch { return true }
   })
-  const { me, refreshQuota } = useMe()
+  const { me, refreshQuota, consented, privacyOpen, agreePrivacy, dismissPrivacy, reopenPrivacy } = useMe()
   const openid = me?.openid || ''
   const [actionTrip, setActionTrip] = useState<Trip | null>(null)
   const [shareTrip, setShareTrip] = useState<Trip | null>(null)
@@ -307,6 +308,20 @@ export default function Home() {
           void handleAiCreate(data)
         }}
       />
+      <PrivacyConsent
+        open={privacyOpen}
+        onAgree={agreePrivacy}
+        onDisagree={dismissPrivacy}
+      />
+      {!consented && !privacyOpen && (
+        <View style={{ position: 'fixed', left: 0, right: 0, top: 0, bottom: 0, background: 'rgba(0,0,0,0.5)', zIndex: 1999, display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column' }}>
+          <Text style={{ fontSize: '28rpx', color: '#fff', textAlign: 'center', lineHeight: '1.6' }}>需同意隐私政策后使用</Text>
+          <View
+            style={{ marginTop: '32rpx', padding: '20rpx 48rpx', background: '#2c2c2c', color: '#fff', borderRadius: '16rpx', fontSize: '28rpx' }}
+            onClick={reopenPrivacy}
+          >查看隐私政策</View>
+        </View>
+      )}
 
       
     </View>

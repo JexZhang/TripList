@@ -1,4 +1,4 @@
-import { View, Text, RootPortal } from '@tarojs/components'
+import { View, Text } from '@tarojs/components'
 import './index.scss'
 
 interface Props {
@@ -11,7 +11,6 @@ export default function PrivacyConsent({ open, onAgree, onDisagree }: Props) {
   if (!open) return null
 
   return (
-    <RootPortal>
       <View className='pc-mask'>
         <View className='pc-card' catchMove>
           <Text className='pc-title'>隐私政策</Text>
@@ -29,6 +28,5 @@ export default function PrivacyConsent({ open, onAgree, onDisagree }: Props) {
           </View>
         </View>
       </View>
-    </RootPortal>
   )
 }

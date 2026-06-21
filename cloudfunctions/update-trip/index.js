@@ -1,8 +1,8 @@
 const cloud = require('wx-server-sdk')
 cloud.init({ env: cloud.DYNAMIC_CURRENT_ENV })
 
-const { checkText } = require('../_shared/content-security')
-const { validateTripName, validateSpotName, validateSpotNote } = require('../_shared/input-guard')
+const { checkText } = require('./_shared/content-security')
+const { validateTripName, validateSpotName, validateSpotNote } = require('./_shared/input-guard')
 
 const ALLOWED_FIELDS = [
   'name',

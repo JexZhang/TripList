@@ -1,8 +1,8 @@
 const cloud = require('wx-server-sdk')
 cloud.init({ env: cloud.DYNAMIC_CURRENT_ENV })
 
-const { checkText, checkImage, recordCheck } = require('../_shared/content-security')
-const { validateNickname } = require('../_shared/input-guard')
+const { checkText, checkImage, recordCheck } = require('./_shared/content-security')
+const { validateNickname } = require('./_shared/input-guard')
 
 const VALID_THEMES = ['tegami', 'magazine', 'postcard', 'minimal']
 const PLACEHOLDER_NICKNAME = '行迹旅人'

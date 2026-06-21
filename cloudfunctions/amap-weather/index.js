@@ -1,7 +1,7 @@
 const cloud = require('wx-server-sdk')
 const axios = require('axios')
-const { requireOpenid } = require('../_shared/auth-helper')
-const { validateAdcode } = require('../_shared/input-guard')
+const { requireOpenid } = require('./_shared/auth-helper')
+const { validateAdcode } = require('./_shared/input-guard')
 
 cloud.init({ env: cloud.DYNAMIC_CURRENT_ENV })
 

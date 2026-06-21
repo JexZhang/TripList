@@ -1,8 +1,6 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState, ReactNode } from 'react'
 import Taro from '@tarojs/taro'
-import { View, Text } from '@tarojs/components'
 import ProfileSetupModal from '../components/ProfileSetupModal'
-import PrivacyConsent from '../components/PrivacyConsent'
 
 export type ThemeName = 'tegami' | 'magazine' | 'postcard' | 'minimal'
 
@@ -22,7 +20,13 @@ interface Ctx {
   refreshQuota: () => Promise<void>
   /** 是否已同意隐私政策 */
   consented: boolean
-  /** 重新弹出隐私政策弹窗（用于受限页面引导） */
+  /** 隐私弹窗是否打开 */
+  privacyOpen: boolean
+  /** 同意隐私政策 */
+  agreePrivacy: () => void
+  /** 不同意（关闭弹窗） */
+  dismissPrivacy: () => void
+  /** 重新弹出隐私政策弹窗 */
   reopenPrivacy: () => void
 }
 
@@ -110,43 +114,31 @@ export function MeProvider({ children }: { children: ReactNode }) {
   const openProfileSetup = useCallback(() => setSetupOpen(true), [])
   const reopenPrivacy = useCallback(() => setPrivacyOpen(true), [])
 
-  const handleAgree = () => {
+  const agreePrivacy = useCallback(() => {
     Taro.setStorageSync(PRIVACY_KEY, Date.now())
     setConsented(true)
     setPrivacyOpen(false)
     refresh() // 同意后再拉用户数据
-  }
-  const handleDisagree = () => {
+  }, [refresh])
+
+  const dismissPrivacy = useCallback(() => {
     setPrivacyOpen(false)
-  }
+  }, [])
 
   const value = useMemo(
-    () => ({ me, refresh, openProfileSetup, quota, refreshQuota, consented, reopenPrivacy }),
-    [me, refresh, openProfileSetup, quota, refreshQuota, consented],
+    () => ({ me, refresh, openProfileSetup, quota, refreshQuota, consented, privacyOpen, agreePrivacy, dismissPrivacy, reopenPrivacy }),
+    [me, refresh, openProfileSetup, quota, refreshQuota, consented, privacyOpen, agreePrivacy, dismissPrivacy, reopenPrivacy],
   )
 
   return (
     <MeContext.Provider value={value}>
-      {consented ? children : (
-        <View style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100vh', flexDirection: 'column', padding: '0 48rpx' }}>
-          <Text style={{ fontSize: '28rpx', color: '#999', textAlign: 'center', lineHeight: '1.6' }}>需同意隐私政策后使用</Text>
-          <View
-            style={{ marginTop: '32rpx', padding: '20rpx 48rpx', background: '#2c2c2c', color: '#fff', borderRadius: '16rpx', fontSize: '28rpx' }}
-            onClick={reopenPrivacy}
-          >查看隐私政策</View>
-        </View>
-      )}
+      {children}
       <ProfileSetupModal
         open={setupOpen}
         initialNickname={me?.nickname}
         initialAvatarUrl={me?.avatarUrl}
         onClose={handleClose}
         onSubmit={handleSubmit}
-      />
-      <PrivacyConsent
-        open={privacyOpen}
-        onAgree={handleAgree}
-        onDisagree={handleDisagree}
       />
     </MeContext.Provider>
   )
