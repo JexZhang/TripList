@@ -82,9 +82,11 @@ exports.main = async (event) => {
 
   // ── 内容审核：仅审核实际变更的文本字段 ──
   if (cleaned.name !== undefined) {
-    const nameVal = validateTripName(cleaned.name)
-    if (!nameVal.ok) throw new Error(nameVal.error)
-    if (cleaned.name !== (trip.data.name || '')) {
+    const nameChanged = cleaned.name !== (trip.data.name || '')
+    if (nameChanged) {
+      // 只在名称发生变更时校验（避免旧数据空名称触发 validateTripName 报错）
+      const nameVal = validateTripName(cleaned.name)
+      if (!nameVal.ok) throw new Error(nameVal.error)
       const nameCheck = await checkText(nameVal.clean, OPENID, 1) // scene=1 资料
       if (!nameCheck.pass) throw new Error(nameCheck.reason)
       cleaned.name = nameVal.clean
@@ -103,10 +105,12 @@ exports.main = async (event) => {
       for (const spot of (day.spots || [])) {
         const existing = spot._id ? existingSpotMap.get(spot._id) : null
         if (spot.name !== undefined) {
-          const spotNameVal = validateSpotName(spot.name)
-          if (!spotNameVal.ok) throw new Error(spotNameVal.error)
-          spot.name = spotNameVal.clean
-          if (!existing || spot.name !== existing.name) {
+          const spotNameChanged = !existing || spot.name !== existing.name
+          if (spotNameChanged) {
+            // 只在地点名变更时校验，避免旧数据（AI 生成/历史导入的空名称）触发报错
+            const spotNameVal = validateSpotName(spot.name)
+            if (!spotNameVal.ok) throw new Error(spotNameVal.error)
+            spot.name = spotNameVal.clean
             const spotNameCheck = await checkText(spotNameVal.clean, OPENID, 2)
             if (!spotNameCheck.pass) throw new Error(spotNameCheck.reason)
           }

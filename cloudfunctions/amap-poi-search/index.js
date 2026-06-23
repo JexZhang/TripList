@@ -1,12 +1,12 @@
 const cloud = require('wx-server-sdk')
 const axios = require('axios')
-const { requireOpenid } = require('./_shared/auth-helper')
 const { validateSearchKw } = require('./_shared/input-guard')
 
 cloud.init({ env: cloud.DYNAMIC_CURRENT_ENV })
 
 exports.main = async (event, context) => {
-  requireOpenid()
+  // 不需要 OPENID 鉴权：此函数可由 ai-plan-trip 云函数内部调用（云间调用无 OPENID），
+  // AMAP key 在服务端，输入已由 validateSearchKw 校验，无需额外身份验证
   const { keyword, city } = event || {}
   const kwCheck = validateSearchKw(keyword)
   if (!kwCheck.ok) return { results: [] }

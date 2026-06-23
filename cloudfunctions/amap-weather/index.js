@@ -1,12 +1,11 @@
 const cloud = require('wx-server-sdk')
 const axios = require('axios')
-const { requireOpenid } = require('./_shared/auth-helper')
 const { validateAdcode } = require('./_shared/input-guard')
 
 cloud.init({ env: cloud.DYNAMIC_CURRENT_ENV })
 
 exports.main = async (event, context) => {
-  requireOpenid()
+  // 不需要 OPENID 鉴权：AMAP key 在服务端，adcode 已校验，无需额外身份验证
   const { adcode } = event || {}
   const adCheck = validateAdcode(adcode)
   if (!adCheck.ok) throw new Error(adCheck.error)
