@@ -1,4 +1,5 @@
 import type { Day, Spot } from '../../types/trip'
+import { sortSpotsByTime } from '../ItineraryView/shared'
 
 // 按 day 索引循环取色;同一天的 marker 用同一色
 const DAY_COLORS = [
@@ -39,7 +40,9 @@ export function collectLocated(days: Day[], onlyDayIdx?: number): Located[] {
   const out: Located[] = []
   days.forEach((d, dIdx) => {
     if (onlyDayIdx !== undefined && dIdx !== onlyDayIdx) return
-    d.spots.forEach((s, sIdx) => {
+    const sorted = sortSpotsByTime(d.spots)
+    sorted.forEach((s) => {
+      const sIdx = d.spots.indexOf(s)
       if (typeof s.lat === 'number' && typeof s.lng === 'number') {
         out.push({ dayIdx: dIdx, spotIdx: sIdx, spot: s, lat: s.lat, lng: s.lng })
       }
