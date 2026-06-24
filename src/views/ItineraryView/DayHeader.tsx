@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { View, Text } from '@tarojs/components'
+import { ScrollView, View, Text } from '@tarojs/components'
 import type { Day, Destination, DayWeather } from '../../types/trip'
 import { loadWeather } from '../../utils/weather'
 
@@ -9,8 +9,7 @@ interface Props {
   onWeatherUpdate: (w: Day['weather']) => void
 }
 
-// 单日最多展示的城市数：单日跨 3 城以上极少见，限制可控制高德天气调用量。
-// 若 MAX_CITIES 个城市的文案仍超出一行，由 .dh-content 的 CSS 省略号按显示长度截断。
+// 单日最多展示 3 个城市的天气；超出一屏可在天气条内左右滑动查看。
 const MAX_CITIES = 3
 const WEATHER_TTL = 30 * 60 * 1000
 
@@ -58,16 +57,19 @@ export default function DayHeader({ day, fallbackDestination }: Props) {
     )
   }
 
-  // 每个城市拼「城市 天气描述 低°–高°」；城市内用空格，城市间用 ` · ` 分隔
-  const cityItems = cityRefs.map((c) => {
-    const w = cityWeathers[c.adcode]
-    return w ? `${c.city} ${w.desc} ${w.low}°–${w.high}°` : c.city
-  })
-
+  // 横向可滑动的天气条：每个城市一项「城市 天气描述 低°–高°」
   return (
-    <View className='day-header'>
-      {/* 城市间用可见分隔符：nowrap 下连续空格会折叠，单纯空格无法区分城市边界 */}
-      <Text className='dh-content'>{cityItems.join(' · ')}</Text>
-    </View>
+    <ScrollView scrollX showScrollbar={false} className='day-header'>
+      <View className='dh-track'>
+        {cityRefs.map((c) => {
+          const w = cityWeathers[c.adcode]
+          return (
+            <Text key={c.city} className='dh-city'>
+              {w ? `${c.city} ${w.desc} ${w.low}°–${w.high}°` : c.city}
+            </Text>
+          )
+        })}
+      </View>
+    </ScrollView>
   )
 }
