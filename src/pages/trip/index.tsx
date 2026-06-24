@@ -243,7 +243,15 @@ function TripBody() {
         placeholderText: '攻略名',
       } as any)
       if (res.confirm && (res as any).content?.trim()) {
-        await renameTrip(t._id, (res as any).content.trim(), openid)
+        try {
+          await renameTrip(t._id, (res as any).content.trim(), openid)
+        } catch (e) {
+          // 后端 update-trip 内容审核不通过会抛错，之前无 try/catch 导致静默失败
+          const err = e as { errMsg?: string; message?: string }
+          const text = `${err?.errMsg || ''} ${err?.message || ''}`
+          const isModeration = /违规|审核/.test(text)
+          Taro.showToast({ title: isModeration ? '名称含违规内容，请修改' : '重命名失败，请重试', icon: 'none' })
+        }
       }
       return
     }

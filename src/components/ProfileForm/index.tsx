@@ -38,10 +38,14 @@ export default function ProfileForm({
   const [avatarUrl, setAvatarUrl] = useState(initialAvatarUrl || '')
   const [avatarUploading, setAvatarUploading] = useState(false)
   const [submitting, setSubmitting] = useState(false)
+  // 微信原生昵称审核结论：'unknown' 未审/超时，'pass' 通过，'fail' 不通过。
+  // 仅在 'fail' 时阻断保存——避免「弹了违规 toast 却照样保存」。
+  const [nickReview, setNickReview] = useState<'unknown' | 'pass' | 'fail'>('unknown')
 
   useEffect(() => {
     setNickname(initialNickname && initialNickname !== '行迹旅人' ? initialNickname : '')
     setAvatarUrl(initialAvatarUrl || '')
+    setNickReview('unknown')
   }, [initialNickname, initialAvatarUrl])
 
   const onChooseAvatar = async (e: { detail?: { avatarUrl?: string } }) => {
@@ -71,6 +75,10 @@ export default function ProfileForm({
       Taro.showToast({ title: '请输入昵称', icon: 'none' })
       return
     }
+    if (nickReview === 'fail') {
+      Taro.showToast({ title: '该昵称包含违规内容，请修改', icon: 'none' })
+      return
+    }
     if (!avatarUrl || avatarUploading) {
       Taro.showToast({ title: avatarUploading ? '头像上传中…' : '请选择头像', icon: 'none' })
       return
@@ -80,7 +88,11 @@ export default function ProfileForm({
       await onSubmit({ nickname: nick, avatarUrl })
     } catch (e) {
       console.error('[ProfileForm] submit failed', e)
-      Taro.showToast({ title: '保存失败', icon: 'none' })
+      // 后端 ensure-user 审核不通过会抛错，尽量把违规原因透传给用户
+      const err = e as { errMsg?: string; message?: string }
+      const text = `${err?.errMsg || ''} ${err?.message || ''}`
+      const isModeration = /违规|审核/.test(text)
+      Taro.showToast({ title: isModeration ? '昵称含违规内容，请修改' : '保存失败', icon: 'none' })
     } finally {
       setSubmitting(false)
     }
@@ -107,8 +119,15 @@ export default function ProfileForm({
           placeholder='点击可使用微信昵称'
           value={nickname}
           maxlength={20}
-          onInput={(e) => setNickname(e.detail.value)}
+          onInput={(e) => { setNickname(e.detail.value); setNickReview('unknown') }}
           onBlur={(e) => { if (e.detail.value) setNickname(e.detail.value) }}
+          onNickNameReview={(e: { detail?: { pass?: boolean; timeout?: boolean } }) => {
+            // 微信仅在 type="nickname" 时触发；detail = { pass, timeout }
+            const d = e?.detail || {}
+            // 审核超时无法判定，标记 unknown，交由后端兜底，不误伤
+            if (d.timeout) { setNickReview('unknown'); return }
+            setNickReview(d.pass === false ? 'fail' : 'pass')
+          }}
           {...(kbProps ?? { adjustPosition: false as const })}
         />
       </View>
