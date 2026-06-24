@@ -5,19 +5,6 @@
 
 
 /* ===== 日期标题 ===== */
-// 测量容器（隐藏）
-.dh-measure-container {
-  position: absolute;
-  visibility: hidden;
-  white-space: nowrap;
-  pointer-events: none;
-}
-
-.dh-measure-text {
-  font-size: inherit;
-  font-weight: inherit;
-}
-
 .day-header {
   padding: 4rpx 32rpx 8rpx;
   position: relative;
@@ -27,6 +14,7 @@
 
   .dh-content {
     flex: 1;
+    min-width: 0; // flex 子项需置 0 才能收缩并触发 text-overflow 省略号
     font-size: 28rpx;
     font-weight: 500;
     color: var(--ink);
