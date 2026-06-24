@@ -21,19 +21,15 @@ async function checkText(content, openid, scene = 2) {
       version: 2,
     })
     const suggest = res?.result?.suggest
-    // 'risky'（高风险）与 'review'（疑似，建议人工复核）都判为不通过。
-    // 本项目没有人工复核流程，对 'review' 一并从严拦截，避免疑似违规内容直接放行。
-    if (suggest === 'risky' || suggest === 'review') {
-      return { pass: false, label: res.result.label, reason: '内容包含违规信息，请修改' }
+    if (suggest === 'risky') {
+      return { pass: false, label: res.result.label, reason: '内容包含违规信息' }
     }
-    // 仅 'pass' 放行
+    // 'pass' 或 'review' 都放行
     return { pass: true }
   } catch (err) {
-    // fail-closed：审核接口异常（超时、频率限制、系统错误）时不再静默放行，
-    // 一律拦截，避免违规内容趁审核失败写入。代价是审核服务抖动期间正常内容
-    // 也会被暂时拦下，提示用户稍后重试（下一次保存/重试会自愈）。
-    console.error('[content-security] msgSecCheck failed, fail-closed:', err.errCode, err.errMsg)
-    return { pass: false, reason: '内容审核服务繁忙，请稍后重试' }
+    // 降级放行：超时、频率限制、系统错误
+    console.warn('[content-security] msgSecCheck failed, fallback pass:', err.errCode, err.errMsg)
+    return { pass: true }
   }
 }
 
