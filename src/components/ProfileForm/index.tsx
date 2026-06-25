@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { View, Text, Button, Input, Image } from '@tarojs/components'
 import Taro from '@tarojs/taro'
 import { uploadAvatar, isCloudUrl } from '../../utils/cover'
@@ -40,13 +40,33 @@ export default function ProfileForm({
   const [submitting, setSubmitting] = useState(false)
   // 微信原生昵称审核结论：'unknown' 未审/超时，'pass' 通过，'fail' 不通过。
   // 仅在 'fail' 时阻断保存——避免「弹了违规 toast 却照样保存」。
-  const [nickReview, setNickReview] = useState<'unknown' | 'pass' | 'fail'>('unknown')
+  // 用 ref 保存（不进 state）：handleSubmit 与审核回调需同步读到最新值，
+  // 避免 state 异步更新导致「点保存时还读到旧的 unknown」。
+  const nickReviewRef = useRef<'unknown' | 'pass' | 'fail'>('unknown')
+  // 点保存时审核仍在途（unknown）→ 把真正的提交动作挂起，等审核回调来定夺。
+  const pendingSubmitRef = useRef<(() => void) | null>(null)
+  // 审核迟迟不回（真超时）时的兜底定时器：到点退回后端审核，避免永久卡住。
+  const reviewTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+
+  const setReview = (v: 'unknown' | 'pass' | 'fail') => {
+    nickReviewRef.current = v
+  }
+  const clearReviewTimer = () => {
+    if (reviewTimerRef.current) {
+      clearTimeout(reviewTimerRef.current)
+      reviewTimerRef.current = null
+    }
+  }
 
   useEffect(() => {
     setNickname(initialNickname && initialNickname !== '行迹旅人' ? initialNickname : '')
     setAvatarUrl(initialAvatarUrl || '')
-    setNickReview('unknown')
+    setReview('unknown')
+    pendingSubmitRef.current = null
+    clearReviewTimer()
   }, [initialNickname, initialAvatarUrl])
+
+  useEffect(() => () => clearReviewTimer(), [])
 
   const onChooseAvatar = async (e: { detail?: { avatarUrl?: string } }) => {
     const url = e?.detail?.avatarUrl
@@ -69,20 +89,8 @@ export default function ProfileForm({
     }
   }
 
-  const handleSubmit = async () => {
-    const nick = nickname.trim()
-    if (!nick) {
-      Taro.showToast({ title: '请输入昵称', icon: 'none' })
-      return
-    }
-    if (nickReview === 'fail') {
-      Taro.showToast({ title: '该昵称包含违规内容，请修改', icon: 'none' })
-      return
-    }
-    if (!avatarUrl || avatarUploading) {
-      Taro.showToast({ title: avatarUploading ? '头像上传中…' : '请选择头像', icon: 'none' })
-      return
-    }
+  // 真正落库的提交动作（审核已放行后才会走到这里）
+  const runSubmit = async (nick: string) => {
     setSubmitting(true)
     try {
       await onSubmit({ nickname: nick, avatarUrl })
@@ -96,6 +104,41 @@ export default function ProfileForm({
     } finally {
       setSubmitting(false)
     }
+  }
+
+  const handleSubmit = async () => {
+    const nick = nickname.trim()
+    if (!nick) {
+      Taro.showToast({ title: '请输入昵称', icon: 'none' })
+      return
+    }
+    if (!avatarUrl || avatarUploading) {
+      Taro.showToast({ title: avatarUploading ? '头像上传中…' : '请选择头像', icon: 'none' })
+      return
+    }
+
+    const review = nickReviewRef.current
+    if (review === 'fail') {
+      Taro.showToast({ title: '该昵称包含违规内容，请修改', icon: 'none' })
+      return
+    }
+    if (review === 'pass') {
+      await runSubmit(nick)
+      return
+    }
+
+    // review === 'unknown'：点保存这一下才让输入框 blur，微信此刻才发起异步昵称审核。
+    // 不能同步放行（否则违规昵称也会保存），挂起提交、等 onNickNameReview 回调定夺。
+    setSubmitting(true)
+    pendingSubmitRef.current = () => { void runSubmit(nick) }
+    clearReviewTimer()
+    // 审核真超时（约 2.5s 仍无结论）→ 退回后端兜底审核，避免永久卡住。
+    reviewTimerRef.current = setTimeout(() => {
+      reviewTimerRef.current = null
+      const run = pendingSubmitRef.current
+      pendingSubmitRef.current = null
+      if (run) run()
+    }, 2500)
   }
 
   return (
@@ -119,14 +162,31 @@ export default function ProfileForm({
           placeholder='点击可使用微信昵称'
           value={nickname}
           maxlength={20}
-          onInput={(e) => { setNickname(e.detail.value); setNickReview('unknown') }}
+          onInput={(e) => { setNickname(e.detail.value); setReview('unknown') }}
           onBlur={(e) => { if (e.detail.value) setNickname(e.detail.value) }}
           onNickNameReview={(e: { detail?: { pass?: boolean; timeout?: boolean } }) => {
             // 微信仅在 type="nickname" 时触发；detail = { pass, timeout }
             const d = e?.detail || {}
             // 审核超时无法判定，标记 unknown，交由后端兜底，不误伤
-            if (d.timeout) { setNickReview('unknown'); return }
-            setNickReview(d.pass === false ? 'fail' : 'pass')
+            const result: 'unknown' | 'pass' | 'fail' = d.timeout
+              ? 'unknown'
+              : d.pass === false ? 'fail' : 'pass'
+            setReview(result)
+
+            // 若有「点了保存但在等审核」的挂起提交，由本次结论定夺
+            const pending = pendingSubmitRef.current
+            if (!pending) return
+            if (result === 'fail') {
+              pendingSubmitRef.current = null
+              clearReviewTimer()
+              setSubmitting(false)
+              Taro.showToast({ title: '该昵称包含违规内容，请修改', icon: 'none' })
+            } else if (result === 'pass') {
+              pendingSubmitRef.current = null
+              clearReviewTimer()
+              pending()
+            }
+            // result === 'unknown'（超时）：保持挂起，交由 reviewTimerRef 兜底放行
           }}
           {...(kbProps ?? { adjustPosition: false as const })}
         />
