@@ -165,6 +165,8 @@ exports.main = async (event) => {
       // 只在名称发生变更时校验（避免旧数据空名称触发 validateTripName 报错）
       const nameVal = validateTripName(cleaned.name)
       if (!nameVal.ok) throw new Error(nameVal.error)
+      const nameCheck = await checkText(nameVal.clean, OPENID, 1) // scene=1 资料
+      if (!nameCheck.pass) throw new Error(nameCheck.reason)
       cleaned.name = nameVal.clean
       modTasks.push({ text: nameVal.clean, scene: 1 }) // scene=1 资料
     }
@@ -188,7 +190,8 @@ exports.main = async (event) => {
             const spotNameVal = validateSpotName(spot.name)
             if (!spotNameVal.ok) throw new Error(spotNameVal.error)
             spot.name = spotNameVal.clean
-            modTasks.push({ text: spotNameVal.clean, scene: 2 })
+            const spotNameCheck = await checkText(spotNameVal.clean, OPENID, 2)
+            if (!spotNameCheck.pass) throw new Error(spotNameCheck.reason)
           }
         }
         if (spot.note !== undefined) {
