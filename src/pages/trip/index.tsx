@@ -21,8 +21,6 @@ import TripPhaseHero from '../../components/TripPhaseHero'
 import { buildShareMessage, shareRef, resetShareRef } from '../../utils/share'
 import { renderShareCard, buildShareTitle } from '../../utils/share-card'
 import { smartDeleteTrip, renameTrip, copyTripLocally, updateTrip } from '../../utils/db'
-import { mergePlanIntoDays } from '../../utils/trip-helpers'
-import { mergeAIDraft } from '../../utils/ai-apply'
 import type { ShareKind } from '../../utils/cloud'
 import type { AIPreferences } from '../../types/trip'
 import { newAITaskId, fireAITask } from '../../utils/ai-task'
@@ -39,7 +37,7 @@ const VIEWS: { key: ViewKey; label: string }[] = [
 ]
 
 function TripBody() {
-  const { state, dispatch } = useTripStore()
+  const { state, dispatch, applyAiDraft } = useTripStore()
   const { openid } = useTripStore()
   const { me } = useMe()
   const themeCls = useThemeClass('trip')
@@ -140,7 +138,7 @@ function TripBody() {
   }
   
   const clearAiFields = async () => {
-    if (!t) return
+    if (!t || !isOwner) return
     await updateTrip(t._id, {
       aiTaskId: null,
       aiStatus: null,
@@ -184,30 +182,12 @@ function TripBody() {
     setTheaterMinimized(true)
   }
   
-  const handlePreviewApply = async (selectedSpots: Record<string, number[]>, name: string) => {
+  const handlePreviewApply = async (selectedSpots: Record<string, number[]>) => {
     if (!t || !t.aiDraft) return
     try {
-      const aiDraft = t.aiDraft as any
-      const patch = mergeAIDraft(t, aiDraft)
-      const newDays = mergePlanIntoDays(t.days, aiDraft, selectedSpots)
-      await updateTrip(t._id, {
-        ...patch,
-        name, // 始终以用户在预览中编辑的名称为准
-        days: newDays,
-        aiTaskId: null,
-        aiStatus: null,
-        aiDraft: null,
-        aiError: null,
-      }, openid)
-      dispatch({ type: 'UPDATE_TRIP', patch: {
-        ...patch,
-        name,
-        days: newDays,
-        aiTaskId: null,
-        aiStatus: null,
-        aiDraft: null,
-        aiError: null,
-      } })
+      // 合并由服务端按可信的 trip.aiDraft 完成（免内容审核）；此处只传勾选索引。
+      // 名称/目的地也由服务端从草稿派生，无需客户端传递。
+      await applyAiDraft(selectedSpots)
       setAiPreviewOpen(false)
       // Clear enrich draft on apply
       if (t._id) { try { Taro.removeStorageSync(draftKeyEnrich(t._id)) } catch { /* ignore */ } }
@@ -334,7 +314,7 @@ function TripBody() {
         {view === 'itinerary' && (
           <>
             <TripPhaseHero trip={t} />
-            {t.aiStatus && (
+            {isOwner && t.aiStatus && (
               <TripAIStatusBar
                 status={t.aiStatus as TripAIStatusBarStatus}
                 onTap={handleInlineBarTap}
@@ -382,13 +362,13 @@ function TripBody() {
         }}
       />
       <AILoadingTheater
-        open={t.aiStatus === 'generating' && !theaterMinimized}
+        open={isOwner && t.aiStatus === 'generating' && !theaterMinimized}
         status='thinking'
         onCancel={handleTheaterCancel}
         onMinimize={handleTheaterMinimize}
       />
       <AIPlanPreview
-        open={aiPreviewOpen}
+        open={isOwner && aiPreviewOpen}
         plan={t.aiDraft || null}
         status={t.aiStatus === 'ready' ? 'done' : 'pending'}
         generating={t.aiStatus === 'generating'}

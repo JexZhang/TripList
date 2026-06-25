@@ -96,6 +96,12 @@ export const cloud = {
   updateTrip: (data: { tripId: string; patch: Record<string, unknown> }) =>
     call<typeof data, { ok: boolean }>('update-trip', data),
 
+  // 应用 AI 草稿：服务端按可信的 trip.aiDraft 合并，免内容审核；客户端只传勾选索引
+  applyAiDraft: (data: { tripId: string; selectedSpots: Record<string, number[]> }) =>
+    call<{ tripId: string; selectedSpots: Record<string, number[]>; action: string }, { ok: boolean; trip: Record<string, unknown> }>(
+      'update-trip', { ...data, action: 'apply-ai-draft' },
+    ),
+
   deleteAccount: () =>
     call<Record<string, never>, { ok: boolean }>('delete-account', {}),
 }

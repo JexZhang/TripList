@@ -78,6 +78,18 @@ export async function updateTrip(tripId: string, patch: Partial<Trip>, _openid: 
 }
 
 /**
+ * 应用 AI 草稿（服务端按可信的 trip.aiDraft 合并写入，免内容审核）。
+ * 客户端只传勾选的地点索引，返回应用后的完整 trip。
+ */
+export async function applyAiDraft(
+  tripId: string,
+  selectedSpots: Record<string, number[]>,
+): Promise<Trip> {
+  const res = await cloud.applyAiDraft({ tripId, selectedSpots })
+  return res.trip as unknown as Trip
+}
+
+/**
  * 重命名（薄封装）
  */
 export async function renameTrip(tripId: string, newName: string, openid: string): Promise<void> {

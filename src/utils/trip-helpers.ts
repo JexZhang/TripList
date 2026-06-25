@@ -1,6 +1,6 @@
 import dayjs from 'dayjs'
 import { uid } from './id'
-import type { Day, NewTripInput, Destination, GeneratedDay, GeneratedPlan } from '../types/trip'
+import type { Day, NewTripInput, Destination, GeneratedDay } from '../types/trip'
 
 /**
  * 按日期范围生成空的 day 数组（每天一条，无 spot）
@@ -81,44 +81,4 @@ export function planDayToDay(gd: GeneratedDay): Day {
     })),
     weather: null,
   }
-}
-
-/**
- * 按用户勾选的地点索引，把 AI 生成方案合并进原 days 数组。
- * selectedSpots: { [date]: number[] } — 该天被勾选的地点索引列表。
- * - 某天索引列表为空 → 该天不变（用户放弃该天的 AI 方案）
- * - 某天有勾选索引 → 该天 spots 替换为那几个 AI 地点（保留原 day id/weather）
- */
-export function mergePlanIntoDays(
-  existing: Day[],
-  plan: GeneratedPlan,
-  selectedSpots: Record<string, number[]>,
-): Day[] {
-  const aiByDate = new Map<string, GeneratedDay>()
-  for (const gd of plan.days) aiByDate.set(gd.date, gd)
-
-  return existing.map(d => {
-    const indices = selectedSpots[d.date]
-    if (!indices || indices.length === 0) return d
-    const gd = aiByDate.get(d.date)
-    if (!gd) return d
-    const spots = indices
-      .filter(i => i >= 0 && i < gd.spots.length)
-      .map(i => {
-        const gs = gd.spots[i]
-        return {
-          id: uid(),
-          type: gs.type,
-          name: gs.name,
-          city: gs.city,
-          note: gs.note,
-          price: gs.price,
-          time: gs.time,
-          lat: gs.lat,
-          lng: gs.lng,
-          adcode: gs.adcode,
-        }
-      })
-    return { ...d, spots }
-  })
 }

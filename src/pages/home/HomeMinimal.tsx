@@ -60,8 +60,9 @@ export default function HomeMinimal({
 
         <View className='hmin-list'>
           {trips.map((t, i) => {
-            const ai = aiStatusFor(t)
             const isCollab = t._openid !== openid
+            // 协作攻略的 AI 状态不对协作者展示/驱动（结束 AI、看草稿等均属 owner）
+            const ai = isCollab ? null : aiStatusFor(t)
             const phase = getTripPhase(t.startDate, t.endDate)
             const isPost = phase === 'post'
             return (

@@ -12,6 +12,7 @@
   "scripts": {
     "prepare": "husky",
     "new": "taro new",
+    "cf:sync": "node cloudfunctions/sync-shared.js",
     "build:weapp": "taro build --type weapp",
     "build:swan": "taro build --type swan",
     "build:alipay": "taro build --type alipay",

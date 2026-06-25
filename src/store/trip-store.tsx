@@ -1,8 +1,8 @@
-import { createContext, useContext, useEffect, useMemo, useReducer, useRef, ReactNode } from 'react'
+import { createContext, useCallback, useContext, useEffect, useMemo, useReducer, useRef, ReactNode } from 'react'
 import Taro from '@tarojs/taro'
 import dayjs from 'dayjs'
 import type { Trip, Day, Spot } from '../types/trip'
-import { getTrip, updateTrip } from '../utils/db'
+import { getTrip, updateTrip, applyAiDraft as applyAiDraftCloud } from '../utils/db'
 
 function resyncDays(days: Day[]): Day[] {
   if (days.length === 0) return days
@@ -129,6 +129,7 @@ interface ContextValue {
   dispatch: React.Dispatch<Action>
   openid: string
   readonly: boolean
+  applyAiDraft: (selectedSpots: Record<string, number[]>) => Promise<void>
 }
 
 const Ctx = createContext<ContextValue | null>(null)
@@ -175,8 +176,12 @@ export function TripProvider({
       dispatch({ type: 'ERROR', error: '加载失败，请重试' })
     })
 
+    // 用 where 替代 doc：doc().watch() 的查询条件只有 _id，不是 trips 自定义安全规则的子集，
+    // 会被服务端拒绝（-402002 init watch fail）。这里只锁 _id（不带 _openid），
+    // 由 trips read 规则用 get() 在运行时判断 owner / 协作者成员资格，使 owner 与协作者都能监听。
     // @ts-ignore Taro.cloud.database watch
-    watcher = Taro.cloud.database().collection('trips').doc(tripId).watch({
+    watcher = Taro.cloud.database().collection('trips').where({ _id: tripId }).watch({
+      // @ts-ignore snapshot 来自无类型的 Taro.cloud watch（where().watch 的回调签名与我们的 docs 结构不符）
       onChange: (snapshot: { docs: Trip[] }) => {
         const doc = snapshot.docs && snapshot.docs[0]
         if (!doc) return
@@ -260,7 +265,22 @@ export function TripProvider({
     }
   }, [])
 
-  const value = useMemo(() => ({ state, dispatch, openid, readonly: ro }), [state, openid, ro])
+  // 应用 AI 草稿：走服务端 apply-ai-draft（按可信 aiDraft 合并、免审），用返回的完整 trip
+  // 直接落地，并同步 lastSavedRef，让随后的 debounce 保存判定为「无变更」跳过——
+  // 否则那次全量保存会把合并后的 days 再次送 update-trip 审核，绕回 3s 超时。
+  const applyAiDraft = useCallback(async (selectedSpots: Record<string, number[]>) => {
+    const tripId = latestTripRef.current?._id
+    if (!tripId) return
+    // 取消可能在排队的 debounce 保存
+    if (timerRef.current) { clearTimeout(timerRef.current); timerRef.current = null }
+    const newTrip = await applyAiDraftCloud(tripId, selectedSpots)
+    pendingRef.current = false
+    deferredRemoteRef.current = null
+    dispatch({ type: 'SET_TRIP', trip: newTrip })
+    lastSavedRef.current = JSON.stringify(newTrip)
+  }, [dispatch])
+
+  const value = useMemo(() => ({ state, dispatch, openid, readonly: ro, applyAiDraft }), [state, openid, ro, applyAiDraft])
 
   return (
     <Ctx.Provider value={value}>
