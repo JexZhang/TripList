@@ -1,0 +1,392 @@
+{
+  "city": "成都",
+  "theme": "guide",
+  "source": "triplist",
+  "coordinate_policy": "AMap GCJ-02 is converted to WGS84 for OSMnx rendering",
+  "pois": [
+    {
+      "input_name": "成都龙之梦大酒店",
+      "resolved_name": "成都龙之梦大酒店",
+      "source": "triplist",
+      "poi_id": "culOKUiZY7Jt",
+      "address": "嘉陵江路8号-A",
+      "province": null,
+      "city": "成都",
+      "district": null,
+      "type": "hotel",
+      "typecode": null,
+      "lng_gcj02": 104.144628,
+      "lat_gcj02": 30.6297,
+      "lng_wgs84": 104.141997,
+      "lat_wgs84": 30.632151,
+      "confidence": 1.0,
+      "status": "resolved",
+      "needs_review": false,
+      "candidates": [
+        {
+          "score": 1.0,
+          "poi_id": "culOKUiZY7Jt",
+          "name": "成都龙之梦大酒店",
+          "address": "嘉陵江路8号-A",
+          "city": "成都",
+          "district": "",
+          "type": "hotel",
+          "lng_gcj02": 104.144628,
+          "lat_gcj02": 30.6297
+        }
+      ]
+    },
+    {
+      "input_name": "成都龙之梦大酒店·龙悦中餐厅·宴会厅",
+      "resolved_name": "成都龙之梦大酒店·龙悦中餐厅·宴会厅",
+      "source": "triplist",
+      "poi_id": "Xr1Hr39caI8m",
+      "address": "保和街道嘉陵江路8号龙之梦酒店2层(火车东站)",
+      "province": null,
+      "city": "成都",
+      "district": null,
+      "type": "meal",
+      "typecode": null,
+      "lng_gcj02": 104.144253,
+      "lat_gcj02": 30.629527,
+      "lng_wgs84": 104.141621,
+      "lat_wgs84": 30.631977,
+      "confidence": 1.0,
+      "status": "resolved",
+      "needs_review": false,
+      "candidates": [
+        {
+          "score": 1.0,
+          "poi_id": "Xr1Hr39caI8m",
+          "name": "成都龙之梦大酒店·龙悦中餐厅·宴会厅",
+          "address": "保和街道嘉陵江路8号龙之梦酒店2层(火车东站)",
+          "city": "成都",
+          "district": "",
+          "type": "meal",
+          "lng_gcj02": 104.144253,
+          "lat_gcj02": 30.629527
+        }
+      ]
+    },
+    {
+      "input_name": "宽窄巷子景区",
+      "resolved_name": "宽窄巷子景区",
+      "source": "triplist",
+      "poi_id": "Gi2JQo1zdFTw",
+      "address": "少城街道金河路口宽窄巷子",
+      "province": null,
+      "city": "成都",
+      "district": null,
+      "type": "spot",
+      "typecode": null,
+      "lng_gcj02": 104.053307,
+      "lat_gcj02": 30.663869,
+      "lng_wgs84": 104.050686,
+      "lat_wgs84": 30.666309,
+      "confidence": 1.0,
+      "status": "resolved",
+      "needs_review": false,
+      "candidates": [
+        {
+          "score": 1.0,
+          "poi_id": "Gi2JQo1zdFTw",
+          "name": "宽窄巷子景区",
+          "address": "少城街道金河路口宽窄巷子",
+          "city": "成都",
+          "district": "",
+          "type": "spot",
+          "lng_gcj02": 104.053307,
+          "lat_gcj02": 30.663869
+        }
+      ]
+    },
+    {
+      "input_name": "眉州东坡(宽窄巷子景区店)",
+      "resolved_name": "眉州东坡(宽窄巷子景区店)",
+      "source": "triplist",
+      "poi_id": "noZEvhmvny5g",
+      "address": "窄巷子38号1栋(宽窄巷子地铁站B口步行240米)",
+      "province": null,
+      "city": "成都",
+      "district": null,
+      "type": "meal",
+      "typecode": null,
+      "lng_gcj02": 104.052726,
+      "lat_gcj02": 30.663834,
+      "lng_wgs84": 104.050106,
+      "lat_wgs84": 30.666275,
+      "confidence": 1.0,
+      "status": "resolved",
+      "needs_review": false,
+      "candidates": [
+        {
+          "score": 1.0,
+          "poi_id": "noZEvhmvny5g",
+          "name": "眉州东坡(宽窄巷子景区店)",
+          "address": "窄巷子38号1栋(宽窄巷子地铁站B口步行240米)",
+          "city": "成都",
+          "district": "",
+          "type": "meal",
+          "lng_gcj02": 104.052726,
+          "lat_gcj02": 30.663834
+        }
+      ]
+    },
+    {
+      "input_name": "成都东站",
+      "resolved_name": "成都东站",
+      "source": "triplist",
+      "poi_id": "npqoXtOskQgq",
+      "address": "邛崃山路333号(成都东客站地铁站东出口旁)",
+      "province": null,
+      "city": "成都",
+      "district": null,
+      "type": "transport",
+      "typecode": null,
+      "lng_gcj02": 104.140947,
+      "lat_gcj02": 30.628779,
+      "lng_wgs84": 104.13831,
+      "lat_wgs84": 30.631225,
+      "confidence": 1.0,
+      "status": "resolved",
+      "needs_review": false,
+      "candidates": [
+        {
+          "score": 1.0,
+          "poi_id": "npqoXtOskQgq",
+          "name": "成都东站",
+          "address": "邛崃山路333号(成都东客站地铁站东出口旁)",
+          "city": "成都",
+          "district": "",
+          "type": "transport",
+          "lng_gcj02": 104.140947,
+          "lat_gcj02": 30.628779
+        }
+      ]
+    },
+    {
+      "input_name": "成都东站",
+      "resolved_name": "成都东站",
+      "source": "triplist",
+      "poi_id": "yvD3rXCSxxJ7",
+      "address": "邛崃山路333号(成都东客站地铁站东出口旁)",
+      "province": null,
+      "city": "成都",
+      "district": null,
+      "type": "transport",
+      "typecode": null,
+      "lng_gcj02": 104.140947,
+      "lat_gcj02": 30.628779,
+      "lng_wgs84": 104.13831,
+      "lat_wgs84": 30.631225,
+      "confidence": 1.0,
+      "status": "resolved",
+      "needs_review": false,
+      "candidates": [
+        {
+          "score": 1.0,
+          "poi_id": "yvD3rXCSxxJ7",
+          "name": "成都东站",
+          "address": "邛崃山路333号(成都东客站地铁站东出口旁)",
+          "city": "成都",
+          "district": "",
+          "type": "transport",
+          "lng_gcj02": 104.140947,
+          "lat_gcj02": 30.628779
+        }
+      ]
+    },
+    {
+      "input_name": "成都锦禧·悦庭酒店(宽窄巷子店)",
+      "resolved_name": "成都锦禧·悦庭酒店(宽窄巷子店)",
+      "source": "triplist",
+      "poi_id": "lUO4NIDsu0Ox",
+      "address": "西城角巷18号",
+      "province": null,
+      "city": "成都",
+      "district": null,
+      "type": "hotel",
+      "typecode": null,
+      "lng_gcj02": 104.057676,
+      "lat_gcj02": 30.677075,
+      "lng_wgs84": 104.055044,
+      "lat_wgs84": 30.679501,
+      "confidence": 1.0,
+      "status": "resolved",
+      "needs_review": false,
+      "candidates": [
+        {
+          "score": 1.0,
+          "poi_id": "lUO4NIDsu0Ox",
+          "name": "成都锦禧·悦庭酒店(宽窄巷子店)",
+          "address": "西城角巷18号",
+          "city": "成都",
+          "district": "",
+          "type": "hotel",
+          "lng_gcj02": 104.057676,
+          "lat_gcj02": 30.677075
+        }
+      ]
+    },
+    {
+      "input_name": "成都大熊猫繁育研究基地",
+      "resolved_name": "成都大熊猫繁育研究基地",
+      "source": "triplist",
+      "poi_id": "jyJSO5adzYTg",
+      "address": "熊猫大道1375号",
+      "province": null,
+      "city": "成都",
+      "district": null,
+      "type": "spot",
+      "typecode": null,
+      "lng_gcj02": 104.138176,
+      "lat_gcj02": 30.740573,
+      "lng_wgs84": 104.135529,
+      "lat_wgs84": 30.742963,
+      "confidence": 1.0,
+      "status": "resolved",
+      "needs_review": false,
+      "candidates": [
+        {
+          "score": 1.0,
+          "poi_id": "jyJSO5adzYTg",
+          "name": "成都大熊猫繁育研究基地",
+          "address": "熊猫大道1375号",
+          "city": "成都",
+          "district": "",
+          "type": "spot",
+          "lng_gcj02": 104.138176,
+          "lat_gcj02": 30.740573
+        }
+      ]
+    },
+    {
+      "input_name": "饕林餐厅(武侯祠店)",
+      "resolved_name": "饕林餐厅(武侯祠店)",
+      "source": "triplist",
+      "poi_id": "AVKF1LS9sb9I",
+      "address": "浆洗街15号-附5号浆西荟2楼(汉堡王楼上)",
+      "province": null,
+      "city": "成都",
+      "district": null,
+      "type": "meal",
+      "typecode": null,
+      "lng_gcj02": 104.058466,
+      "lat_gcj02": 30.64468,
+      "lng_wgs84": 104.055834,
+      "lat_wgs84": 30.647119,
+      "confidence": 1.0,
+      "status": "resolved",
+      "needs_review": false,
+      "candidates": [
+        {
+          "score": 1.0,
+          "poi_id": "AVKF1LS9sb9I",
+          "name": "饕林餐厅(武侯祠店)",
+          "address": "浆洗街15号-附5号浆西荟2楼(汉堡王楼上)",
+          "city": "成都",
+          "district": "",
+          "type": "meal",
+          "lng_gcj02": 104.058466,
+          "lat_gcj02": 30.64468
+        }
+      ]
+    },
+    {
+      "input_name": "成都武侯祠博物馆",
+      "resolved_name": "成都武侯祠博物馆",
+      "source": "triplist",
+      "poi_id": "daTzGSLegFue",
+      "address": "武侯祠大街231号",
+      "province": null,
+      "city": "成都",
+      "district": null,
+      "type": "spot",
+      "typecode": null,
+      "lng_gcj02": 104.047992,
+      "lat_gcj02": 30.646168,
+      "lng_wgs84": 104.045384,
+      "lat_wgs84": 30.648627,
+      "confidence": 1.0,
+      "status": "resolved",
+      "needs_review": false,
+      "candidates": [
+        {
+          "score": 1.0,
+          "poi_id": "daTzGSLegFue",
+          "name": "成都武侯祠博物馆",
+          "address": "武侯祠大街231号",
+          "city": "成都",
+          "district": "",
+          "type": "spot",
+          "lng_gcj02": 104.047992,
+          "lat_gcj02": 30.646168
+        }
+      ]
+    },
+    {
+      "input_name": "锦里古街",
+      "resolved_name": "锦里古街",
+      "source": "triplist",
+      "poi_id": "su1RZvFUZlMT",
+      "address": "武侯祠大街231号附1号",
+      "province": null,
+      "city": "成都",
+      "district": null,
+      "type": "spot",
+      "typecode": null,
+      "lng_gcj02": 104.049828,
+      "lat_gcj02": 30.645994,
+      "lng_wgs84": 104.047216,
+      "lat_wgs84": 30.648449,
+      "confidence": 1.0,
+      "status": "resolved",
+      "needs_review": false,
+      "candidates": [
+        {
+          "score": 1.0,
+          "poi_id": "su1RZvFUZlMT",
+          "name": "锦里古街",
+          "address": "武侯祠大街231号附1号",
+          "city": "成都",
+          "district": "",
+          "type": "spot",
+          "lng_gcj02": 104.049828,
+          "lat_gcj02": 30.645994
+        }
+      ]
+    },
+    {
+      "input_name": "鸡毛店·川菜(宽窄巷子店)",
+      "resolved_name": "鸡毛店·川菜(宽窄巷子店)",
+      "source": "triplist",
+      "poi_id": "fKBqrIDUJhz1",
+      "address": "通惠门路69号1层2号(嘎嘎鸭脑壳对面)",
+      "province": null,
+      "city": "成都",
+      "district": null,
+      "type": "meal",
+      "typecode": null,
+      "lng_gcj02": 104.049076,
+      "lat_gcj02": 30.665476,
+      "lng_wgs84": 104.046465,
+      "lat_wgs84": 30.667924,
+      "confidence": 1.0,
+      "status": "resolved",
+      "needs_review": false,
+      "candidates": [
+        {
+          "score": 1.0,
+          "poi_id": "fKBqrIDUJhz1",
+          "name": "鸡毛店·川菜(宽窄巷子店)",
+          "address": "通惠门路69号1层2号(嘎嘎鸭脑壳对面)",
+          "city": "成都",
+          "district": "",
+          "type": "meal",
+          "lng_gcj02": 104.049076,
+          "lat_gcj02": 30.665476
+        }
+      ]
+    }
+  ]
+}

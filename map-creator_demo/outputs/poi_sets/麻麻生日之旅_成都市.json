@@ -1,0 +1,40 @@
+{
+  "city": "成都市",
+  "theme": "guide",
+  "source": "triplist",
+  "coordinate_policy": "AMap GCJ-02 is converted to WGS84 for OSMnx rendering",
+  "pois": [
+    {
+      "input_name": "成都天府国际机场2号航站楼",
+      "resolved_name": "成都天府国际机场2号航站楼",
+      "source": "triplist",
+      "poi_id": "DswUWSVCkXVH",
+      "address": "天府机场1号2号航站楼地铁站出入口步行280米",
+      "province": null,
+      "city": "成都市",
+      "district": null,
+      "type": "transport",
+      "typecode": null,
+      "lng_gcj02": 104.447443,
+      "lat_gcj02": 30.310177,
+      "lng_wgs84": 104.444739,
+      "lat_wgs84": 30.31271,
+      "confidence": 1.0,
+      "status": "resolved",
+      "needs_review": false,
+      "candidates": [
+        {
+          "score": 1.0,
+          "poi_id": "DswUWSVCkXVH",
+          "name": "成都天府国际机场2号航站楼",
+          "address": "天府机场1号2号航站楼地铁站出入口步行280米",
+          "city": "成都市",
+          "district": "",
+          "type": "transport",
+          "lng_gcj02": 104.447443,
+          "lat_gcj02": 30.310177
+        }
+      ]
+    }
+  ]
+}

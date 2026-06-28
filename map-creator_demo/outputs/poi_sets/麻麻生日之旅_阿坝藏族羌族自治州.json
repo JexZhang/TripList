@@ -1,0 +1,232 @@
+{
+  "city": "阿坝藏族羌族自治州",
+  "theme": "guide",
+  "source": "triplist",
+  "coordinate_policy": "AMap GCJ-02 is converted to WGS84 for OSMnx rendering",
+  "pois": [
+    {
+      "input_name": "黄龙九寨站",
+      "resolved_name": "黄龙九寨站",
+      "source": "triplist",
+      "poi_id": "yW3FGJEbiSs6",
+      "address": "川主寺镇",
+      "province": null,
+      "city": "阿坝藏族羌族自治州",
+      "district": null,
+      "type": "transport",
+      "typecode": null,
+      "lng_gcj02": 103.615084,
+      "lat_gcj02": 32.745215,
+      "lng_wgs84": 103.612777,
+      "lat_wgs84": 32.747608,
+      "confidence": 1.0,
+      "status": "resolved",
+      "needs_review": false,
+      "candidates": [
+        {
+          "score": 1.0,
+          "poi_id": "yW3FGJEbiSs6",
+          "name": "黄龙九寨站",
+          "address": "川主寺镇",
+          "city": "阿坝藏族羌族自治州",
+          "district": "",
+          "type": "transport",
+          "lng_gcj02": 103.615084,
+          "lat_gcj02": 32.745215
+        }
+      ]
+    },
+    {
+      "input_name": "黄龙国家级风景名胜区",
+      "resolved_name": "黄龙国家级风景名胜区",
+      "source": "triplist",
+      "poi_id": "a8qMMOZTqS8p",
+      "address": "瑟尔磋寨平松路",
+      "province": null,
+      "city": "阿坝藏族羌族自治州",
+      "district": null,
+      "type": "spot",
+      "typecode": null,
+      "lng_gcj02": 103.833028,
+      "lat_gcj02": 32.743163,
+      "lng_wgs84": 103.830605,
+      "lat_wgs84": 32.745479,
+      "confidence": 1.0,
+      "status": "resolved",
+      "needs_review": false,
+      "candidates": [
+        {
+          "score": 1.0,
+          "poi_id": "a8qMMOZTqS8p",
+          "name": "黄龙国家级风景名胜区",
+          "address": "瑟尔磋寨平松路",
+          "city": "阿坝藏族羌族自治州",
+          "district": "",
+          "type": "spot",
+          "lng_gcj02": 103.833028,
+          "lat_gcj02": 32.743163
+        }
+      ]
+    },
+    {
+      "input_name": "九寨沟半山度民宿(九寨沟景区店)",
+      "resolved_name": "九寨沟半山度民宿(九寨沟景区店)",
+      "source": "triplist",
+      "poi_id": "x2BZcZvDwFhy",
+      "address": "漳扎镇彭丰村一组38号",
+      "province": null,
+      "city": "阿坝藏族羌族自治州",
+      "district": null,
+      "type": "hotel",
+      "typecode": null,
+      "lng_gcj02": 103.908329,
+      "lat_gcj02": 33.268578,
+      "lng_wgs84": 103.905973,
+      "lat_wgs84": 33.270633,
+      "confidence": 1.0,
+      "status": "resolved",
+      "needs_review": false,
+      "candidates": [
+        {
+          "score": 1.0,
+          "poi_id": "x2BZcZvDwFhy",
+          "name": "九寨沟半山度民宿(九寨沟景区店)",
+          "address": "漳扎镇彭丰村一组38号",
+          "city": "阿坝藏族羌族自治州",
+          "district": "",
+          "type": "hotel",
+          "lng_gcj02": 103.908329,
+          "lat_gcj02": 33.268578
+        }
+      ]
+    },
+    {
+      "input_name": "童话藏餐厅(九寨沟景区店)",
+      "resolved_name": "童话藏餐厅(九寨沟景区店)",
+      "source": "triplist",
+      "poi_id": "qjwDIyUarhra",
+      "address": "彭丰村48号四季童话酒店二楼",
+      "province": null,
+      "city": "阿坝藏族羌族自治州",
+      "district": null,
+      "type": "meal",
+      "typecode": null,
+      "lng_gcj02": 103.906494,
+      "lat_gcj02": 33.269878,
+      "lng_wgs84": 103.904139,
+      "lat_wgs84": 33.271933,
+      "confidence": 1.0,
+      "status": "resolved",
+      "needs_review": false,
+      "candidates": [
+        {
+          "score": 1.0,
+          "poi_id": "qjwDIyUarhra",
+          "name": "童话藏餐厅(九寨沟景区店)",
+          "address": "彭丰村48号四季童话酒店二楼",
+          "city": "阿坝藏族羌族自治州",
+          "district": "",
+          "type": "meal",
+          "lng_gcj02": 103.906494,
+          "lat_gcj02": 33.269878
+        }
+      ]
+    },
+    {
+      "input_name": "九寨沟",
+      "resolved_name": "九寨沟",
+      "source": "triplist",
+      "poi_id": "SKQ8rPLHdCED",
+      "address": "漳扎镇",
+      "province": null,
+      "city": "阿坝藏族羌族自治州",
+      "district": null,
+      "type": "spot",
+      "typecode": null,
+      "lng_gcj02": 103.912874,
+      "lat_gcj02": 33.142376,
+      "lng_wgs84": 103.910522,
+      "lat_wgs84": 33.144513,
+      "confidence": 1.0,
+      "status": "resolved",
+      "needs_review": false,
+      "candidates": [
+        {
+          "score": 1.0,
+          "poi_id": "SKQ8rPLHdCED",
+          "name": "九寨沟",
+          "address": "漳扎镇",
+          "city": "阿坝藏族羌族自治州",
+          "district": "",
+          "type": "spot",
+          "lng_gcj02": 103.912874,
+          "lat_gcj02": 33.142376
+        }
+      ]
+    },
+    {
+      "input_name": "九香源川菜",
+      "resolved_name": "九香源川菜",
+      "source": "triplist",
+      "poi_id": "kW7w8gRFx6az",
+      "address": "漳扎镇九寨沟沟口边边街2栋",
+      "province": null,
+      "city": "阿坝藏族羌族自治州",
+      "district": null,
+      "type": "meal",
+      "typecode": null,
+      "lng_gcj02": 103.925661,
+      "lat_gcj02": 33.273598,
+      "lng_wgs84": 103.923291,
+      "lat_wgs84": 33.275638,
+      "confidence": 1.0,
+      "status": "resolved",
+      "needs_review": false,
+      "candidates": [
+        {
+          "score": 1.0,
+          "poi_id": "kW7w8gRFx6az",
+          "name": "九香源川菜",
+          "address": "漳扎镇九寨沟沟口边边街2栋",
+          "city": "阿坝藏族羌族自治州",
+          "district": "",
+          "type": "meal",
+          "lng_gcj02": 103.925661,
+          "lat_gcj02": 33.273598
+        }
+      ]
+    },
+    {
+      "input_name": "黄龙九寨站",
+      "resolved_name": "黄龙九寨站",
+      "source": "triplist",
+      "poi_id": "TBucTmBRxFyv",
+      "address": "川主寺镇",
+      "province": null,
+      "city": "阿坝藏族羌族自治州",
+      "district": null,
+      "type": "transport",
+      "typecode": null,
+      "lng_gcj02": 103.615084,
+      "lat_gcj02": 32.745215,
+      "lng_wgs84": 103.612777,
+      "lat_wgs84": 32.747608,
+      "confidence": 1.0,
+      "status": "resolved",
+      "needs_review": false,
+      "candidates": [
+        {
+          "score": 1.0,
+          "poi_id": "TBucTmBRxFyv",
+          "name": "黄龙九寨站",
+          "address": "川主寺镇",
+          "city": "阿坝藏族羌族自治州",
+          "district": "",
+          "type": "transport",
+          "lng_gcj02": 103.615084,
+          "lat_gcj02": 32.745215
+        }
+      ]
+    }
+  ]
+}
