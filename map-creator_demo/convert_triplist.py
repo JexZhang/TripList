@@ -75,13 +75,15 @@ def spot_to_poi(spot: dict) -> dict | None:
     name = spot.get("name", "").strip()
     city = spot.get("city", "")
     note = spot.get("note", "")
+    addr = spot.get("address", "")  # 高德简短地址优先
+    display = addr or (note[:80] if note else "")
 
     return {
         "input_name": name,
         "resolved_name": name,
         "source": "triplist",
         "poi_id": spot.get("id"),
-        "address": note[:80] if note else "",
+        "address": display,
         "province": None,
         "city": city,
         "district": None,
@@ -98,7 +100,7 @@ def spot_to_poi(spot: dict) -> dict | None:
             "score": 1.0,
             "poi_id": spot.get("id"),
             "name": name,
-            "address": note[:80] if note else "",
+            "address": display,
             "city": city,
             "district": "",
             "type": spot.get("type"),

@@ -9,6 +9,7 @@ export interface Spot {
   adcode?: string
   lat?: number
   lng?: number
+  address?: string       // 高德简短地址(前端暂不展示, 供导览地图使用)
   price?: number
   note?: string
 
@@ -125,6 +126,7 @@ export interface GeneratedSpot {
   lat?: number                // LLM 从 search_poi 工具结果抄过来; 无则前端标记 _unresolved
   lng?: number
   adcode?: string
+  address?: string            // 高德简短地址, 供导览地图使用
   _unresolved?: boolean       // 缺 lat/lng 时由 client 端预览标记
 }
 

@@ -55,6 +55,7 @@ function mergePlanIntoDays(existing, plan, selectedSpots) {
           lat: gs.lat,
           lng: gs.lng,
           adcode: gs.adcode,
+          address: gs.address,
         }
       })
     return { ...d, spots }

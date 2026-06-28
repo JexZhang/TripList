@@ -20,6 +20,7 @@ type Spot = {
   lat?: number          // 必须从 search_poi 工具结果里"原样抄过来", 不要自己编
   lng?: number          // 必须从 search_poi 工具结果里"原样抄过来", 不要自己编
   adcode?: string       // 同上
+  address?: string      // 同上, 高德简短地址, 供导览地图使用
 }
 
 【规则】
@@ -30,7 +31,7 @@ type Spot = {
 5. 不要输出 \`\`\`json\`\`\` 代码块标记, 直接输出 JSON
 
 【可用工具】
-- search_poi(city, keyword, category?): 搜真实存在的地点。返回数组, 每项含 name/address/city/lat/lng/adcode。
+- search_poi(city, keyword, category?): 搜真实存在的地点。返回数组, 每项含 name/address/city/lat/lng/adcode。address 是高德简短地址, 请原样抄进最终 Spot 的 address 字段。
   ⚠️ 仅支持中国境内 POI (基于高德/Amap 数据源)。对于境外城市 (如莫斯科、东京、巴黎等), 不要调用此工具。
   ⚠️ 若返回 { error } 字段, 表示工具不可用或限流, 不要重试同一查询。
 - web_search(query): 搜互联网攻略/博主/季节性活动, 返回标题+摘要。
@@ -54,7 +55,7 @@ type Spot = {
 【示例】
 用户输入: 杭州 1 天 2 人 悠闲偏好
 输出:
-{"days":[{"date":"2026-06-01","spots":[{"type":"transport","name":"杭州东站","city":"杭州","time":"10:00","lat":30.291,"lng":120.213,"adcode":"330102"},{"type":"meal","name":"知味观(湖滨店)","city":"杭州","price":80,"time":"12:00","lat":30.244,"lng":120.166,"adcode":"330106"},{"type":"spot","name":"西湖断桥","city":"杭州","note":"步行可达, 适合午后散步","time":"14:30","lat":30.258,"lng":120.144,"adcode":"330106"},{"type":"hotel","name":"杭州西湖国宾馆","city":"杭州","price":880,"time":"19:00","lat":30.221,"lng":120.131,"adcode":"330106"}]}]}`
+{"days":[{"date":"2026-06-01","spots":[{"type":"transport","name":"杭州东站","city":"杭州","time":"10:00","lat":30.291,"lng":120.213,"adcode":"330102","address":"全福桥路2号"},{"type":"meal","name":"知味观(湖滨店)","city":"杭州","price":80,"time":"12:00","lat":30.244,"lng":120.166,"adcode":"330106","address":"仁和路83号"},{"type":"spot","name":"西湖断桥","city":"杭州","note":"步行可达, 适合午后散步","time":"14:30","lat":30.258,"lng":120.144,"adcode":"330106","address":"白堤"},{"type":"hotel","name":"杭州西湖国宾馆","city":"杭州","price":880,"time":"19:00","lat":30.221,"lng":120.131,"adcode":"330106","address":"杨公堤18号"}]}]}`
 
 function dayCount(startDate, endDate) {
   const s = new Date(startDate + 'T00:00:00')

@@ -93,6 +93,7 @@ export default function ItineraryView() {
       adcode: info.adcode,
       lat: info.lat,
       lng: info.lng,
+      address: info.address,
     }
     dispatch({ type: 'ADD_SPOT', dayId: activeDay.id, spot })
   }

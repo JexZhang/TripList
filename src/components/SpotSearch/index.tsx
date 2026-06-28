@@ -11,6 +11,7 @@ export interface SelectedSpotInfo {
   adcode?: string
   lat?: number
   lng?: number
+  address?: string
 }
 
 interface Props {
@@ -74,6 +75,7 @@ export default function SpotSearch({ open, defaultCity, onClose, onSelect }: Pro
       adcode: r.adcode || undefined,
       lat: r.lat || undefined,
       lng: r.lng || undefined,
+      address: r.address || undefined,
     })
     onClose()
   }

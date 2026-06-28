@@ -44,6 +44,7 @@ export default function EditSpotSheet({ open, spot, defaultCity, onClose, onSave
       adcode: info.adcode,
       lat: info.lat,
       lng: info.lng,
+      address: info.address,
     }))
   }
 
