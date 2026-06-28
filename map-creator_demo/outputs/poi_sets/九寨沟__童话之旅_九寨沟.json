@@ -1,0 +1,168 @@
+{
+  "city": "九寨沟",
+  "theme": "guide",
+  "source": "triplist",
+  "coordinate_policy": "AMap GCJ-02 is converted to WGS84 for OSMnx rendering",
+  "pois": [
+    {
+      "input_name": "九寨沟景区 · 沟口",
+      "resolved_name": "九寨沟景区 · 沟口",
+      "source": "triplist",
+      "poi_id": "jzg-s11",
+      "address": "建议早高峰入场，先坐观光车直奔最深处「长海 / 五彩池」。门票 169 加观光车 90，共 259/人。",
+      "province": null,
+      "city": "九寨沟",
+      "district": null,
+      "type": "transport",
+      "typecode": null,
+      "lng_gcj02": 103.9213,
+      "lat_gcj02": 33.1856,
+      "lng_wgs84": 103.918939,
+      "lat_wgs84": 33.187702,
+      "confidence": 1.0,
+      "status": "resolved",
+      "needs_review": false,
+      "candidates": [
+        {
+          "score": 1.0,
+          "poi_id": "jzg-s11",
+          "name": "九寨沟景区 · 沟口",
+          "address": "建议早高峰入场，先坐观光车直奔最深处「长海 / 五彩池」。门票 169 加观光车 90，共 259/人。",
+          "city": "九寨沟",
+          "district": "",
+          "type": "transport",
+          "lng_gcj02": 103.9213,
+          "lat_gcj02": 33.1856
+        }
+      ]
+    },
+    {
+      "input_name": "五花海 · 树正沟",
+      "resolved_name": "五花海 · 树正沟",
+      "source": "triplist",
+      "poi_id": "jzg-s12",
+      "address": "Y 字型沟口三条沟最经典段；五花海色彩最浓。",
+      "province": null,
+      "city": "九寨沟",
+      "district": null,
+      "type": "spot",
+      "typecode": null,
+      "lng_gcj02": 103.905,
+      "lat_gcj02": 33.228,
+      "lng_wgs84": 103.902647,
+      "lat_wgs84": 33.230082,
+      "confidence": 1.0,
+      "status": "resolved",
+      "needs_review": false,
+      "candidates": [
+        {
+          "score": 1.0,
+          "poi_id": "jzg-s12",
+          "name": "五花海 · 树正沟",
+          "address": "Y 字型沟口三条沟最经典段；五花海色彩最浓。",
+          "city": "九寨沟",
+          "district": "",
+          "type": "spot",
+          "lng_gcj02": 103.905,
+          "lat_gcj02": 33.228
+        }
+      ]
+    },
+    {
+      "input_name": "诺日朗瀑布",
+      "resolved_name": "诺日朗瀑布",
+      "source": "triplist",
+      "poi_id": "jzg-s13",
+      "address": "国内最宽钙华瀑布；中央换乘点，可吃自带午餐。",
+      "province": null,
+      "city": "九寨沟",
+      "district": null,
+      "type": "spot",
+      "typecode": null,
+      "lng_gcj02": 103.918,
+      "lat_gcj02": 33.231,
+      "lng_wgs84": 103.91564,
+      "lat_wgs84": 33.233074,
+      "confidence": 1.0,
+      "status": "resolved",
+      "needs_review": false,
+      "candidates": [
+        {
+          "score": 1.0,
+          "poi_id": "jzg-s13",
+          "name": "诺日朗瀑布",
+          "address": "国内最宽钙华瀑布；中央换乘点，可吃自带午餐。",
+          "city": "九寨沟",
+          "district": "",
+          "type": "spot",
+          "lng_gcj02": 103.918,
+          "lat_gcj02": 33.231
+        }
+      ]
+    },
+    {
+      "input_name": "长海 + 五彩池",
+      "resolved_name": "长海 + 五彩池",
+      "source": "triplist",
+      "poi_id": "jzg-s14",
+      "address": "沟内最高海拔湖泊（约 3100m），水色翡翠绿。",
+      "province": null,
+      "city": "九寨沟",
+      "district": null,
+      "type": "spot",
+      "typecode": null,
+      "lng_gcj02": 103.927,
+      "lat_gcj02": 33.05,
+      "lng_wgs84": 103.924638,
+      "lat_wgs84": 33.05219,
+      "confidence": 1.0,
+      "status": "resolved",
+      "needs_review": false,
+      "candidates": [
+        {
+          "score": 1.0,
+          "poi_id": "jzg-s14",
+          "name": "长海 + 五彩池",
+          "address": "沟内最高海拔湖泊（约 3100m），水色翡翠绿。",
+          "city": "九寨沟",
+          "district": "",
+          "type": "spot",
+          "lng_gcj02": 103.927,
+          "lat_gcj02": 33.05
+        }
+      ]
+    },
+    {
+      "input_name": "黄龙九寨站",
+      "resolved_name": "黄龙九寨站",
+      "source": "triplist",
+      "poi_id": "jzg-s15",
+      "address": "搭高铁返成都约 2h15m。",
+      "province": null,
+      "city": "九寨沟",
+      "district": null,
+      "type": "transport",
+      "typecode": null,
+      "lng_gcj02": 103.7167,
+      "lat_gcj02": 32.7833,
+      "lng_wgs84": 103.714187,
+      "lat_wgs84": 32.785513,
+      "confidence": 1.0,
+      "status": "resolved",
+      "needs_review": false,
+      "candidates": [
+        {
+          "score": 1.0,
+          "poi_id": "jzg-s15",
+          "name": "黄龙九寨站",
+          "address": "搭高铁返成都约 2h15m。",
+          "city": "九寨沟",
+          "district": "",
+          "type": "transport",
+          "lng_gcj02": 103.7167,
+          "lat_gcj02": 32.7833
+        }
+      ]
+    }
+  ]
+}

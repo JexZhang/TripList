@@ -1,0 +1,40 @@
+{
+  "city": "大兴安岭",
+  "theme": "guide",
+  "source": "triplist",
+  "coordinate_policy": "AMap GCJ-02 is converted to WGS84 for OSMnx rendering",
+  "pois": [
+    {
+      "input_name": "加格达奇站 · 经停",
+      "resolved_name": "加格达奇站 · 经停",
+      "source": "triplist",
+      "poi_id": "mohe-s12",
+      "address": "凌晨经停大兴安岭门户，可下车透气 15 分钟。",
+      "province": null,
+      "city": "大兴安岭",
+      "district": null,
+      "type": "spot",
+      "typecode": null,
+      "lng_gcj02": 124.1167,
+      "lat_gcj02": 50.4147,
+      "lng_wgs84": 124.109959,
+      "lat_wgs84": 50.41301,
+      "confidence": 1.0,
+      "status": "resolved",
+      "needs_review": false,
+      "candidates": [
+        {
+          "score": 1.0,
+          "poi_id": "mohe-s12",
+          "name": "加格达奇站 · 经停",
+          "address": "凌晨经停大兴安岭门户，可下车透气 15 分钟。",
+          "city": "大兴安岭",
+          "district": "",
+          "type": "spot",
+          "lng_gcj02": 124.1167,
+          "lat_gcj02": 50.4147
+        }
+      ]
+    }
+  ]
+}

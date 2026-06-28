@@ -1,0 +1,392 @@
+{
+  "city": "漠河",
+  "theme": "guide",
+  "source": "triplist",
+  "coordinate_policy": "AMap GCJ-02 is converted to WGS84 for OSMnx rendering",
+  "pois": [
+    {
+      "input_name": "漠河火车站",
+      "resolved_name": "漠河火车站",
+      "source": "triplist",
+      "poi_id": "mohe-s14",
+      "address": "中国最北火车站。出站可包车直奔北极村，约 80 公里。",
+      "province": null,
+      "city": "漠河",
+      "district": null,
+      "type": "transport",
+      "typecode": null,
+      "lng_gcj02": 122.5391,
+      "lat_gcj02": 53.1714,
+      "lng_wgs84": 122.533265,
+      "lat_wgs84": 53.169757,
+      "confidence": 1.0,
+      "status": "resolved",
+      "needs_review": false,
+      "candidates": [
+        {
+          "score": 1.0,
+          "poi_id": "mohe-s14",
+          "name": "漠河火车站",
+          "address": "中国最北火车站。出站可包车直奔北极村，约 80 公里。",
+          "city": "漠河",
+          "district": "",
+          "type": "transport",
+          "lng_gcj02": 122.5391,
+          "lat_gcj02": 53.1714
+        }
+      ]
+    },
+    {
+      "input_name": "五六火灾纪念馆",
+      "resolved_name": "五六火灾纪念馆",
+      "source": "triplist",
+      "poi_id": "mohe-s15",
+      "address": "1987 年大火纪念，记录大兴安岭浩劫；门票 60 元，约 1 小时。",
+      "province": null,
+      "city": "漠河",
+      "district": null,
+      "type": "spot",
+      "typecode": null,
+      "lng_gcj02": 122.553,
+      "lat_gcj02": 53.009,
+      "lng_wgs84": 122.547238,
+      "lat_wgs84": 53.007493,
+      "confidence": 1.0,
+      "status": "resolved",
+      "needs_review": false,
+      "candidates": [
+        {
+          "score": 1.0,
+          "poi_id": "mohe-s15",
+          "name": "五六火灾纪念馆",
+          "address": "1987 年大火纪念，记录大兴安岭浩劫；门票 60 元，约 1 小时。",
+          "city": "漠河",
+          "district": "",
+          "type": "spot",
+          "lng_gcj02": 122.553,
+          "lat_gcj02": 53.009
+        }
+      ]
+    },
+    {
+      "input_name": "北极村",
+      "resolved_name": "北极村",
+      "source": "triplist",
+      "poi_id": "mohe-s16",
+      "address": "中国最北村落，到达即看落日。民宿 18:00 开晚饭。",
+      "province": null,
+      "city": "漠河",
+      "district": null,
+      "type": "transport",
+      "typecode": null,
+      "lng_gcj02": 122.355,
+      "lat_gcj02": 53.4773,
+      "lng_wgs84": 122.348751,
+      "lat_wgs84": 53.475263,
+      "confidence": 1.0,
+      "status": "resolved",
+      "needs_review": false,
+      "candidates": [
+        {
+          "score": 1.0,
+          "poi_id": "mohe-s16",
+          "name": "北极村",
+          "address": "中国最北村落，到达即看落日。民宿 18:00 开晚饭。",
+          "city": "漠河",
+          "district": "",
+          "type": "transport",
+          "lng_gcj02": 122.355,
+          "lat_gcj02": 53.4773
+        }
+      ]
+    },
+    {
+      "input_name": "最北邮局",
+      "resolved_name": "最北邮局",
+      "source": "triplist",
+      "poi_id": "mohe-s19",
+      "address": "寄一张明信片回家，邮戳上有「最北」字样。",
+      "province": null,
+      "city": "漠河",
+      "district": null,
+      "type": "spot",
+      "typecode": null,
+      "lng_gcj02": 122.358,
+      "lat_gcj02": 53.481,
+      "lng_wgs84": 122.351742,
+      "lat_wgs84": 53.478957,
+      "confidence": 1.0,
+      "status": "resolved",
+      "needs_review": false,
+      "candidates": [
+        {
+          "score": 1.0,
+          "poi_id": "mohe-s19",
+          "name": "最北邮局",
+          "address": "寄一张明信片回家，邮戳上有「最北」字样。",
+          "city": "漠河",
+          "district": "",
+          "type": "spot",
+          "lng_gcj02": 122.358,
+          "lat_gcj02": 53.481
+        }
+      ]
+    },
+    {
+      "input_name": "最北点广场 · 神州北极",
+      "resolved_name": "最北点广场 · 神州北极",
+      "source": "triplist",
+      "poi_id": "mohe-s20",
+      "address": "地标石碑打卡。零下 30°C，泼水成冰试试看。",
+      "province": null,
+      "city": "漠河",
+      "district": null,
+      "type": "spot",
+      "typecode": null,
+      "lng_gcj02": 122.33,
+      "lat_gcj02": 53.556,
+      "lng_wgs84": 122.33,
+      "lat_wgs84": 53.556,
+      "confidence": 1.0,
+      "status": "resolved",
+      "needs_review": false,
+      "candidates": [
+        {
+          "score": 1.0,
+          "poi_id": "mohe-s20",
+          "name": "最北点广场 · 神州北极",
+          "address": "地标石碑打卡。零下 30°C，泼水成冰试试看。",
+          "city": "漠河",
+          "district": "",
+          "type": "spot",
+          "lng_gcj02": 122.33,
+          "lat_gcj02": 53.556
+        }
+      ]
+    },
+    {
+      "input_name": "北极沙洲 · 中俄分界",
+      "resolved_name": "北极沙洲 · 中俄分界",
+      "source": "triplist",
+      "poi_id": "mohe-s21",
+      "address": "黑龙江对岸即俄罗斯。冬季江面封冻可走上去；切勿越界。",
+      "province": null,
+      "city": "漠河",
+      "district": null,
+      "type": "spot",
+      "typecode": null,
+      "lng_gcj02": 122.35,
+      "lat_gcj02": 53.557,
+      "lng_wgs84": 122.35,
+      "lat_wgs84": 53.557,
+      "confidence": 1.0,
+      "status": "resolved",
+      "needs_review": false,
+      "candidates": [
+        {
+          "score": 1.0,
+          "poi_id": "mohe-s21",
+          "name": "北极沙洲 · 中俄分界",
+          "address": "黑龙江对岸即俄罗斯。冬季江面封冻可走上去；切勿越界。",
+          "city": "漠河",
+          "district": "",
+          "type": "spot",
+          "lng_gcj02": 122.35,
+          "lat_gcj02": 53.557
+        }
+      ]
+    },
+    {
+      "input_name": "圣诞滑雪场",
+      "resolved_name": "圣诞滑雪场",
+      "source": "triplist",
+      "poi_id": "mohe-s22",
+      "address": "中国最北滑雪场，价格亲民；夜场可看极光（运气好）。",
+      "province": null,
+      "city": "漠河",
+      "district": null,
+      "type": "spot",
+      "typecode": null,
+      "lng_gcj02": 122.369,
+      "lat_gcj02": 53.478,
+      "lng_wgs84": 122.362715,
+      "lat_wgs84": 53.475942,
+      "confidence": 1.0,
+      "status": "resolved",
+      "needs_review": false,
+      "candidates": [
+        {
+          "score": 1.0,
+          "poi_id": "mohe-s22",
+          "name": "圣诞滑雪场",
+          "address": "中国最北滑雪场，价格亲民；夜场可看极光（运气好）。",
+          "city": "漠河",
+          "district": "",
+          "type": "spot",
+          "lng_gcj02": 122.369,
+          "lat_gcj02": 53.478
+        }
+      ]
+    },
+    {
+      "input_name": "北红村",
+      "resolved_name": "北红村",
+      "source": "triplist",
+      "poi_id": "mohe-s25",
+      "address": "比北极村更原生态，木刻楞老屋。东北饺子管够。",
+      "province": null,
+      "city": "漠河",
+      "district": null,
+      "type": "spot",
+      "typecode": null,
+      "lng_gcj02": 123.254,
+      "lat_gcj02": 53.486,
+      "lng_wgs84": 123.247163,
+      "lat_wgs84": 53.484071,
+      "confidence": 1.0,
+      "status": "resolved",
+      "needs_review": false,
+      "candidates": [
+        {
+          "score": 1.0,
+          "poi_id": "mohe-s25",
+          "name": "北红村",
+          "address": "比北极村更原生态，木刻楞老屋。东北饺子管够。",
+          "city": "漠河",
+          "district": "",
+          "type": "spot",
+          "lng_gcj02": 123.254,
+          "lat_gcj02": 53.486
+        }
+      ]
+    },
+    {
+      "input_name": "龙江第一湾",
+      "resolved_name": "龙江第一湾",
+      "source": "triplist",
+      "poi_id": "mohe-s26",
+      "address": "登 999 级阶梯到观景台，黑龙江 Ω 型大转弯，绝景。",
+      "province": null,
+      "city": "漠河",
+      "district": null,
+      "type": "spot",
+      "typecode": null,
+      "lng_gcj02": 121.079,
+      "lat_gcj02": 53.3447,
+      "lng_wgs84": 121.072666,
+      "lat_wgs84": 53.342725,
+      "confidence": 1.0,
+      "status": "resolved",
+      "needs_review": false,
+      "candidates": [
+        {
+          "score": 1.0,
+          "poi_id": "mohe-s26",
+          "name": "龙江第一湾",
+          "address": "登 999 级阶梯到观景台，黑龙江 Ω 型大转弯，绝景。",
+          "city": "漠河",
+          "district": "",
+          "type": "spot",
+          "lng_gcj02": 121.079,
+          "lat_gcj02": 53.3447
+        }
+      ]
+    },
+    {
+      "input_name": "乌苏里浅滩 · 中国最北点",
+      "resolved_name": "乌苏里浅滩 · 中国最北点",
+      "source": "triplist",
+      "poi_id": "mohe-s27",
+      "address": "真正的北纬 53°33' 中国最北端纪念碑。",
+      "province": null,
+      "city": "漠河",
+      "district": null,
+      "type": "spot",
+      "typecode": null,
+      "lng_gcj02": 122.5104,
+      "lat_gcj02": 53.5644,
+      "lng_wgs84": 122.5104,
+      "lat_wgs84": 53.5644,
+      "confidence": 1.0,
+      "status": "resolved",
+      "needs_review": false,
+      "candidates": [
+        {
+          "score": 1.0,
+          "poi_id": "mohe-s27",
+          "name": "乌苏里浅滩 · 中国最北点",
+          "address": "真正的北纬 53°33' 中国最北端纪念碑。",
+          "city": "漠河",
+          "district": "",
+          "type": "spot",
+          "lng_gcj02": 122.5104,
+          "lat_gcj02": 53.5644
+        }
+      ]
+    },
+    {
+      "input_name": "漠河市区住宿",
+      "resolved_name": "漠河市区住宿",
+      "source": "triplist",
+      "poi_id": "mohe-s28",
+      "address": "晚饭推荐「北极人家」铁锅炖。",
+      "province": null,
+      "city": "漠河",
+      "district": null,
+      "type": "hotel",
+      "typecode": null,
+      "lng_gcj02": 122.54,
+      "lat_gcj02": 52.97,
+      "lng_wgs84": 122.534206,
+      "lat_wgs84": 52.968492,
+      "confidence": 1.0,
+      "status": "resolved",
+      "needs_review": false,
+      "candidates": [
+        {
+          "score": 1.0,
+          "poi_id": "mohe-s28",
+          "name": "漠河市区住宿",
+          "address": "晚饭推荐「北极人家」铁锅炖。",
+          "city": "漠河",
+          "district": "",
+          "type": "hotel",
+          "lng_gcj02": 122.54,
+          "lat_gcj02": 52.97
+        }
+      ]
+    },
+    {
+      "input_name": "漠河古莲机场",
+      "resolved_name": "漠河古莲机场",
+      "source": "triplist",
+      "poi_id": "mohe-s31",
+      "address": "中国最北机场，候机楼很小。航班多经停哈尔滨中转返程。",
+      "province": null,
+      "city": "漠河",
+      "district": null,
+      "type": "transport",
+      "typecode": null,
+      "lng_gcj02": 122.4302,
+      "lat_gcj02": 52.9133,
+      "lng_wgs84": 122.424005,
+      "lat_wgs84": 52.911555,
+      "confidence": 1.0,
+      "status": "resolved",
+      "needs_review": false,
+      "candidates": [
+        {
+          "score": 1.0,
+          "poi_id": "mohe-s31",
+          "name": "漠河古莲机场",
+          "address": "中国最北机场，候机楼很小。航班多经停哈尔滨中转返程。",
+          "city": "漠河",
+          "district": "",
+          "type": "transport",
+          "lng_gcj02": 122.4302,
+          "lat_gcj02": 52.9133
+        }
+      ]
+    }
+  ]
+}
