@@ -19,6 +19,8 @@ export interface TripHeaderViewProps {
   onPaxChange: (pax: number) => void
   /** 协作者条点击 */
   onCollabTap: () => void
+  /** 整体日期调整入口点击 */
+  onDateAdjustTap: () => void
 }
 
 /** 标准化 trip.aiStatus 到 AIBadge 可消费的 status */

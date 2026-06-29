@@ -162,3 +162,16 @@
 .thpp-ai-bar {
   margin: 0 0 16rpx;
 }
+
+.thpp-date-edit {
+  padding: 8rpx 10rpx;
+  margin: -8rpx -10rpx;
+  border: 2rpx dashed var(--accent);
+  border-radius: var(--r-sm);
+}
+.thpp-date-edit-value {
+  display: inline-flex;
+  align-items: center;
+  gap: 8rpx;
+}
+.thpp-date-edit:active { background: rgba(193, 61, 47, 0.08); }

@@ -104,3 +104,14 @@
 .thmg-ai-bar {
   margin: 0 0 12rpx;
 }
+
+.thmg-date-edit {
+  display: inline-flex;
+  align-items: center;
+  gap: 6rpx;
+  padding: 4rpx 10rpx;
+  border-bottom: 3rpx solid var(--accent);
+  color: var(--ink);
+  font-weight: 800;
+}
+.thmg-date-edit:active { color: var(--accent); }

@@ -3,25 +3,7 @@ import Taro from '@tarojs/taro'
 import dayjs from 'dayjs'
 import type { Trip, Day, Spot } from '../types/trip'
 import { getTrip, updateTrip, applyAiDraft as applyAiDraftCloud } from '../utils/db'
-
-function resyncDays(days: Day[]): Day[] {
-  if (days.length === 0) return days
-  const base = days[0].date
-  return days.map((d, i) => ({
-    ...d,
-    date: dayjs(base).add(i, 'day').format('YYYY-MM-DD'),
-  }))
-}
-
-function withSyncedDays(trip: Trip, days: Day[]): Trip {
-  const synced = resyncDays(days)
-  return {
-    ...trip,
-    days: synced,
-    startDate: synced[0]?.date || trip.startDate,
-    endDate: synced[synced.length - 1]?.date || trip.endDate,
-  }
-}
+import { applyOrganizedTripDays, deleteTripDay, moveTripDay, rebaseTripDates, reorderTripDays, syncContinuousDays } from './trip-date-utils'
 
 type Action =
   | { type: 'SET_TRIP'; trip: Trip }
@@ -30,6 +12,9 @@ type Action =
   | { type: 'ADD_DAY'; day: Day; position?: 'front' | 'back' }
   | { type: 'DELETE_DAY'; dayId: string }
   | { type: 'MOVE_DAY'; dayId: string; targetIndex: number }
+  | { type: 'REBASE_DATES'; startDate: string }
+  | { type: 'REORDER_DAYS'; dayIds: string[] }
+  | { type: 'APPLY_ORGANIZED_DAYS'; dayIds: string[] }
   | { type: 'ADD_SPOT'; dayId: string; spot: Spot }
   | { type: 'UPDATE_SPOT'; dayId: string; spotId: string; patch: Partial<Spot> }
   | { type: 'DELETE_SPOT'; dayId: string; spotId: string }
@@ -63,31 +48,23 @@ function reducer(state: State, a: Action): State {
         // 在最前插入: 新首日的 date = 原首日 -1, withSyncedDays 会按这个 base 重新派生
         const oldStart = trip.days[0]?.date || trip.startDate
         const prepended = { ...a.day, date: dayjs(oldStart).subtract(1, 'day').format('YYYY-MM-DD') }
-        return { ...state, trip: withSyncedDays(trip, [prepended, ...trip.days]) }
+        return { ...state, trip: syncContinuousDays(trip, [prepended, ...trip.days], undefined, { clearWeather: false }) }
       }
-      return { ...state, trip: withSyncedDays(trip, [...trip.days, a.day]) }
+      return { ...state, trip: syncContinuousDays(trip, [...trip.days, a.day], undefined, { clearWeather: false }) }
     }
     case 'DELETE_DAY':
-      return { ...state, trip: withSyncedDays(trip, trip.days.filter(d => d.id !== a.dayId)) }
-    case 'MOVE_DAY': {
-      const fromIdx = trip.days.findIndex(d => d.id === a.dayId)
-      if (fromIdx < 0) return state
-      const clamped = Math.max(0, Math.min(trip.days.length - 1, a.targetIndex))
-      if (clamped === fromIdx) return state
-      const next = trip.days.slice()
-      const [moved] = next.splice(fromIdx, 1)
-      next.splice(clamped, 0, moved)
-      // 决定整体起点是否平移:
-      //   挪到最前 -> 整体提前 1 天 (新首日 = 原首日 -1)
-      //   挪到最后 -> 整体推后 1 天 (新首日 = 原首日 +1)
-      //   中间 -> 不变
-      const oldStart = trip.days[0].date
-      let newBase = oldStart
-      if (clamped === 0) newBase = dayjs(oldStart).subtract(1, 'day').format('YYYY-MM-DD')
-      else if (clamped === trip.days.length - 1) newBase = dayjs(oldStart).add(1, 'day').format('YYYY-MM-DD')
-      next[0] = { ...next[0], date: newBase }
-      return { ...state, trip: withSyncedDays(trip, next) }
-    }
+      if (trip.days.length <= 1) return state
+      return { ...state, trip: deleteTripDay(trip, a.dayId) }
+    case 'MOVE_DAY':
+      return { ...state, trip: moveTripDay(trip, a.dayId, a.targetIndex) }
+    case 'REBASE_DATES':
+      if (!trip.days.length) return state
+      return { ...state, trip: rebaseTripDates(trip, a.startDate) }
+    case 'REORDER_DAYS':
+      return { ...state, trip: reorderTripDays(trip, a.dayIds) }
+    case 'APPLY_ORGANIZED_DAYS':
+      if (!a.dayIds.length) return state
+      return { ...state, trip: applyOrganizedTripDays(trip, a.dayIds) }
     case 'ADD_SPOT':
       return {
         ...state,

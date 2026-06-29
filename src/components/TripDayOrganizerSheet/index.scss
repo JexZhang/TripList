@@ -1,0 +1,163 @@
+.tdos-mask {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: flex-end;
+  background: rgba(43, 26, 16, 0.45);
+  animation: fade-in 0.22s var(--ease-out) both;
+}
+.tdos-sheet {
+  width: 100%;
+  max-height: 86vh;
+  box-sizing: border-box;
+  padding: 20rpx 24rpx 44rpx;
+  overflow-y: auto;
+  color: var(--ink);
+  background: var(--surface);
+  border-radius: var(--r-xl) var(--r-xl) 0 0;
+  box-shadow: 0 -16rpx 48rpx rgba(43, 26, 16, 0.15);
+  animation: sheet-up 0.36s var(--ease-spring) both;
+}
+.tdos-top {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: 120rpx 1fr 120rpx;
+  align-items: center;
+  padding: 18rpx 0 24rpx;
+  background: var(--surface);
+}
+.tdos-title { text-align: center; font-size: 32rpx; font-weight: 900; color: var(--ink); }
+.tdos-top-action { font-size: 26rpx; font-weight: 700; color: var(--ink-3); }
+.tdos-done { text-align: right; color: var(--accent); }
+.tdos-list { display: flex; flex-direction: column; gap: 18rpx; }
+.tdos-row { display: grid; grid-template-columns: 116rpx 1fr; gap: 18rpx; align-items: stretch; }
+.tdos-row.is-highlighted .tdos-slot,
+.tdos-row.is-highlighted .tdos-card { border-color: var(--accent); box-shadow: 0 0 0 2rpx rgba(255, 122, 46, 0.16); }
+.tdos-slot {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 116rpx;
+  border: 2rpx solid var(--line);
+  border-radius: var(--r-md);
+  background: var(--bg-soft);
+}
+.tdos-day { font-size: 22rpx; font-weight: 900; color: var(--ink); font-family: var(--font-mono); }
+.tdos-date { margin-top: 8rpx; font-size: 22rpx; color: var(--ink-3); font-family: var(--font-mono); }
+.tdos-card {
+  position: relative;
+  display: flex;
+  align-items: stretch;
+  min-height: 116rpx;
+  border: 2rpx solid var(--line);
+  border-radius: var(--r-md);
+  background: var(--surface-2);
+  overflow: hidden;
+  transition: transform 0.16s var(--ease-out), border-color 0.16s var(--ease-out);
+}
+.tdos-card:active { transform: scale(0.985); border-color: var(--accent); }
+.tdos-card.is-dragging {
+  z-index: 4;
+  border-color: var(--accent);
+  box-shadow: 0 18rpx 42rpx rgba(43, 26, 16, 0.18);
+  transition: none;
+}
+.tdos-card-main {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 8rpx;
+  padding: 20rpx 22rpx;
+}
+.tdos-summary {
+  font-size: 28rpx;
+  font-weight: 800;
+  color: var(--ink);
+  line-height: 1.35;
+}
+.tdos-card-label { font-size: 20rpx; color: var(--ink-3); }
+.tdos-drag-handle {
+  flex: 0 0 72rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-left: 1rpx solid var(--line);
+  background: rgba(43, 26, 16, 0.025);
+}
+.tdos-drag-handle:active {
+  background: var(--accent-bg);
+}
+.tdos-grip-icon {
+  width: 32rpx;
+  display: flex;
+  flex-direction: column;
+  gap: 7rpx;
+}
+.tdos-grip-line {
+  height: 4rpx;
+  border-radius: 999rpx;
+  background: var(--ink-3);
+}
+.tdos-delete {
+  flex: 0 0 72rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-left: 1rpx solid var(--line);
+  color: var(--coral, #c43d3d);
+  font-size: 24rpx;
+  font-weight: 800;
+  background: rgba(196, 61, 61, 0.06);
+}
+.tdos-delete:active { background: rgba(196, 61, 61, 0.14); }
+.tdos-trash-icon {
+  position: relative;
+  width: 30rpx;
+  height: 34rpx;
+}
+.tdos-trash-lid {
+  position: absolute;
+  left: 3rpx;
+  top: 2rpx;
+  width: 24rpx;
+  height: 4rpx;
+  border-radius: 999rpx;
+  background: var(--coral, #c43d3d);
+}
+.tdos-trash-lid::before {
+  content: '';
+  position: absolute;
+  left: 8rpx;
+  top: -5rpx;
+  width: 8rpx;
+  height: 5rpx;
+  border-radius: 4rpx 4rpx 0 0;
+  background: var(--coral, #c43d3d);
+}
+.tdos-trash-can {
+  position: absolute;
+  left: 5rpx;
+  top: 9rpx;
+  width: 20rpx;
+  height: 22rpx;
+  box-sizing: border-box;
+  border: 4rpx solid var(--coral, #c43d3d);
+  border-top-width: 0;
+  border-radius: 0 0 5rpx 5rpx;
+  display: flex;
+  justify-content: center;
+  gap: 4rpx;
+  padding-top: 4rpx;
+}
+.tdos-trash-line {
+  width: 3rpx;
+  height: 13rpx;
+  border-radius: 999rpx;
+  background: var(--coral, #c43d3d);
+}

@@ -1,0 +1,96 @@
+.tdas-mask {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: flex-end;
+  background: rgba(43, 26, 16, 0.45);
+  animation: fade-in 0.22s var(--ease-out) both;
+}
+.tdas-sheet {
+  position: relative;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 40rpx 32rpx 48rpx;
+  color: var(--ink);
+  background: var(--surface);
+  border-radius: var(--r-xl) var(--r-xl) 0 0;
+  box-shadow: 0 -16rpx 48rpx rgba(43, 26, 16, 0.15);
+  animation: sheet-up 0.36s var(--ease-spring) both;
+}
+.tdas-sheet::before {
+  content: '';
+  position: absolute;
+  top: 16rpx;
+  left: 50%;
+  width: 72rpx;
+  height: 8rpx;
+  border-radius: 999rpx;
+  background: var(--line-2);
+  transform: translateX(-50%);
+}
+.tdas-head { padding: 8rpx 0 28rpx; }
+.tdas-title { font-size: 34rpx; font-weight: 800; color: var(--ink); }
+.tdas-picker {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 24rpx 28rpx;
+  border: 2rpx solid var(--line);
+  border-radius: var(--r-md);
+  background: var(--bg-soft);
+}
+.tdas-picker:active { border-color: var(--accent); }
+.tdas-picker.is-disabled { opacity: 0.55; }
+.tdas-picker-label { font-size: 24rpx; color: var(--ink-3); }
+.tdas-picker-value { font-size: 30rpx; font-weight: 800; color: var(--ink); font-family: var(--font-mono); }
+.tdas-preview {
+  margin: 20rpx 0 28rpx;
+  padding: 18rpx 22rpx;
+  border-radius: var(--r-sm);
+  background: var(--accent-bg);
+  color: var(--accent);
+  font-size: 24rpx;
+  font-weight: 700;
+}
+.tdas-group {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24rpx;
+  padding: 24rpx 0;
+  border-top: 1rpx solid var(--line);
+  border-bottom: 1rpx solid var(--line);
+}
+.tdas-group-copy { display: flex; flex-direction: column; gap: 8rpx; }
+.tdas-group-title { font-size: 28rpx; font-weight: 800; color: var(--ink); }
+.tdas-group-desc { font-size: 22rpx; color: var(--ink-3); }
+.tdas-organize {
+  flex: 0 0 auto;
+  padding: 16rpx 24rpx;
+  border-radius: var(--r-pill);
+  color: var(--accent);
+  background: var(--accent-bg);
+  font-size: 24rpx;
+  font-weight: 800;
+}
+.tdas-organize:active { transform: scale(0.96); }
+.tdas-confirm {
+  margin-top: 28rpx;
+  padding: 24rpx 0;
+  border-radius: var(--r-pill);
+  text-align: center;
+  color: #fff;
+  background: var(--accent);
+  font-size: 30rpx;
+  font-weight: 800;
+}
+.tdas-confirm.is-disabled { opacity: 0.45; }
+.tdas-cancel {
+  margin-top: 16rpx;
+  padding: 22rpx 0 4rpx;
+  text-align: center;
+  color: var(--ink-3);
+  font-size: 28rpx;
+  font-weight: 700;
+}

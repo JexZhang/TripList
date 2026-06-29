@@ -14,6 +14,8 @@ import ShareTypeSheet from '../../components/ShareTypeSheet'
 import AIInterview from '../../components/AIInterview'
 import AILoadingTheater from '../../components/AILoadingTheater'
 import TripAIStatusBar, { type TripAIStatusBarStatus } from '../../components/TripAIStatusBar'
+import TripDateAdjustSheet from '../../components/TripDateAdjustSheet'
+import TripDayOrganizerSheet from '../../components/TripDayOrganizerSheet'
 import AIPlanPreview from '../../components/AIPlanPreview'
 import { draftKeyEnrich } from '../../components/AIInterview'
 import TripHeader from './TripHeader'
@@ -37,8 +39,7 @@ const VIEWS: { key: ViewKey; label: string }[] = [
 ]
 
 function TripBody() {
-  const { state, dispatch, applyAiDraft } = useTripStore()
-  const { openid } = useTripStore()
+  const { state, dispatch, applyAiDraft, openid, readonly: ro } = useTripStore()
   const { me } = useMe()
   const themeCls = useThemeClass('trip')
   const [view, setView] = useState<ViewKey>('itinerary')
@@ -46,6 +47,9 @@ function TripBody() {
   const [shareOpen, setShareOpen] = useState(false)
   const [shareReady, setShareReady] = useState({ readonly: false, collab: false })
   const [collabSheetOpen, setCollabSheetOpen] = useState(false)
+  const [dateAdjustOpen, setDateAdjustOpen] = useState(false)
+  const [organizerOpen, setOrganizerOpen] = useState(false)
+  const [organizerInitialDayId, setOrganizerInitialDayId] = useState('')
 
   // === AI 草稿流相关 ===
   const [aiFormOpen, setAiFormOpen] = useState(false)
@@ -163,6 +167,22 @@ function TripBody() {
     if (!t || !isOwner) return
     if (t.aiStatus === null || t.aiStatus === undefined) setAiFormOpen(true)
     // 否则什么都不做 (用户应该点状态条)
+  }
+
+
+  const openOrganizer = (dayId = '') => {
+    if (ro) return
+    setOrganizerInitialDayId(dayId)
+    setDateAdjustOpen(false)
+    setOrganizerOpen(true)
+  }
+
+  const handleDateRebase = (startDate: string) => {
+    dispatch({ type: 'REBASE_DATES', startDate })
+  }
+
+  const handleOrganizerComplete = (dayIds: string[]) => {
+    dispatch({ type: 'APPLY_ORGANIZED_DAYS', dayIds })
   }
 
   const handleTheaterCancel = async () => {
@@ -306,6 +326,7 @@ function TripBody() {
         onBack={() => Taro.navigateBack().catch(() => Taro.reLaunch({ url: '/pages/home/index' }))}
         onPaxChange={(next) => dispatch({ type: 'UPDATE_TRIP', patch: { pax: next } })}
         onCollabTap={() => setCollabSheetOpen(true)}
+        onDateAdjustTap={() => { if (!ro) setDateAdjustOpen(true) }}
       />
 
       <View className='trip-tabs'>
@@ -328,7 +349,7 @@ function TripBody() {
                 onTap={handleInlineBarTap}
               />
             )}
-            <ItineraryView />
+            <ItineraryView onOrganizeDay={openOrganizer} />
           </>
         )}
         {view === 'budget' && <BudgetView />}
@@ -357,6 +378,26 @@ function TripBody() {
         ownerAvatarUrl={displayTrip?.ownerAvatarUrl || t.ownerAvatarUrl}
         onClose={() => setCollabSheetOpen(false)}
       />
+
+      {!ro && (
+        <TripDateAdjustSheet
+          open={dateAdjustOpen}
+          trip={t}
+          onClose={() => setDateAdjustOpen(false)}
+          onConfirm={handleDateRebase}
+          onOrganize={() => openOrganizer()}
+        />
+      )}
+
+      {!ro && (
+        <TripDayOrganizerSheet
+          open={organizerOpen}
+          days={t.days}
+          initialDayId={organizerInitialDayId}
+          onClose={() => setOrganizerOpen(false)}
+          onComplete={handleOrganizerComplete}
+        />
+      )}
 
       <AIInterview
         open={aiFormOpen}

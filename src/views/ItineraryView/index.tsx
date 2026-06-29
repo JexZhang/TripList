@@ -16,7 +16,11 @@ import ItinMinimal from './ItinMinimal'
 import type { ItinViewProps } from './shared'
 import './index.scss'
 
-export default function ItineraryView() {
+interface Props {
+  onOrganizeDay?: (dayId: string) => void
+}
+
+export default function ItineraryView({ onOrganizeDay }: Props = {}) {
   const { state, dispatch, readonly: ro } = useTripStore()
   const trip = state.trip!
   const { theme } = useTheme()
@@ -45,42 +49,9 @@ export default function ItineraryView() {
     setActiveDayId(day.id)
   }
 
-  const longPressDay = async (dayId: string, dayIdx: number) => {
-    const total = trip.days.length
-    const dayNo = dayIdx + 1
-    const items: { label: string; action: () => void }[] = []
-    if (dayIdx > 0) {
-      items.push({ label: '← 前移一位', action: () => dispatch({ type: 'MOVE_DAY', dayId, targetIndex: dayIdx - 1 }) })
-      items.push({ label: '⇤ 移到最前 (整体提前 1 天)', action: () => dispatch({ type: 'MOVE_DAY', dayId, targetIndex: 0 }) })
-    }
-    if (dayIdx < total - 1) {
-      items.push({ label: '后移一位 →', action: () => dispatch({ type: 'MOVE_DAY', dayId, targetIndex: dayIdx + 1 }) })
-      items.push({ label: '⇥ 移到最后 (整体延后 1 天)', action: () => dispatch({ type: 'MOVE_DAY', dayId, targetIndex: total - 1 }) })
-    }
-    items.push({
-      label: `删除 Day ${dayNo}`,
-      action: async () => {
-        const res = await Taro.showModal({
-          title: `删除 Day ${dayNo}?`,
-          content: '该日的所有 spots 一并删除',
-          confirmText: '删除',
-          confirmColor: '#c43d3d',
-        })
-        if (res.confirm) {
-          dispatch({ type: 'DELETE_DAY', dayId })
-          if (activeDayId === dayId) {
-            setActiveDayId(trip.days.find((d) => d.id !== dayId)?.id || '')
-          }
-        }
-      },
-    })
-    try {
-      const res = await Taro.showActionSheet({ itemList: items.map((i) => i.label) })
-      const picked = items[res.tapIndex]
-      if (picked) await picked.action()
-    } catch {
-      // 用户取消
-    }
+  const longPressDay = (dayId: string) => {
+    setActiveDayId(dayId)
+    onOrganizeDay?.(dayId)
   }
 
   const handleAddSpot = (info: SelectedSpotInfo) => {
@@ -118,7 +89,7 @@ export default function ItineraryView() {
     activeDayIdx,
     fallbackDestination: trip.destinations?.[0] || null,
     onSelectDay: setActiveDayId,
-    onLongPressDay: ro ? noop : longPressDay,
+    onLongPressDay: ro ? noop : (dayId) => longPressDay(dayId),
     onAddDay: ro ? noop : addDay,
     onSpotClick: ro ? noop : (s) => setEditSpot({ dayId: activeDay.id, spot: s }),
     onSpotLongPress: ro ? noop : longPressSpot,
@@ -132,7 +103,7 @@ export default function ItineraryView() {
         days={trip.days}
         activeId={activeDayId}
         onSelect={setActiveDayId}
-        onLongPress={ro ? noop : longPressDay}
+        onLongPress={ro ? noop : (dayId) => longPressDay(dayId)}
         onAdd={ro ? noop : addDay}
       />
 

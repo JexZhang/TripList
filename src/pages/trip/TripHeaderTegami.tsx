@@ -10,7 +10,7 @@ const PAX_OPTIONS = Array.from({ length: 99 }, (_, i) => `${i + 1} 人`)
 const statusBarHeight = Taro.getSystemInfoSync().statusBarHeight || 20
 
 export default function TripHeaderTegami({
-  trip, isOwner, aiStatus, onAITap, onMenuTap, onBack, onPaxChange, onCollabTap,
+  trip, isOwner, aiStatus, onAITap, onMenuTap, onBack, onPaxChange, onCollabTap, onDateAdjustTap,
 }: TripHeaderViewProps) {
   const showAI = isOwner && !aiStatus
   const startDate = trip.days[0]?.date || trip.startDate
@@ -34,6 +34,10 @@ export default function TripHeaderTegami({
           <Text className='thtg-name'>{trip.name}</Text>
           <View className='thtg-meta'>
             <Text>{startDate} → {endDate}</Text>
+            <View className='thtg-date-edit' onClick={onDateAdjustTap}>
+              <Icon name='calendar' size={14} color='var(--accent)' />
+              <Text>日期</Text>
+            </View>
             <Text className='thtg-dot'>·</Text>
             <Text>{trip.days.length || 0} 天</Text>
             <Text className='thtg-dot'>·</Text>

@@ -1,6 +1,7 @@
 import { View, Text, Picker } from '@tarojs/components'
 import Taro from '@tarojs/taro'
 import AIBadge from '../../components/AIBadge'
+import Icon from '../../components/Icon'
 import CollaboratorsBar from '../../components/CollaboratorsBar'
 import type { TripHeaderViewProps } from './shared-header'
 import './styles/header-postcard.scss'
@@ -9,7 +10,7 @@ const PAX_OPTIONS = Array.from({ length: 99 }, (_, i) => `${i + 1} 人`)
 const statusBarHeight = Taro.getSystemInfoSync().statusBarHeight || 20
 
 export default function TripHeaderPostcard({
-  trip, isOwner, aiStatus, onAITap, onMenuTap, onBack, onPaxChange, onCollabTap,
+  trip, isOwner, aiStatus, onAITap, onMenuTap, onBack, onPaxChange, onCollabTap, onDateAdjustTap,
 }: TripHeaderViewProps) {
   const showAI = isOwner && !aiStatus
   const startDate = trip.days[0]?.date || trip.startDate
@@ -35,9 +36,12 @@ export default function TripHeaderPostcard({
           <View className='thpp-titleblock'>
             <Text className='thpp-name'>{trip.name}</Text>
             <View className='thpp-meta-grid'>
-              <View className='thpp-meta-row'>
+              <View className='thpp-meta-row thpp-date-edit' onClick={onDateAdjustTap}>
                 <Text className='thpp-meta-l'>出发</Text>
-                <Text className='thpp-meta-v'>{startDate}</Text>
+                <View className='thpp-date-edit-value'>
+                  <Icon name='calendar' size={14} color='var(--accent)' />
+                  <Text className='thpp-meta-v'>{startDate}</Text>
+                </View>
               </View>
               <View className='thpp-meta-row'>
                 <Text className='thpp-meta-l'>抵达</Text>

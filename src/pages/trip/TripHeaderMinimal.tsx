@@ -1,6 +1,7 @@
 import { View, Text, Picker } from '@tarojs/components'
 import Taro from '@tarojs/taro'
 import AIBadge from '../../components/AIBadge'
+import Icon from '../../components/Icon'
 import CollaboratorsBar from '../../components/CollaboratorsBar'
 import type { TripHeaderViewProps } from './shared-header'
 import './styles/header-minimal.scss'
@@ -9,7 +10,7 @@ const PAX_OPTIONS = Array.from({ length: 99 }, (_, i) => `${i + 1} 人`)
 const statusBarHeight = Taro.getSystemInfoSync().statusBarHeight || 20
 
 export default function TripHeaderMinimal({
-  trip, isOwner, aiStatus, onAITap, onMenuTap, onBack, onPaxChange, onCollabTap,
+  trip, isOwner, aiStatus, onAITap, onMenuTap, onBack, onPaxChange, onCollabTap, onDateAdjustTap,
 }: TripHeaderViewProps) {
   const showAI = isOwner && !aiStatus
   const startDate = trip.days[0]?.date || trip.startDate
@@ -31,6 +32,10 @@ export default function TripHeaderMinimal({
 
         <View className='thmin-meta'>
           <Text>{startDate} → {endDate}</Text>
+          <View className='thmin-date-edit' onClick={onDateAdjustTap}>
+            <Icon name='calendar' size={14} color='var(--ink)' />
+            <Text>日期</Text>
+          </View>
           <Text>·</Text>
           <Text>{trip.days.length || 0} 天</Text>
           <Text>·</Text>

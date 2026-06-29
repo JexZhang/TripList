@@ -100,3 +100,15 @@
 .thtg-ai-bar {
   margin: 0 0 16rpx;
 }
+
+.thtg-date-edit {
+  display: inline-flex;
+  align-items: center;
+  gap: 6rpx;
+  padding: 4rpx 12rpx;
+  border: 1rpx dashed var(--accent);
+  border-radius: var(--r-pill);
+  color: var(--accent);
+  font-weight: 700;
+}
+.thtg-date-edit:active { background: var(--accent-bg); }

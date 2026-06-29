@@ -87,3 +87,14 @@
   background: var(--line);
   margin: 32rpx 0 16rpx;
 }
+
+.thmin-date-edit {
+  display: inline-flex;
+  align-items: center;
+  gap: 6rpx;
+  padding: 4rpx 0;
+  color: var(--ink);
+  border-bottom: 1rpx solid var(--ink);
+  font-weight: 700;
+}
+.thmin-date-edit:active { color: var(--accent); border-bottom-color: var(--accent); }

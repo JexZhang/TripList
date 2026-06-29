@@ -4,6 +4,7 @@ import './index.scss'
 
 export type IconName =
   | 'search' | 'pin' | 'tag' | 'people' | 'season' | 'lock' | 'sliders'
+  | 'calendar'
   | 'itinerary' | 'map' | 'budget' | 'packing'
   | 'spot' | 'hotel' | 'meal' | 'transport'
   | 'check' | 'plus' | 'close' | 'arrow-left' | 'chevron-down' | 'chevron-right'
