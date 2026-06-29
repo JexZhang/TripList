@@ -5,6 +5,7 @@ import { cloud, type ShareKind } from '../../utils/cloud'
 import { fmtDateShort } from '../../utils/format'
 import { tripSummary } from '../../utils/trip-helpers'
 import { useThemeClass } from '../../utils/theme-class'
+import { useMe } from '../../store/me-store'
 import type { Trip } from '../../types/trip'
 import './index.scss'
 
@@ -18,6 +19,7 @@ export default function SharePage() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const themeCls = useThemeClass('share')
+  const { consented, reopenPrivacy } = useMe()
   const [acting, setActing] = useState(false)
 
   // 阻止转发泄漏 token
@@ -50,6 +52,10 @@ export default function SharePage() {
 
   const accept = async () => {
     if (!trip || acting) return
+    if (!consented) {
+      reopenPrivacy()
+      return
+    }
     setActing(true)
     try {
       if (kind === 'readonly') {
@@ -100,7 +106,7 @@ export default function SharePage() {
 
       <View className='share-foot'>
         <View
-          className={`share-btn ${acting ? 'disabled' : ''}`}
+          className={`share-btn ${acting || !consented ? 'disabled' : ''}`}
           onClick={accept}
         >{kind === 'readonly' ? '复制到我的攻略册' : '加入协作'}</View>
         <Text className='share-back' onClick={() => Taro.reLaunch({ url: '/pages/home/index' })}>

@@ -2,6 +2,8 @@ const cloud = require('wx-server-sdk')
 
 cloud.init({ env: cloud.DYNAMIC_CURRENT_ENV })
 
+const PLACEHOLDER_NICKNAME = '行迹旅人'
+
 /** 校验 collab share token */
 async function validateToken(db, token, tripId) {
   const tokenQuery = await db.collection('share_tokens').where({ token }).get()
@@ -11,6 +13,27 @@ async function validateToken(db, token, tripId) {
   if (Date.now() > t.expiresAt) throw new Error('token expired')
   if (t.tripId !== tripId) throw new Error('tripId mismatch')
   return t
+}
+
+async function ensureUserDocument(db, openid, now) {
+  const ref = db.collection('users').doc(openid)
+  const existing = await ref.get().catch(() => null)
+  if (existing && existing.data) {
+    await ref.update({ data: { lastSeenAt: now } }).catch(() => {})
+    return existing.data
+  }
+
+  const user = {
+    _id: openid,
+    nickname: PLACEHOLDER_NICKNAME,
+    avatarUrl: '',
+    theme: null,
+    plan: 'free',
+    createdAt: now,
+    lastSeenAt: now,
+  }
+  await db.collection('users').add({ data: user })
+  return user
 }
 
 exports.main = async (event, context) => {
@@ -56,21 +79,20 @@ exports.main = async (event, context) => {
   }
 
   // 已加入也是无操作
+  const now = Date.now()
+  const user = await ensureUserDocument(db, OPENID, now)
+
+  // Already joined is a no-op after repairing any missing users document.
   const collabs = trip.data.collaborators || []
   if (collabs.some(c => c.openid === OPENID)) {
     return { ok: true, alreadyJoined: true }
   }
 
-  // 拉当前用户信息（可能空，不阻断）
-  const userDoc = await db.collection('users').doc(OPENID).get().catch(() => null)
-  const user = (userDoc && userDoc.data) || {}
-
-  const now = Date.now()
   await db.collection('trips').doc(tripId).update({
     data: {
       collaborators: _.push([{
         openid: OPENID,
-        nickname: user.nickname || '行迹旅人',
+        nickname: user.nickname || PLACEHOLDER_NICKNAME,
         avatarUrl: user.avatarUrl || '',
         role: 'editor',
         joinedAt: now,

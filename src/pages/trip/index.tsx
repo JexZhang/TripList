@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { View } from '@tarojs/components'
+import { View, Text } from '@tarojs/components'
 import Taro, { useRouter, useShareAppMessage } from '@tarojs/taro'
 import { TripProvider, useTripStore } from '../../store/trip-store'
 import { useMe } from '../../store/me-store'
@@ -396,7 +396,7 @@ function TripBody() {
 export default function TripPage() {
   const router = useRouter()
   const tripId = router.params.id || ''
-  const { me } = useMe()
+  const { me, consented, reopenPrivacy } = useMe()
   const openid = me?.openid || ''
 
   // 用户点 <Button open-type="share"> 时 WeChat 触发,根据 button dataset.kind 选 payload
@@ -415,6 +415,13 @@ export default function TripPage() {
   const [initialTrip] = useState(() => consumeCachedTrip(tripId))
 
   if (!tripId) return <View className='trip-empty'>缺少 trip id</View>
+  if (!consented) {
+    return (
+      <View className='trip-empty' onClick={reopenPrivacy}>
+        <Text>需同意隐私政策后使用</Text>
+      </View>
+    )
+  }
   if (!openid) return <View className='trip-empty'>登录中...</View>
 
   return (
