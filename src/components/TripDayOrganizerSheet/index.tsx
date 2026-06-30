@@ -1,10 +1,11 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
-import { View, Text, RootPortal } from '@tarojs/components'
+import { View, Text, RootPortal, ScrollView, MovableArea, MovableView } from '@tarojs/components'
 import Taro from '@tarojs/taro'
 import dayjs from 'dayjs'
 import { useTheme } from '../../store/theme-store'
 import type { Day } from '../../types/trip'
-import { clampDragOffset, dragTargetIndex, organizerRowStepPx } from './drag'
+import { buildOrganizerDateSlots } from './date-slots'
+import { dragTargetIndexFromY, organizerRowStepPx } from './drag'
 import './index.scss'
 
 interface Props {
@@ -15,10 +16,8 @@ interface Props {
   onComplete: (dayIds: string[]) => void
 }
 
-interface TouchPoint { clientY: number }
-interface TouchEventLike { touches?: TouchPoint[]; changedTouches?: TouchPoint[] }
-interface DragRef { id: string; index: number; startY: number }
-interface DragState { id: string; offsetPx: number }
+interface MovableChangeEventLike { detail?: { y?: number } }
+interface DragState { id: string; yPx: number }
 
 function summarizeDay(day: Day): string {
   if (!day.spots.length) return '暂无安排'
@@ -36,57 +35,59 @@ function moveItem<T>(items: T[], from: number, to: number): T[] {
 
 export default function TripDayOrganizerSheet({ open, days, initialDayId, onClose, onComplete }: Props) {
   const { theme } = useTheme()
+  const [slotCount, setSlotCount] = useState(days.length)
   const [draftDays, setDraftDays] = useState(days)
+  const [highlightedSlotIndex, setHighlightedSlotIndex] = useState<number | null>(null)
   const [dragState, setDragState] = useState<DragState | null>(null)
-  const dragRef = useRef<DragRef | null>(null)
+  const dragIdRef = useRef<string | null>(null)
   const rowStepPx = useMemo(() => {
     const width = Taro.getSystemInfoSync().windowWidth || 375
     return organizerRowStepPx(width)
   }, [])
+  const rowStepRpx = 134
+  const dateSlots = useMemo(
+    () => buildOrganizerDateSlots(days[0]?.date || dayjs().format('YYYY-MM-DD'), slotCount),
+    [days, slotCount],
+  )
+  const boardHeight = `${Math.max(dateSlots.length, 1) * rowStepRpx}rpx`
 
   useEffect(() => {
     if (open) {
+      setSlotCount(days.length)
       setDraftDays(days)
-      dragRef.current = null
+      const initialIndex = days.findIndex((day) => day.id === initialDayId)
+      setHighlightedSlotIndex(initialIndex >= 0 ? initialIndex : null)
+      dragIdRef.current = null
       setDragState(null)
     }
-  }, [days, open])
+  }, [days, initialDayId, open])
 
   if (!open) return null
 
-  const startDrag = (event: TouchEventLike, index: number) => {
-    const y = event.touches?.[0]?.clientY
-    if (typeof y !== 'number') return
-    const day = draftDays[index]
-    if (!day) return
-    dragRef.current = { id: day.id, index, startY: y }
-    setDragState({ id: day.id, offsetPx: 0 })
+  const startDrag = (id: string, index: number) => {
+    dragIdRef.current = id
+    setDragState({ id, yPx: index * rowStepPx })
   }
 
-  const moveDrag = (event: TouchEventLike) => {
-    const drag = dragRef.current
-    const y = event.touches?.[0]?.clientY
-    if (!drag || typeof y !== 'number') return
-    const offset = clampDragOffset(y - drag.startY, rowStepPx, drag.index, draftDays.length)
-    const target = dragTargetIndex(drag.index, offset, rowStepPx, draftDays.length)
-    if (target === drag.index) {
-      setDragState({ id: drag.id, offsetPx: offset })
-      return
-    }
-
-    const movedSteps = target - drag.index
-    const remainder = offset - movedSteps * rowStepPx
+  const moveDrag = (id: string, event: MovableChangeEventLike) => {
+    const y = event.detail?.y
+    if (dragIdRef.current !== id || typeof y !== 'number') return
+    const target = dragTargetIndexFromY(y, rowStepPx, draftDays.length)
+    setDragState({ id, yPx: y })
     setDraftDays((current) => {
-      const from = current.findIndex((item) => item.id === drag.id)
-      if (from < 0) return current
+      const from = current.findIndex((item) => item.id === id)
+      if (from < 0 || from === target) return current
       return moveItem(current, from, target)
     })
-    dragRef.current = { id: drag.id, index: target, startY: y - remainder }
-    setDragState({ id: drag.id, offsetPx: remainder })
   }
 
   const endDrag = () => {
-    dragRef.current = null
+    const id = dragIdRef.current
+    if (!id) {
+      setDragState(null)
+      return
+    }
+    dragIdRef.current = null
     setDragState(null)
   }
 
@@ -107,6 +108,8 @@ export default function TripDayOrganizerSheet({ open, days, initialDayId, onClos
     } else {
       Taro.showToast({ title: '已移除空白日期', icon: 'none', duration: 900 })
     }
+    if (day.id === initialDayId) setHighlightedSlotIndex(null)
+    setSlotCount((current) => Math.max(1, current - 1))
     setDraftDays((current) => current.filter((item) => item.id !== day.id))
   }
 
@@ -128,53 +131,72 @@ export default function TripDayOrganizerSheet({ open, days, initialDayId, onClos
             </View>
           </View>
 
-          <View className='tdos-list'>
-            {draftDays.map((day, index) => {
-              const highlighted = day.id === initialDayId
-              const dragging = dragState?.id === day.id
-              return (
-                <View key={day.id} className={`tdos-row ${highlighted ? 'is-highlighted' : ''}`}>
-                  <View className='tdos-slot'>
-                    <Text className='tdos-day'>Day {index + 1}</Text>
-                    <Text className='tdos-date'>{dayjs(day.date).format('MM/DD')}</Text>
-                  </View>
-                  <View
-                    className={`tdos-card ${dragging ? 'is-dragging' : ''}`}
-                    style={dragging ? { transform: `translateY(${dragState.offsetPx}px) scale(1.015)` } : undefined}
-                    catchMove={dragging}
-                  >
-                    <View className='tdos-card-main'>
-                      <Text className='tdos-summary'>{summarizeDay(day)}</Text>
-                      <Text className='tdos-card-label'>按住右侧把手拖动</Text>
-                    </View>
+          <ScrollView className='tdos-list' scrollY={!dragState}>
+            <View className='tdos-organizer-board' style={{ height: boardHeight }}>
+              <View className='tdos-slot-column'>
+                {dateSlots.map((slot, index) => {
+                  const highlighted = highlightedSlotIndex === index
+                  return (
                     <View
-                      className='tdos-drag-handle'
-                      catchMove={dragging}
-                      onTouchStart={(e) => startDrag(e, index)}
-                      onTouchMove={moveDrag}
+                      key={slot.key}
+                      className={`tdos-slot-row ${highlighted ? 'is-highlighted' : ''}`}
+                      style={{ top: `${index * rowStepRpx}rpx` }}
+                    >
+                      <Text className='tdos-day'>Day {index + 1}</Text>
+                      <Text className='tdos-date'>{dayjs(slot.date).format('MM/DD')}</Text>
+                    </View>
+                  )
+                })}
+              </View>
+              <MovableArea className='tdos-card-area' style={{ height: boardHeight }}>
+                {draftDays.map((day, index) => {
+                  const dragging = dragState?.id === day.id
+                  const y = dragging ? dragState.yPx : index * rowStepPx
+                  return (
+                    <MovableView
+                      key={day.id}
+                      className={`tdos-movable-row ${dragging ? 'is-dragging' : ''}`}
+                      direction='vertical'
+                      x={0}
+                      y={y}
+                      damping={40}
+                      friction={2}
+                      inertia={false}
+                      outOfBounds={false}
+                      onChange={(event) => moveDrag(day.id, event)}
                       onTouchEnd={endDrag}
                       onTouchCancel={endDrag}
                     >
-                      <View className='tdos-grip-icon'>
-                        <View className='tdos-grip-line' />
-                        <View className='tdos-grip-line' />
-                        <View className='tdos-grip-line' />
-                      </View>
-                    </View>
-                    <View className='tdos-delete' onClick={() => requestDelete(day)}>
-                      <View className='tdos-trash-icon'>
-                        <View className='tdos-trash-lid' />
-                        <View className='tdos-trash-can'>
-                          <View className='tdos-trash-line' />
-                          <View className='tdos-trash-line' />
+                      <View className={`tdos-card ${dragging ? 'is-dragging' : ''}`}>
+                        <View className='tdos-card-main'>
+                          <Text className='tdos-summary'>{summarizeDay(day)}</Text>
+                        </View>
+                        <View
+                          className='tdos-drag-handle'
+                          onTouchStart={() => startDrag(day.id, index)}
+                        >
+                          <View className='tdos-grip-icon'>
+                            <View className='tdos-grip-line' />
+                            <View className='tdos-grip-line' />
+                            <View className='tdos-grip-line' />
+                          </View>
+                        </View>
+                        <View className='tdos-delete' onClick={() => requestDelete(day)}>
+                          <View className='tdos-trash-icon'>
+                            <View className='tdos-trash-lid' />
+                            <View className='tdos-trash-can'>
+                              <View className='tdos-trash-line' />
+                              <View className='tdos-trash-line' />
+                            </View>
+                          </View>
                         </View>
                       </View>
-                    </View>
-                  </View>
-                </View>
-              )
-            })}
-          </View>
+                    </MovableView>
+                  )
+                })}
+              </MovableArea>
+            </View>
+          </ScrollView>
         </View>
       </View>
     </RootPortal>

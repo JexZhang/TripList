@@ -73,7 +73,7 @@
   width: 6rpx;
   background: linear-gradient(180deg, var(--accent) 0%, var(--accent-2) 100%);
 }
-.sc-head { display: flex; align-items: center; }
+.sc-head { display: flex; align-items: flex-start; }
 .sc-icon {
   font-size: 32rpx; margin-right: 14rpx;
   width: 56rpx; height: 56rpx;
@@ -84,15 +84,39 @@
 .sc-time {
   font-size: 24rpx; font-weight: 700;
   margin-right: 16rpx;
+  line-height: 56rpx;
   color: var(--accent);
   min-width: 80rpx;
   /* 杂志风格：时间使用等宽体 */
   font-family: var(--font-mono);
 }
-.sc-name { font-size: 30rpx; font-weight: 600; flex: 1; color: var(--ink); }
-.sc-foot { margin-top: 12rpx; display: flex; justify-content: space-between; align-items: baseline; padding-left: 70rpx; }
-.sc-note { font-size: 24rpx; color: var(--ink-3); flex: 1; line-height: 1.5; }
+.sc-title-line {
+  flex: 1;
+  min-width: 0;
+  min-height: 56rpx;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  column-gap: 18rpx;
+  align-items: center;
+}
+.sc-name {
+  min-width: 0;
+  font-size: 30rpx;
+  font-weight: 600;
+  line-height: 1.35;
+  white-space: normal;
+  word-break: break-all;
+  overflow-wrap: anywhere;
+  color: var(--ink);
+}
+.sc-foot { margin-top: 12rpx; padding-left: 70rpx; }
+.sc-note { font-size: 24rpx; color: var(--ink-3); line-height: 1.5; }
 .sc-price { 
+  flex: 0 0 auto;
+  justify-self: end;
+  align-self: center;
+  white-space: nowrap;
+  line-height: 1.35;
   font-size: 26rpx; font-weight: 700; color: var(--coral);
   /* 杂志风格：价格使用等宽体 */
   font-family: var(--font-mono);

@@ -17,12 +17,14 @@ export default function SpotCard({ spot, onClick, onLongPress }: Props) {
           <Icon name={spot.type} color='var(--accent)' style={{ width: '34rpx', height: '34rpx' }} />
         </View>
         <Text className='sc-time'>{spot.time || '—'}</Text>
-        <Text className='sc-name'>{spot.name}</Text>
-      </View>
-      {(spot.note || spot.price) && (
-        <View className='sc-foot'>
-          {spot.note ? <Text className='sc-note'>{spot.note}</Text> : null}
+        <View className='sc-title-line'>
+          <Text className='sc-name'>{spot.name}</Text>
           {spot.price ? <Text className='sc-price'>{fmtCurrency(spot.price)}</Text> : null}
+        </View>
+      </View>
+      {spot.note && (
+        <View className='sc-foot'>
+          <Text className='sc-note'>{spot.note}</Text>
         </View>
       )}
     </View>

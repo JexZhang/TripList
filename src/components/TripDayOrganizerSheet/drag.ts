@@ -17,3 +17,8 @@ export function dragTargetIndex(index: number, offsetPx: number, rowStepPx: numb
   const steps = Math.trunc(offsetPx / rowStepPx)
   return Math.max(0, Math.min(count - 1, index + steps))
 }
+
+export function dragTargetIndexFromY(yPx: number, rowStepPx: number, count: number): number {
+  if (count <= 0 || rowStepPx <= 0) return 0
+  return Math.max(0, Math.min(count - 1, Math.round(yPx / rowStepPx)))
+}

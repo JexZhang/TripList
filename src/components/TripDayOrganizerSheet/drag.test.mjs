@@ -29,6 +29,7 @@ function loadTsModule(file) {
 const {
   ORGANIZER_ROW_STEP_RPX,
   clampDragOffset,
+  dragTargetIndexFromY,
   dragTargetIndex,
   organizerRowStepPx,
 } = loadTsModule('./src/components/TripDayOrganizerSheet/drag.ts')
@@ -53,4 +54,14 @@ test('dragTargetIndex computes the destination slot from the current finger offs
   assert.equal(dragTargetIndex(2, 70, rowStep, 5), 3)
   assert.equal(dragTargetIndex(2, -70, rowStep, 5), 1)
   assert.equal(dragTargetIndex(4, 200, rowStep, 5), 4)
+})
+
+test('dragTargetIndexFromY computes the nearest movable row slot from native y', () => {
+  const rowStep = organizerRowStepPx(375)
+
+  assert.equal(dragTargetIndexFromY(0, rowStep, 5), 0)
+  assert.equal(dragTargetIndexFromY(rowStep * 1.49, rowStep, 5), 1)
+  assert.equal(dragTargetIndexFromY(rowStep * 1.51, rowStep, 5), 2)
+  assert.equal(dragTargetIndexFromY(-40, rowStep, 5), 0)
+  assert.equal(dragTargetIndexFromY(rowStep * 8, rowStep, 5), 4)
 })
