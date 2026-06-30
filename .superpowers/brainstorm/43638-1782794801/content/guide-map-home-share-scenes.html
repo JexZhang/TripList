@@ -1,27 +1,36 @@
 <style>
   :root {
-    --bg: #f7f1e8;
-    --surface: #fffaf2;
-    --surface-2: #f1e7d8;
-    --ink: #2d271f;
-    --ink-2: #594f44;
-    --ink-3: #8a7c6b;
-    --line: #e4d8c8;
-    --line-2: #d5c6b5;
-    --accent: #c46d3a;
-    --accent-2: #315b45;
-    --accent-bg: #f2dfcf;
-    --coral: #d85e43;
+    /* ── Tegami 主题令牌（与 tokens.scss 一致） ── */
+    --bg: #FFF4E6;
+    --bg-deep: #F4E6CE;
+    --bg-soft: #FFE9D1;
+    --surface: #FFFFFF;
+    --surface-2: #FFF9F1;
+    --ink: #2B1A10;
+    --ink-2: #5A4338;
+    --ink-3: #9B8378;
+    --line: rgba(43, 26, 16, 0.08);
+    --line-2: rgba(43, 26, 16, 0.14);
+ --accent: #FF7A2E;
+    --accent-2: #FF9A4D;
+    --accent-soft: #FFD3A8;
+    --accent-bg: #FFEBD6;
+    --coral: #FF5B5B;
+    --leaf: #4FB286;
+    --sun: #FFC247;
+    --plum: #6B46C1;
     --r-pill: 999px;
-    --r-md: 8px;
-    --r-lg: 14px;
+    --r-md: 11px;
+    --r-lg: 16px;
     --r-xl: 22px;
-    --shadow-sm: 0 6px 16px rgba(54, 42, 30, .08);
-    --shadow-md: 0 12px 28px rgba(54, 42, 30, .12);
-    --font-body: -apple-system, BlinkMacSystemFont, "PingFang SC", "Noto Sans SC", sans-serif;
-    --font-display: "Songti SC", "STSong", "Noto Serif SC", serif;
-    --font-mono: ui-monospace, SFMono-Regular, Menlo, monospace;
+    --shadow-sm: 0 2px 7px rgba(255, 122, 46, 0.10);
+    --shadow-md: 0 6px 16px rgba(58, 36, 25, 0.10);
+    --font-body: "PingFang SC", "Noto Sans SC", -apple-system, sans-serif;
+    --font-display: "Noto Serif SC", "Songti SC", "STSong", serif;
+    --font-mono: "JetBrains Mono", "SF Mono", "Fira Code", ui-monospace, monospace;
   }
+
+  /* ── Stage ── */
   .stage { color: var(--ink); font-family: var(--font-body); }
   .intro { display:flex; justify-content:space-between; gap:24px; align-items:flex-start; margin-bottom:22px; }
   .intro h2 { margin:0 0 8px; font-family:var(--font-display); letter-spacing:0; }
@@ -35,48 +44,343 @@
   .scene-title span { font-size:11px; font-family:var(--font-mono); color:var(--ink-3); white-space:nowrap; }
   .phone { width:265px; height:574px; margin:0 auto; border:1px solid #2f2922; border-radius:28px; overflow:hidden; background:var(--bg); box-shadow:0 16px 36px rgba(39,30,22,.18); position:relative; }
   .status { height:22px; padding:9px 16px 0; display:flex; justify-content:space-between; font-family:var(--font-mono); font-size:10px; color:var(--ink-2); }
-  .screen { height:543px; overflow:hidden; position:relative; background:var(--bg); }
+  .screen { height:543px; overflow-y:auto; overflow-x:hidden; position:relative; background:var(--bg); -webkit-overflow-scrolling:touch; scrollbar-width:thin; scrollbar-color:rgba(43,26,16,.15) transparent; }
+  .screen::-webkit-scrollbar { width:3px; }
+  .screen::-webkit-scrollbar-thumb { background:rgba(43,26,16,.15); border-radius:3px; }
+  .screen::-webkit-scrollbar-track { background:transparent; }
   .caption { margin:12px 2px 0; color:var(--ink-2); line-height:1.5; font-size:13px; }
   .caption b { color:var(--ink); }
 
-  .home { min-height:100%; padding:16px 0 70px; background:var(--bg); }
-  .home-head { display:flex; align-items:center; justify-content:space-between; padding:8px 16px 12px; }
-  .home-date { font-size:12px; color:var(--ink-3); letter-spacing:1px; }
-  .avatar { width:28px; height:28px; border-radius:50%; background:linear-gradient(135deg,#315b45,#c46d3a); }
-  .create { display:grid; grid-template-columns:1fr 1fr; gap:8px; padding:0 16px 14px; }
-  .create div { background:var(--surface); border:1px solid var(--line); border-radius:12px; padding:12px; box-shadow:var(--shadow-sm); }
-  .create b { display:block; font-size:14px; margin-bottom:4px; }
-  .create span { font-size:11px; color:var(--ink-3); }
-  .section-h { display:flex; align-items:center; gap:7px; padding:0 16px; margin:10px 0; }
-  .bar { width:3px; height:16px; border-radius:2px; background:var(--ink); }
-  .section-h b { font-family:var(--font-display); font-size:15px; }
-  .featured-row { white-space:nowrap; overflow:hidden; padding:0 16px 8px; }
-  .featured { display:inline-block; width:132px; margin-right:10px; background:var(--surface); border-radius:8px; overflow:hidden; box-shadow:var(--shadow-sm); vertical-align:top; }
-  .featured-img { height:82px; background:#e9dcc8; position:relative; overflow:hidden; }
-  .featured-img img { width:100%; height:100%; object-fit:cover; display:block; }
-  .featured-meta { padding:8px 9px; }
-  .featured-meta b { display:block; font-size:12px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-  .featured-meta span { display:block; font-size:10px; color:var(--ink-3); margin-top:3px; }
-  .trip-list { padding:0 16px; display:grid; gap:10px; }
-  .trip-cover-card { background:var(--surface); border:1px solid var(--line); border-radius:12px; overflow:hidden; box-shadow:var(--shadow-md); }
-  .trip-cover { height:150px; position:relative; overflow:hidden; background:#eee1cf; }
-  .trip-cover img { width:100%; height:100%; object-fit:cover; display:block; }
-  .trip-cover::after { content:""; position:absolute; inset:auto 0 0; height:74px; background:linear-gradient(0deg, rgba(40,29,18,.70), rgba(40,29,18,0)); }
-  .cover-label { position:absolute; left:12px; top:10px; padding:4px 8px; border-radius:999px; background:rgba(255,250,242,.92); color:var(--ink); font-size:10px; font-weight:700; }
-  .cover-title { position:absolute; left:12px; right:12px; bottom:12px; color:#fff; z-index:1; }
-  .cover-title b { display:block; font-family:var(--font-display); font-size:20px; line-height:1.15; text-shadow:0 1px 5px rgba(0,0,0,.24); }
-  .cover-title span { display:block; font-size:11px; margin-top:4px; opacity:.9; }
-  .trip-cover-body { padding:12px 14px; display:flex; justify-content:space-between; gap:12px; align-items:center; }
-  .trip-cover-body span { font-size:12px; color:var(--ink-3); }
-  .manage-chip { padding:6px 10px; border-radius:999px; background:var(--accent-bg); color:var(--accent); font-size:11px; font-weight:700; }
-  .hmin-row { display:flex; gap:12px; padding:16px 0; background:var(--surface); border-bottom:1px solid var(--line-2); align-items:flex-start; }
-  .hmin-row-no { font-size:12px; color:var(--ink-3); font-family:var(--font-mono); letter-spacing:1px; padding-top:2px; }
-  .hmin-row-body { flex:1; min-width:0; }
-  .hmin-row-top { display:flex; justify-content:space-between; align-items:baseline; gap:8px; }
-  .hmin-row-name { font-size:15px; font-weight:650; color:var(--ink); }
-  .hmin-row-arrow { color:var(--ink-3); }
-  .hmin-row-meta { display:flex; gap:4px; margin-top:5px; font-size:11px; color:var(--ink-3); font-family:var(--font-mono); }
+  /* ══════════════════════════════════════════════════
+     场景 1：首页 · Tegami 主题真实还原
+     基于 HomeTegami.tsx + home-tegami.scss
+     ══════════════════════════════════════════════════ */
+  .ht {
+    min-height: 100%;
+    padding: 16px 0 60px;
+    background:
+      radial-gradient(120% 60% at 100% 0%, rgba(255, 154, 77, 0.22) 0%, transparent 55%),
+      radial-gradient(80% 40% at 0% 10%, rgba(255, 194, 71, 0.18) 0%, transparent 60%),
+      var(--bg);
+  }
+  .ht-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 16px 12px;
+  }
+  .ht-date {
+    font-size: 12px;
+    font-family: var(--font-body);
+    color: var(--ink-3);
+    letter-spacing: 1px;
+  }
+  .ht-avatar {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--accent), var(--plum));
+    border: 2px solid var(--surface);
+    box-shadow: 0 2px 6px rgba(255,122,46,.18);
+  }
 
+  /* 创建台（还原 HomeCreateTiles） */
+  .hct {
+    display: flex;
+    gap: 10px;
+    padding: 0 16px;
+    margin-bottom: 16px;
+  }
+  .hct-tile {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 20px 8px;
+    border-radius: var(--r-lg);
+    position: relative;
+    overflow: hidden;
+  }
+  .hct-tile--ai {
+    flex: 1.5;
+    background: linear-gradient(135deg, var(--plum) 0%, var(--accent) 100%);
+    box-shadow: 0 4px 12px rgba(107, 70, 193, 0.22);
+  }
+  .hct-tile--new {
+    background: var(--ink);
+  }
+  .hct-shine {
+    position: absolute;
+    top: 0; bottom: 0; left: 0;
+    width: 50%;
+    background: linear-gradient(100deg, transparent 0%, rgba(255,255,255,0.08) 20%, rgba(255,255,255,0.38) 50%, rgba(255,255,255,0.08) 80%, transparent 100%);
+    animation: hct-sweep 3.2s ease-in-out infinite;
+    pointer-events: none;
+  }
+  @keyframes hct-sweep {
+    0%   { transform: translateX(-120%); }
+    70%  { transform: translateX(320%); }
+    100% { transform: translateX(320%); }
+  }
+  .hct-icon {
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.20);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px; color: #fff;
+    position: relative; z-index: 1;
+  }
+  .hct-label {
+    font-size: 14px; font-weight: 700; color: #fff;
+    letter-spacing: 1px; position: relative; z-index: 1;
+  }
+  .hct-desc {
+    font-size: 11px; color: rgba(255,255,255,0.72);
+    letter-spacing: 0.5px; position: relative; z-index: 1;
+    margin-top: -2px;
+  }
+
+  /* 旅人精选横滑（还原 HomeFeaturedRow） */
+  .home-featured {
+    padding: 12px 0 4px;
+  }
+  .home-featured-h {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    padding: 0 16px;
+    margin-bottom: 10px;
+  }
+  .home-featured-title {
+    display: flex; align-items: center; gap: 6px;
+  }
+  .home-featured-bar {
+    width: 3px; height: 16px; border-radius: 2px;
+    background: linear-gradient(180deg, #FF7A2E, #FFC247);
+    flex-shrink: 0;
+  }
+  .home-featured-t {
+    font-size: 16px; font-weight: 700; color: var(--ink);
+    font-family: var(--font-display);
+  }
+  .home-featured-more {
+    font-size: 12px; color: var(--accent);
+  }
+  .home-featured-row {
+    white-space: nowrap;
+    overflow-x: auto;
+    padding: 0 16px 4px;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  .home-featured-row::-webkit-scrollbar { display: none; }
+  .home-featured-card {
+    display: inline-block;
+    width: 140px;
+    margin-right: 10px;
+    border-radius: var(--r-md);
+    overflow: hidden;
+    background: var(--surface);
+    box-shadow: var(--shadow-sm);
+    vertical-align: top;
+    white-space: normal;
+  }
+  .hf-cover {
+    position: relative;
+    height: 100px;
+    padding: 10px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    overflow: hidden;
+  }
+  .hf-cover-pat {
+    position: absolute; right: -12px; bottom: -12px;
+    width: 60px; height: 60px;
+    border: 2px solid rgba(255,255,255,0.22);
+    border-radius: 50%; pointer-events: none;
+  }
+  .hf-cover-region {
+    display: block; font-size: 9px; color: #fff;
+    letter-spacing: 2px; opacity: 0.85;
+    font-family: var(--font-mono);
+  }
+  .hf-cover-city {
+    display: block; font-size: 24px; font-weight: 800;
+    color: #fff; font-family: var(--font-display);
+    text-shadow: 0 1px 4px rgba(0,0,0,0.25); line-height: 1.1;
+  }
+  .hf-meta { padding: 8px 9px; }
+  .hf-meta-name {
+    display: block; font-size: 12px; font-weight: 600;
+    color: var(--ink);
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  .hf-meta-info {
+    display: block; margin-top: 3px; font-size: 10px; color: var(--ink-3);
+  }
+  /* 导览图封面卡（有导览图的模板） */
+  .hf-cover--has-guide {
+    height: 100px; position: relative;
+  }
+  .hf-cover--has-guide img {
+    width: 100%; height: 100%; object-fit: cover; display: block;
+    position: absolute; inset: 0;
+  }
+  .hf-cover--has-guide .hf-guide-badge {
+    position: absolute; left: 8px; bottom: 8px;
+    padding: 3px 7px; border-radius: 999px;
+    background: rgba(255,250,242,0.92); color: var(--ink);
+    font-size: 8px; font-weight: 700; z-index: 1;
+    letter-spacing: 0.5px;
+  }
+
+  /* 我的行程区 */
+  .ht-section { padding: 0 16px; }
+  .ht-section-h {
+    display: flex; align-items: center; gap: 6px;
+    margin-bottom: 10px;
+  }
+  .ht-section-bar {
+    width: 3px; height: 16px; border-radius: 2px; flex-shrink: 0;
+  }
+  .ht-section-bar--trips {
+    background: linear-gradient(180deg, #6B46C1, #A78BFA);
+  }
+  .ht-section-t {
+    font-size: 16px; font-weight: 700; color: var(--ink);
+    font-family: var(--font-display);
+  }
+  .ht-stack {
+    display: flex; flex-direction: column; gap: 10px;
+  }
+
+  /* ── 普通 Tegami 卡（无导览图） ── */
+  .ht-card {
+    background: var(--surface);
+    border-radius: var(--r-lg);
+    padding: 14px 14px 14px 20px;
+    box-shadow: var(--shadow-md);
+    position: relative; overflow: hidden;
+  }
+  .ht-card-0 { transform: rotate(-0.6deg); }
+  .ht-card-1 { transform: rotate(0.4deg); }
+  .ht-card-2 { transform: rotate(-0.3deg); }
+  .ht-card-edge {
+    position: absolute; left: 0; top: 0; bottom: 0;
+    width: 6px;
+    background: linear-gradient(180deg, var(--c1), var(--c2));
+  }
+  .ht-card-meta {
+    font-size: 11px; color: var(--ink-3);
+    font-family: var(--font-mono); letter-spacing: 0.5px;
+  }
+  .ht-card-name {
+    display: block; margin-top: 4px;
+    font-size: 19px; font-weight: 700;
+    font-family: var(--font-display); color: var(--ink);
+    letter-spacing: 0.5px;
+  }
+  .ht-card-foot { margin-top: 8px; display: flex; gap: 6px; }
+  .ht-card-badge {
+    padding: 2px 7px; border-radius: var(--r-pill);
+    font-size: 10px; font-weight: 700; letter-spacing: 1px;
+    background: linear-gradient(135deg, var(--accent), var(--coral));
+    color: #fff;
+  }
+
+  /* ── 导览图封面卡（有导览图的行程 — 核心设计） ── */
+  .ht-card--guide {
+    background: var(--surface);
+    border-radius: var(--r-lg);
+    box-shadow: var(--shadow-md);
+    overflow: hidden;
+    position: relative;
+  }
+  .ht-card--guide .guide-hero {
+    height: 110px;
+    position: relative;
+    overflow: hidden;
+  }
+  .ht-card--guide .guide-hero img {
+    width: 100%; height: 100%; object-fit: cover; display: block;
+  }
+  .ht-card--guide .guide-hero::after {
+    content: "";
+    position: absolute; inset: auto 0 0; height: 48px;
+    background: linear-gradient(0deg, rgba(43,26,16,0.55), transparent);
+  }
+  .ht-card--guide .guide-tag {
+    position: absolute; left: 10px; top: 8px;
+    padding: 3px 8px; border-radius: 999px;
+    background: rgba(255,250,242,0.92);
+    color: var(--ink); font-size: 9px; font-weight: 700;
+    z-index: 1; letter-spacing: 0.5px;
+    display: flex; align-items: center; gap: 4px;
+  }
+  .ht-card--guide .guide-tag::before {
+    content: ""; width: 6px; height: 6px;
+    border-radius: 50%; background: var(--leaf);
+    flex-shrink: 0;
+  }
+  .ht-card--guide .guide-overlay {
+    position: absolute; left: 10px; right: 10px; bottom: 8px;
+    z-index: 1; color: #fff;
+  }
+  .ht-card--guide .guide-overlay-name {
+    display: block; font-size: 18px; font-weight: 700;
+    font-family: var(--font-display);
+    text-shadow: 0 1px 5px rgba(0,0,0,0.3);
+    line-height: 1.15;
+  }
+  .ht-card--guide .guide-overlay-meta {
+    display: block; font-size: 10px; margin-top: 3px; opacity: 0.9;
+    font-family: var(--font-mono);
+  }
+  .ht-card--guide .guide-body {
+    padding: 10px 12px;
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .ht-card--guide .guide-body-info {
+    font-size: 11px; color: var(--ink-3);
+  }
+  .ht-card--guide .guide-body-info b {
+    color: var(--accent); font-weight: 700;
+  }
+  .ht-card--guide .guide-body-chip {
+    padding: 5px 10px; border-radius: 999px;
+    background: var(--accent-bg); color: var(--accent);
+    font-size: 10px; font-weight: 700;
+  }
+
+  /* ── AI 状态行 ── */
+  .ai-row {
+    display: flex; align-items: center; gap: 5px;
+    margin-bottom: 6px;
+    font-size: 10px; font-weight: 700;
+  }
+  .ai-row--ready {
+    color: var(--leaf);
+  }
+  .ai-row--thinking {
+    color: var(--plum);
+  }
+  .ai-dot {
+    width: 6px; height: 6px; border-radius: 50%;
+  }
+  .ai-row--ready .ai-dot { background: var(--leaf); }
+  .ai-row--thinking .ai-dot { background: var(--plum); animation: pulse-dot 1.5s ease-in-out infinite; }
+  @keyframes pulse-dot {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+  }
+
+  /* ══════════════════════════════════════════════════
+     场景 2-4 沿用之前样式（微调 token 色值）
+     ══════════════════════════════════════════════════ */
   .thmin { padding:4px 16px 2px; background:radial-gradient(100% 50% at 100% 0%, rgba(255,154,77,.18) 0%, transparent 60%), var(--bg); }
   .thmin-bar { display:flex; justify-content:space-between; align-items:center; padding:4px 0 8px; }
   .back { display:flex; align-items:center; gap:7px; color:var(--ink-2); }
@@ -101,14 +405,6 @@
   .day-card { background:var(--surface); border:1px solid var(--line); border-radius:10px; padding:12px; }
   .day-card b { display:block; font-size:14px; margin-bottom:5px; }
   .day-card span { color:var(--ink-3); font-size:11px; }
-  .action-mask { position:absolute; inset:0; background:rgba(43,26,16,.45); display:flex; align-items:flex-end; }
-  .action-sheet { width:100%; background:var(--surface); border-radius:22px 22px 0 0; padding:24px 0 20px; position:relative; box-shadow:0 -8px 24px rgba(43,26,16,.15); }
-  .action-sheet::before { content:""; position:absolute; top:8px; left:50%; transform:translateX(-50%); width:36px; height:4px; border-radius:999px; background:var(--line-2); }
-  .tas-head { padding:0 18px 10px; font-weight:700; font-size:16px; }
-  .tas-item { padding:14px 18px; border-top:1px solid var(--line); font-size:15px; }
-  .tas-item small { display:block; color:var(--ink-3); font-size:11px; margin-top:3px; }
-  .tas-item.accent { color:var(--accent); font-weight:700; }
-  .tas-cancel { margin-top:6px; padding:14px 0; text-align:center; font-size:15px; font-weight:700; color:var(--ink-2); border-top:6px solid var(--bg); }
 
   .tpl { background:var(--bg); height:100%; padding-bottom:82px; position:relative; }
   .tpl-top { display:flex; align-items:center; justify-content:space-between; padding:10px 14px 4px; }
@@ -176,47 +472,124 @@
 
   <div class="scenes" data-multiselect>
     <div class="scene" data-choice="home-cover" onclick="toggleSelect(this)">
-      <div class="scene-title"><h3>1. 首页 · 已有图的行程变封面卡</h3><span>推荐</span></div>
+      <div class="scene-title"><h3>1. 首页 · 导览图封面卡</h3><span>Tegami 主题</span></div>
       <div class="phone">
         <div class="status"><span>12:57</span><span>行迹</span></div>
         <div class="screen">
-          <div class="home">
-            <div class="home-head"><span class="home-date">六月三十日 · 周二</span><span class="avatar"></span></div>
-            <div class="create"><div><b>AI 规划</b><span>生成新攻略</span></div><div><b>手动创建</b><span>从空白开始</span></div></div>
-            <div class="section-h"><span class="bar"></span><b>旅人精选</b></div>
-            <div class="featured-row">
-              <div class="featured"><div class="featured-img"><img src="guide-map.png" alt=""></div><div class="featured-meta"><b>成都亲友慢游</b><span>5天 · 适合长辈</span></div></div>
-              <div class="featured"><div class="featured-img" style="background:linear-gradient(135deg,#315b45,#c46d3a)"></div><div class="featured-meta"><b>西北环线</b><span>7天 · 自驾</span></div></div>
+          <div class="ht">
+            <!-- 顶部栏：日期 + 头像 -->
+            <div class="ht-head">
+              <span class="ht-date">六月三十日 · 周二</span>
+              <span class="ht-avatar"></span>
             </div>
-            <div class="section-h"><span class="bar"></span><b>我的行程</b></div>
-            <div class="trip-list">
-              <div class="trip-cover-card">
-                <div class="trip-cover">
-                  <img src="guide-map.png" alt="">
-                  <span class="cover-label">导览图</span>
-                  <div class="cover-title"><b>麻麻生日之旅</b><span>8.28 → 9.1 · 4 人 · 5 天</span></div>
-                </div>
-                <div class="trip-cover-body"><span>成都导览图已生成，可保存和分享</span><b class="manage-chip">管理</b></div>
+  
+            <!-- 创建台：AI 规划 + 手动新建 -->
+            <div class="hct">
+              <div class="hct-tile hct-tile--ai">
+                <div class="hct-shine"></div>
+                <div class="hct-icon">✦</div>
+                <span class="hct-label">AI 帮你规划</span>
+                <span class="hct-desc">说出目的地，智能生成行程</span>
               </div>
-              <div class="hmin-row">
-                <span class="hmin-row-no">02</span>
-                <div class="hmin-row-body">
-                  <div class="hmin-row-top"><span class="hmin-row-name">杭州周末散步</span><span class="hmin-row-arrow">›</span></div>
-                  <div class="hmin-row-meta"><span>7.12 → 7.13</span><span>·</span><span>2 人 · 2 天</span></div>
+              <div class="hct-tile hct-tile--new">
+                <div class="hct-icon">＋</div>
+                <span class="hct-label">手动新建</span>
+              </div>
+            </div>
+  
+            <!-- 旅人精选横滑 -->
+            <div class="home-featured">
+              <div class="home-featured-h">
+                <div class="home-featured-title">
+                  <div class="home-featured-bar"></div>
+                  <span class="home-featured-t">旅人精选</span>
+                </div>
+                <span class="home-featured-more">更多 ›</span>
+              </div>
+              <div class="home-featured-row">
+                <!-- 有导览图的模板 → 导览图封面 -->
+                <div class="home-featured-card">
+                  <div class="hf-cover hf-cover--has-guide">
+                    <img src="guide-map.png" alt="">
+                    <span class="hf-guide-badge">导览图</span>
+                  </div>
+                  <div class="hf-meta">
+                    <span class="hf-meta-name">成都亲友慢游</span>
+                    <span class="hf-meta-info">5天4晚 · 12 个地点</span>
+                  </div>
+                </div>
+                <!-- 无导览图的模板 → 渐变色封面 -->
+                <div class="home-featured-card">
+                  <div class="hf-cover" style="background:linear-gradient(140deg, #6B46C1, #FF5B5B)">
+                    <div class="hf-cover-pat"></div>
+                    <span class="hf-cover-region">西北 · 秋</span>
+                    <span class="hf-cover-city">大环线</span>
+                  </div>
+                  <div class="hf-meta">
+                    <span class="hf-meta-name">西北环线自驾</span>
+                    <span class="hf-meta-info">7天6晚 · 18 个地点</span>
+                  </div>
+                </div>
+                <div class="home-featured-card">
+                  <div class="hf-cover" style="background:linear-gradient(140deg, #4FB286, #FFC247)">
+                    <div class="hf-cover-pat"></div>
+                    <span class="hf-cover-region">云南 · 春</span>
+                    <span class="hf-cover-city">大理</span>
+                  </div>
+                  <div class="hf-meta">
+                    <span class="hf-meta-name">大理慢生活</span>
+                    <span class="hf-meta-info">4天3晚 · 9 个地点</span>
+                  </div>
                 </div>
               </div>
-              <div class="hmin-row">
-                <span class="hmin-row-no">03</span>
-                <div class="hmin-row-body">
-                  <div class="hmin-row-top"><span class="hmin-row-name">南京亲子两日</span><span class="hmin-row-arrow">›</span></div>
-                  <div class="hmin-row-meta"><span>10.02 → 10.03</span><span>·</span><span>3 人 · 2 天</span></div>
+            </div>
+  
+            <!-- 我的行程 -->
+            <div class="ht-section">
+              <div class="ht-section-h">
+                <div class="ht-section-bar ht-section-bar--trips"></div>
+                <span class="ht-section-t">我的行程</span>
+              </div>
+  
+              <div class="ht-stack">
+                <!-- ★ 有导览图的行程 → 导览图封面卡（核心设计） -->
+                <div class="ht-card--guide">
+                  <div class="guide-hero">
+                    <img src="guide-map.png" alt="成都导览图">
+                    <span class="guide-tag">导览图已生成</span>
+                    <div class="guide-overlay">
+                      <span class="guide-overlay-name">麻麻生日之旅</span>
+                      <span class="guide-overlay-meta">8.28 → 9.1 · 5天 · 4人</span>
+                    </div>
+                  </div>
+                  <div class="guide-body">
+                    <span class="guide-body-info"><b>12 个点位</b> · 成都导览图可保存/分享</span>
+                    <span class="guide-body-chip">查看</span>
+                  </div>
+                </div>
+  
+                <!-- 无导览图的行程 → 普通 Tegami 卡 -->
+                <div class="ht-card ht-card-1" style="--c1:#6B46C1;--c2:#FF5B5B;">
+                  <div class="ht-card-edge"></div>
+                  <div class="ht-card-body">
+                    <span class="ht-card-meta">7.12 → 7.13 · 2人 · 2天</span>
+                    <span class="ht-card-name">杭州周末散步</span>
+                  </div>
+                </div>
+  
+                <div class="ht-card ht-card-2" style="--c1:#4FB286;--c2:#FFC247;">
+                  <div class="ht-card-edge"></div>
+                  <div class="ht-card-body">
+                    <span class="ht-card-meta">10.02 → 10.03 · 3人 · 2天</span>
+                    <span class="ht-card-name">南京亲子两日</span>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
       </div>
-      <p class="caption"><b>判断：</b>合适。首页里的导览图不承担地图功能，而是攻略封面。已有图的行程自然变得更“完成”，未生成的行程保持现在的轻列表。</p>
+      <p class="caption"><b>对比：</b>有导览图的行程变为「封面卡」——导览图作为 hero 图 + 行程信息覆在下方，底部有「查看」chip 引导进入详情。没有导览图的行程保持 Tegami 标志性的彩色左边条卡片。<br><br><b>设计原则：</b>导览图封面卡和普通卡同宽、等高自适应，不打破列表节奏。视觉层级：导览图卡 > 彩色卡 > 已结束淡化卡。</p>
     </div>
 
     <div class="scene" data-choice="trip-asset" onclick="toggleSelect(this)">

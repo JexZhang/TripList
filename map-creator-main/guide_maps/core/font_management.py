@@ -4,8 +4,6 @@ from __future__ import annotations
 
 from pathlib import Path
 
-import matplotlib.font_manager as fm
-
 from guide_maps.core.paths import FONTS_DIR
 
 
@@ -47,8 +45,20 @@ def load_fonts(family: str = "Noto Sans SC") -> dict[str, str]:
     candidates["regular"][0:0] = system_regular
     candidates["bold"][0:0] = system_bold
     candidates["light"][0:0] = system_regular
-    default = Path(fm.findfont(fm.FontProperties(family="DejaVu Sans")))
     result: dict[str, str] = {}
     for key, paths in candidates.items():
-        result[key] = str(next((path for path in paths if path.exists()), default))
+        result[key] = str(_first_existing(paths))
     return result
+
+
+def _first_existing(paths: list[Path]) -> Path:
+    for path in paths:
+        if path.exists():
+            return path
+    return _matplotlib_default_font()
+
+
+def _matplotlib_default_font() -> Path:
+    import matplotlib.font_manager as fm
+
+    return Path(fm.findfont(fm.FontProperties(family="DejaVu Sans")))

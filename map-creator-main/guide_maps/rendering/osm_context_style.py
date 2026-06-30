@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import json
 import math
+import os
 import sys
 from dataclasses import dataclass
 from pathlib import Path
@@ -13,7 +14,15 @@ from typing import Callable
 if __package__ in (None, ""):
     sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
+_MPLCONFIGDIR = Path(__file__).resolve().parents[2] / "cache" / "matplotlib"
+_MPLCONFIGDIR.mkdir(parents=True, exist_ok=True)
+os.environ.setdefault("MPLCONFIGDIR", str(_MPLCONFIGDIR))
+
 import geopandas as gpd
+import matplotlib
+
+matplotlib.use("Agg")
+
 import matplotlib.patheffects as path_effects
 import matplotlib.pyplot as plt
 import osmnx as ox
@@ -245,28 +254,40 @@ def fetch_map_features(point: tuple[float, float], dist: float, *, include_lifes
 
 
 def select_buildings(features):
-    return _filter_features(features, lambda row: _row_has_any(row, "building"))
+    return _filter_features_by_mask(features, _series_has_any(features, "building"))
 
 
 def select_parks(features):
-    return _filter_features(features, lambda row: _value_has(row.get("leisure"), {"park"}) or _value_has(row.get("landuse"), {"grass", "forest"}))
+    return _filter_features_by_mask(features, _series_value_has(features, "leisure", {"park"}) | _series_value_has(features, "landuse", {"grass", "forest"}))
 
 
 def select_water(features):
-    return _filter_features(features, lambda row: _value_has(row.get("natural"), {"water"}) or _row_has_any(row, "waterway"))
+    return _filter_features_by_mask(features, _series_value_has(features, "natural", {"water"}) | _series_has_any(features, "waterway"))
 
 
 def select_lifestyle(features):
-    return _filter_features(features, lambda row: _classify_context(row) is not None)
+    return _filter_features_by_mask(
+        features,
+        _series_value_has(features, "amenity", {"cafe", "bar", "pub", "restaurant", "fast_food"})
+        | _series_value_has(features, "shop", {"boutique", "clothes", "florist", "books", "antiques", "art"})
+        | _series_value_has(features, "tourism", {"gallery", "artwork", "attraction"})
+        | _series_has_any(features, "historic"),
+    )
 
 
 def select_transit(features):
-    return _filter_features(
+    return _filter_features_by_mask(
         features,
-        lambda row: _value_has(row.get("railway"), {"subway_entrance", "station"})
-        or _value_has(row.get("public_transport"), {"station", "platform"})
-        or _value_has(row.get("highway"), {"bus_stop"}),
+        _series_value_has(features, "railway", {"subway_entrance", "station"})
+        | _series_value_has(features, "public_transport", {"station", "platform"})
+        | _series_value_has(features, "highway", {"bus_stop"}),
     )
+
+
+def _filter_features_by_mask(features, mask):
+    if features is None or len(features) == 0:
+        return None
+    return features.loc[mask]
 
 
 def _filter_features(features, predicate: Callable):
@@ -274,6 +295,24 @@ def _filter_features(features, predicate: Callable):
         return None
     mask = [bool(predicate(row)) for _, row in features.iterrows()]
     return features.loc[mask]
+
+
+def _series_has_any(features, key: str):
+    if features is None or len(features) == 0 or key not in features.columns:
+        return _empty_mask(features)
+    return features[key].apply(_truthy_osm_value)
+
+
+def _series_value_has(features, key: str, targets: set[str]):
+    if features is None or len(features) == 0 or key not in features.columns:
+        return _empty_mask(features)
+    return features[key].apply(lambda value: _value_has(value, targets))
+
+
+def _empty_mask(features):
+    if features is None:
+        return False
+    return features.index.to_series().map(lambda _: False)
 
 
 def _row_has_any(row, key: str) -> bool:
@@ -391,8 +430,7 @@ class LabelPlacer:
         return None
 
     def _accept(self, artist) -> bool:
-        self.ax.figure.canvas.draw()
-        bbox = artist.get_window_extent(self.ax.figure.canvas.get_renderer()).padded(self.pad_px)
+        bbox = artist.get_window_extent(self.renderer).padded(self.pad_px)
         if not self.label_bounds.contains(bbox.x0, bbox.y0) or not self.label_bounds.contains(bbox.x1, bbox.y1):
             return False
         if any(bbox.overlaps(existing) for existing in self.occupied):
@@ -638,17 +676,66 @@ def draw_spots(ax, spots: list[Spot], crs, fonts, placer: LabelPlacer | None = N
         return
     gdf = gpd.GeoDataFrame([{"display": spot.display, "category": spot.category, "geometry": Point(spot.lon, spot.lat)} for spot in spots], crs="EPSG:4326").to_crs(crs)
     rows = gdf.reset_index(drop=True)
+    display_positions = _spot_display_positions(ax, rows)
     number_font = FontProperties(fname=fonts["bold"], size=12) if fonts and fonts.get("bold") else None
     label_font = FontProperties(fname=fonts["bold"], size=10.5) if fonts and fonts.get("bold") else None
     if placer:
-        for _, row in rows.iterrows():
-            placer.reserve_point(row.geometry.x, row.geometry.y, radius_px=22)
-    for idx, row in rows.iterrows():
+        for display_x, display_y, _, _ in display_positions:
+            placer.reserve_point(display_x, display_y, radius_px=22)
+    for (idx, row), (display_x, display_y, origin_x, origin_y) in zip(rows.iterrows(), display_positions):
         color = CATEGORY_COLORS.get(row["category"], "#2B7C8E")
-        ax.scatter(row.geometry.x, row.geometry.y, s=320, marker="o", color=color, edgecolors=THEME["panel"], linewidths=2.0, zorder=8)
-        ax.annotate(str(idx + 1), xy=(row.geometry.x, row.geometry.y), color="#FFF9ED", fontsize=12, fontproperties=number_font, ha="center", va="center", zorder=9)
+        if _screen_distance(ax, display_x, display_y, origin_x, origin_y) > 4:
+            ax.plot([origin_x, display_x], [origin_y, display_y], color=THEME["text"], linewidth=1.1, alpha=0.95, zorder=7.7, linestyle="--", dash_capstyle="round")
+        ax.scatter(display_x, display_y, s=320, marker="o", color=color, edgecolors=THEME["panel"], linewidths=2.0, zorder=8)
+        ax.annotate(str(idx + 1), xy=(display_x, display_y), color="#FFF9ED", fontsize=12, fontproperties=number_font, ha="center", va="center", zorder=9)
         if placer:
-            placer.place_annotated(row.geometry.x, row.geometry.y, str(row["display"]), _label_offsets_for_point(ax, row.geometry.x, row.geometry.y), color=THEME["text"], fontsize=10.5, fontproperties=label_font, zorder=10, weight_stroke=3.6)
+            placer.place_annotated(display_x, display_y, str(row["display"]), _label_offsets_for_point(ax, display_x, display_y), color=THEME["text"], fontsize=10.5, fontproperties=label_font, zorder=10, weight_stroke=3.6)
+
+
+def _spot_display_positions(ax, rows, min_gap_px: float = 44) -> list[tuple[float, float, float, float]]:
+    axes_bbox = ax.get_window_extent(ax.figure.canvas.get_renderer()).padded(-24)
+    chosen_screen: list[tuple[float, float]] = []
+    positions: list[tuple[float, float, float, float]] = []
+    offsets = _spot_displacement_offsets()
+    for _, row in rows.iterrows():
+        origin_x = row.geometry.x
+        origin_y = row.geometry.y
+        sx, sy = ax.transData.transform((origin_x, origin_y))
+        best = (sx, sy)
+        for dx, dy in offsets:
+            candidate = (sx + dx, sy + dy)
+            if not axes_bbox.contains(*candidate):
+                continue
+            if all(math.hypot(candidate[0] - x, candidate[1] - y) >= min_gap_px for x, y in chosen_screen):
+                best = candidate
+                break
+        chosen_screen.append(best)
+        display_x, display_y = ax.transData.inverted().transform(best)
+        positions.append((display_x, display_y, origin_x, origin_y))
+    return positions
+
+
+def _spot_displacement_offsets() -> list[tuple[float, float]]:
+    offsets = [(0.0, 0.0)]
+    directions = [
+        (1.0, 0.0),
+        (-1.0, 0.0),
+        (0.0, 1.0),
+        (0.0, -1.0),
+        (0.75, 0.75),
+        (-0.75, 0.75),
+        (0.75, -0.75),
+        (-0.75, -0.75),
+    ]
+    for radius in (46, 62, 80, 100):
+        offsets.extend((radius * dx, radius * dy) for dx, dy in directions)
+    return offsets
+
+
+def _screen_distance(ax, x1: float, y1: float, x2: float, y2: float) -> float:
+    sx1, sy1 = ax.transData.transform((x1, y1))
+    sx2, sy2 = ax.transData.transform((x2, y2))
+    return math.hypot(sx1 - sx2, sy1 - sy2)
 
 
 def draw_park_labels(ax, parks, crs, fonts, placer: LabelPlacer | None = None, limit: int = 8) -> None:

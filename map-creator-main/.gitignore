@@ -1,13 +1,13 @@
 __pycache__/
 *.pyc
 .pytest_cache/
-cache/
-outputs/
+
+
 config.local.json
 
 config.local.json
 .env
-cache/
+
 .pytest_cache/
 __pycache__/
 *.pyc

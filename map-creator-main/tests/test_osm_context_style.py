@@ -107,3 +107,48 @@ def test_context_axes_reserve_left_legend_without_map_background():
     assert len(legend_ax.images) == 0
 
     plt.close(fig)
+
+
+def test_close_spot_markers_are_displaced_to_avoid_overlap():
+    fig, ax = plt.subplots(figsize=(4, 3), dpi=100)
+    ax.set_xlim(120.999, 121.001)
+    ax.set_ylim(30.999, 31.001)
+    spots = [
+        style.Spot("a", "A", 31.0, 121.0, "coffee", "addr A"),
+        style.Spot("b", "B", 31.00001, 121.00001, "bar", "addr B"),
+    ]
+    placer = style.LabelPlacer(ax)
+
+    style.draw_spots(ax, spots, crs="EPSG:4326", fonts={}, placer=placer)
+
+    fig.canvas.draw()
+    renderer = fig.canvas.get_renderer()
+    number_boxes = [
+        text.get_window_extent(renderer).padded(11)
+        for text in ax.texts
+        if text.get_text() in {"1", "2"}
+    ]
+    assert len(number_boxes) == 2
+    assert not number_boxes[0].overlaps(number_boxes[1])
+
+    plt.close(fig)
+
+
+def test_displaced_spot_leader_line_is_high_contrast_dashed():
+    fig, ax = plt.subplots(figsize=(4, 3), dpi=100)
+    ax.set_xlim(120.999, 121.001)
+    ax.set_ylim(30.999, 31.001)
+    spots = [
+        style.Spot("a", "A", 31.0, 121.0, "coffee", "addr A"),
+        style.Spot("b", "B", 31.00001, 121.00001, "bar", "addr B"),
+    ]
+
+    style.draw_spots(ax, spots, crs="EPSG:4326", fonts={}, placer=style.LabelPlacer(ax))
+
+    leader_lines = [line for line in ax.lines if line.get_zorder() == 7.7]
+    assert leader_lines
+    assert leader_lines[0].get_color() == style.THEME["text"]
+    assert leader_lines[0].get_linestyle() == "--"
+    assert leader_lines[0].get_alpha() == 0.95
+
+    plt.close(fig)

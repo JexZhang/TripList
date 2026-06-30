@@ -3,10 +3,19 @@
 
 from __future__ import annotations
 
+import os
 from dataclasses import dataclass
 from pathlib import Path
 
+_MPLCONFIGDIR = Path(__file__).resolve().parents[2] / "cache" / "matplotlib"
+_MPLCONFIGDIR.mkdir(parents=True, exist_ok=True)
+os.environ.setdefault("MPLCONFIGDIR", str(_MPLCONFIGDIR))
+
 import geopandas as gpd
+import matplotlib
+
+matplotlib.use("Agg")
+
 import matplotlib.patheffects as path_effects
 import matplotlib.pyplot as plt
 import osmnx as ox
