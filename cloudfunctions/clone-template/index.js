@@ -33,6 +33,7 @@ exports.main = async (event) => {
     featured: _featured,
     sortWeight: _sortWeight,
     coverImages: _coverImages,
+    guideMapUrl: _guideMapUrl,
     version: _version,
     ownerOpenid: _o1,
     ownerNickname: _o2,

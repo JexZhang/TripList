@@ -43,6 +43,32 @@
   background: linear-gradient(90deg, var(--c1, var(--accent)), var(--c2, var(--accent-2)), transparent);
 }
 
+.lib-card-guide {
+  height: 248px;
+  position: relative;
+  overflow: hidden;
+  background: var(--surface-2);
+}
+
+.lib-card-guide-img {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.lib-card-guide-badge {
+  position: absolute;
+  left: 24px;
+  bottom: 20px;
+  padding: 8px 18px;
+  border-radius: 999px;
+  background: rgba(255, 250, 242, 0.92);
+  color: var(--ink);
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+
 .lib-card-body { padding: 36px 40px 40px; }
 
 .lib-card-top {

@@ -12,6 +12,7 @@ const CARD_FIELD = {
   dayCount: true, spotCount: true,
   tags: true, audience: true, seasons: true,
   coverImages: true,
+  guideMapUrl: true,
 } as const
 
 // ── Storage SWR:精选区缓存 6 小时,先回缓存再后台刷新 ──

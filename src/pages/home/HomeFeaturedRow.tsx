@@ -1,4 +1,4 @@
-import { View, Text, ScrollView } from '@tarojs/components'
+import { View, Text, ScrollView, Image } from '@tarojs/components'
 import type { TemplateCard } from '../../types/template'
 import { templateCoverColors } from '../../utils/template-cover'
 import './styles/home-featured.scss'
@@ -32,11 +32,18 @@ export default function HomeFeaturedRow({ templates, onOpenTemplate, onOpenLibra
           const regionLabel = [c.region, seasonTag].filter(Boolean).join(' · ')
           return (
             <View key={c._id} className='home-featured-card' onClick={() => onOpenTemplate(c._id)}>
-              <View className='hf-cover' style={{ background: `linear-gradient(140deg, ${c1}, ${c2})` }}>
-                <View className='hf-cover-pat' />
-                <Text className='hf-cover-region'>{regionLabel}</Text>
-                <Text className='hf-cover-city'>{c.city}</Text>
-              </View>
+              {c.guideMapUrl ? (
+                <View className='hf-cover hf-cover--has-guide'>
+                  <Image className='hf-guide-img' src={c.guideMapUrl} mode='aspectFill' />
+                  <Text className='hf-guide-badge'>导览图</Text>
+                </View>
+              ) : (
+                <View className='hf-cover' style={{ background: `linear-gradient(140deg, ${c1}, ${c2})` }}>
+                  <View className='hf-cover-pat' />
+                  <Text className='hf-cover-region'>{regionLabel}</Text>
+                  <Text className='hf-cover-city'>{c.city}</Text>
+                </View>
+              )}
               <View className='hf-meta'>
                 <Text className='hf-meta-name'>{c.name}</Text>
                 <Text className='hf-meta-info'>{nightsLabel(c.dayCount)} · {c.spotCount} 个地点</Text>

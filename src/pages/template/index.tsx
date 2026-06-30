@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
-import { View, Text } from '@tarojs/components'
+import { View, Text, Image } from '@tarojs/components'
 import Taro, { useRouter } from '@tarojs/taro'
 import type { Template } from '../../types/template'
 import type { Trip } from '../../types/trip'
@@ -130,6 +130,13 @@ export default function TemplatePage() {
           )}
         </View>
 
+        {tpl.guideMapUrl && (
+          <View className='tpl-guide-cover' onClick={() => Taro.previewImage({ urls: [tpl.guideMapUrl as string], current: tpl.guideMapUrl as string })}>
+            <Image className='tpl-guide-img' src={tpl.guideMapUrl} mode='aspectFill' />
+            <Text className='tpl-guide-badge'>精选导览图</Text>
+          </View>
+        )}
+
         <View className='tpl-tabs'>
           {TABS.map((tb) => (
             <View key={tb.key} className={`tpl-tab ${tab === tb.key ? 'on' : ''}`} onClick={() => setTab(tb.key)}>
@@ -164,5 +171,4 @@ export default function TemplatePage() {
     </TripProvider>
   )
 }
-
 

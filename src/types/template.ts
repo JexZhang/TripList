@@ -12,6 +12,7 @@ export interface TemplateMeta {
   featured: boolean
   sortWeight: number
   coverImages: string[] // 初期可空
+  guideMapUrl?: string | null // 平台预生成导览图,有值时作为模板主视觉
   version: number
 }
 
@@ -39,6 +40,7 @@ export interface TemplateCard {
   audience: AIAudience[]
   seasons: string[]
   coverImages: string[]
+  guideMapUrl?: string | null
 }
 
 export interface TemplateQuery {

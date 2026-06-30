@@ -1,0 +1,168 @@
+{
+  "city": "九寨沟",
+  "theme": "guide",
+  "source": "triplist",
+  "coordinate_policy": "AMap GCJ-02 is converted to WGS84 for OSMnx rendering",
+  "pois": [
+    {
+      "input_name": "九寨沟景区 · 沟口",
+      "resolved_name": "九寨沟景区 · 沟口",
+      "source": "triplist",
+      "poi_id": "jzg-s11",
+      "address": "九寨沟县漳扎镇",
+      "province": null,
+      "city": "九寨沟",
+      "district": null,
+      "type": "transport",
+      "typecode": null,
+      "lng_gcj02": 103.9213,
+      "lat_gcj02": 33.1856,
+      "lng_wgs84": 103.918939,
+      "lat_wgs84": 33.187702,
+      "confidence": 1.0,
+      "status": "resolved",
+      "needs_review": false,
+      "candidates": [
+        {
+          "score": 1.0,
+          "poi_id": "jzg-s11",
+          "name": "九寨沟景区 · 沟口",
+          "address": "九寨沟县漳扎镇",
+          "city": "九寨沟",
+          "district": "",
+          "type": "transport",
+          "lng_gcj02": 103.9213,
+          "lat_gcj02": 33.1856
+        }
+      ]
+    },
+    {
+      "input_name": "五花海 · 树正沟",
+      "resolved_name": "五花海 · 树正沟",
+      "source": "triplist",
+      "poi_id": "jzg-s12",
+      "address": "九寨沟县漳扎镇九寨沟景区内",
+      "province": null,
+      "city": "九寨沟",
+      "district": null,
+      "type": "spot",
+      "typecode": null,
+      "lng_gcj02": 103.905,
+      "lat_gcj02": 33.228,
+      "lng_wgs84": 103.902647,
+      "lat_wgs84": 33.230082,
+      "confidence": 1.0,
+      "status": "resolved",
+      "needs_review": false,
+      "candidates": [
+        {
+          "score": 1.0,
+          "poi_id": "jzg-s12",
+          "name": "五花海 · 树正沟",
+          "address": "九寨沟县漳扎镇九寨沟景区内",
+          "city": "九寨沟",
+          "district": "",
+          "type": "spot",
+          "lng_gcj02": 103.905,
+          "lat_gcj02": 33.228
+        }
+      ]
+    },
+    {
+      "input_name": "诺日朗瀑布",
+      "resolved_name": "诺日朗瀑布",
+      "source": "triplist",
+      "poi_id": "jzg-s13",
+      "address": "九寨沟县漳扎镇九寨沟景区内",
+      "province": null,
+      "city": "九寨沟",
+      "district": null,
+      "type": "spot",
+      "typecode": null,
+      "lng_gcj02": 103.918,
+      "lat_gcj02": 33.231,
+      "lng_wgs84": 103.91564,
+      "lat_wgs84": 33.233074,
+      "confidence": 1.0,
+      "status": "resolved",
+      "needs_review": false,
+      "candidates": [
+        {
+          "score": 1.0,
+          "poi_id": "jzg-s13",
+          "name": "诺日朗瀑布",
+          "address": "九寨沟县漳扎镇九寨沟景区内",
+          "city": "九寨沟",
+          "district": "",
+          "type": "spot",
+          "lng_gcj02": 103.918,
+          "lat_gcj02": 33.231
+        }
+      ]
+    },
+    {
+      "input_name": "长海 + 五彩池",
+      "resolved_name": "长海 + 五彩池",
+      "source": "triplist",
+      "poi_id": "jzg-s14",
+      "address": "九寨沟县漳扎镇九寨沟景区内",
+      "province": null,
+      "city": "九寨沟",
+      "district": null,
+      "type": "spot",
+      "typecode": null,
+      "lng_gcj02": 103.927,
+      "lat_gcj02": 33.05,
+      "lng_wgs84": 103.924638,
+      "lat_wgs84": 33.05219,
+      "confidence": 1.0,
+      "status": "resolved",
+      "needs_review": false,
+      "candidates": [
+        {
+          "score": 1.0,
+          "poi_id": "jzg-s14",
+          "name": "长海 + 五彩池",
+          "address": "九寨沟县漳扎镇九寨沟景区内",
+          "city": "九寨沟",
+          "district": "",
+          "type": "spot",
+          "lng_gcj02": 103.927,
+          "lat_gcj02": 33.05
+        }
+      ]
+    },
+    {
+      "input_name": "黄龙九寨站",
+      "resolved_name": "黄龙九寨站",
+      "source": "triplist",
+      "poi_id": "jzg-s15",
+      "address": "松潘县川主寺镇",
+      "province": null,
+      "city": "九寨沟",
+      "district": null,
+      "type": "transport",
+      "typecode": null,
+      "lng_gcj02": 103.7167,
+      "lat_gcj02": 32.7833,
+      "lng_wgs84": 103.714187,
+      "lat_wgs84": 32.785513,
+      "confidence": 1.0,
+      "status": "resolved",
+      "needs_review": false,
+      "candidates": [
+        {
+          "score": 1.0,
+          "poi_id": "jzg-s15",
+          "name": "黄龙九寨站",
+          "address": "松潘县川主寺镇",
+          "city": "九寨沟",
+          "district": "",
+          "type": "transport",
+          "lng_gcj02": 103.7167,
+          "lat_gcj02": 32.7833
+        }
+      ]
+    }
+  ]
+}

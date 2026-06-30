@@ -120,6 +120,33 @@
   line-height: 1.1;
 }
 
+.hf-cover--has-guide {
+  padding: 0;
+  background: var(--surface-2);
+}
+
+.hf-guide-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.hf-guide-badge {
+  position: absolute;
+  left: 16rpx;
+  bottom: 16rpx;
+  z-index: 1;
+  padding: 6rpx 14rpx;
+  border-radius: 999px;
+  background: rgba(255, 250, 242, 0.92);
+  color: var(--ink);
+  font-size: 18rpx;
+  font-weight: 700;
+  letter-spacing: 1rpx;
+}
+
 /* ── 底部白底信息区 ── */
 .hf-meta {
   padding: 16rpx 18rpx;

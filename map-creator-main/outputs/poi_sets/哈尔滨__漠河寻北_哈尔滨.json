@@ -1,0 +1,232 @@
+{
+  "city": "哈尔滨",
+  "theme": "guide",
+  "source": "triplist",
+  "coordinate_policy": "AMap GCJ-02 is converted to WGS84 for OSMnx rendering",
+  "pois": [
+    {
+      "input_name": "圣索菲亚大教堂",
+      "resolved_name": "圣索菲亚大教堂",
+      "source": "triplist",
+      "poi_id": "mohe-s2",
+      "address": "道里区透笼街88号",
+      "province": null,
+      "city": "哈尔滨",
+      "district": null,
+      "type": "spot",
+      "typecode": null,
+      "lng_gcj02": 126.6184,
+      "lat_gcj02": 45.7717,
+      "lng_wgs84": 126.612754,
+      "lat_wgs84": 45.769783,
+      "confidence": 1.0,
+      "status": "resolved",
+      "needs_review": false,
+      "candidates": [
+        {
+          "score": 1.0,
+          "poi_id": "mohe-s2",
+          "name": "圣索菲亚大教堂",
+          "address": "道里区透笼街88号",
+          "city": "哈尔滨",
+          "district": "",
+          "type": "spot",
+          "lng_gcj02": 126.6184,
+          "lat_gcj02": 45.7717
+        }
+      ]
+    },
+    {
+      "input_name": "中央大街",
+      "resolved_name": "中央大街",
+      "source": "triplist",
+      "poi_id": "mohe-s3",
+      "address": "道里区中央大街",
+      "province": null,
+      "city": "哈尔滨",
+      "district": null,
+      "type": "spot",
+      "typecode": null,
+      "lng_gcj02": 126.6193,
+      "lat_gcj02": 45.777,
+      "lng_wgs84": 126.613652,
+      "lat_wgs84": 45.775084,
+      "confidence": 1.0,
+      "status": "resolved",
+      "needs_review": false,
+      "candidates": [
+        {
+          "score": 1.0,
+          "poi_id": "mohe-s3",
+          "name": "中央大街",
+          "address": "道里区中央大街",
+          "city": "哈尔滨",
+          "district": "",
+          "type": "spot",
+          "lng_gcj02": 126.6193,
+          "lat_gcj02": 45.777
+        }
+      ]
+    },
+    {
+      "input_name": "中华巴洛克 · 老道外",
+      "resolved_name": "中华巴洛克 · 老道外",
+      "source": "triplist",
+      "poi_id": "mohe-s5",
+      "address": "道外区南二道街32号",
+      "province": null,
+      "city": "哈尔滨",
+      "district": null,
+      "type": "spot",
+      "typecode": null,
+      "lng_gcj02": 126.645,
+      "lat_gcj02": 45.7821,
+      "lng_wgs84": 126.639295,
+      "lat_wgs84": 45.780152,
+      "confidence": 1.0,
+      "status": "resolved",
+      "needs_review": false,
+      "candidates": [
+        {
+          "score": 1.0,
+          "poi_id": "mohe-s5",
+          "name": "中华巴洛克 · 老道外",
+          "address": "道外区南二道街32号",
+          "city": "哈尔滨",
+          "district": "",
+          "type": "spot",
+          "lng_gcj02": 126.645,
+          "lat_gcj02": 45.7821
+        }
+      ]
+    },
+    {
+      "input_name": "松花江畔 · 防洪纪念塔",
+      "resolved_name": "松花江畔 · 防洪纪念塔",
+      "source": "triplist",
+      "poi_id": "mohe-s6",
+      "address": "道里区中央大街尽头广场",
+      "province": null,
+      "city": "哈尔滨",
+      "district": null,
+      "type": "spot",
+      "typecode": null,
+      "lng_gcj02": 126.6188,
+      "lat_gcj02": 45.7821,
+      "lng_wgs84": 126.613152,
+      "lat_wgs84": 45.780186,
+      "confidence": 1.0,
+      "status": "resolved",
+      "needs_review": false,
+      "candidates": [
+        {
+          "score": 1.0,
+          "poi_id": "mohe-s6",
+          "name": "松花江畔 · 防洪纪念塔",
+          "address": "道里区中央大街尽头广场",
+          "city": "哈尔滨",
+          "district": "",
+          "type": "spot",
+          "lng_gcj02": 126.6188,
+          "lat_gcj02": 45.7821
+        }
+      ]
+    },
+    {
+      "input_name": "太阳岛雪博会",
+      "resolved_name": "太阳岛雪博会",
+      "source": "triplist",
+      "poi_id": "mohe-s7",
+      "address": "松北区太阳大道3号",
+      "province": null,
+      "city": "哈尔滨",
+      "district": null,
+      "type": "spot",
+      "typecode": null,
+      "lng_gcj02": 126.6072,
+      "lat_gcj02": 45.79,
+      "lng_wgs84": 126.601565,
+      "lat_wgs84": 45.788096,
+      "confidence": 1.0,
+      "status": "resolved",
+      "needs_review": false,
+      "candidates": [
+        {
+          "score": 1.0,
+          "poi_id": "mohe-s7",
+          "name": "太阳岛雪博会",
+          "address": "松北区太阳大道3号",
+          "city": "哈尔滨",
+          "district": "",
+          "type": "spot",
+          "lng_gcj02": 126.6072,
+          "lat_gcj02": 45.79
+        }
+      ]
+    },
+    {
+      "input_name": "冰雪大世界",
+      "resolved_name": "冰雪大世界",
+      "source": "triplist",
+      "poi_id": "mohe-s8",
+      "address": "松北区太阳岛西区",
+      "province": null,
+      "city": "哈尔滨",
+      "district": null,
+      "type": "spot",
+      "typecode": null,
+      "lng_gcj02": 126.5775,
+      "lat_gcj02": 45.8047,
+      "lng_wgs84": 126.57186,
+      "lat_wgs84": 45.802793,
+      "confidence": 1.0,
+      "status": "resolved",
+      "needs_review": false,
+      "candidates": [
+        {
+          "score": 1.0,
+          "poi_id": "mohe-s8",
+          "name": "冰雪大世界",
+          "address": "松北区太阳岛西区",
+          "city": "哈尔滨",
+          "district": "",
+          "type": "spot",
+          "lng_gcj02": 126.5775,
+          "lat_gcj02": 45.8047
+        }
+      ]
+    },
+    {
+      "input_name": "哈尔滨火车站",
+      "resolved_name": "哈尔滨火车站",
+      "source": "triplist",
+      "poi_id": "mohe-s11",
+      "address": "南岗区铁路街1号",
+      "province": null,
+      "city": "哈尔滨",
+      "district": null,
+      "type": "transport",
+      "typecode": null,
+      "lng_gcj02": 126.6228,
+      "lat_gcj02": 45.756,
+      "lng_wgs84": 126.617149,
+      "lat_wgs84": 45.754075,
+      "confidence": 1.0,
+      "status": "resolved",
+      "needs_review": false,
+      "candidates": [
+        {
+          "score": 1.0,
+          "poi_id": "mohe-s11",
+          "name": "哈尔滨火车站",
+          "address": "南岗区铁路街1号",
+          "city": "哈尔滨",
+          "district": "",
+          "type": "transport",
+          "lng_gcj02": 126.6228,
+          "lat_gcj02": 45.756
+        }
+      ]
+    }
+  ]
+}

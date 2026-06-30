@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
-import { View, Text, ScrollView, Input } from '@tarojs/components'
+import { View, Text, ScrollView, Input, Image } from '@tarojs/components'
 import Taro from '@tarojs/taro'
 import type { TemplateCard, TemplateQuery } from '../../types/template'
 import { listTemplates } from '../../utils/templates'
@@ -148,7 +148,14 @@ export default function LibraryPage() {
                 <View key={c._id} className='lib-card'
                   style={{ '--c1': g[0], '--c2': g[1], animationDelay: `${i * 60}ms` } as React.CSSProperties}
                   onClick={() => Taro.navigateTo({ url: `/pages/template/index?id=${c._id}` })}>
-                  <View className='lib-card-ink' />
+                  {c.guideMapUrl ? (
+                    <View className='lib-card-guide'>
+                      <Image className='lib-card-guide-img' src={c.guideMapUrl} mode='aspectFill' />
+                      <Text className='lib-card-guide-badge'>导览图</Text>
+                    </View>
+                  ) : (
+                    <View className='lib-card-ink' />
+                  )}
                   <View className='lib-card-body'>
                     <View className='lib-card-top'>
                       <Text className='lib-card-name'>{c.name}</Text>

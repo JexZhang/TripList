@@ -15,6 +15,29 @@
 .tpl-tags { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 16px; }
 .tpl-tag { font-size: 22px; padding: 6px 16px; border-radius: 999px; background: var(--surface); border: 1px solid var(--line); color: var(--ink); }
 
+.tpl-guide-cover {
+  margin: 8px 28px 20px;
+  height: 276px;
+  border-radius: 20px;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  position: relative;
+  background: var(--surface-2);
+  box-shadow: var(--shadow-sm);
+}
+.tpl-guide-img { width: 100%; height: 100%; display: block; }
+.tpl-guide-badge {
+  position: absolute;
+  left: 20px;
+  bottom: 16px;
+  padding: 8px 16px;
+  border-radius: 999px;
+  background: rgba(255, 250, 242, 0.92);
+  color: var(--ink);
+  font-size: 20px;
+  font-weight: 700;
+}
+
 .tpl-tabs { display: flex; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); margin: 8px 0; }
 .tpl-tab { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 18px 0; color: var(--ink-3); }
 .tpl-tab.on { color: var(--accent); }

@@ -1,0 +1,296 @@
+{
+  "city": "成都",
+  "theme": "guide",
+  "source": "triplist",
+  "coordinate_policy": "AMap GCJ-02 is converted to WGS84 for OSMnx rendering",
+  "pois": [
+    {
+      "input_name": "成都天府国际机场",
+      "resolved_name": "成都天府国际机场",
+      "source": "triplist",
+      "poi_id": "jzg-s1",
+      "address": "简阳市芦葭镇",
+      "province": null,
+      "city": "成都",
+      "district": null,
+      "type": "transport",
+      "typecode": null,
+      "lng_gcj02": 104.4421,
+      "lat_gcj02": 30.314,
+      "lng_wgs84": 104.439387,
+      "lat_wgs84": 30.316523,
+      "confidence": 1.0,
+      "status": "resolved",
+      "needs_review": false,
+      "candidates": [
+        {
+          "score": 1.0,
+          "poi_id": "jzg-s1",
+          "name": "成都天府国际机场",
+          "address": "简阳市芦葭镇",
+          "city": "成都",
+          "district": "",
+          "type": "transport",
+          "lng_gcj02": 104.4421,
+          "lat_gcj02": 30.314
+        }
+      ]
+    },
+    {
+      "input_name": "宽窄巷子",
+      "resolved_name": "宽窄巷子",
+      "source": "triplist",
+      "poi_id": "jzg-s2",
+      "address": "青羊区金河路宽窄巷子",
+      "province": null,
+      "city": "成都",
+      "district": null,
+      "type": "spot",
+      "typecode": null,
+      "lng_gcj02": 104.0617,
+      "lat_gcj02": 30.6743,
+      "lng_wgs84": 104.05906,
+      "lat_wgs84": 30.67672,
+      "confidence": 1.0,
+      "status": "resolved",
+      "needs_review": false,
+      "candidates": [
+        {
+          "score": 1.0,
+          "poi_id": "jzg-s2",
+          "name": "宽窄巷子",
+          "address": "青羊区金河路宽窄巷子",
+          "city": "成都",
+          "district": "",
+          "type": "spot",
+          "lng_gcj02": 104.0617,
+          "lat_gcj02": 30.6743
+        }
+      ]
+    },
+    {
+      "input_name": "锦里 + 武侯祠",
+      "resolved_name": "锦里 + 武侯祠",
+      "source": "triplist",
+      "poi_id": "jzg-s3",
+      "address": "武侯区武侯祠大街231号",
+      "province": null,
+      "city": "成都",
+      "district": null,
+      "type": "spot",
+      "typecode": null,
+      "lng_gcj02": 104.0467,
+      "lat_gcj02": 30.6444,
+      "lng_wgs84": 104.044096,
+      "lat_wgs84": 30.646862,
+      "confidence": 1.0,
+      "status": "resolved",
+      "needs_review": false,
+      "candidates": [
+        {
+          "score": 1.0,
+          "poi_id": "jzg-s3",
+          "name": "锦里 + 武侯祠",
+          "address": "武侯区武侯祠大街231号",
+          "city": "成都",
+          "district": "",
+          "type": "spot",
+          "lng_gcj02": 104.0467,
+          "lat_gcj02": 30.6444
+        }
+      ]
+    },
+    {
+      "input_name": "成都东站",
+      "resolved_name": "成都东站",
+      "source": "triplist",
+      "poi_id": "jzg-s5",
+      "address": "成华区青衣江路",
+      "province": null,
+      "city": "成都",
+      "district": null,
+      "type": "transport",
+      "typecode": null,
+      "lng_gcj02": 104.1567,
+      "lat_gcj02": 30.626,
+      "lng_wgs84": 104.154091,
+      "lat_wgs84": 30.628473,
+      "confidence": 1.0,
+      "status": "resolved",
+      "needs_review": false,
+      "candidates": [
+        {
+          "score": 1.0,
+          "poi_id": "jzg-s5",
+          "name": "成都东站",
+          "address": "成华区青衣江路",
+          "city": "成都",
+          "district": "",
+          "type": "transport",
+          "lng_gcj02": 104.1567,
+          "lat_gcj02": 30.626
+        }
+      ]
+    },
+    {
+      "input_name": "成都东站",
+      "resolved_name": "成都东站",
+      "source": "triplist",
+      "poi_id": "jzg-s16",
+      "address": "成华区青衣江路",
+      "province": null,
+      "city": "成都",
+      "district": null,
+      "type": "transport",
+      "typecode": null,
+      "lng_gcj02": 104.1567,
+      "lat_gcj02": 30.626,
+      "lng_wgs84": 104.154091,
+      "lat_wgs84": 30.628473,
+      "confidence": 1.0,
+      "status": "resolved",
+      "needs_review": false,
+      "candidates": [
+        {
+          "score": 1.0,
+          "poi_id": "jzg-s16",
+          "name": "成都东站",
+          "address": "成华区青衣江路",
+          "city": "成都",
+          "district": "",
+          "type": "transport",
+          "lng_gcj02": 104.1567,
+          "lat_gcj02": 30.626
+        }
+      ]
+    },
+    {
+      "input_name": "大熊猫繁育研究基地",
+      "resolved_name": "大熊猫繁育研究基地",
+      "source": "triplist",
+      "poi_id": "jzg-s19",
+      "address": "成华区熊猫大道1375号",
+      "province": null,
+      "city": "成都",
+      "district": null,
+      "type": "spot",
+      "typecode": null,
+      "lng_gcj02": 104.1483,
+      "lat_gcj02": 30.735,
+      "lng_wgs84": 104.14567,
+      "lat_wgs84": 30.737409,
+      "confidence": 1.0,
+      "status": "resolved",
+      "needs_review": false,
+      "candidates": [
+        {
+          "score": 1.0,
+          "poi_id": "jzg-s19",
+          "name": "大熊猫繁育研究基地",
+          "address": "成华区熊猫大道1375号",
+          "city": "成都",
+          "district": "",
+          "type": "spot",
+          "lng_gcj02": 104.1483,
+          "lat_gcj02": 30.735
+        }
+      ]
+    },
+    {
+      "input_name": "杜甫草堂",
+      "resolved_name": "杜甫草堂",
+      "source": "triplist",
+      "poi_id": "jzg-s20",
+      "address": "青羊区青华路37号",
+      "province": null,
+      "city": "成都",
+      "district": null,
+      "type": "spot",
+      "typecode": null,
+      "lng_gcj02": 104.026,
+      "lat_gcj02": 30.662,
+      "lng_wgs84": 104.023455,
+      "lat_wgs84": 30.664506,
+      "confidence": 1.0,
+      "status": "resolved",
+      "needs_review": false,
+      "candidates": [
+        {
+          "score": 1.0,
+          "poi_id": "jzg-s20",
+          "name": "杜甫草堂",
+          "address": "青羊区青华路37号",
+          "city": "成都",
+          "district": "",
+          "type": "spot",
+          "lng_gcj02": 104.026,
+          "lat_gcj02": 30.662
+        }
+      ]
+    },
+    {
+      "input_name": "春熙路 · 太古里",
+      "resolved_name": "春熙路 · 太古里",
+      "source": "triplist",
+      "poi_id": "jzg-s21",
+      "address": "锦江区中纱帽街8号",
+      "province": null,
+      "city": "成都",
+      "district": null,
+      "type": "spot",
+      "typecode": null,
+      "lng_gcj02": 104.0808,
+      "lat_gcj02": 30.6529,
+      "lng_wgs84": 104.078134,
+      "lat_wgs84": 30.655307,
+      "confidence": 1.0,
+      "status": "resolved",
+      "needs_review": false,
+      "candidates": [
+        {
+          "score": 1.0,
+          "poi_id": "jzg-s21",
+          "name": "春熙路 · 太古里",
+          "address": "锦江区中纱帽街8号",
+          "city": "成都",
+          "district": "",
+          "type": "spot",
+          "lng_gcj02": 104.0808,
+          "lat_gcj02": 30.6529
+        }
+      ]
+    },
+    {
+      "input_name": "钢管厂五区小郡肝串串",
+      "resolved_name": "钢管厂五区小郡肝串串",
+      "source": "triplist",
+      "poi_id": "jzg-s22",
+      "address": "锦江区春熙路",
+      "province": null,
+      "city": "成都",
+      "district": null,
+      "type": "spot",
+      "typecode": null,
+      "lng_gcj02": 104.075,
+      "lat_gcj02": 30.666,
+      "lng_wgs84": 104.072339,
+      "lat_wgs84": 30.668406,
+      "confidence": 1.0,
+      "status": "resolved",
+      "needs_review": false,
+      "candidates": [
+        {
+          "score": 1.0,
+          "poi_id": "jzg-s22",
+          "name": "钢管厂五区小郡肝串串",
+          "address": "锦江区春熙路",
+          "city": "成都",
+          "district": "",
+          "type": "spot",
+          "lng_gcj02": 104.075,
+          "lat_gcj02": 30.666
+        }
+      ]
+    }
+  ]
+}

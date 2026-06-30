@@ -1,0 +1,104 @@
+{
+  "city": "黄龙",
+  "theme": "guide",
+  "source": "triplist",
+  "coordinate_policy": "AMap GCJ-02 is converted to WGS84 for OSMnx rendering",
+  "pois": [
+    {
+      "input_name": "黄龙九寨站",
+      "resolved_name": "黄龙九寨站",
+      "source": "triplist",
+      "poi_id": "jzg-s6",
+      "address": "松潘县川主寺镇",
+      "province": null,
+      "city": "黄龙",
+      "district": null,
+      "type": "transport",
+      "typecode": null,
+      "lng_gcj02": 103.7167,
+      "lat_gcj02": 32.7833,
+      "lng_wgs84": 103.714187,
+      "lat_wgs84": 32.785513,
+      "confidence": 1.0,
+      "status": "resolved",
+      "needs_review": false,
+      "candidates": [
+        {
+          "score": 1.0,
+          "poi_id": "jzg-s6",
+          "name": "黄龙九寨站",
+          "address": "松潘县川主寺镇",
+          "city": "黄龙",
+          "district": "",
+          "type": "transport",
+          "lng_gcj02": 103.7167,
+          "lat_gcj02": 32.7833
+        }
+      ]
+    },
+    {
+      "input_name": "黄龙风景区",
+      "resolved_name": "黄龙风景区",
+      "source": "triplist",
+      "poi_id": "jzg-s7",
+      "address": "松潘县黄龙乡",
+      "province": null,
+      "city": "黄龙",
+      "district": null,
+      "type": "spot",
+      "typecode": null,
+      "lng_gcj02": 103.8243,
+      "lat_gcj02": 32.7547,
+      "lng_wgs84": 103.821857,
+      "lat_wgs84": 32.756993,
+      "confidence": 1.0,
+      "status": "resolved",
+      "needs_review": false,
+      "candidates": [
+        {
+          "score": 1.0,
+          "poi_id": "jzg-s7",
+          "name": "黄龙风景区",
+          "address": "松潘县黄龙乡",
+          "city": "黄龙",
+          "district": "",
+          "type": "spot",
+          "lng_gcj02": 103.8243,
+          "lat_gcj02": 32.7547
+        }
+      ]
+    },
+    {
+      "input_name": "九寨沟口 · 沟口大酒店",
+      "resolved_name": "九寨沟口 · 沟口大酒店",
+      "source": "triplist",
+      "poi_id": "jzg-s8",
+      "address": "九寨沟县漳扎镇",
+      "province": null,
+      "city": "黄龙",
+      "district": null,
+      "type": "hotel",
+      "typecode": null,
+      "lng_gcj02": 103.921,
+      "lat_gcj02": 33.185,
+      "lng_wgs84": 103.918639,
+      "lat_wgs84": 33.187103,
+      "confidence": 1.0,
+      "status": "resolved",
+      "needs_review": false,
+      "candidates": [
+        {
+          "score": 1.0,
+          "poi_id": "jzg-s8",
+          "name": "九寨沟口 · 沟口大酒店",
+          "address": "九寨沟县漳扎镇",
+          "city": "黄龙",
+          "district": "",
+          "type": "hotel",
+          "lng_gcj02": 103.921,
+          "lat_gcj02": 33.185
+        }
+      ]
+    }
+  ]
+}
