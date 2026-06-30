@@ -3,6 +3,7 @@ import { View, Text, Input, Textarea, Picker, ScrollView, RootPortal } from '@ta
 import type { Spot, SpotType } from '../../types/trip'
 import SpotSearch, { type SelectedSpotInfo } from '../SpotSearch'
 import { useKeyboardLift } from '../../utils/use-keyboard-height'
+import { useTheme } from '../../store/theme-store'
 import './index.scss'
 
 const TYPES: { key: SpotType; label: string }[] = [
@@ -25,6 +26,7 @@ export default function EditSpotSheet({ open, spot, defaultCity, onClose, onSave
   const [draft, setDraft] = useState<Partial<Spot>>({})
   const [searchOpen, setSearchOpen] = useState(false)
   const { height: keyboardHeight, bind: kbProps } = useKeyboardLift()
+  const { theme } = useTheme()
 
   useEffect(() => {
     if (open && spot) {
@@ -58,7 +60,7 @@ export default function EditSpotSheet({ open, spot, defaultCity, onClose, onSave
   return (
     <>
     <RootPortal>
-    <View className='edit-spot-mask theme-tokens' onClick={onClose}>
+    <View className={`edit-spot-mask theme-tokens theme-${theme}`} onClick={onClose}>
       <View
         className='edit-spot-sheet'
         style={{

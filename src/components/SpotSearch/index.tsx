@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react'
 import { View, Text, Input, ScrollView, RootPortal } from '@tarojs/components'
 import { cloud, type PoiResult } from '../../utils/cloud'
 import { useKeyboardLift } from '../../utils/use-keyboard-height'
+import { useTheme } from '../../store/theme-store'
 import './index.scss'
 
 export interface SelectedSpotInfo {
@@ -27,6 +28,7 @@ export default function SpotSearch({ open, defaultCity, onClose, onSelect }: Pro
   const [loading, setLoading] = useState(false)
   const [debouncedKw, setDebouncedKw] = useState('')
   const { height: keyboardHeight, bind: kbProps } = useKeyboardLift()
+  const { theme } = useTheme()
 
   // debounce 输入
   useEffect(() => {
@@ -82,7 +84,7 @@ export default function SpotSearch({ open, defaultCity, onClose, onSelect }: Pro
 
   return (
     <RootPortal>
-    <View className='spot-search-mask theme-tokens' onClick={onClose}>
+    <View className={`spot-search-mask theme-tokens theme-${theme}`} onClick={onClose}>
       <View
         className='spot-search-sheet'
         style={{
