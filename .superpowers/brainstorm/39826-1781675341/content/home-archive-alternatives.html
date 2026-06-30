@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>归档替代方案对比</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700;900&family=JetBrains+Mono:wght@400;500&display=swap');
+    :root {
+      --bg:#FFF4E6; --surface:#FFF; --surface-2:#FFF9F1;
+      --ink:#2B1A10; --ink-2:#5A4338; --ink-3:#9B8378;
+      --line:rgba(43,26,16,.08); --line-2:rgba(43,26,16,.14);
+      --accent:#FF7A2E; --accent-2:#FF9A4D; --accent-bg:#FFEBD6;
+      --coral:#FF5B5B; --leaf:#4FB286; --sun:#FFC247; --plum:#6B46C1;
+      --font-display:'Noto Serif SC','Songti SC',serif;
+      --font-body:'PingFang SC',-apple-system,BlinkMacSystemFont,sans-serif;
+      --font-mono:'JetBrains Mono',monospace;
+      --shadow-sm:0 2px 8px rgba(58,36,25,.06);
+      --shadow-md:0 6px 20px rgba(58,36,25,.10);
+    }
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:var(--font-body);background:linear-gradient(180deg,#f5f5f5,#e8e8e8);min-height:100vh;padding:32px 16px}
+    .container{max-width:1600px;margin:0 auto}
+    h1{font-family:var(--font-display);font-size:30px;font-weight:700;color:var(--ink);text-align:center;margin-bottom:8px}
+    .subtitle{text-align:center;color:var(--ink-3);font-size:15px;margin-bottom:40px;line-height:1.6}
+
+    .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:28px;margin-bottom:40px}
+    .card{background:#fff;border-radius:20px;overflow:hidden;box-shadow:0 6px 24px rgba(0,0,0,.10)}
+    .card-head{padding:16px 20px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center}
+    .card-title{font-family:var(--font-display);font-size:17px;font-weight:700;color:var(--ink)}
+    .badge{font-size:11px;padding:3px 10px;border-radius:10px;font-weight:600}
+    .badge-d{background:#E3F2FD;color:#1976D2}
+    .badge-e{background:#E8F5E9;color:#388E3C}
+    .badge-f{background:#FFF3E0;color:#F57C00}
+
+    .phone{width:100%;max-width:375px;height:780px;margin:0 auto;background:var(--bg);overflow-y:auto;overflow-x:hidden}
+
+    /* Common */
+    .ph{padding:16px 20px 12px;display:flex;justify-content:space-between;align-items:center;background:var(--surface);border-bottom:1px solid var(--line)}
+    .ph-title{font-family:var(--font-display);font-size:22px;font-weight:700;color:var(--ink)}
+    .avatar{width:34px;height:34px;border-radius:50%;background:var(--accent-bg);border:2px solid var(--accent)}
+
+    .abar{padding:12px 20px;display:flex;gap:10px;background:var(--surface);border-bottom:1px solid var(--line)}
+    .abtn{flex:1;padding:10px 8px;border-radius:12px;text-align:center;font-size:13px;font-weight:600;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:5px}
+    .abtn-ai{background:linear-gradient(135deg,var(--accent),var(--coral));color:#fff}
+    .abtn-new{background:var(--surface-2);color:var(--ink-2);border:1px solid var(--line)}
+
+    .sec{padding:20px}
+    .sec-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
+    .sec-title{font-family:var(--font-display);font-size:17px;font-weight:700;color:var(--ink)}
+    .sec-more{font-size:13px;color:var(--accent)}
+
+    /* Tabs */
+    .tabs{display:flex;gap:0;background:var(--surface);padding:0 20px;border-bottom:1px solid var(--line)}
+    .tab-item{padding:12px 16px;font-size:14px;font-weight:600;color:var(--ink-3);border-bottom:2px solid transparent;cursor:pointer}
+    .tab-item.active{color:var(--accent);border-bottom-color:var(--accent)}
+
+    /* Trip card */
+    .tc{background:var(--surface);border-radius:14px;padding:16px;margin-bottom:10px;box-shadow:var(--shadow-md);position:relative;overflow:hidden}
+    .tc::before{content:'';position:absolute;left:0;top:0;bottom:0;width:5px;background:linear-gradient(180deg,var(--c1),var(--c2))}
+    .tc.c1{--c1:#FF7A2E;--c2:#FF9A4D}.tc.c2{--c1:#6B46C1;--c2:#FF5B5B}.tc.c3{--c1:#4FB286;--c2:#FFC247}.tc.c4{--c1:#FFC247;--c2:#FF7A2E}
+    .tc-name{font-family:var(--font-display);font-size:16px;font-weight:700;color:var(--ink);margin-bottom:5px}
+    .tc-meta{font-size:12px;color:var(--ink-3);font-family:var(--font-mono);display:flex;gap:6px;align-items:center}
+    .tc-dot{width:4px;height:4px;border-radius:50%;background:var(--line-2)}
+    .phase{display:inline-block;margin-top:8px;font-size:11px;padding:3px 10px;border-radius:8px;font-weight:600}
+    .phase-up{background:#E8F5E9;color:#2E7D32}
+    .phase-live{background:#FFF3E0;color:#E65100}
+    .phase-dn{background:var(--surface-2);color:var(--ink-3)}
+
+    /* Dim card for completed */
+    .tc.dim{opacity:.65}
+    .tc.dim .tc-name{color:var(--ink-2)}
+
+    /* Template row */
+    .tpl-row{display:flex;gap:10px;overflow-x:auto;padding-bottom:4px}
+    .tpl-card{min-width:130px;background:var(--surface);border-radius:12px;padding:12px;box-shadow:var(--shadow-sm);flex-shrink:0}
+    .tpl-name{font-size:13px;font-weight:600;color:var(--ink);margin-bottom:2px}
+    .tpl-city{font-size:11px;color:var(--ink-3)}
+    .tpl-ink{height:4px;border-radius:2px;margin-bottom:8px}
+
+    /* Empty state */
+    .empty{text-align:center;padding:50px 20px 24px}
+    .empty-icon{font-size:56px;margin-bottom:14px;opacity:.6}
+    .empty-title{font-family:var(--font-display);font-size:19px;font-weight:700;color:var(--ink);margin-bottom:8px}
+    .empty-desc{font-size:13px;color:var(--ink-3);line-height:1.6;margin-bottom:20px}
+
+    /* Divider */
+    .divider{display:flex;align-items:center;gap:12px;padding:8px 20px;color:var(--ink-3);font-size:12px}
+    .divider::before,.divider::after{content:'';flex:1;height:1px;background:var(--line)}
+
+    /* Separator line */
+    .sep{height:8px;background:var(--bg-deep,#F4E6CE);border:none}
+
+    /* Me page mockup (方案E) */
+    .me-section{background:var(--surface);border-top:8px solid var(--bg-deep,#F4E6CE)}
+    .me-trip-group{padding:16px 20px;border-bottom:1px solid var(--line)}
+    .me-group-title{font-size:13px;font-weight:600;color:var(--ink-3);margin-bottom:10px;letter-spacing:1px}
+
+    /* Pros/Cons */
+    .pros-cons{background:#fff;border-radius:20px;padding:28px;box-shadow:0 6px 24px rgba(0,0,0,.10);margin-top:40px}
+    .pros-cons h2{font-family:var(--font-display);font-size:22px;font-weight:700;color:var(--ink);text-align:center;margin-bottom:24px}
+    .pc-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+    .pc-card{padding:20px;border-radius:14px;background:var(--bg)}
+    .pc-title{font-family:var(--font-display);font-size:16px;font-weight:700;color:var(--ink);margin-bottom:12px}
+    .pc-pro,.pc-con{font-size:13px;line-height:1.8;color:var(--ink-2)}
+    .pc-pro::before{content:'✅ ';font-size:12px}
+    .pc-con::before{content:'⚠️ ';font-size:12px}
+    .pc-pro{margin-bottom:4px}
+
+    /* Recommendation */
+    .rec{margin-top:32px;padding:24px;background:linear-gradient(135deg,#E3F2FD,#BBDEFB);border-radius:16px;text-align:center}
+    .rec-title{font-family:var(--font-display);font-size:18px;font-weight:700;color:#1565C0;margin-bottom:12px}
+    .rec-text{font-size:14px;color:#1565C0;line-height:1.8;max-width:800px;margin:0 auto}
+  </style>
+</head>
+<body>
+<div class="container">
+  <h1>归档替代方案 · 四种思路</h1>
+  <p class="subtitle">不用"自动折叠"规则，用更简单直接的方式处理已完成行程</p>
+
+  <div class="grid">
+    <!-- ===== 方案 D: 标签页筛选 ===== -->
+    <div class="card">
+      <div class="card-head">
+        <span class="card-title">D · 标签页筛选</span>
+        <span class="badge badge-d">用户自主</span>
+      </div>
+      <div class="phone">
+        <div class="ph"><span class="ph-title">我的行程</span><div class="avatar"></div></div>
+        <div class="abar">
+          <button class="abtn abtn-ai">✨ AI 智能规划</button>
+          <button class="abtn abtn-new">➕ 新建行程</button>
+        </div>
+        <!-- Tabs -->
+        <div class="tabs">
+          <div class="tab-item active">全部 (5)</div>
+          <div class="tab-item">进行中 (2)</div>
+          <div class="tab-item">已完成 (3)</div>
+        </div>
+        <!-- All trips flat -->
+        <div class="sec">
+          <div class="tc c1">
+            <div class="tc-name">南京 · 金陵四日</div>
+            <div class="tc-meta"><span>2026.03.15</span><span class="tc-dot"></span><span>4天3晚</span></div>
+            <div class="phase phase-up">即将出发</div>
+          </div>
+          <div class="tc c2">
+            <div class="tc-name">厦门 · 鼓浪屿漫步</div>
+            <div class="tc-meta"><span>2026.03.01</span><span class="tc-dot"></span><span>5天4晚</span></div>
+            <div class="phase phase-live">进行中</div>
+          </div>
+          <div class="tc c3">
+            <div class="tc-name">哈尔滨 · 漠河寻北</div>
+            <div class="tc-meta"><span>2026.02.20</span><span class="tc-dot"></span><span>7天6晚</span></div>
+            <div class="phase phase-dn">已完成</div>
+          </div>
+          <div class="tc c4">
+            <div class="tc-name">大理 · 风花雪月</div>
+            <div class="tc-meta"><span>2026.01.10</span><span class="tc-dot"></span><span>4天3晚</span></div>
+            <div class="phase phase-dn">已完成</div>
+          </div>
+          <div class="tc c1">
+            <div class="tc-name">九寨沟 · 童话之旅</div>
+            <div class="tc-meta"><span>2025.12.20</span><span class="tc-dot"></span><span>5天4晚</span></div>
+            <div class="phase phase-dn">已完成</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== 方案 E: 移至"我的"页 ===== -->
+    <div class="card">
+      <div class="card-head">
+        <span class="card-title">E · 首页只留活跃</span>
+        <span class="badge badge-e">最简洁</span>
+      </div>
+      <div class="phone">
+        <div class="ph"><span class="ph-title">我的行程</span><div class="avatar"></div></div>
+        <div class="abar">
+          <button class="abtn abtn-ai">✨ AI 智能规划</button>
+          <button class="abtn abtn-new">➕ 新建行程</button>
+        </div>
+        <!-- Only active trips -->
+        <div class="sec">
+          <div class="tc c1">
+            <div class="tc-name">南京 · 金陵四日</div>
+            <div class="tc-meta"><span>2026.03.15</span><span class="tc-dot"></span><span>4天3晚</span></div>
+            <div class="phase phase-up">即将出发</div>
+          </div>
+          <div class="tc c2">
+            <div class="tc-name">厦门 · 鼓浪屿漫步</div>
+            <div class="tc-meta"><span>2026.03.01</span><span class="tc-dot"></span><span>5天4晚</span></div>
+            <div class="phase phase-live">进行中</div>
+          </div>
+        </div>
+        <!-- Template section fills space -->
+        <div class="sec" style="border-top:1px solid var(--line)">
+          <div class="sec-head"><span class="sec-title">热门模板</span><span class="sec-more">更多 ›</span></div>
+          <div class="tpl-row">
+            <div class="tpl-card"><div class="tpl-ink" style="background:linear-gradient(90deg,#FF7A2E,#FF9A4D)"></div><div class="tpl-name">哈尔滨</div><div class="tpl-city">漠河寻北 · 7天</div></div>
+            <div class="tpl-card"><div class="tpl-ink" style="background:linear-gradient(90deg,#6B46C1,#FF5B5B)"></div><div class="tpl-name">大理</div><div class="tpl-city">风花雪月 · 4天</div></div>
+          </div>
+        </div>
+        <!-- Divider to "me" page mockup -->
+        <div style="padding:16px 20px 8px;background:var(--bg-deep,#F4E6CE)">
+          <div style="text-align:center;font-size:12px;color:var(--ink-3);letter-spacing:2px">↓ "我的"页面 ↓</div>
+        </div>
+        <!-- Me page -->
+        <div class="me-section">
+          <div class="me-trip-group">
+            <div class="me-group-title">📋 我的行程 (5)</div>
+            <div class="tc c1" style="margin-bottom:6px">
+              <div class="tc-name" style="font-size:14px">南京 · 金陵四日</div>
+              <div class="tc-meta"><span>即将出发</span><span class="tc-dot"></span><span>4天3晚</span></div>
+            </div>
+            <div class="tc c2" style="margin-bottom:6px">
+              <div class="tc-name" style="font-size:14px">厦门 · 鼓浪屿漫步</div>
+              <div class="tc-meta"><span>进行中</span><span class="tc-dot"></span><span>5天4晚</span></div>
+            </div>
+          </div>
+          <div class="me-trip-group">
+            <div class="me-group-title">📁 已完成 (3)</div>
+            <div class="tc c3 dim" style="margin-bottom:6px">
+              <div class="tc-name" style="font-size:14px">哈尔滨 · 漠河寻北</div>
+              <div class="tc-meta"><span>2026.02</span><span class="tc-dot"></span><span>7天6晚</span></div>
+            </div>
+            <div class="tc c4 dim" style="margin-bottom:6px">
+              <div class="tc-name" style="font-size:14px">大理 · 风花雪月</div>
+              <div class="tc-meta"><span>2026.01</span><span class="tc-dot"></span><span>4天3晚</span></div>
+            </div>
+            <div class="tc c1 dim" style="margin-bottom:6px">
+              <div class="tc-name" style="font-size:14px">九寨沟 · 童话之旅</div>
+              <div class="tc-meta"><span>2025.12</span><span class="tc-dot"></span><span>5天4晚</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== 方案 F: 降调混排 ===== -->
+    <div class="card">
+      <div class="card-head">
+        <span class="card-title">F · 降调混排</span>
+        <span class="badge badge-f">零规则</span>
+      </div>
+      <div class="phone">
+        <div class="ph"><span class="ph-title">我的行程</span><div class="avatar"></div></div>
+        <div class="abar">
+          <button class="abtn abtn-ai">✨ AI 智能规划</button>
+          <button class="abtn abtn-new">➕ 新建行程</button>
+        </div>
+        <!-- Active trips full style -->
+        <div class="sec">
+          <div class="tc c1">
+            <div class="tc-name">南京 · 金陵四日</div>
+            <div class="tc-meta"><span>2026.03.15</span><span class="tc-dot"></span><span>4天3晚</span></div>
+            <div class="phase phase-up">即将出发</div>
+          </div>
+          <div class="tc c2">
+            <div class="tc-name">厦门 · 鼓浪屿漫步</div>
+            <div class="tc-meta"><span>2026.03.01</span><span class="tc-dot"></span><span>5天4晚</span></div>
+            <div class="phase phase-live">进行中</div>
+          </div>
+
+          <!-- Subtle divider -->
+          <div style="display:flex;align-items:center;gap:10px;margin:16px 0 12px;color:var(--ink-3);font-size:11px;letter-spacing:1px">
+            <span style="flex:1;height:1px;background:var(--line)"></span>
+            <span>已完成的旅程</span>
+            <span style="flex:1;height:1px;background:var(--line)"></span>
+          </div>
+
+          <!-- Completed trips - dimmed, compact -->
+          <div class="tc c3 dim">
+            <div class="tc-name">哈尔滨 · 漠河寻北</div>
+            <div class="tc-meta"><span>2026.02.20</span><span class="tc-dot"></span><span>7天6晚</span></div>
+          </div>
+          <div class="tc c4 dim">
+            <div class="tc-name">大理 · 风花雪月</div>
+            <div class="tc-meta"><span>2026.01.10</span><span class="tc-dot"></span><span>4天3晚</span></div>
+          </div>
+          <div class="tc c1 dim">
+            <div class="tc-name">九寨沟 · 童话之旅</div>
+            <div class="tc-meta"><span>2025.12.20</span><span class="tc-dot"></span><span>5天4晚</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== 对比分析 ===== -->
+  <div class="pros-cons">
+    <h2>方案对比分析</h2>
+    <div class="pc-grid">
+      <div class="pc-card">
+        <div class="pc-title">D · 标签页筛选</div>
+        <div class="pc-pro">用户完全自主，不会误判</div>
+        <div class="pc-pro">所有行程一目了然</div>
+        <div class="pc-pro">Tab 切换成本低</div>
+        <div class="pc-con">首页多了 Tab 栏，占一行空间</div>
+        <div class="pc-con">默认"全部"Tab 还是会看到已完成的</div>
+      </div>
+      <div class="pc-card">
+        <div class="pc-title">E · 首页只留活跃</div>
+        <div class="pc-pro">首页最干净，零干扰</div>
+        <div class="pc-pro">无需任何判定规则</div>
+        <div class="pc-pro">"我的"页面天然适合归档</div>
+        <div class="pc-con">想看历史行程需跳转</div>
+        <div class="pc-con">老用户可能觉得不方便</div>
+      </div>
+      <div class="pc-card">
+        <div class="pc-title">F · 降调混排</div>
+        <div class="pc-pro">零规则，按时间排序即可</div>
+        <div class="pc-pro">视觉上用透明度自然区分</div>
+        <div class="pc-pro">一行分隔线代替折叠，不隐藏</div>
+        <div class="pc-con">行程多时列表会很长</div>
+        <div class="pc-con">没有"筛选"功能时不够灵活</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="rec">
+    <div class="rec-title">💡 建议</div>
+    <div class="rec-text">
+      <strong>方案 F（降调混排）</strong>最适合当前阶段 ——<br>
+      最简单、零规则、不隐藏任何内容。已完成行程用低透明度 + 分隔线自然区分，<br>
+      用户一眼能区分主次，同时不丢失任何历史数据。<br><br>
+      后期行程多了，可以叠加 <strong>方案 D 的 Tab</strong> 作为增强，两者完全兼容。
+    </div>
+  </div>
+</div>
+</body>
+</html>

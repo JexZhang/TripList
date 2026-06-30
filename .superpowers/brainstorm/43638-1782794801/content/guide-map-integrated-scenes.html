@@ -1,0 +1,909 @@
+<style>
+  :root {
+    --bg: #f7f1e8;
+    --surface: #fffaf2;
+    --surface-2: #f1e7d8;
+    --ink: #2d271f;
+    --ink-2: #594f44;
+    --ink-3: #8a7c6b;
+    --line: #e4d8c8;
+    --line-2: #d5c6b5;
+    --accent: #c46d3a;
+    --accent-2: #315b45;
+    --accent-bg: #f2dfcf;
+    --coral: #d85e43;
+    --r-pill: 999px;
+    --r-md: 8px;
+    --r-lg: 14px;
+    --r-xl: 22px;
+    --shadow-sm: 0 6px 16px rgba(54, 42, 30, .08);
+    --shadow-md: 0 12px 28px rgba(54, 42, 30, .12);
+    --font-body: -apple-system, BlinkMacSystemFont, "PingFang SC", "Noto Sans SC", sans-serif;
+    --font-display: "Songti SC", "STSong", "Noto Serif SC", serif;
+    --font-mono: ui-monospace, SFMono-Regular, Menlo, monospace;
+  }
+
+  .stage {
+    color: var(--ink);
+    font-family: var(--font-body);
+  }
+  .intro {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 24px;
+    margin-bottom: 22px;
+  }
+  .intro h2 {
+    margin: 0 0 8px;
+    font-family: var(--font-display);
+    letter-spacing: 0;
+  }
+  .intro p {
+    margin: 0;
+    max-width: 760px;
+    color: var(--ink-3);
+    line-height: 1.55;
+  }
+  .legend {
+    border: 1px solid var(--line);
+    background: var(--surface);
+    border-radius: var(--r-md);
+    padding: 12px 14px;
+    min-width: 230px;
+    color: var(--ink-2);
+    font-size: 13px;
+    line-height: 1.55;
+  }
+  .scenes {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(280px, 1fr));
+    gap: 18px;
+    align-items: start;
+  }
+  .scene {
+    border: 1px solid var(--line);
+    background: #fffdf8;
+    border-radius: var(--r-lg);
+    padding: 14px;
+    box-shadow: var(--shadow-sm);
+    cursor: pointer;
+  }
+  .scene:hover {
+    border-color: #9b795c;
+  }
+  .scene-title {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 12px;
+    margin: 2px 0 12px;
+  }
+  .scene-title h3 {
+    margin: 0;
+    font-size: 17px;
+    font-family: var(--font-display);
+    letter-spacing: 0;
+  }
+  .scene-title span {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--ink-3);
+    white-space: nowrap;
+  }
+  .phone {
+    width: 265px;
+    height: 574px;
+    margin: 0 auto;
+    border: 1px solid #2f2922;
+    border-radius: 28px;
+    overflow: hidden;
+    background: var(--bg);
+    box-shadow: 0 16px 36px rgba(39, 30, 22, .18);
+    position: relative;
+  }
+  .status {
+    height: 22px;
+    padding: 9px 16px 0;
+    display: flex;
+    justify-content: space-between;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--ink-2);
+  }
+  .screen {
+    height: 543px;
+    overflow: hidden;
+    position: relative;
+  }
+  .thmin {
+    padding: 4px 16px 2px;
+    background:
+      radial-gradient(100% 50% at 100% 0%, rgba(255, 154, 77, .18) 0%, transparent 60%),
+      var(--bg);
+  }
+  .thmin-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 4px 0 8px;
+  }
+  .back {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    color: var(--ink-2);
+  }
+  .back b {
+    font-size: 22px;
+    font-weight: 200;
+    line-height: 1;
+  }
+  .back span {
+    font-size: 9px;
+    letter-spacing: 3px;
+    color: var(--ink-3);
+    font-family: var(--font-display);
+  }
+  .menu {
+    font-size: 22px;
+    color: var(--ink-2);
+  }
+  .eyebrow {
+    display: block;
+    font-size: 11px;
+    letter-spacing: 4px;
+    color: var(--ink-3);
+    font-family: var(--font-display);
+    margin-bottom: 8px;
+  }
+  .trip-name {
+    display: block;
+    font-size: 30px;
+    font-family: var(--font-display);
+    line-height: 1.05;
+    color: var(--ink);
+    font-weight: 700;
+    margin-bottom: 7px;
+  }
+  .meta {
+    display: flex;
+    gap: 5px;
+    font-size: 12px;
+    color: var(--ink-3);
+    font-family: var(--font-mono);
+  }
+  .rule {
+    height: 1px;
+    background: var(--line);
+    margin: 14px 0 8px;
+  }
+  .tabs {
+    display: flex;
+    padding: 4px;
+    margin: 12px 16px 8px;
+    background: var(--surface);
+    border-radius: var(--r-pill);
+    box-shadow: var(--shadow-sm);
+    gap: 2px;
+  }
+  .tabs span {
+    flex: 1;
+    padding: 8px 6px;
+    font-size: 13px;
+    color: var(--ink-3);
+    text-align: center;
+    border-radius: var(--r-pill);
+    font-weight: 500;
+  }
+  .tabs .on {
+    color: #fff;
+    font-weight: 700;
+    background: linear-gradient(135deg, var(--accent) 0%, var(--accent-2) 100%);
+    box-shadow: 0 3px 8px rgba(196, 109, 58, .28);
+  }
+  .modebar {
+    display: flex;
+    gap: 6px;
+    padding: 12px 16px 8px;
+    white-space: nowrap;
+    overflow: hidden;
+  }
+  .pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 6px 10px 6px 7px;
+    background: var(--surface);
+    border: 1px solid var(--accent);
+    border-radius: var(--r-pill);
+    color: var(--ink-2);
+    font-size: 12px;
+    font-weight: 700;
+    font-family: var(--font-mono);
+  }
+  .pill::before {
+    content: "";
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: var(--accent);
+  }
+  .pill.on {
+    background: var(--accent);
+    color: #fff;
+  }
+  .pill.on::before {
+    background: #fff;
+  }
+  .native-map {
+    height: 292px;
+    margin-top: 2px;
+    border-radius: 14px 14px 0 0;
+    overflow: hidden;
+    position: relative;
+    background:
+      linear-gradient(35deg, transparent 0 44%, rgba(102, 90, 72, .22) 44% 45%, transparent 45%),
+      linear-gradient(115deg, transparent 0 35%, rgba(102, 90, 72, .20) 35% 36%, transparent 36%),
+      linear-gradient(0deg, rgba(73, 153, 139, .18), rgba(73, 153, 139, .04)),
+      #eee4d4;
+  }
+  .route-line {
+    position: absolute;
+    left: 62px;
+    top: 92px;
+    width: 128px;
+    height: 94px;
+    border-left: 4px solid #c46d3a;
+    border-bottom: 4px solid #c46d3a;
+    border-radius: 0 0 0 50px;
+    transform: rotate(-11deg);
+  }
+  .marker {
+    position: absolute;
+    min-width: 22px;
+    height: 22px;
+    border-radius: 999px;
+    background: var(--accent);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    font-weight: 800;
+    border: 2px solid #fff;
+    box-shadow: 0 3px 8px rgba(0,0,0,.2);
+  }
+  .m1 { left: 56px; top: 92px; }
+  .m2 { left: 133px; top: 145px; background: #315b45; }
+  .m3 { left: 190px; top: 74px; background: #d6a336; }
+  .m4 { left: 102px; top: 210px; background: #8e5c8f; }
+  .guide-strip {
+    position: absolute;
+    left: 12px;
+    right: 12px;
+    bottom: 14px;
+    border: 1px solid rgba(228, 216, 200, .9);
+    background: rgba(255, 250, 242, .96);
+    border-radius: 12px;
+    padding: 9px;
+    box-shadow: var(--shadow-md);
+    display: grid;
+    grid-template-columns: 72px 1fr;
+    gap: 9px;
+    align-items: center;
+  }
+  .guide-strip img {
+    width: 72px;
+    height: 52px;
+    object-fit: cover;
+    border-radius: 6px;
+    display: block;
+  }
+  .guide-strip b {
+    display: block;
+    font-size: 13px;
+    color: var(--ink);
+    margin-bottom: 3px;
+  }
+  .guide-strip p {
+    margin: 0;
+    font-size: 10px;
+    color: var(--ink-3);
+    line-height: 1.35;
+  }
+  .tiny-button {
+    margin-top: 6px;
+    display: inline-flex;
+    padding: 4px 9px;
+    border-radius: 999px;
+    background: var(--ink);
+    color: #fff;
+    font-size: 10px;
+    font-weight: 700;
+  }
+
+  .guide-page {
+    background: var(--bg);
+    height: 100%;
+  }
+  .guide-head {
+    padding: 4px 16px 10px;
+  }
+  .guide-title {
+    font-family: var(--font-display);
+    font-size: 26px;
+    line-height: 1.1;
+    margin: 8px 0 6px;
+  }
+  .guide-sub {
+    color: var(--ink-3);
+    font-size: 12px;
+    font-family: var(--font-mono);
+  }
+  .guide-image {
+    margin: 8px 12px;
+    border-radius: 12px;
+    border: 1px solid var(--line);
+    box-shadow: var(--shadow-md);
+    overflow: hidden;
+    background: var(--surface);
+  }
+  .guide-image img {
+    width: 100%;
+    height: 190px;
+    object-fit: cover;
+    display: block;
+  }
+  .guide-actions {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    padding: 10px 12px;
+  }
+  .guide-action {
+    padding: 9px 0;
+    border-radius: 999px;
+    text-align: center;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    color: var(--ink-2);
+    font-size: 12px;
+    font-weight: 700;
+  }
+  .guide-action.main {
+    background: var(--accent-2);
+    color: #fff;
+    border-color: var(--accent-2);
+  }
+  .asset-card {
+    margin: 4px 12px;
+    padding: 12px;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+  }
+  .asset-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--line);
+    font-size: 12px;
+  }
+  .asset-row:last-child {
+    border-bottom: 0;
+  }
+  .asset-row span {
+    color: var(--ink-3);
+  }
+  .asset-row b {
+    color: var(--ink);
+    font-weight: 650;
+  }
+
+  .lib {
+    background: var(--bg);
+    min-height: 100%;
+  }
+  .lib-search {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 12px 14px 6px;
+    padding: 10px 12px;
+    border-radius: 999px;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    color: var(--ink-3);
+    font-size: 13px;
+  }
+  .lib-filter {
+    display: flex;
+    gap: 6px;
+    padding: 6px 14px 8px;
+    border-bottom: 1px solid var(--line);
+    overflow: hidden;
+  }
+  .chip {
+    padding: 6px 12px;
+    border-radius: 999px;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    font-size: 11px;
+    white-space: nowrap;
+  }
+  .chip.on {
+    background: var(--accent);
+    color: #fff;
+    border-color: var(--accent);
+  }
+  .lib-grid {
+    padding: 14px;
+    display: grid;
+    gap: 14px;
+  }
+  .lib-card {
+    background: var(--surface);
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: var(--shadow-md);
+  }
+  .lib-cover {
+    height: 128px;
+    position: relative;
+    overflow: hidden;
+    background: var(--surface-2);
+  }
+  .lib-cover img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  .lib-cover::after {
+    content: "";
+    position: absolute;
+    inset: auto 0 0;
+    height: 52px;
+    background: linear-gradient(0deg, rgba(38, 28, 18, .55), transparent);
+  }
+  .lib-cover-label {
+    position: absolute;
+    left: 12px;
+    bottom: 10px;
+    z-index: 1;
+    color: #fff;
+    font-size: 11px;
+    font-family: var(--font-mono);
+    letter-spacing: 1.2px;
+  }
+  .lib-card-body {
+    padding: 16px 18px 18px;
+  }
+  .lib-card-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 12px;
+    margin-bottom: 10px;
+  }
+  .lib-name {
+    font-family: var(--font-display);
+    font-size: 18px;
+    font-weight: 700;
+    line-height: 1.35;
+  }
+  .lib-days {
+    color: var(--accent);
+    background: var(--accent-bg);
+    padding: 5px 11px;
+    border-radius: 999px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 800;
+    white-space: nowrap;
+  }
+  .lib-info {
+    display: flex;
+    gap: 8px;
+    color: var(--ink-3);
+    font-family: var(--font-mono);
+    font-size: 11px;
+    margin-bottom: 12px;
+  }
+  .tag-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 7px;
+  }
+  .tag {
+    font-size: 10px;
+    padding: 6px 9px;
+    border-radius: 999px;
+    background: var(--surface-2);
+    color: var(--ink-2);
+    border: 1px solid var(--line);
+  }
+  .tpl {
+    background: var(--bg);
+    height: 100%;
+    padding-bottom: 82px;
+    position: relative;
+  }
+  .tpl-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 14px 4px;
+  }
+  .tpl-readonly {
+    padding: 5px 9px;
+    border-radius: 999px;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    color: var(--accent);
+    font-size: 11px;
+  }
+  .tpl-hero {
+    padding: 5px 14px 8px;
+  }
+  .tpl-name {
+    font-size: 25px;
+    font-family: var(--font-display);
+    line-height: 1.2;
+  }
+  .tpl-meta {
+    display: flex;
+    gap: 6px;
+    color: var(--ink-3);
+    font-size: 12px;
+    margin-top: 8px;
+  }
+  .tpl-guide-cover {
+    margin: 8px 14px 10px;
+    border-radius: 10px;
+    overflow: hidden;
+    border: 1px solid var(--line);
+    position: relative;
+  }
+  .tpl-guide-cover img {
+    width: 100%;
+    height: 118px;
+    object-fit: cover;
+    display: block;
+  }
+  .tpl-guide-cover span {
+    position: absolute;
+    left: 10px;
+    bottom: 8px;
+    padding: 4px 8px;
+    border-radius: 999px;
+    background: rgba(255,250,242,.9);
+    color: var(--ink);
+    font-size: 10px;
+    font-weight: 700;
+  }
+  .tpl-tabs {
+    display: flex;
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+  }
+  .tpl-tabs span {
+    flex: 1;
+    text-align: center;
+    padding: 10px 0;
+    color: var(--ink-3);
+    font-size: 12px;
+  }
+  .tpl-tabs .on {
+    color: var(--accent);
+    font-weight: 700;
+  }
+  .tpl-list {
+    padding: 12px 14px;
+    display: grid;
+    gap: 8px;
+  }
+  .tpl-item {
+    padding: 10px;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    font-size: 12px;
+  }
+  .tpl-item b {
+    display: block;
+    margin-bottom: 4px;
+  }
+  .tpl-item span {
+    color: var(--ink-3);
+  }
+  .tpl-cta {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    padding: 8px 14px 20px;
+    background: var(--bg);
+    border-top: 1px solid var(--line);
+  }
+  .tpl-cta-hint {
+    color: var(--ink-3);
+    font-size: 11px;
+    margin-bottom: 6px;
+  }
+  .tpl-cta-btn {
+    padding: 13px;
+    border-radius: 10px;
+    background: var(--accent);
+    color: #fff;
+    font-size: 15px;
+    text-align: center;
+    font-weight: 700;
+  }
+
+  .share-bg {
+    height: 100%;
+    background: var(--bg);
+    position: relative;
+  }
+  .share-card-preview {
+    margin: 18px 16px;
+    border-radius: 16px;
+    overflow: hidden;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    box-shadow: var(--shadow-sm);
+  }
+  .share-card-preview img {
+    width: 100%;
+    height: 172px;
+    object-fit: cover;
+    display: block;
+  }
+  .share-card-preview div {
+    padding: 14px;
+  }
+  .share-card-preview b {
+    display: block;
+    font-size: 16px;
+    margin-bottom: 5px;
+  }
+  .share-card-preview span {
+    color: var(--ink-3);
+    font-size: 12px;
+  }
+  .sts-mask {
+    position: absolute;
+    inset: 0;
+    background: rgba(43, 26, 16, .45);
+    display: flex;
+    align-items: flex-end;
+  }
+  .sts-sheet {
+    width: 100%;
+    background: var(--surface);
+    color: var(--ink);
+    border-radius: 22px 22px 0 0;
+    padding: 24px 0 20px;
+    box-shadow: 0 -8px 24px rgba(43, 26, 16, .15);
+    position: relative;
+  }
+  .sts-sheet::before {
+    content: "";
+    position: absolute;
+    top: 8px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 36px;
+    height: 4px;
+    border-radius: 999px;
+    background: var(--line-2);
+  }
+  .share-preview-mini {
+    margin: 0 18px 12px;
+    border-radius: 12px;
+    border: 1px solid var(--line);
+    overflow: hidden;
+    background: #fff;
+  }
+  .share-preview-mini img {
+    width: 100%;
+    height: 92px;
+    object-fit: cover;
+    display: block;
+  }
+  .sts-item {
+    padding: 14px 18px;
+    border-bottom: 1px solid var(--line);
+  }
+  .sts-title {
+    display: block;
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--ink);
+  }
+  .sts-desc {
+    display: block;
+    margin-top: 4px;
+    font-size: 11px;
+    color: var(--ink-3);
+  }
+  .sts-loading {
+    display: block;
+    margin-top: 4px;
+    font-size: 10px;
+    color: var(--accent);
+    font-weight: 700;
+  }
+  .sts-cancel {
+    margin-top: 6px;
+    padding: 14px 0;
+    text-align: center;
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--ink-2);
+    border-top: 6px solid var(--bg);
+  }
+  .caption {
+    margin: 12px 2px 0;
+    color: var(--ink-2);
+    line-height: 1.5;
+    font-size: 13px;
+  }
+  .caption b {
+    color: var(--ink);
+  }
+  @media (max-width: 1180px) {
+    .scenes {
+      grid-template-columns: repeat(2, minmax(280px, 1fr));
+    }
+  }
+  @media (max-width: 680px) {
+    .intro {
+      flex-direction: column;
+    }
+    .scenes {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
+
+<div class="stage">
+  <div class="intro">
+    <div>
+      <h2>把导览图放回行册真实界面</h2>
+      <p>这版不再单独展示三张概念卡，而是模拟同一张高成本导览图资产在现有小程序页面里的位置。重点看它和现有信息架构是否贴合：地图页、导览图详情页、旅人精选/模板详情、分享底部弹层。</p>
+    </div>
+    <div class="legend">
+      复用现有骨架：TripHeader、pill tabs、MapView modebar、template readonly CTA、ShareTypeSheet。导览图只作为资产插入，不替代交互地图。
+    </div>
+  </div>
+
+  <div class="scenes" data-multiselect>
+    <div class="scene" data-choice="trip-map-entry" onclick="toggleSelect(this)">
+      <div class="scene-title"><h3>1. 攻略详情 · 地图页入口</h3><span>MapView 内</span></div>
+      <div class="phone">
+        <div class="status"><span>12:49</span><span>行迹</span></div>
+        <div class="screen">
+          <div class="thmin">
+            <div class="thmin-bar"><div class="back"><b>‹</b><span>back</span></div><div class="menu">⋯</div></div>
+            <span class="eyebrow">TRIP PLAN</span>
+            <span class="trip-name">麻麻生日之旅</span>
+            <div class="meta"><span>8.28 → 9.1</span><span>·</span><span>5天</span><span>·</span><span>4人</span></div>
+            <div class="rule"></div>
+          </div>
+          <div class="tabs"><span>攻略</span><span class="on">地图</span><span>开销</span><span>清单</span></div>
+          <div class="modebar"><span class="pill on">全部</span><span class="pill">D1</span><span class="pill">D2</span><span class="pill">D3</span><span class="pill">D4</span></div>
+          <div class="native-map">
+            <div class="route-line"></div>
+            <div class="marker m1">1</div>
+            <div class="marker m2">2</div>
+            <div class="marker m3">3</div>
+            <div class="marker m4">4</div>
+            <div class="guide-strip">
+              <img src="guide-map.png" alt="">
+              <div>
+                <b>成都导览图已生成</b>
+                <p>12 个点位 · 可保存/分享 · 行程变化后提示更新</p>
+                <span class="tiny-button">查看导览图</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <p class="caption"><b>作用：</b>这是个人行程的主入口。用户仍先看到可交互地图，导览图作为已生成资产浮在地图底部，像“增强内容”，不是抢主界面的广告。</p>
+    </div>
+
+    <div class="scene" data-choice="guide-detail" onclick="toggleSelect(this)">
+      <div class="scene-title"><h3>2. 导览图详情页</h3><span>新页面/弹层</span></div>
+      <div class="phone">
+        <div class="status"><span>12:49</span><span>行迹</span></div>
+        <div class="screen">
+          <div class="guide-page">
+            <div class="guide-head">
+              <div class="thmin-bar"><div class="back"><b>‹</b><span>map</span></div><div class="menu">⋯</div></div>
+              <div class="guide-title">麻麻生日之旅 · 成都</div>
+              <div class="guide-sub">城市导览图 · 生成于 6.30 · 来自当前攻略点位</div>
+            </div>
+            <div class="guide-image"><img src="guide-map.png" alt=""></div>
+            <div class="guide-actions">
+              <div class="guide-action main">保存图片</div>
+              <div class="guide-action">分享</div>
+              <div class="guide-action">更新</div>
+            </div>
+            <div class="asset-card">
+              <div class="asset-row"><span>覆盖城市</span><b>成都</b></div>
+              <div class="asset-row"><span>入图点位</span><b>12 个</b></div>
+              <div class="asset-row"><span>复用位置</span><b>攻略页 / 分享 / 模板</b></div>
+              <div class="asset-row"><span>状态</span><b>已与当前行程同步</b></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <p class="caption"><b>作用：</b>这里承载“珍贵资产”的管理：保存、分享、更新、查看生成来源。它应该比普通图片预览更像行册里的正式内容。</p>
+    </div>
+
+    <div class="scene" data-choice="template-library" onclick="toggleSelect(this)">
+      <div class="scene-title"><h3>3. 旅人精选 / 模板详情</h3><span>library + template</span></div>
+      <div class="phone">
+        <div class="status"><span>12:49</span><span>行迹</span></div>
+        <div class="screen">
+          <div class="tpl">
+            <div class="tpl-top"><div class="back"><b>‹</b><span>back</span></div><div class="tpl-readonly">只读攻略</div></div>
+            <div class="tpl-hero">
+              <div class="tpl-name">成都亲友慢游</div>
+              <div class="tpl-meta"><span>5天</span><span>·</span><span>成都/黄龙/九寨沟</span><span>·</span><span>适合长辈</span></div>
+            </div>
+            <div class="tpl-guide-cover">
+              <img src="guide-map.png" alt="">
+              <span>精选导览图</span>
+            </div>
+            <div class="tpl-tabs"><span class="on">攻略</span><span>地图</span><span>开销</span><span>清单</span></div>
+            <div class="tpl-list">
+              <div class="tpl-item"><b>D1 高铁入山 · 黄龙瑶池</b><span>宽窄巷子、成都东站、酒店家宴</span></div>
+              <div class="tpl-item"><b>D2 黄龙国家级风景名胜区</b><span>索道上行，步行下山，适合慢节奏</span></div>
+              <div class="tpl-item"><b>D4 成都 · 熊猫与古街</b><span>熊猫基地、武侯祠、锦里古街</span></div>
+            </div>
+            <div class="tpl-cta">
+              <div class="tpl-cta-hint">复制后可按你的出发日重排日期</div>
+              <div class="tpl-cta-btn">复制这份攻略</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <p class="caption"><b>作用：</b>模板页里导览图像作品封面，增强旅人精选质感。这里应使用人工审核或平台预生成的图，不对每个普通模板临时生成。</p>
+    </div>
+
+    <div class="scene" data-choice="share-sheet" onclick="toggleSelect(this)">
+      <div class="scene-title"><h3>4. 分享增强</h3><span>ShareTypeSheet</span></div>
+      <div class="phone">
+        <div class="status"><span>12:49</span><span>行迹</span></div>
+        <div class="screen">
+          <div class="share-bg">
+            <div class="thmin">
+              <div class="thmin-bar"><div class="back"><b>‹</b><span>back</span></div><div class="menu">⋯</div></div>
+              <span class="eyebrow">TRIP PLAN</span>
+              <span class="trip-name">麻麻生日之旅</span>
+              <div class="meta"><span>8.28 → 9.1</span><span>·</span><span>5天</span><span>·</span><span>4人</span></div>
+            </div>
+            <div class="share-card-preview">
+              <img src="guide-map.png" alt="">
+              <div><b>导览图将用于分享卡片</b><span>已有图时直接复用，没有图则回退到当前行迹卡片</span></div>
+            </div>
+            <div class="sts-mask">
+              <div class="sts-sheet">
+                <div class="share-preview-mini"><img src="guide-map.png" alt=""></div>
+                <div class="sts-item"><span class="sts-title">只读分享</span><span class="sts-desc">朋友可查看攻略和导览图，不能编辑</span><span class="sts-loading">已使用成都导览图作为分享图</span></div>
+                <div class="sts-item"><span class="sts-title">邀请协作</span><span class="sts-desc">朋友可加入一起规划，导览图随攻略同步展示</span></div>
+                <div class="sts-cancel">取消</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <p class="caption"><b>作用：</b>分享不触发昂贵生成，只复用已有导览图。没有图时继续走现在的 `renderShareCard`，避免用户点分享时等待很久。</p>
+    </div>
+  </div>
+</div>

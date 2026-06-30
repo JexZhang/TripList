@@ -1,0 +1,111 @@
+<style>
+  .phone { width:248px; border:2px solid #d8d4cc; border-radius:22px; padding:12px 10px; background:#fff; box-shadow:0 6px 18px rgba(0,0,0,.06); margin:0 auto; }
+  .pbar { display:flex; justify-content:space-between; align-items:center; margin-bottom:11px; }
+  .lib-pill { font-size:10px; padding:5px 10px; border-radius:20px; border:1px solid #e2ded4; color:#7a7468; }
+  .pavatar { width:26px; height:26px; border-radius:50%; background:#e7e2d8; }
+  .btnrow { display:flex; gap:8px; margin-bottom:8px; }
+  .tile { flex:1; border-radius:13px; padding:14px 8px; text-align:center; font-size:12px; font-weight:600; color:#fff; line-height:1.5; }
+  .tileA { background:linear-gradient(135deg,#FF7A2E,#FF9A4D); }
+  .tileB { background:#2b2b2b; }
+  .tileC { background:#fff; color:#c0531c; border:1.5px dashed #f0b384; }
+  .libbar { display:flex; align-items:center; gap:8px; border:1.5px solid #f0e6d6; border-radius:12px; padding:10px 12px; margin-bottom:8px; background:#fffaf2; }
+  .libbar .ic { width:30px;height:30px;border-radius:8px;background:linear-gradient(135deg,#FFD9A6,#FFB870); }
+  .libbar .tx { flex:1; }
+  .libbar .t1 { font-size:11.5px; font-weight:600; color:#9a5a1c; }
+  .libbar .t2 { font-size:9.5px; color:#b89a72; margin-top:2px; }
+  .libbar .ar { font-size:13px; color:#c0531c; }
+  .seclabel { font-size:10px; letter-spacing:1px; color:#a59f93; text-transform:uppercase; margin:14px 0 8px; display:flex; justify-content:space-between; align-items:center; }
+  .seclink { font-size:10px; color:#c0531c; text-transform:none; letter-spacing:0; }
+  .trip { border:1px solid #ece8e0; border-radius:11px; padding:9px 10px; margin-bottom:7px; }
+  .trip .tn { font-size:12px; font-weight:600; color:#333; }
+  .trip .tm { font-size:10px; color:#a59f93; margin-top:3px; }
+  .trip.past { opacity:.5; }
+  .daily { border-radius:14px; padding:0; margin-bottom:8px; height:96px; position:relative; overflow:hidden; background:linear-gradient(120deg,#3a4a6b,#6b7fa3); display:flex; flex-direction:column; justify-content:flex-end; }
+  .daily .ov { padding:10px 12px; color:#fff; }
+  .daily .dl { font-size:9px; letter-spacing:1px; opacity:.85; }
+  .daily .dt { font-size:14px; font-weight:700; margin-top:3px; }
+  .daily .ds { font-size:9.5px; opacity:.9; margin-top:2px; }
+  .empty-board { border:1.5px dashed #e2ded4; border-radius:14px; padding:14px; margin-bottom:8px; }
+  .eb-h { font-size:11px; color:#8a8478; margin-bottom:10px; }
+  .eb-grid { display:grid; grid-template-columns:1fr 1fr; gap:7px; }
+  .eb-c { height:54px; border-radius:9px; background:linear-gradient(135deg,#efe9dd,#e3dccd); }
+  .note { font-size:11px; color:#8a8478; text-align:center; margin-top:6px; }
+</style>
+
+<h2>「灵感攻略」的 3 种更有创意的处理</h2>
+<p class="subtitle">都保留你选的 B 双入口。区别在于：攻略库不再是底部那条「广告 feed」，而是换一种身份出现。</p>
+
+<div class="cards">
+
+  <div class="card" data-choice="d1" onclick="toggleSelect(this)" style="max-width:none">
+    <div class="card-image" style="padding:14px;background:#faf8f3">
+      <div class="phone">
+        <div class="pbar"><div style="font-size:11px;color:#a59f93">三种方式开始</div><div class="pavatar"></div></div>
+        <div class="btnrow">
+          <div class="tile tileA">✦<br/>AI 规划</div>
+          <div class="tile tileB">+<br/>手动新建</div>
+          <div class="tile tileC">▣<br/>套用攻略</div>
+        </div>
+        <div class="seclabel"><span>我的行程</span></div>
+        <div class="trip"><div class="tn">京都赏枫 5 日</div><div class="tm">11.20 → 11.24 · 即将出发</div></div>
+        <div class="trip"><div class="tn">成都美食周末</div><div class="tm">进行中</div></div>
+        <div class="trip past"><div class="tn">东京跨年</div><div class="tm">已结束</div></div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>D1 · 攻略库 = 第三种「开始方式」</h3>
+      <p>三入口并排：AI / 手动 / 套用攻略。库变成创建路径，点「套用攻略」进库页挑模板。首页再无任何 feed，最干净，三种开始动作一目了然。</p>
+    </div>
+  </div>
+
+  <div class="card" data-choice="d2" onclick="toggleSelect(this)" style="max-width:none">
+    <div class="card-image" style="padding:14px;background:#faf8f3">
+      <div class="phone">
+        <div class="pbar"><div class="lib-pill">▣ 攻略库</div><div class="pavatar"></div></div>
+        <div class="btnrow">
+          <div class="tile tileA">✦<br/>AI 规划</div>
+          <div class="tile tileB">+<br/>手动新建</div>
+        </div>
+        <div class="seclabel"><span>我的行程</span></div>
+        <div class="trip"><div class="tn">京都赏枫 5 日</div><div class="tm">11.20 → 11.24 · 即将出发</div></div>
+        <div class="trip"><div class="tn">成都美食周末</div><div class="tm">进行中</div></div>
+        <div class="trip past"><div class="tn">东京跨年</div><div class="tm">已结束</div></div>
+        <div class="note">— 新用户(无行程)时 ↓ —</div>
+        <div class="empty-board">
+          <div class="eb-h">还没有行程？看看大家怎么玩 👇</div>
+          <div class="eb-grid"><div class="eb-c"></div><div class="eb-c"></div><div class="eb-c"></div><div class="eb-c"></div></div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>D2 · 情境化(老用户隐、新用户显)</h3>
+      <p>有行程时：库只是右上角一个「攻略库」入口 pill，首页专注我的行程。无行程时：首屏铺开灵感发现板引导种草。灵感只在最需要时出现，绝不打扰老用户。</p>
+    </div>
+  </div>
+
+  <div class="card" data-choice="d3" onclick="toggleSelect(this)" style="max-width:none">
+    <div class="card-image" style="padding:14px;background:#faf8f3">
+      <div class="phone">
+        <div class="pbar"><div style="font-size:11px;color:#a59f93">你好，旅人</div><div class="pavatar"></div></div>
+        <div class="btnrow">
+          <div class="tile tileA">✦<br/>AI 规划</div>
+          <div class="tile tileB">+<br/>手动新建</div>
+        </div>
+        <div class="daily">
+          <div class="ov"><div class="dl">今日灵感 · DAILY</div><div class="dt">京都 · 红叶狩り</div><div class="ds">7 天古都漫步 · 来自 行迹编辑部</div></div>
+        </div>
+        <div class="seclabel"><span>我的行程</span><span class="seclink">攻略库 ›</span></div>
+        <div class="trip"><div class="tn">京都赏枫 5 日</div><div class="tm">11.20 → 11.24 · 即将出发</div></div>
+        <div class="trip"><div class="tn">成都美食周末</div><div class="tm">进行中</div></div>
+        <div class="trip past"><div class="tn">东京跨年</div><div class="tm">已结束</div></div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>D3 · 每日一荐(发现感，非广告)</h3>
+      <p>创建入口下方一张「今日灵感」大图卡，每天只推一个目的地/攻略，强调「发现一个」而非「一排广告」。完整库入口缩到「我的行程」标题旁的小链接。</p>
+    </div>
+  </div>
+
+</div>
+
+<p class="subtitle" style="margin-top:18px">我个人偏向 <b>D1</b>（最干净、概念最自洽：库就是一种开始方式），其次 D2（对老用户最友好）。点一个或在终端聊聊你的想法。</p>

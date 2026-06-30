@@ -1,0 +1,312 @@
+<h2>详情页内 · 三块切换布局（考虑未来扩展到 5-6 个 view）</h2>
+<p class="subtitle">模型里展示了 5 个 view：攻略 / 开销 / 清单 / 地图 / 相册。看看哪种最经得起扩容。</p>
+
+<style>
+  .phone {
+    width: 280px;
+    height: 500px;
+    background: #f7f1e3;
+    color: #2a2522;
+    border-radius: 28px;
+    border: 8px solid #1a1a1a;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    font-family: -apple-system, 'Helvetica Neue', sans-serif;
+  }
+  .phone-top {
+    padding: 12px 14px 8px;
+    border-bottom: 1px solid rgba(0,0,0,0.08);
+  }
+  .phone-back { font-size: 14px; opacity: 0.65; }
+  .phone-title { font-size: 18px; font-weight: 700; margin-top: 4px; }
+  .phone-meta { font-size: 11px; opacity: 0.55; margin-top: 3px; }
+  .content-area {
+    flex: 1;
+    padding: 10px 14px;
+    overflow: hidden;
+  }
+  .content-line {
+    height: 14px;
+    background: rgba(0,0,0,0.06);
+    border-radius: 3px;
+    margin-bottom: 8px;
+  }
+  .content-line.short { width: 60%; }
+  .content-line.medium { width: 80%; }
+
+  /* E: scrollable underline tabs */
+  .scroll-tabs {
+    display: flex;
+    padding: 8px 14px 0;
+    border-bottom: 1px solid rgba(0,0,0,0.1);
+    overflow-x: auto;
+    white-space: nowrap;
+    scrollbar-width: none;
+  }
+  .scroll-tabs::-webkit-scrollbar { display: none; }
+  .st-item {
+    padding: 10px 14px 12px;
+    font-size: 13px;
+    opacity: 0.55;
+    position: relative;
+    flex-shrink: 0;
+  }
+  .st-item.on { opacity: 1; font-weight: 600; }
+  .st-item.on::after {
+    content: '';
+    position: absolute;
+    left: 14px; right: 14px; bottom: 0;
+    height: 2px;
+    background: #2a2522;
+  }
+  .st-fade {
+    position: absolute;
+    right: 0; top: 84px;
+    width: 30px; height: 36px;
+    background: linear-gradient(to left, #f7f1e3, transparent);
+    pointer-events: none;
+  }
+  .phone-tabs-wrap { position: relative; }
+
+  /* F: bottom tab + overflow */
+  .bn {
+    margin-top: auto;
+    display: flex;
+    border-top: 1px solid rgba(0,0,0,0.15);
+    background: #f7f1e3;
+  }
+  .bn-item {
+    flex: 1;
+    padding: 10px 0 14px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    opacity: 0.55;
+  }
+  .bn-item.on { opacity: 1; }
+  .bn-icon {
+    width: 22px; height: 22px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px;
+  }
+  .bn-label { font-size: 11px; letter-spacing: 1px; }
+
+  /* G: header dropdown */
+  .hd-drop {
+    margin: 12px 14px;
+    padding: 10px 14px;
+    border: 1px solid #2a2522;
+    border-radius: 6px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 14px;
+    background: #fff;
+  }
+  .hd-arrow { font-size: 12px; opacity: 0.55; }
+  .hd-menu {
+    margin: 0 14px;
+    background: #fff;
+    border: 1px solid rgba(0,0,0,0.15);
+    border-radius: 6px;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.08);
+    overflow: hidden;
+  }
+  .hd-menu-item {
+    padding: 12px 14px;
+    font-size: 13px;
+    border-bottom: 1px solid rgba(0,0,0,0.06);
+  }
+  .hd-menu-item:last-child { border-bottom: 0; }
+  .hd-menu-item.on { background: rgba(0,0,0,0.05); font-weight: 600; }
+
+  /* H: top horizontal text-only with chevron page indicator */
+  .pager {
+    padding: 10px 14px;
+    border-bottom: 1px solid rgba(0,0,0,0.1);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .pager-chev { padding: 4px 10px; opacity: 0.55; font-size: 14px; }
+  .pager-center {
+    flex: 1;
+    text-align: center;
+  }
+  .pager-name {
+    font-size: 14px; font-weight: 600;
+    letter-spacing: 2px;
+  }
+  .pager-dots {
+    margin-top: 4px;
+    display: flex;
+    justify-content: center;
+    gap: 4px;
+  }
+  .pager-dot {
+    width: 4px; height: 4px;
+    border-radius: 999px;
+    background: #2a2522;
+    opacity: 0.25;
+  }
+  .pager-dot.on { opacity: 1; width: 16px; }
+</style>
+
+<div class="cards" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; padding: 12px 0;">
+
+  <!-- E: Scrollable underline tabs -->
+  <div class="card" data-choice="e" onclick="toggleSelect(this)">
+    <div class="card-image" style="display:flex;justify-content:center;padding:20px 0;background:#222;">
+      <div class="phone">
+        <div class="phone-top">
+          <div class="phone-back">‹ 返回</div>
+          <div class="phone-title">南京 · 金陵四日</div>
+          <div class="phone-meta">05.29 → 06.01 · 4 天 · 4 人</div>
+        </div>
+        <div class="phone-tabs-wrap">
+          <div class="scroll-tabs">
+            <div class="st-item on">攻略</div>
+            <div class="st-item">开销</div>
+            <div class="st-item">清单</div>
+            <div class="st-item">地图</div>
+            <div class="st-item">相册</div>
+          </div>
+          <div class="st-fade"></div>
+        </div>
+        <div class="content-area">
+          <div class="content-line medium"></div>
+          <div class="content-line"></div>
+          <div class="content-line short"></div>
+          <div class="content-line medium"></div>
+          <div class="content-line"></div>
+          <div class="content-line short"></div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>E · 顶部横滑 Tab（下划线指示器）</h3>
+      <p>中国 app 主流模式（微博/小红书/抖音）。下划线随当前 tab 移动，右边渐隐提示"还能滑"。<strong>扩容到 8 个都不慌。</strong></p>
+    </div>
+  </div>
+
+  <!-- F: bottom 4 + 更多 -->
+  <div class="card" data-choice="f" onclick="toggleSelect(this)">
+    <div class="card-image" style="display:flex;justify-content:center;padding:20px 0;background:#222;">
+      <div class="phone">
+        <div class="phone-top">
+          <div class="phone-back">‹ 返回</div>
+          <div class="phone-title">南京 · 金陵四日</div>
+          <div class="phone-meta">05.29 → 06.01 · 4 天 · 4 人</div>
+        </div>
+        <div class="content-area">
+          <div class="content-line medium"></div>
+          <div class="content-line"></div>
+          <div class="content-line short"></div>
+          <div class="content-line medium"></div>
+          <div class="content-line"></div>
+          <div class="content-line short"></div>
+        </div>
+        <div class="bn">
+          <div class="bn-item on">
+            <div class="bn-icon">◆</div>
+            <div class="bn-label">攻略</div>
+          </div>
+          <div class="bn-item">
+            <div class="bn-icon">¥</div>
+            <div class="bn-label">开销</div>
+          </div>
+          <div class="bn-item">
+            <div class="bn-icon">✓</div>
+            <div class="bn-label">清单</div>
+          </div>
+          <div class="bn-item">
+            <div class="bn-icon">⊙</div>
+            <div class="bn-label">地图</div>
+          </div>
+          <div class="bn-item">
+            <div class="bn-icon">⋯</div>
+            <div class="bn-label">更多</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>F · 底部 Tab + "更多"溢出</h3>
+      <p>底部固定 4 个常用 + "更多"展开剩余。维持底部 tab 持续可见，可扩展但是"更多"里的二级 view 触达层数+1。</p>
+    </div>
+  </div>
+
+  <!-- G: header dropdown -->
+  <div class="card" data-choice="g" onclick="toggleSelect(this)">
+    <div class="card-image" style="display:flex;justify-content:center;padding:20px 0;background:#222;">
+      <div class="phone">
+        <div class="phone-top">
+          <div class="phone-back">‹ 返回</div>
+          <div class="phone-title">南京 · 金陵四日</div>
+          <div class="phone-meta">05.29 → 06.01 · 4 天 · 4 人</div>
+        </div>
+        <div class="hd-drop">
+          <span>攻略 · ITINERARY</span>
+          <span class="hd-arrow">▾</span>
+        </div>
+        <div class="hd-menu">
+          <div class="hd-menu-item on">攻略 · 行程时间线</div>
+          <div class="hd-menu-item">开销 · 行程预算</div>
+          <div class="hd-menu-item">清单 · 出行准备</div>
+          <div class="hd-menu-item">地图 · 路线可视化</div>
+          <div class="hd-menu-item">相册 · 旅行记录</div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>G · 顶部下拉切换</h3>
+      <p>单一按钮显示当前 view，点击展开列表（带副标题说明）。<strong>最像"翻册子"</strong>，可承载 10+ view，但切换多了一步点击。</p>
+    </div>
+  </div>
+
+  <!-- H: pager with dots -->
+  <div class="card" data-choice="h" onclick="toggleSelect(this)">
+    <div class="card-image" style="display:flex;justify-content:center;padding:20px 0;background:#222;">
+      <div class="phone">
+        <div class="phone-top">
+          <div class="phone-back">‹ 返回</div>
+          <div class="phone-title">南京 · 金陵四日</div>
+          <div class="phone-meta">05.29 → 06.01 · 4 天 · 4 人</div>
+        </div>
+        <div class="pager">
+          <div class="pager-chev">‹</div>
+          <div class="pager-center">
+            <div class="pager-name">攻略</div>
+            <div class="pager-dots">
+              <div class="pager-dot on"></div>
+              <div class="pager-dot"></div>
+              <div class="pager-dot"></div>
+              <div class="pager-dot"></div>
+              <div class="pager-dot"></div>
+            </div>
+          </div>
+          <div class="pager-chev">›</div>
+        </div>
+        <div class="content-area">
+          <div class="content-line medium"></div>
+          <div class="content-line"></div>
+          <div class="content-line short"></div>
+          <div class="content-line medium"></div>
+          <div class="content-line"></div>
+          <div class="content-line short"></div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>H · 翻页器（左右箭头 + 圆点指示器）</h3>
+      <p>当前 view 名居中，左右箭头切换 + 圆点指示总数。也支持左右滑动手势。最像"翻书"，<strong>独特</strong>但发现性低（用户不知道有哪些 view）。</p>
+    </div>
+  </div>
+
+</div>
+
+<div class="section" style="margin-top: 24px;">
+  <p class="subtitle"><strong>我推荐 E（顶部横滑 Tab）。</strong>这是中国移动 app 的"母语"，用户零学习成本；下划线指示器优雅；右边渐隐自然告诉用户"可以滑"；扩到 8 个 view 也不挤。"行迹"语境里它就像目录页签。</p>
+</div>

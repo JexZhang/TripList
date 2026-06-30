@@ -1,0 +1,97 @@
+<style>
+  .phones { display:flex; gap:20px; justify-content:center; flex-wrap:wrap; }
+  .phone { width:240px; border:2px solid var(--border,#d8d4cc); border-radius:22px; padding:12px 10px; background:#fff; box-shadow:0 6px 18px rgba(0,0,0,.06); }
+  .pbar { display:flex; justify-content:flex-end; margin-bottom:10px; }
+  .pavatar { width:26px; height:26px; border-radius:50%; background:#e7e2d8; }
+  .hero { border-radius:14px; padding:12px; margin-bottom:12px; color:#fff; background:linear-gradient(135deg,#FF7A2E,#FF9A4D); }
+  .hero h4 { margin:0 0 4px; font-size:14px; }
+  .hero p { margin:0 0 10px; font-size:11px; opacity:.9; }
+  .btnrow { display:flex; gap:8px; }
+  .b1 { flex:1; text-align:center; font-size:11px; padding:7px 0; border-radius:9px; background:rgba(255,255,255,.95); color:#c0531c; font-weight:600; }
+  .b2 { flex:1; text-align:center; font-size:11px; padding:7px 0; border-radius:9px; border:1px solid rgba(255,255,255,.7); color:#fff; }
+  .tile { flex:1; border-radius:13px; padding:14px 8px; text-align:center; font-size:12px; font-weight:600; color:#fff; }
+  .tileA { background:linear-gradient(135deg,#FF7A2E,#FF9A4D); }
+  .tileB { background:#2b2b2b; }
+  .inputbar { border:1.5px solid #e2ded4; border-radius:14px; padding:13px 12px; font-size:12px; color:#9a9488; margin-bottom:6px; display:flex; align-items:center; gap:6px; }
+  .seclabel { font-size:10px; letter-spacing:1px; color:#a59f93; text-transform:uppercase; margin:14px 0 8px; display:flex; justify-content:space-between; }
+  .trip { border:1px solid #ece8e0; border-radius:11px; padding:9px 10px; margin-bottom:7px; }
+  .trip .tn { font-size:12px; font-weight:600; color:#333; }
+  .trip .tm { font-size:10px; color:#a59f93; margin-top:3px; }
+  .trip.past { opacity:.5; }
+  .tplrow { display:flex; gap:7px; overflow:hidden; }
+  .tpl { min-width:64px; height:46px; border-radius:9px; background:#efe9dd; }
+  .seclink { font-size:10px; color:#c0531c; }
+  .textlink { text-align:right; font-size:11px; color:#c0531c; margin-bottom:4px; }
+</style>
+
+<h2>首页整体骨架 · 3 种方案对比</h2>
+<p class="subtitle">都是「创建入口优先」+「单一行程列表(已删归档区)」。差别在顶部创建入口怎么呈现，以及是否还要底部按钮。</p>
+
+<div class="cards">
+  <div class="card" data-choice="a" onclick="toggleSelect(this)" style="max-width:none">
+    <div class="card-image" style="padding:14px;background:#faf8f3">
+      <div class="phone">
+        <div class="pbar"><div class="pavatar"></div></div>
+        <div class="hero">
+          <h4>✦ 让 AI 帮你规划</h4>
+          <p>说一句话，生成整趟行程</p>
+          <div class="btnrow"><div class="b1">AI 规划</div><div class="b2">+ 手动新建</div></div>
+        </div>
+        <div class="seclabel"><span>我的行程</span></div>
+        <div class="trip"><div class="tn">京都赏枫 5 日</div><div class="tm">11.20 → 11.24 · 即将出发</div></div>
+        <div class="trip"><div class="tn">成都美食周末</div><div class="tm">进行中</div></div>
+        <div class="trip past"><div class="tn">东京跨年</div><div class="tm">已结束</div></div>
+        <div class="seclabel"><span>灵感攻略</span><span class="seclink">查看更多 ›</span></div>
+        <div class="tplrow"><div class="tpl"></div><div class="tpl"></div><div class="tpl"></div></div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>A · 单张创建 Hero 卡</h3>
+      <p>顶部一张醒目卡片，AI 规划为主、手动新建为辅，二合一。底部不再放按钮。最聚焦。</p>
+    </div>
+  </div>
+
+  <div class="card" data-choice="b" onclick="toggleSelect(this)" style="max-width:none">
+    <div class="card-image" style="padding:14px;background:#faf8f3">
+      <div class="phone">
+        <div class="pbar"><div class="pavatar"></div></div>
+        <div class="btnrow" style="margin-bottom:12px">
+          <div class="tile tileA">✦<br/>AI 规划</div>
+          <div class="tile tileB">+<br/>手动新建</div>
+        </div>
+        <div class="seclabel"><span>我的行程</span></div>
+        <div class="trip"><div class="tn">京都赏枫 5 日</div><div class="tm">11.20 → 11.24 · 即将出发</div></div>
+        <div class="trip"><div class="tn">成都美食周末</div><div class="tm">进行中</div></div>
+        <div class="trip past"><div class="tn">东京跨年</div><div class="tm">已结束</div></div>
+        <div class="seclabel"><span>灵感攻略</span><span class="seclink">查看更多 ›</span></div>
+        <div class="tplrow"><div class="tpl"></div><div class="tpl"></div><div class="tpl"></div></div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>B · 双入口并排 Tile</h3>
+      <p>AI 规划 与 手动新建 平级两个大方块，地位对等、一眼可选。底部不再放按钮。</p>
+    </div>
+  </div>
+
+  <div class="card" data-choice="c" onclick="toggleSelect(this)" style="max-width:none">
+    <div class="card-image" style="padding:14px;background:#faf8f3">
+      <div class="phone">
+        <div class="pbar"><div class="pavatar"></div></div>
+        <div class="inputbar">🔍 想去哪儿？一句话生成行程…</div>
+        <div class="textlink">手动新建 ›</div>
+        <div class="seclabel"><span>我的行程</span></div>
+        <div class="trip"><div class="tn">京都赏枫 5 日</div><div class="tm">11.20 → 11.24 · 即将出发</div></div>
+        <div class="trip"><div class="tn">成都美食周末</div><div class="tm">进行中</div></div>
+        <div class="trip past"><div class="tn">东京跨年</div><div class="tm">已结束</div></div>
+        <div class="seclabel"><span>灵感攻略</span><span class="seclink">查看更多 ›</span></div>
+        <div class="tplrow"><div class="tpl"></div><div class="tpl"></div><div class="tpl"></div></div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>C · 输入式 Hero(对话感)</h3>
+      <p>顶部一个「想去哪儿？」输入条，点按即进 AI 访谈，最轻最有引导感；手动新建降为文字链接。</p>
+    </div>
+  </div>
+</div>
+
+<p class="subtitle" style="margin-top:18px">三种都把「灵感攻略(精选模板)」放在行程列表下方、横滑展示。已结束行程用淡化处理留在同一列表底部。点一个你倾向的方案，或在终端告诉我想法。</p>

@@ -1,0 +1,109 @@
+<style>
+  .row { display:flex; gap:14px; justify-content:center; flex-wrap:wrap; align-items:flex-start; }
+  /* A: generated gradient "cover" */
+  .gcard { width:150px; border-radius:14px; overflow:hidden; box-shadow:0 5px 14px rgba(0,0,0,.12); }
+  .gcover { height:110px; padding:11px; position:relative; color:#fff; display:flex; flex-direction:column; justify-content:space-between; background:linear-gradient(140deg,#c2410c,#f59e0b); }
+  .gcover .region { font-size:9px; letter-spacing:2px; opacity:.85; text-transform:uppercase; }
+  .gcover .city { font-size:24px; font-weight:800; line-height:1.05; text-shadow:0 1px 4px rgba(0,0,0,.25); }
+  .gcover .pat { position:absolute; right:-10px; bottom:-10px; width:70px; height:70px; border:2px solid rgba(255,255,255,.25); border-radius:50%; }
+  .gmeta { background:#fff; padding:9px 10px; }
+  .gmeta .nm { font-size:12px; font-weight:600; color:#333; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .gmeta .ln { font-size:10px; color:#a59f93; margin-top:3px; }
+
+  /* B: ticket / luggage tag */
+  .tcard { width:150px; border-radius:14px; background:#fffdf8; border:1px solid #e8e0d0; box-shadow:0 5px 14px rgba(0,0,0,.08); padding:13px 12px; position:relative; }
+  .tcard:before, .tcard:after { content:''; position:absolute; top:50%; width:11px; height:11px; border-radius:50%; background:#faf8f3; transform:translateY(-50%); }
+  .tcard:before { left:-6px; box-shadow:inset -1px 0 0 #e8e0d0; }
+  .tcard:after { right:-6px; box-shadow:inset 1px 0 0 #e8e0d0; }
+  .tcard .reg { font-size:9px; letter-spacing:2px; color:#bcae9a; text-transform:uppercase; }
+  .tcard .cty { font-size:21px; font-weight:700; color:#3a342a; font-family:Georgia,serif; margin:3px 0 9px; }
+  .tdash { border-top:1.5px dashed #ddd3c0; margin:9px 0; }
+  .tcard .stat { font-size:11px; color:#7a7468; letter-spacing:.5px; }
+  .tchips { display:flex; gap:5px; margin-top:9px; flex-wrap:wrap; }
+  .tchip { font-size:9px; padding:3px 8px; border-radius:11px; background:#f3ede0; color:#8a7d63; }
+
+  /* C: minimal label */
+  .mcard { width:150px; border-radius:14px; background:#fff; border:1px solid #ece8e0; box-shadow:0 3px 10px rgba(0,0,0,.05); padding:14px 13px; }
+  .mbar { width:26px; height:3px; border-radius:2px; background:#FF7A2E; margin-bottom:10px; }
+  .mcard .reg { font-size:9px; letter-spacing:1.5px; color:#bcae9a; text-transform:uppercase; }
+  .mcard .cty { font-size:18px; font-weight:700; color:#2c2c2c; margin:2px 0 4px; }
+  .mcard .sub { font-size:11px; color:#9a9488; }
+  .mchips { display:flex; gap:5px; margin-top:11px; flex-wrap:wrap; }
+  .mchip { font-size:9px; padding:3px 8px; border-radius:6px; border:1px solid #ece6da; color:#9a8d73; }
+  .cap { text-align:center; font-size:12px; color:#5a5448; margin-top:10px; font-weight:600; }
+  .capd { text-align:center; font-size:10.5px; color:#9a9488; max-width:170px; margin:4px auto 0; line-height:1.5; }
+</style>
+
+<h2>无封面，也能好看：3 种纯文字卡</h2>
+<p class="subtitle">全部只用现有字段：地区·目的地名·天数晚数·地点数·玩法标签。不依赖照片、不依赖 emoji。（这是 E 布局里那条横滑卡的样式选择，最终四主题各自换皮）</p>
+
+<div class="cards">
+
+  <div class="card" data-choice="a" onclick="toggleSelect(this)" style="max-width:none">
+    <div class="card-image" style="padding:18px;background:#faf8f3">
+      <div class="row">
+        <div class="gcard">
+          <div class="gcover" style="background:linear-gradient(140deg,#c2410c,#f59e0b)"><div class="pat"></div><div class="region">KANSAI · 秋</div><div class="city">京都</div></div>
+          <div class="gmeta"><div class="nm">红叶狩 · 古都漫步</div><div class="ln">7天6晚 · 21 个地点</div></div>
+        </div>
+        <div class="gcard">
+          <div class="gcover" style="background:linear-gradient(140deg,#0e7490,#22d3ee)"><div class="pat"></div><div class="region">ICELAND · 冬</div><div class="city">冰岛</div></div>
+          <div class="gmeta"><div class="nm">环岛极光之旅</div><div class="ln">9天8晚 · 16 个地点</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>A · 生成色「封面」+ 大字目的地</h3>
+      <p>按地区/季节生成渐变色块当封面（类似护照主题已有的印章生成色），大字号城市名做主角。最接近「有封面」的观感，色彩有变化、不单调。</p>
+    </div>
+  </div>
+
+  <div class="card" data-choice="b" onclick="toggleSelect(this)" style="max-width:none">
+    <div class="card-image" style="padding:18px;background:#faf8f3">
+      <div class="row">
+        <div class="tcard">
+          <div class="reg">KANSAI · 秋</div><div class="cty">京都</div>
+          <div class="stat">7 天 6 晚 · 21 个地点</div>
+          <div class="tdash"></div>
+          <div class="tchips"><span class="tchip">红叶</span><span class="tchip">古都</span><span class="tchip">citywalk</span></div>
+        </div>
+        <div class="tcard">
+          <div class="reg">ICELAND · 冬</div><div class="cty">冰岛</div>
+          <div class="stat">9 天 8 晚 · 16 个地点</div>
+          <div class="tdash"></div>
+          <div class="tchips"><span class="tchip">极光</span><span class="tchip">自驾</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>B · 票券 / 行李牌风</h3>
+      <p>左右半圆缺口 + 衬线大字 + 虚线分割 + 标签。本身就是「旅行单据」气质，和行迹的手帐/护照调性最搭，不假装有照片，反而高级。</p>
+    </div>
+  </div>
+
+  <div class="card" data-choice="c" onclick="toggleSelect(this)" style="max-width:none">
+    <div class="card-image" style="padding:18px;background:#faf8f3">
+      <div class="row">
+        <div class="mcard">
+          <div class="mbar"></div>
+          <div class="reg">关西 · 秋</div><div class="cty">京都</div>
+          <div class="sub">7天6晚 · 21 个地点</div>
+          <div class="mchips"><span class="mchip">红叶</span><span class="mchip">古都</span><span class="mchip">citywalk</span></div>
+        </div>
+        <div class="mcard">
+          <div class="mbar" style="background:#0891b2"></div>
+          <div class="reg">冰岛 · 冬</div><div class="cty">冰岛环岛</div>
+          <div class="sub">9天8晚 · 16 个地点</div>
+          <div class="mchips"><span class="mchip">极光</span><span class="mchip">自驾</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>C · 极简信息卡</h3>
+      <p>一道彩色短杠 + 城市名 + 标签，大量留白。最克制、最快读，信息一目了然，但视觉冲击最弱。</p>
+    </div>
+  </div>
+
+</div>
+
+<p class="subtitle" style="margin-top:16px">我偏向 <b>A</b>（生成色封面最有"封面感"、横滑最吸睛，又零照片成本）；如果你想更"行迹手帐味"，<b>B</b> 票券风也很贴。点一个吧。</p>

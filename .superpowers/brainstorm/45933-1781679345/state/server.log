@@ -1,0 +1,34 @@
+{"type":"server-started","port":51916,"host":"127.0.0.1","url_host":"localhost","url":"http://localhost:51916","screen_dir":"/Users/jinchi/Documents/行册/.superpowers/brainstorm/45933-1781679345/content","state_dir":"/Users/jinchi/Documents/行册/.superpowers/brainstorm/45933-1781679345/state"}
+{"type":"screen-added","file":"/Users/jinchi/Documents/行册/.superpowers/brainstorm/45933-1781679345/content/welcome.html"}
+{"type":"screen-updated","file":"/Users/jinchi/Documents/行册/.superpowers/brainstorm/45933-1781679345/content/welcome.html"}
+{"type":"screen-updated","file":"/Users/jinchi/Documents/行册/.superpowers/brainstorm/45933-1781679345/content/welcome.html"}
+{"type":"screen-added","file":"/Users/jinchi/Documents/行册/.superpowers/brainstorm/45933-1781679345/content/layout-skeleton.html"}
+{"type":"screen-updated","file":"/Users/jinchi/Documents/行册/.superpowers/brainstorm/45933-1781679345/content/layout-skeleton.html"}
+{"type":"screen-updated","file":"/Users/jinchi/Documents/行册/.superpowers/brainstorm/45933-1781679345/content/layout-skeleton.html"}
+{"type":"screen-added","file":"/Users/jinchi/Documents/行册/.superpowers/brainstorm/45933-1781679345/content/inspiration-v2.html"}
+{"type":"screen-updated","file":"/Users/jinchi/Documents/行册/.superpowers/brainstorm/45933-1781679345/content/inspiration-v2.html"}
+{"type":"screen-updated","file":"/Users/jinchi/Documents/行册/.superpowers/brainstorm/45933-1781679345/content/inspiration-v2.html"}
+{"type":"screen-updated","file":"/Users/jinchi/Documents/行册/.superpowers/brainstorm/45933-1781679345/content/inspiration-v2.html"}
+{"source":"user-event","type":"click","text":"三种方式开始\n        \n          ✦AI 规划\n          +手动新建\n          ▣套用攻略\n        \n        我的行程\n        京都赏枫 5 日11.20 → 11.24 · 即将出发\n        成都美食周末进行中\n        东京跨年已结束\n      \n    \n    \n      D1 · 攻略库 = 第三种「开始方式」\n      三入口并排：AI / 手动 / 套用攻略。库变成创建路径，点「套用攻略」进库页挑模板。首页再无任何 feed，最干净，三种开始动作一目了然。","choice":"d1","id":null,"timestamp":1781680315850}
+{"source":"user-event","type":"click","text":"你好，旅人\n        \n          ✦AI 规划\n          +手动新建\n        \n        \n          今日灵感 · DAILY京都 · 红叶狩り7 天古都漫步 · 来自 行册编辑部\n        \n        我的行程攻略库 ›\n        京都赏枫 5 日11.20 → 11.24 · 即将出发\n        成都美食周末进行中\n        东京跨年已结束\n      \n    \n    \n      D3 · 每日一荐(发现感，非广告)\n      创建入口下方一张「今日灵感」大图卡，每天只推一个目的地/攻略，强调「发现一个」而非「一排广告」。完整库入口缩到「我的行程」标题旁的小链接。","choice":"d3","id":null,"timestamp":1781680373723}
+{"type":"screen-added","file":"/Users/jinchi/Documents/行册/.superpowers/brainstorm/45933-1781679345/content/inspiration-v3.html"}
+{"type":"screen-updated","file":"/Users/jinchi/Documents/行册/.superpowers/brainstorm/45933-1781679345/content/inspiration-v3.html"}
+{"type":"screen-updated","file":"/Users/jinchi/Documents/行册/.superpowers/brainstorm/45933-1781679345/content/inspiration-v3.html"}
+{"type":"screen-updated","file":"/Users/jinchi/Documents/行册/.superpowers/brainstorm/45933-1781679345/content/inspiration-v3.html"}
+{"type":"screen-added","file":"/Users/jinchi/Documents/行册/.superpowers/brainstorm/45933-1781679345/content/coverless-cards.html"}
+{"type":"screen-updated","file":"/Users/jinchi/Documents/行册/.superpowers/brainstorm/45933-1781679345/content/coverless-cards.html"}
+{"type":"screen-updated","file":"/Users/jinchi/Documents/行册/.superpowers/brainstorm/45933-1781679345/content/coverless-cards.html"}
+{"type":"screen-updated","file":"/Users/jinchi/Documents/行册/.superpowers/brainstorm/45933-1781679345/content/coverless-cards.html"}
+{"type":"screen-added","file":"/Users/jinchi/Documents/行册/.superpowers/brainstorm/45933-1781679345/content/waiting.html"}
+{"type":"screen-updated","file":"/Users/jinchi/Documents/行册/.superpowers/brainstorm/45933-1781679345/content/waiting.html"}
+{"type":"screen-updated","file":"/Users/jinchi/Documents/行册/.superpowers/brainstorm/45933-1781679345/content/waiting.html"}
+{"type":"screen-added","file":"/Users/jinchi/Documents/行册/.superpowers/brainstorm/45933-1781679345/content/final-home.html"}
+{"type":"screen-updated","file":"/Users/jinchi/Documents/行册/.superpowers/brainstorm/45933-1781679345/content/final-home.html"}
+{"type":"screen-updated","file":"/Users/jinchi/Documents/行册/.superpowers/brainstorm/45933-1781679345/content/final-home.html"}
+{"type":"screen-added","file":"/Users/jinchi/Documents/行册/.superpowers/brainstorm/45933-1781679345/content/final-home-v2.html"}
+{"type":"screen-updated","file":"/Users/jinchi/Documents/行册/.superpowers/brainstorm/45933-1781679345/content/final-home-v2.html"}
+{"type":"screen-updated","file":"/Users/jinchi/Documents/行册/.superpowers/brainstorm/45933-1781679345/content/final-home-v2.html"}
+{"type":"screen-updated","file":"/Users/jinchi/Documents/行册/.superpowers/brainstorm/45933-1781679345/content/final-home-v2.html"}
+{"type":"screen-added","file":"/Users/jinchi/Documents/行册/.superpowers/brainstorm/45933-1781679345/content/writing.html"}
+{"type":"screen-updated","file":"/Users/jinchi/Documents/行册/.superpowers/brainstorm/45933-1781679345/content/writing.html"}
+{"type":"server-stopped","reason":"idle timeout"}

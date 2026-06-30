@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>首页完整方案对比</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700;900&family=JetBrains+Mono:wght@400;500&display=swap');
+:root{
+  --bg:#FFF4E6;--bg2:#F4E6CE;--sf:#FFF;--sf2:#FFF9F1;
+  --ink:#2B1A10;--ink2:#5A4338;--ink3:#9B8378;
+  --ln:rgba(43,26,16,.08);--ln2:rgba(43,26,16,.14);
+  --ac:#FF7A2E;--ac2:#FF9A4D;--acbg:#FFEBD6;
+  --co:#FF5B5B;--lf:#4FB286;--sn:#FFC247;--pl:#6B46C1;
+  --fd:'Noto Serif SC','Songti SC',serif;
+  --fb:'PingFang SC',-apple-system,BlinkMacSystemFont,sans-serif;
+  --fm:'JetBrains Mono',monospace;
+  --ss:0 2px 8px rgba(58,36,25,.06);--sm:0 6px 20px rgba(58,36,25,.10);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--fb);background:linear-gradient(180deg,#f5f5f5,#e8e8e8);min-height:100vh;padding:28px 12px}
+.wrap{max-width:1600px;margin:0 auto}
+h1{font-family:var(--fd);font-size:28px;font-weight:700;color:var(--ink);text-align:center;margin-bottom:6px}
+.sub{text-align:center;color:var(--ink3);font-size:14px;margin-bottom:12px;line-height:1.6}
+.note{text-align:center;color:var(--co);font-size:13px;margin-bottom:28px;font-weight:600}
+
+/* Tabs */
+.tabs{display:flex;justify-content:center;gap:6px;margin-bottom:28px}
+.tab{padding:9px 22px;border-radius:18px;font-size:14px;font-weight:600;border:1px solid var(--ln);background:#fff;color:var(--ink2);cursor:pointer;transition:all .15s}
+.tab.on{background:var(--ac);color:#fff;border-color:var(--ac)}
+
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-bottom:36px}
+.card{background:#fff;border-radius:18px;overflow:hidden;box-shadow:0 6px 24px rgba(0,0,0,.10)}
+.ch{padding:14px 18px;border-bottom:1px solid var(--ln);display:flex;justify-content:space-between;align-items:center}
+.ct{font-family:var(--fd);font-size:16px;font-weight:700;color:var(--ink)}
+.bd{font-size:10px;padding:3px 9px;border-radius:9px;font-weight:600}
+.bd-d{background:#E3F2FD;color:#1976D2}.bd-e{background:#E8F5E9;color:#388E3C}.bd-f{background:#FFF3E0;color:#F57C00}
+
+.ph{width:100%;max-width:375px;height:760px;margin:0 auto;background:var(--bg);overflow-y:auto;overflow-x:hidden}
+.state{display:none}.state.vis{display:block}
+
+/* === Shared UI === */
+.hd{padding:14px 18px 10px;display:flex;justify-content:space-between;align-items:center;background:var(--sf);border-bottom:1px solid var(--ln)}
+.hd-t{font-family:var(--fd);font-size:20px;font-weight:700;color:var(--ink)}
+.av{width:32px;height:32px;border-radius:50%;background:var(--acbg);border:2px solid var(--ac)}
+
+.ab{padding:10px 18px;display:flex;gap:8px;background:var(--sf);border-bottom:1px solid var(--ln)}
+.abtn{flex:1;padding:9px 6px;border-radius:10px;text-align:center;font-size:12.5px;font-weight:600;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:4px}
+.abtn-a{background:linear-gradient(135deg,var(--ac),var(--co));color:#fff}
+.abtn-n{background:var(--sf2);color:var(--ink2);border:1px solid var(--ln)}
+
+/* Tabs row */
+.trow{display:flex;background:var(--sf);padding:0 18px;border-bottom:1px solid var(--ln)}
+.ti{padding:10px 14px;font-size:13px;font-weight:600;color:var(--ink3);border-bottom:2px solid transparent}
+.ti.on{color:var(--ac);border-bottom-color:var(--ac)}
+
+.sec{padding:16px 18px}
+.sh{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+.st{font-family:var(--fd);font-size:15px;font-weight:700;color:var(--ink)}
+.sm{font-size:12px;color:var(--ac)}
+
+/* Trip card */
+.tc{background:var(--sf);border-radius:12px;padding:14px;margin-bottom:8px;box-shadow:var(--sm);position:relative;overflow:hidden}
+.tc::before{content:'';position:absolute;left:0;top:0;bottom:0;width:4px;background:linear-gradient(180deg,var(--c1),var(--c2))}
+.tc.c1{--c1:#FF7A2E;--c2:#FF9A4D}.tc.c2{--c1:#6B46C1;--c2:#FF5B5B}.tc.c3{--c1:#4FB286;--c2:#FFC247}.tc.c4{--c1:#FFC247;--c2:#FF7A2E}
+.tn{font-family:var(--fd);font-size:15px;font-weight:700;color:var(--ink);margin-bottom:4px}
+.tm{font-size:11px;color:var(--ink3);font-family:var(--fm);display:flex;gap:5px;align-items:center}
+.td{width:3px;height:3px;border-radius:50%;background:var(--ln2)}
+.ph2{display:inline-block;margin-top:6px;font-size:10px;padding:2px 8px;border-radius:7px;font-weight:600}
+.pu{background:#E8F5E9;color:#2E7D32}.pl{background:#FFF3E0;color:#E65100}.pd{background:var(--sf2);color:var(--ink3)}
+.tc.dim{opacity:.55}.tc.dim .tn{color:var(--ink2)}
+
+/* Template card */
+.tpl-r{display:flex;gap:8px;overflow-x:auto;padding-bottom:4px}
+.tpl{min-width:120px;background:var(--sf);border-radius:10px;padding:10px;box-shadow:var(--ss);flex-shrink:0}
+.tpl-n{font-size:12px;font-weight:600;color:var(--ink);margin-bottom:2px}
+.tpl-c{font-size:10px;color:var(--ink3)}
+.tpl-i{height:3px;border-radius:2px;margin-bottom:7px}
+
+/* Empty */
+.emp{text-align:center;padding:44px 18px 20px}
+.emp-i{font-size:52px;margin-bottom:12px;opacity:.6}
+.emp-t{font-family:var(--fd);font-size:18px;font-weight:700;color:var(--ink);margin-bottom:8px}
+.emp-d{font-size:13px;color:var(--ink3);line-height:1.6;margin-bottom:18px}
+
+/* Divider */
+.dv{display:flex;align-items:center;gap:10px;padding:6px 0;color:var(--ink3);font-size:10px;letter-spacing:1px;margin:8px 0}
+.dv::before,.dv::after{content:'';flex:1;height:1px;background:var(--ln)}
+
+/* Separator */
+.sep{height:6px;background:var(--bg2)}
+
+/* Pros cons */
+.pc{background:#fff;border-radius:18px;padding:24px;box-shadow:0 6px 24px rgba(0,0,0,.10);margin-top:32px}
+.pc h2{font-family:var(--fd);font-size:20px;font-weight:700;color:var(--ink);text-align:center;margin-bottom:20px}
+.pcg{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.pcc{padding:16px;border-radius:12px;background:var(--bg)}
+.pct{font-family:var(--fd);font-size:15px;font-weight:700;color:var(--ink);margin-bottom:10px}
+.pci{font-size:12px;line-height:1.8;color:var(--ink2)}
+</style>
+</head>
+<body>
+<div class="wrap">
+<h1>首页完整方案 · 全区域对比</h1>
+<p class="sub">页头 + 操作栏 + 行程 + 模板库 + 归档处理，完整展示</p>
+<p class="note">点击「有行程 / 空状态」切换两种场景</p>
+
+<div class="tabs">
+  <button class="tab on" onclick="sw('has')">📋 有行程状态</button>
+  <button class="tab" onclick="sw('empty')">📭 空状态（无行程）</button>
+</div>
+
+<!-- ============ 有行程 ============ -->
+<div class="state vis" id="s-has">
+<div class="grid">
+
+<!-- D -->
+<div class="card">
+<div class="ch"><span class="ct">D · 标签页筛选</span><span class="bd bd-d">用户自主</span></div>
+<div class="ph">
+  <div class="hd"><span class="hd-t">我的行程</span><div class="av"></div></div>
+  <div class="ab">
+    <button class="abtn abtn-a">✨ AI 智能规划</button>
+    <button class="abtn abtn-n">➕ 新建行程</button>
+  </div>
+  <div class="trow">
+    <div class="ti on">全部 (5)</div>
+    <div class="ti">进行中 (2)</div>
+    <div class="ti">已完成 (3)</div>
+  </div>
+  <div class="sec">
+    <div class="tc c1"><div class="tn">南京 · 金陵四日</div><div class="tm"><span>03.15</span><span class="td"></span><span>4天3晚</span></div><div class="ph2 pu">即将出发</div></div>
+    <div class="tc c2"><div class="tn">厦门 · 鼓浪屿漫步</div><div class="tm"><span>03.01</span><span class="td"></span><span>5天4晚</span></div><div class="ph2 pl">进行中</div></div>
+    <div class="tc c3"><div class="tn">哈尔滨 · 漠河寻北</div><div class="tm"><span>02.20</span><span class="td"></span><span>7天6晚</span></div><div class="ph2 pd">已完成</div></div>
+    <div class="tc c4"><div class="tn">大理 · 风花雪月</div><div class="tm"><span>01.10</span><span class="td"></span><span>4天3晚</span></div><div class="ph2 pd">已完成</div></div>
+    <div class="tc c1"><div class="tn">九寨沟 · 童话之旅</div><div class="tm"><span>25.12</span><span class="td"></span><span>5天4晚</span></div><div class="ph2 pd">已完成</div></div>
+  </div>
+  <div class="sep"></div>
+  <div class="sec">
+    <div class="sh"><span class="st">精选攻略</span><span class="sm">查看全部 ›</span></div>
+    <div class="tpl-r">
+      <div class="tpl"><div class="tpl-i" style="background:linear-gradient(90deg,#FF7A2E,#FF9A4D)"></div><div class="tpl-n">西双版纳</div><div class="tpl-c">热带雨林 · 5天</div></div>
+      <div class="tpl"><div class="tpl-i" style="background:linear-gradient(90deg,#6B46C1,#FF5B5B)"></div><div class="tpl-n">成都</div><div class="tpl-c">美食之旅 · 4天</div></div>
+      <div class="tpl"><div class="tpl-i" style="background:linear-gradient(90deg,#4FB286,#FFC247)"></div><div class="tpl-n">青岛</div><div class="tpl-c">海滨度假 · 3天</div></div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- E -->
+<div class="card">
+<div class="ch"><span class="ct">E · 首页只留活跃</span><span class="bd bd-e">最简洁</span></div>
+<div class="ph">
+  <div class="hd"><span class="hd-t">我的行程</span><div class="av"></div></div>
+  <div class="ab">
+    <button class="abtn abtn-a">✨ AI 智能规划</button>
+    <button class="abtn abtn-n">➕ 新建行程</button>
+  </div>
+  <div class="sec">
+    <div class="tc c1"><div class="tn">南京 · 金陵四日</div><div class="tm"><span>03.15</span><span class="td"></span><span>4天3晚</span></div><div class="ph2 pu">即将出发</div></div>
+    <div class="tc c2"><div class="tn">厦门 · 鼓浪屿漫步</div><div class="tm"><span>03.01</span><span class="td"></span><span>5天4晚</span></div><div class="ph2 pl">进行中</div></div>
+  </div>
+  <div class="sep"></div>
+  <div class="sec">
+    <div class="sh"><span class="st">精选攻略</span><span class="sm">查看全部 ›</span></div>
+    <div class="tpl-r">
+      <div class="tpl"><div class="tpl-i" style="background:linear-gradient(90deg,#FF7A2E,#FF9A4D)"></div><div class="tpl-n">西双版纳</div><div class="tpl-c">热带雨林 · 5天</div></div>
+      <div class="tpl"><div class="tpl-i" style="background:linear-gradient(90deg,#6B46C1,#FF5B5B)"></div><div class="tpl-n">成都</div><div class="tpl-c">美食之旅 · 4天</div></div>
+      <div class="tpl"><div class="tpl-i" style="background:linear-gradient(90deg,#4FB286,#FFC247)"></div><div class="tpl-n">青岛</div><div class="tpl-c">海滨度假 · 3天</div></div>
+    </div>
+  </div>
+  <!-- Me page hint -->
+  <div style="padding:14px 18px 6px;background:var(--bg2)">
+    <div style="text-align:center;font-size:11px;color:var(--ink3);letter-spacing:2px">— ↓ 已完成的行程在「我的」页面 ↓ —</div>
+  </div>
+  <div style="background:var(--sf);border-top:6px solid var(--bg2);padding:14px 18px">
+    <div style="font-size:12px;font-weight:600;color:var(--ink3);margin-bottom:8px;letter-spacing:1px">📁 我的行程 (5)</div>
+    <div style="font-size:12px;font-weight:600;color:var(--ink3);margin-bottom:8px;letter-spacing:1px;margin-top:12px">📦 已完成 (3)</div>
+    <div class="tc c3 dim" style="margin-bottom:5px"><div class="tn" style="font-size:13px">哈尔滨 · 漠河寻北</div><div class="tm"><span>7天6晚</span></div></div>
+    <div class="tc c4 dim" style="margin-bottom:5px"><div class="tn" style="font-size:13px">大理 · 风花雪月</div><div class="tm"><span>4天3晚</span></div></div>
+    <div class="tc c1 dim" style="margin-bottom:5px"><div class="tn" style="font-size:13px">九寨沟 · 童话之旅</div><div class="tm"><span>5天4晚</span></div></div>
+  </div>
+</div>
+</div>
+
+<!-- F -->
+<div class="card">
+<div class="ch"><span class="ct">F · 降调混排</span><span class="bd bd-f">零规则</span></div>
+<div class="ph">
+  <div class="hd"><span class="hd-t">我的行程</span><div class="av"></div></div>
+  <div class="ab">
+    <button class="abtn abtn-a">✨ AI 智能规划</button>
+    <button class="abtn abtn-n">➕ 新建行程</button>
+  </div>
+  <div class="sec">
+    <div class="tc c1"><div class="tn">南京 · 金陵四日</div><div class="tm"><span>03.15</span><span class="td"></span><span>4天3晚</span></div><div class="ph2 pu">即将出发</div></div>
+    <div class="tc c2"><div class="tn">厦门 · 鼓浪屿漫步</div><div class="tm"><span>03.01</span><span class="td"></span><span>5天4晚</span></div><div class="ph2 pl">进行中</div></div>
+  </div>
+  <div class="sep"></div>
+  <div class="sec">
+    <div class="sh"><span class="st">精选攻略</span><span class="sm">查看全部 ›</span></div>
+    <div class="tpl-r">
+      <div class="tpl"><div class="tpl-i" style="background:linear-gradient(90deg,#FF7A2E,#FF9A4D)"></div><div class="tpl-n">西双版纳</div><div class="tpl-c">热带雨林 · 5天</div></div>
+      <div class="tpl"><div class="tpl-i" style="background:linear-gradient(90deg,#6B46C1,#FF5B5B)"></div><div class="tpl-n">成都</div><div class="tpl-c">美食之旅 · 4天</div></div>
+      <div class="tpl"><div class="tpl-i" style="background:linear-gradient(90deg,#4FB286,#FFC247)"></div><div class="tpl-n">青岛</div><div class="tpl-c">海滨度假 · 3天</div></div>
+    </div>
+  </div>
+  <div style="padding:0 18px">
+    <div class="dv">已完成的旅程</div>
+    <div class="tc c3 dim"><div class="tn">哈尔滨 · 漠河寻北</div><div class="tm"><span>02.20</span><span class="td"></span><span>7天6晚</span></div></div>
+    <div class="tc c4 dim"><div class="tn">大理 · 风花雪月</div><div class="tm"><span>01.10</span><span class="td"></span><span>4天3晚</span></div></div>
+    <div class="tc c1 dim"><div class="tn">九寨沟 · 童话之旅</div><div class="tm"><span>25.12</span><span class="td"></span><span>5天4晚</span></div></div>
+  </div>
+</div>
+</div>
+</div><!-- grid -->
+</div><!-- state has -->
+
+<!-- ============ 空状态 ============ -->
+<div class="state" id="s-empty">
+<div class="grid">
+
+<!-- D 空 -->
+<div class="card">
+<div class="ch"><span class="ct">D · 空状态</span><span class="bd bd-d">Tab筛选</span></div>
+<div class="ph">
+  <div class="hd"><span class="hd-t">我的行程</span><div class="av"></div></div>
+  <div class="ab">
+    <button class="abtn abtn-a">✨ AI 智能规划</button>
+    <button class="abtn abtn-n">➕ 新建行程</button>
+  </div>
+  <div class="trow">
+    <div class="ti on">全部 (0)</div>
+  </div>
+  <div class="emp">
+    <div class="emp-i">✈️</div>
+    <div class="emp-t">还没有任何行程</div>
+    <div class="emp-d">点击上方按钮开始你的第一次旅行<br>让 AI 帮你规划，或从模板开始</div>
+  </div>
+  <div class="sep"></div>
+  <div class="sec">
+    <div class="sh"><span class="st">精选攻略</span><span class="sm">浏览全部 ›</span></div>
+    <div class="tpl-r">
+      <div class="tpl"><div class="tpl-i" style="background:linear-gradient(90deg,#FF7A2E,#FF9A4D)"></div><div class="tpl-n">南京</div><div class="tpl-c">金陵四日 · 20个地点</div></div>
+      <div class="tpl"><div class="tpl-i" style="background:linear-gradient(90deg,#6B46C1,#FF5B5B)"></div><div class="tpl-n">哈尔滨</div><div class="tpl-c">漠河寻北 · 32个地点</div></div>
+      <div class="tpl"><div class="tpl-i" style="background:linear-gradient(90deg,#4FB286,#FFC247)"></div><div class="tpl-n">西双版纳</div><div class="tpl-c">热带雨林 · 18个地点</div></div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- E 空 -->
+<div class="card">
+<div class="ch"><span class="ct">E · 空状态</span><span class="bd bd-e">首页最简</span></div>
+<div class="ph">
+  <div class="hd"><span class="hd-t">我的行程</span><div class="av"></div></div>
+  <div class="ab">
+    <button class="abtn abtn-a">✨ AI 智能规划</button>
+    <button class="abtn abtn-n">➕ 新建行程</button>
+  </div>
+  <div class="emp">
+    <div class="emp-i">✈️</div>
+    <div class="emp-t">还没有任何行程</div>
+    <div class="emp-d">开始记录你的第一次旅行吧<br>让 AI 帮你规划，或从模板开始</div>
+  </div>
+  <div class="sep"></div>
+  <div class="sec">
+    <div class="sh"><span class="st">精选攻略</span><span class="sm">浏览全部 ›</span></div>
+    <div class="tpl-r">
+      <div class="tpl"><div class="tpl-i" style="background:linear-gradient(90deg,#FF7A2E,#FF9A4D)"></div><div class="tpl-n">南京</div><div class="tpl-c">金陵四日 · 20个地点</div></div>
+      <div class="tpl"><div class="tpl-i" style="background:linear-gradient(90deg,#6B46C1,#FF5B5B)"></div><div class="tpl-n">哈尔滨</div><div class="tpl-c">漠河寻北 · 32个地点</div></div>
+      <div class="tpl"><div class="tpl-i" style="background:linear-gradient(90deg,#4FB286,#FFC247)"></div><div class="tpl-n">西双版纳</div><div class="tpl-c">热带雨林 · 18个地点</div></div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- F 空 -->
+<div class="card">
+<div class="ch"><span class="ct">F · 空状态</span><span class="bd bd-f">降调混排</span></div>
+<div class="ph">
+  <div class="hd"><span class="hd-t">我的行程</span><div class="av"></div></div>
+  <div class="ab">
+    <button class="abtn abtn-a">✨ AI 智能规划</button>
+    <button class="abtn abtn-n">➕ 新建行程</button>
+  </div>
+  <div class="emp">
+    <div class="emp-i">✈️</div>
+    <div class="emp-t">还没有任何行程</div>
+    <div class="emp-d">点击上方按钮开始你的第一次旅行<br>让 AI 帮你规划，或从模板开始</div>
+  </div>
+  <div class="sep"></div>
+  <div class="sec">
+    <div class="sh"><span class="st">精选攻略</span><span class="sm">浏览全部 ›</span></div>
+    <div class="tpl-r">
+      <div class="tpl"><div class="tpl-i" style="background:linear-gradient(90deg,#FF7A2E,#FF9A4D)"></div><div class="tpl-n">南京</div><div class="tpl-c">金陵四日 · 20个地点</div></div>
+      <div class="tpl"><div class="tpl-i" style="background:linear-gradient(90deg,#6B46C1,#FF5B5B)"></div><div class="tpl-n">哈尔滨</div><div class="tpl-c">漠河寻北 · 32个地点</div></div>
+      <div class="tpl"><div class="tpl-i" style="background:linear-gradient(90deg,#4FB286,#FFC247)"></div><div class="tpl-n">西双版纳</div><div class="tpl-c">热带雨林 · 18个地点</div></div>
+    </div>
+  </div>
+</div>
+</div>
+
+</div><!-- grid -->
+</div><!-- state empty -->
+
+<!-- ===== 对比 ===== -->
+<div class="pc">
+<h2>三方案对比</h2>
+<div class="pcg">
+  <div class="pcc">
+    <div class="pct">D · 标签页筛选</div>
+    <div class="pci">✅ 用户完全自主，不误判</div>
+    <div class="pci">✅ 所有行程始终可访问</div>
+    <div class="pci">✅ 模板库在行程下方，独立分区</div>
+    <div class="pci">⚠️ Tab 栏多占一行空间</div>
+    <div class="pci">⚠️ 行程少时 Tab 显得多余</div>
+    <div class="pci">⚠️ 空状态时 Tab 无意义</div>
+  </div>
+  <div class="pcc">
+    <div class="pct">E · 首页只留活跃</div>
+    <div class="pci">✅ 首页最干净</div>
+    <div class="pci">✅ 零规则，最简洁</div>
+    <div class="pci">✅ 模板库紧跟行程，填充空间</div>
+    <div class="pci">⚠️ 已完成行程需去「我的」查看</div>
+    <div class="pci">⚠️ 用户可能找不到历史行程</div>
+    <div class="pci">⚠️ 需改动「我的」页面</div>
+  </div>
+  <div class="pcc">
+    <div class="pct">F · 降调混排</div>
+    <div class="pci">✅ 零规则，按时间排即可</div>
+    <div class="pci">✅ 一行分隔线自然区分主次</div>
+    <div class="pci">✅ 不隐藏、不跳转、零学习成本</div>
+    <div class="pci">✅ 模板库在最底部，作为发现入口</div>
+    <div class="pci">⚠️ 行程多时列表较长</div>
+    <div class="pci">⚠️ 无筛选功能</div>
+  </div>
+</div>
+</div>
+
+</div>
+<script>
+function sw(s){
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('on'));
+  document.querySelectorAll('.state').forEach(x=>x.classList.remove('vis'));
+  event.target.classList.add('on');
+  document.getElementById('s-'+s).classList.add('vis');
+}
+</script>
+</body>
+</html>

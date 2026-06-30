@@ -1,0 +1,10 @@
+{"type":"server-started","port":58149,"host":"127.0.0.1","url_host":"localhost","url":"http://localhost:58149","screen_dir":"/Users/jinchi/Documents/行册/.superpowers/brainstorm/91118-1779863883/content","state_dir":"/Users/jinchi/Documents/行册/.superpowers/brainstorm/91118-1779863883/state"}
+{"type":"screen-added","file":"/Users/jinchi/Documents/行册/.superpowers/brainstorm/91118-1779863883/content/waiting.html"}
+{"type":"screen-updated","file":"/Users/jinchi/Documents/行册/.superpowers/brainstorm/91118-1779863883/content/waiting.html"}
+{"type":"screen-added","file":"/Users/jinchi/Documents/行册/.superpowers/brainstorm/91118-1779863883/content/stamp-layout.html"}
+{"type":"screen-updated","file":"/Users/jinchi/Documents/行册/.superpowers/brainstorm/91118-1779863883/content/stamp-layout.html"}
+{"type":"screen-added","file":"/Users/jinchi/Documents/行册/.superpowers/brainstorm/91118-1779863883/content/waiting-2.html"}
+{"type":"screen-updated","file":"/Users/jinchi/Documents/行册/.superpowers/brainstorm/91118-1779863883/content/waiting-2.html"}
+{"type":"screen-added","file":"/Users/jinchi/Documents/行册/.superpowers/brainstorm/91118-1779863883/content/waiting-3.html"}
+{"type":"screen-updated","file":"/Users/jinchi/Documents/行册/.superpowers/brainstorm/91118-1779863883/content/waiting-3.html"}
+{"type":"server-stopped","reason":"idle timeout"}

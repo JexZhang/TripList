@@ -1,0 +1,306 @@
+<style>
+  :root {
+    --bg: #f7f1e8;
+    --surface: #fffaf2;
+    --surface-2: #f1e7d8;
+    --ink: #2d271f;
+    --ink-2: #594f44;
+    --ink-3: #8a7c6b;
+    --line: #e4d8c8;
+    --line-2: #d5c6b5;
+    --accent: #c46d3a;
+    --accent-2: #315b45;
+    --accent-bg: #f2dfcf;
+    --coral: #d85e43;
+    --r-pill: 999px;
+    --r-md: 8px;
+    --r-lg: 14px;
+    --r-xl: 22px;
+    --shadow-sm: 0 6px 16px rgba(54, 42, 30, .08);
+    --shadow-md: 0 12px 28px rgba(54, 42, 30, .12);
+    --font-body: -apple-system, BlinkMacSystemFont, "PingFang SC", "Noto Sans SC", sans-serif;
+    --font-display: "Songti SC", "STSong", "Noto Serif SC", serif;
+    --font-mono: ui-monospace, SFMono-Regular, Menlo, monospace;
+  }
+  .stage { color: var(--ink); font-family: var(--font-body); }
+  .intro { display:flex; justify-content:space-between; gap:24px; align-items:flex-start; margin-bottom:22px; }
+  .intro h2 { margin:0 0 8px; font-family:var(--font-display); letter-spacing:0; }
+  .intro p { margin:0; max-width:820px; color:var(--ink-3); line-height:1.55; }
+  .note { border:1px solid var(--line); background:var(--surface); border-radius:8px; padding:12px 14px; min-width:260px; font-size:13px; line-height:1.55; color:var(--ink-2); }
+  .scenes { display:grid; grid-template-columns:repeat(4, minmax(280px,1fr)); gap:18px; align-items:start; }
+  .scene { border:1px solid var(--line); background:#fffdf8; border-radius:14px; padding:14px; box-shadow:var(--shadow-sm); cursor:pointer; }
+  .scene:hover { border-color:#9b795c; }
+  .scene-title { display:flex; justify-content:space-between; gap:12px; align-items:baseline; margin:2px 0 12px; }
+  .scene-title h3 { margin:0; font-size:17px; font-family:var(--font-display); letter-spacing:0; }
+  .scene-title span { font-size:11px; font-family:var(--font-mono); color:var(--ink-3); white-space:nowrap; }
+  .phone { width:265px; height:574px; margin:0 auto; border:1px solid #2f2922; border-radius:28px; overflow:hidden; background:var(--bg); box-shadow:0 16px 36px rgba(39,30,22,.18); position:relative; }
+  .status { height:22px; padding:9px 16px 0; display:flex; justify-content:space-between; font-family:var(--font-mono); font-size:10px; color:var(--ink-2); }
+  .screen { height:543px; overflow:hidden; position:relative; background:var(--bg); }
+  .caption { margin:12px 2px 0; color:var(--ink-2); line-height:1.5; font-size:13px; }
+  .caption b { color:var(--ink); }
+
+  .home { min-height:100%; padding:16px 0 70px; background:var(--bg); }
+  .home-head { display:flex; align-items:center; justify-content:space-between; padding:8px 16px 12px; }
+  .home-date { font-size:12px; color:var(--ink-3); letter-spacing:1px; }
+  .avatar { width:28px; height:28px; border-radius:50%; background:linear-gradient(135deg,#315b45,#c46d3a); }
+  .create { display:grid; grid-template-columns:1fr 1fr; gap:8px; padding:0 16px 14px; }
+  .create div { background:var(--surface); border:1px solid var(--line); border-radius:12px; padding:12px; box-shadow:var(--shadow-sm); }
+  .create b { display:block; font-size:14px; margin-bottom:4px; }
+  .create span { font-size:11px; color:var(--ink-3); }
+  .section-h { display:flex; align-items:center; gap:7px; padding:0 16px; margin:10px 0; }
+  .bar { width:3px; height:16px; border-radius:2px; background:var(--ink); }
+  .section-h b { font-family:var(--font-display); font-size:15px; }
+  .featured-row { white-space:nowrap; overflow:hidden; padding:0 16px 8px; }
+  .featured { display:inline-block; width:132px; margin-right:10px; background:var(--surface); border-radius:8px; overflow:hidden; box-shadow:var(--shadow-sm); vertical-align:top; }
+  .featured-img { height:82px; background:#e9dcc8; position:relative; overflow:hidden; }
+  .featured-img img { width:100%; height:100%; object-fit:cover; display:block; }
+  .featured-meta { padding:8px 9px; }
+  .featured-meta b { display:block; font-size:12px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .featured-meta span { display:block; font-size:10px; color:var(--ink-3); margin-top:3px; }
+  .trip-list { padding:0 16px; display:grid; gap:10px; }
+  .trip-cover-card { background:var(--surface); border:1px solid var(--line); border-radius:12px; overflow:hidden; box-shadow:var(--shadow-md); }
+  .trip-cover { height:150px; position:relative; overflow:hidden; background:#eee1cf; }
+  .trip-cover img { width:100%; height:100%; object-fit:cover; display:block; }
+  .trip-cover::after { content:""; position:absolute; inset:auto 0 0; height:74px; background:linear-gradient(0deg, rgba(40,29,18,.70), rgba(40,29,18,0)); }
+  .cover-label { position:absolute; left:12px; top:10px; padding:4px 8px; border-radius:999px; background:rgba(255,250,242,.92); color:var(--ink); font-size:10px; font-weight:700; }
+  .cover-title { position:absolute; left:12px; right:12px; bottom:12px; color:#fff; z-index:1; }
+  .cover-title b { display:block; font-family:var(--font-display); font-size:20px; line-height:1.15; text-shadow:0 1px 5px rgba(0,0,0,.24); }
+  .cover-title span { display:block; font-size:11px; margin-top:4px; opacity:.9; }
+  .trip-cover-body { padding:12px 14px; display:flex; justify-content:space-between; gap:12px; align-items:center; }
+  .trip-cover-body span { font-size:12px; color:var(--ink-3); }
+  .manage-chip { padding:6px 10px; border-radius:999px; background:var(--accent-bg); color:var(--accent); font-size:11px; font-weight:700; }
+  .hmin-row { display:flex; gap:12px; padding:16px 0; background:var(--surface); border-bottom:1px solid var(--line-2); align-items:flex-start; }
+  .hmin-row-no { font-size:12px; color:var(--ink-3); font-family:var(--font-mono); letter-spacing:1px; padding-top:2px; }
+  .hmin-row-body { flex:1; min-width:0; }
+  .hmin-row-top { display:flex; justify-content:space-between; align-items:baseline; gap:8px; }
+  .hmin-row-name { font-size:15px; font-weight:650; color:var(--ink); }
+  .hmin-row-arrow { color:var(--ink-3); }
+  .hmin-row-meta { display:flex; gap:4px; margin-top:5px; font-size:11px; color:var(--ink-3); font-family:var(--font-mono); }
+
+  .thmin { padding:4px 16px 2px; background:radial-gradient(100% 50% at 100% 0%, rgba(255,154,77,.18) 0%, transparent 60%), var(--bg); }
+  .thmin-bar { display:flex; justify-content:space-between; align-items:center; padding:4px 0 8px; }
+  .back { display:flex; align-items:center; gap:7px; color:var(--ink-2); }
+  .back b { font-size:22px; font-weight:200; line-height:1; }
+  .back span { font-size:9px; letter-spacing:3px; color:var(--ink-3); font-family:var(--font-display); }
+  .menu { font-size:22px; color:var(--ink-2); }
+  .eyebrow { display:block; font-size:11px; letter-spacing:4px; color:var(--ink-3); font-family:var(--font-display); margin-bottom:8px; }
+  .trip-name { display:block; font-size:30px; font-family:var(--font-display); line-height:1.05; color:var(--ink); font-weight:700; margin-bottom:7px; }
+  .meta { display:flex; gap:5px; font-size:12px; color:var(--ink-3); font-family:var(--font-mono); }
+  .rule { height:1px; background:var(--line); margin:14px 0 8px; }
+  .asset-strip { margin:10px 16px 8px; border:1px solid var(--line); background:var(--surface); border-radius:12px; overflow:hidden; box-shadow:var(--shadow-sm); }
+  .asset-strip img { width:100%; height:98px; object-fit:cover; display:block; }
+  .asset-strip-body { padding:11px 12px; display:flex; justify-content:space-between; gap:10px; align-items:center; }
+  .asset-strip-body b { display:block; font-size:14px; margin-bottom:3px; }
+  .asset-strip-body span { font-size:11px; color:var(--ink-3); }
+  .asset-actions { display:flex; gap:6px; }
+  .asset-actions i { font-style:normal; padding:6px 8px; border-radius:999px; background:var(--surface-2); color:var(--ink-2); font-size:10px; font-weight:700; white-space:nowrap; }
+  .tabs { display:flex; padding:4px; margin:12px 16px 8px; background:var(--surface); border-radius:999px; box-shadow:var(--shadow-sm); gap:2px; }
+  .tabs span { flex:1; padding:8px 6px; font-size:13px; color:var(--ink-3); text-align:center; border-radius:999px; font-weight:500; }
+  .tabs .on { color:#fff; font-weight:700; background:linear-gradient(135deg,var(--accent),var(--accent-2)); }
+  .itin-list { padding:8px 16px; display:grid; gap:9px; }
+  .day-card { background:var(--surface); border:1px solid var(--line); border-radius:10px; padding:12px; }
+  .day-card b { display:block; font-size:14px; margin-bottom:5px; }
+  .day-card span { color:var(--ink-3); font-size:11px; }
+  .action-mask { position:absolute; inset:0; background:rgba(43,26,16,.45); display:flex; align-items:flex-end; }
+  .action-sheet { width:100%; background:var(--surface); border-radius:22px 22px 0 0; padding:24px 0 20px; position:relative; box-shadow:0 -8px 24px rgba(43,26,16,.15); }
+  .action-sheet::before { content:""; position:absolute; top:8px; left:50%; transform:translateX(-50%); width:36px; height:4px; border-radius:999px; background:var(--line-2); }
+  .tas-head { padding:0 18px 10px; font-weight:700; font-size:16px; }
+  .tas-item { padding:14px 18px; border-top:1px solid var(--line); font-size:15px; }
+  .tas-item small { display:block; color:var(--ink-3); font-size:11px; margin-top:3px; }
+  .tas-item.accent { color:var(--accent); font-weight:700; }
+  .tas-cancel { margin-top:6px; padding:14px 0; text-align:center; font-size:15px; font-weight:700; color:var(--ink-2); border-top:6px solid var(--bg); }
+
+  .tpl { background:var(--bg); height:100%; padding-bottom:82px; position:relative; }
+  .tpl-top { display:flex; align-items:center; justify-content:space-between; padding:10px 14px 4px; }
+  .tpl-readonly { padding:5px 9px; border-radius:999px; background:var(--surface); border:1px solid var(--line); color:var(--accent); font-size:11px; }
+  .tpl-hero { padding:5px 14px 8px; }
+  .tpl-name { font-size:25px; font-family:var(--font-display); line-height:1.2; }
+  .tpl-meta { display:flex; gap:6px; color:var(--ink-3); font-size:12px; margin-top:8px; }
+  .tpl-guide-cover { margin:8px 14px 10px; border-radius:10px; overflow:hidden; border:1px solid var(--line); position:relative; }
+  .tpl-guide-cover img { width:100%; height:138px; object-fit:cover; display:block; }
+  .tpl-guide-cover span { position:absolute; left:10px; bottom:8px; padding:4px 8px; border-radius:999px; background:rgba(255,250,242,.9); color:var(--ink); font-size:10px; font-weight:700; }
+  .tpl-tabs { display:flex; border-top:1px solid var(--line); border-bottom:1px solid var(--line); }
+  .tpl-tabs span { flex:1; text-align:center; padding:10px 0; color:var(--ink-3); font-size:12px; }
+  .tpl-tabs .on { color:var(--accent); font-weight:700; }
+  .tpl-list { padding:12px 14px; display:grid; gap:8px; }
+  .tpl-item { padding:10px; background:var(--surface); border:1px solid var(--line); border-radius:8px; font-size:12px; }
+  .tpl-item b { display:block; margin-bottom:4px; }
+  .tpl-item span { color:var(--ink-3); }
+  .tpl-cta { position:absolute; left:0; right:0; bottom:0; padding:8px 14px 20px; background:var(--bg); border-top:1px solid var(--line); }
+  .tpl-cta-hint { color:var(--ink-3); font-size:11px; margin-bottom:6px; }
+  .tpl-cta-btn { padding:13px; border-radius:10px; background:var(--accent); color:#fff; font-size:15px; text-align:center; font-weight:700; }
+
+  .share-bg { height:100%; background:var(--bg); position:relative; }
+  .share-title { padding:16px; }
+  .share-title b { display:block; font-family:var(--font-display); font-size:24px; margin-bottom:5px; }
+  .share-title span { font-size:12px; color:var(--ink-3); }
+  .share-card { margin:0 16px; border-radius:16px; overflow:hidden; background:var(--surface); border:1px solid var(--line); box-shadow:var(--shadow-md); }
+  .share-card-img { height:232px; position:relative; overflow:hidden; background:#eadbca; }
+  .share-card-img img { width:100%; height:100%; object-fit:cover; display:block; }
+  .share-card-img::after { content:""; position:absolute; inset:auto 0 0; height:120px; background:linear-gradient(0deg, rgba(39,29,18,.78), transparent); }
+  .share-logo { position:absolute; left:14px; top:14px; padding:5px 9px; border-radius:999px; background:rgba(255,250,242,.92); color:var(--ink); font-size:11px; font-weight:800; z-index:1; }
+  .share-copy { position:absolute; left:15px; right:15px; bottom:15px; color:#fff; z-index:1; }
+  .share-copy b { display:block; font-family:var(--font-display); font-size:24px; line-height:1.12; text-shadow:0 1px 6px rgba(0,0,0,.25); }
+  .share-copy span { display:block; margin-top:6px; font-size:12px; opacity:.92; }
+  .share-body { padding:14px; display:flex; justify-content:space-between; align-items:center; gap:12px; }
+  .share-body span { font-size:12px; color:var(--ink-3); }
+  .share-body b { padding:7px 12px; border-radius:999px; background:var(--accent-2); color:#fff; font-size:12px; }
+  .sts-mask { position:absolute; inset:0; background:rgba(43,26,16,.45); display:flex; align-items:flex-end; }
+  .sts-sheet { width:100%; background:var(--surface); border-radius:22px 22px 0 0; padding:24px 0 20px; position:relative; box-shadow:0 -8px 24px rgba(43,26,16,.15); }
+  .sts-sheet::before { content:""; position:absolute; top:8px; left:50%; transform:translateX(-50%); width:36px; height:4px; border-radius:999px; background:var(--line-2); }
+  .mini-preview { margin:0 18px 12px; border:1px solid var(--line); border-radius:12px; overflow:hidden; background:white; display:grid; grid-template-columns:92px 1fr; }
+  .mini-preview img { width:92px; height:72px; object-fit:cover; display:block; }
+  .mini-preview div { padding:10px; }
+  .mini-preview b { display:block; font-size:13px; margin-bottom:3px; }
+  .mini-preview span { color:var(--ink-3); font-size:10px; line-height:1.3; }
+  .sts-item { padding:14px 18px; border-bottom:1px solid var(--line); }
+  .sts-title { display:block; font-size:16px; font-weight:700; }
+  .sts-desc { display:block; margin-top:4px; color:var(--ink-3); font-size:11px; }
+  .sts-loading { display:block; margin-top:4px; color:var(--accent); font-size:10px; font-weight:700; }
+  .sts-cancel { margin-top:6px; padding:14px 0; text-align:center; font-size:15px; font-weight:700; color:var(--ink-2); border-top:6px solid var(--bg); }
+
+  @media (max-width:1180px){ .scenes{grid-template-columns:repeat(2,minmax(280px,1fr));} }
+  @media (max-width:680px){ .intro{flex-direction:column;} .scenes{grid-template-columns:1fr;} }
+</style>
+
+<div class="stage">
+  <div class="intro">
+    <div>
+      <h2>导览图的正确位置：封面资产，而不是地图功能</h2>
+      <p>这一版按你的反馈调整：不再放在地图页。导览图被定义为攻略的高价值视觉资产，它可以作为首页行程封面、攻略详情资产入口、模板封面、分享卡片主视觉。同一张图只生成一次，多处复用。</p>
+    </div>
+    <div class="note">
+      当前判断：3 和 4 可以直接进入设计；首页封面也合适，但只对“已有导览图”的行程升级显示，避免首页变成普通图片流。
+    </div>
+  </div>
+
+  <div class="scenes" data-multiselect>
+    <div class="scene" data-choice="home-cover" onclick="toggleSelect(this)">
+      <div class="scene-title"><h3>1. 首页 · 已有图的行程变封面卡</h3><span>推荐</span></div>
+      <div class="phone">
+        <div class="status"><span>12:57</span><span>行迹</span></div>
+        <div class="screen">
+          <div class="home">
+            <div class="home-head"><span class="home-date">六月三十日 · 周二</span><span class="avatar"></span></div>
+            <div class="create"><div><b>AI 规划</b><span>生成新攻略</span></div><div><b>手动创建</b><span>从空白开始</span></div></div>
+            <div class="section-h"><span class="bar"></span><b>旅人精选</b></div>
+            <div class="featured-row">
+              <div class="featured"><div class="featured-img"><img src="guide-map.png" alt=""></div><div class="featured-meta"><b>成都亲友慢游</b><span>5天 · 适合长辈</span></div></div>
+              <div class="featured"><div class="featured-img" style="background:linear-gradient(135deg,#315b45,#c46d3a)"></div><div class="featured-meta"><b>西北环线</b><span>7天 · 自驾</span></div></div>
+            </div>
+            <div class="section-h"><span class="bar"></span><b>我的行程</b></div>
+            <div class="trip-list">
+              <div class="trip-cover-card">
+                <div class="trip-cover">
+                  <img src="guide-map.png" alt="">
+                  <span class="cover-label">导览图</span>
+                  <div class="cover-title"><b>麻麻生日之旅</b><span>8.28 → 9.1 · 4 人 · 5 天</span></div>
+                </div>
+                <div class="trip-cover-body"><span>成都导览图已生成，可保存和分享</span><b class="manage-chip">管理</b></div>
+              </div>
+              <div class="hmin-row">
+                <span class="hmin-row-no">02</span>
+                <div class="hmin-row-body">
+                  <div class="hmin-row-top"><span class="hmin-row-name">杭州周末散步</span><span class="hmin-row-arrow">›</span></div>
+                  <div class="hmin-row-meta"><span>7.12 → 7.13</span><span>·</span><span>2 人 · 2 天</span></div>
+                </div>
+              </div>
+              <div class="hmin-row">
+                <span class="hmin-row-no">03</span>
+                <div class="hmin-row-body">
+                  <div class="hmin-row-top"><span class="hmin-row-name">南京亲子两日</span><span class="hmin-row-arrow">›</span></div>
+                  <div class="hmin-row-meta"><span>10.02 → 10.03</span><span>·</span><span>3 人 · 2 天</span></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <p class="caption"><b>判断：</b>合适。首页里的导览图不承担地图功能，而是攻略封面。已有图的行程自然变得更“完成”，未生成的行程保持现在的轻列表。</p>
+    </div>
+
+    <div class="scene" data-choice="trip-asset" onclick="toggleSelect(this)">
+      <div class="scene-title"><h3>2. 攻略详情 · 资产入口和管理</h3><span>替代地图页入口</span></div>
+      <div class="phone">
+        <div class="status"><span>12:57</span><span>行迹</span></div>
+        <div class="screen">
+          <div class="thmin">
+            <div class="thmin-bar"><div class="back"><b>‹</b><span>back</span></div><div class="menu">⋯</div></div>
+            <span class="eyebrow">TRIP PLAN</span>
+            <span class="trip-name">麻麻生日之旅</span>
+            <div class="meta"><span>8.28 → 9.1</span><span>·</span><span>5天</span><span>·</span><span>4人</span></div>
+            <div class="rule"></div>
+          </div>
+          <div class="asset-strip">
+            <img src="guide-map.png" alt="">
+            <div class="asset-strip-body">
+              <div><b>成都导览图</b><span>12 个点位 · 已作为首页封面和分享图</span></div>
+              <div class="asset-actions"><i>查看</i><i>管理</i></div>
+            </div>
+          </div>
+          <div class="tabs"><span class="on">攻略</span><span>地图</span><span>开销</span><span>清单</span></div>
+          <div class="itin-list">
+            <div class="day-card"><b>D1 高铁入山 · 黄龙瑶池</b><span>成都龙之梦大酒店、宽窄巷子、生日宴</span></div>
+            <div class="day-card"><b>D2 黄龙国家级风景名胜区</b><span>黄龙九寨站、黄龙景区、九寨沟沟口</span></div>
+            <div class="day-card"><b>D4 成都 · 熊猫与古街</b><span>熊猫基地、武侯祠、锦里古街</span></div>
+          </div>
+        </div>
+      </div>
+      <p class="caption"><b>判断：</b>入口放在攻略头部和标签页之前，更像“这份攻略的封面资产”。另一个入口可以放在右上角更多操作里：生成/管理导览图。</p>
+    </div>
+
+    <div class="scene" data-choice="template" onclick="toggleSelect(this)">
+      <div class="scene-title"><h3>3. 旅人精选 · 模板封面</h3><span>保留</span></div>
+      <div class="phone">
+        <div class="status"><span>12:57</span><span>行迹</span></div>
+        <div class="screen">
+          <div class="tpl">
+            <div class="tpl-top"><div class="back"><b>‹</b><span>back</span></div><div class="tpl-readonly">只读攻略</div></div>
+            <div class="tpl-hero">
+              <div class="tpl-name">成都亲友慢游</div>
+              <div class="tpl-meta"><span>5天</span><span>·</span><span>成都/黄龙/九寨沟</span><span>·</span><span>适合长辈</span></div>
+            </div>
+            <div class="tpl-guide-cover"><img src="guide-map.png" alt=""><span>精选导览图</span></div>
+            <div class="tpl-tabs"><span class="on">攻略</span><span>地图</span><span>开销</span><span>清单</span></div>
+            <div class="tpl-list">
+              <div class="tpl-item"><b>D1 高铁入山 · 黄龙瑶池</b><span>宽窄巷子、成都东站、酒店家宴</span></div>
+              <div class="tpl-item"><b>D2 黄龙国家级风景名胜区</b><span>索道上行，步行下山，适合慢节奏</span></div>
+              <div class="tpl-item"><b>D4 成都 · 熊猫与古街</b><span>熊猫基地、武侯祠、锦里古街</span></div>
+            </div>
+            <div class="tpl-cta"><div class="tpl-cta-hint">复制后可按你的出发日重排日期</div><div class="tpl-cta-btn">复制这份攻略</div></div>
+          </div>
+        </div>
+      </div>
+      <p class="caption"><b>判断：</b>这个方向可以做。模板导览图应由平台预生成并人工看过，作为精选攻略质感的一部分，而不是用户打开模板时临时生成。</p>
+    </div>
+
+    <div class="scene" data-choice="share-redesign" onclick="toggleSelect(this)">
+      <div class="scene-title"><h3>4. 分享卡片重做</h3><span>保留</span></div>
+      <div class="phone">
+        <div class="status"><span>12:57</span><span>行迹</span></div>
+        <div class="screen">
+          <div class="share-bg">
+            <div class="share-title"><b>分享预览</b><span>不再使用纯色块，有导览图时直接作为主视觉</span></div>
+            <div class="share-card">
+              <div class="share-card-img">
+                <img src="guide-map.png" alt="">
+                <span class="share-logo">行迹</span>
+                <div class="share-copy"><b>麻麻生日之旅</b><span>成都 · 5天 · 12个导览点位</span></div>
+              </div>
+              <div class="share-body"><span>打开查看完整攻略、地图、预算和清单</span><b>查看攻略</b></div>
+            </div>
+            <div class="sts-mask">
+              <div class="sts-sheet">
+                <div class="mini-preview"><img src="guide-map.png" alt=""><div><b>分享图已就绪</b><span>使用成都导览图，不重新消耗生成额度</span></div></div>
+                <div class="sts-item"><span class="sts-title">只读分享</span><span class="sts-desc">朋友可查看攻略和导览图，不能编辑</span><span class="sts-loading">将发送导览图分享卡片</span></div>
+                <div class="sts-item"><span class="sts-title">邀请协作</span><span class="sts-desc">朋友可加入一起规划，导览图随攻略同步展示</span></div>
+                <div class="sts-cancel">取消</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <p class="caption"><b>判断：</b>必须做。现有色块卡片信息感太弱。新规则：有导览图用导览图；没有导览图才回退到当前确定性色彩卡片。</p>
+    </div>
+  </div>
+</div>

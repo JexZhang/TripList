@@ -1,0 +1,111 @@
+<style>
+  .phone { width:252px; border:2px solid #d8d4cc; border-radius:22px; padding:12px 10px; background:#fff; box-shadow:0 6px 18px rgba(0,0,0,.06); margin:0 auto; }
+  .pbar { display:flex; justify-content:space-between; align-items:center; margin-bottom:11px; }
+  .greet { font-size:11px; color:#a59f93; }
+  .pavatar { width:26px; height:26px; border-radius:50%; background:#e7e2d8; }
+  .btnrow { display:flex; gap:8px; margin-bottom:12px; }
+  .tile { flex:1; border-radius:13px; padding:13px 8px; text-align:center; font-size:12px; font-weight:600; color:#fff; line-height:1.5; }
+  .tileA { background:linear-gradient(135deg,#FF7A2E,#FF9A4D); }
+  .tileB { background:#2b2b2b; }
+  .seclabel { font-size:11px; color:#5a5448; font-weight:700; margin:6px 0 9px; display:flex; justify-content:space-between; align-items:baseline; }
+  .seclabel .en { font-size:9px; color:#bcae9a; letter-spacing:1.5px; font-weight:500; }
+  .seclabel .more { font-size:10px; color:#c0531c; font-weight:500; }
+  .trip { border:1px solid #ece8e0; border-radius:11px; padding:9px 10px; margin-bottom:7px; }
+  .trip .tn { font-size:12px; font-weight:600; color:#333; }
+  .trip .tm { font-size:10px; color:#a59f93; margin-top:3px; }
+  .trip.past { opacity:.5; }
+
+  /* horizontal rich cards */
+  .hrow { display:flex; gap:9px; overflow:hidden; margin-bottom:6px; }
+  .hcard { min-width:118px; width:118px; border-radius:12px; overflow:hidden; box-shadow:0 3px 9px rgba(0,0,0,.08); }
+  .hcover { height:78px; padding:8px; display:flex; align-items:flex-end; color:#fff; }
+  .hcover .ht { font-size:12px; font-weight:700; text-shadow:0 1px 3px rgba(0,0,0,.4); }
+  .hmeta { padding:6px 8px; background:#fff; }
+  .hmeta .m1 { font-size:9.5px; color:#7a7468; }
+  .hmeta .m2 { font-size:9px; color:#b3a89a; margin-top:2px; }
+
+  /* 2-col grid */
+  .grid { display:grid; grid-template-columns:1fr 1fr; gap:9px; }
+  .gcard { border-radius:12px; overflow:hidden; box-shadow:0 3px 9px rgba(0,0,0,.08); }
+  .gcover { height:84px; padding:8px; display:flex; align-items:flex-end; color:#fff; }
+  .gcover .gt { font-size:12px; font-weight:700; text-shadow:0 1px 3px rgba(0,0,0,.4); }
+  .gmeta { padding:7px 8px; background:#fff; }
+  .gmeta .m1 { font-size:9.5px; color:#7a7468; }
+  .gmeta .m2 { font-size:9px; color:#b3a89a; margin-top:2px; }
+
+  .c1{background:linear-gradient(135deg,#c2410c,#ea580c);}
+  .c2{background:linear-gradient(135deg,#0e7490,#0891b2);}
+  .c3{background:linear-gradient(135deg,#4338ca,#6366f1);}
+  .c4{background:linear-gradient(135deg,#15803d,#22c55e);}
+  .namebox { background:#fff7ec; border:1px solid #f3e2c9; border-radius:12px; padding:12px 14px; margin-top:18px; }
+  .namebox h4 { margin:0 0 8px; font-size:13px; color:#8a5a1c; }
+  .chips { display:flex; flex-wrap:wrap; gap:7px; }
+  .chip { font-size:11px; padding:5px 11px; border-radius:16px; background:#fff; border:1px solid #ecd9bd; color:#9a5a1c; }
+</style>
+
+<h2>灵感推荐：自己的版块 + 多条 + 编辑感</h2>
+<p class="subtitle">两种放法都常驻、对所有用户展示、多条带封面与作者。靠「强版块标题 + 封面内容卡」摆脱广告条的廉价感。</p>
+
+<div class="cards">
+
+  <div class="card" data-choice="e" onclick="toggleSelect(this)" style="max-width:none">
+    <div class="card-image" style="padding:14px;background:#faf8f3">
+      <div class="phone">
+        <div class="pbar"><div class="greet">你好，旅人 ☀</div><div class="pavatar"></div></div>
+        <div class="btnrow"><div class="tile tileA">✦<br/>AI 规划</div><div class="tile tileB">+<br/>手动新建</div></div>
+        <div class="seclabel"><span>精选灵感 <span class="en">EDITORS' PICKS</span></span><span class="more">更多 ›</span></div>
+        <div class="hrow">
+          <div class="hcard"><div class="hcover c1"><div class="ht">京都 · 红叶狩</div></div><div class="hmeta"><div class="m1">7 天 · 古都漫步</div><div class="m2">来自 行迹编辑部</div></div></div>
+          <div class="hcard"><div class="hcover c2"><div class="ht">冰岛环岛</div></div><div class="hmeta"><div class="m1">9 天 · 极光</div><div class="m2">来自 @阿元</div></div></div>
+          <div class="hcard"><div class="hcover c3"><div class="ht">…</div></div></div>
+        </div>
+        <div class="seclabel" style="margin-top:14px"><span>我的行程</span></div>
+        <div class="trip"><div class="tn">京都赏枫 5 日</div><div class="tm">11.20 → 11.24 · 即将出发</div></div>
+        <div class="trip past"><div class="tn">东京跨年</div><div class="tm">已结束</div></div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>E · 灵感在上(横滑封面卡)</h3>
+      <p>创建台之下先是「精选灵感」横滑大卡，再是「我的行程」。推荐获得最高曝光，对所有用户都先看到。代价：自己的行程要往下滑一点。</p>
+    </div>
+  </div>
+
+  <div class="card" data-choice="f" onclick="toggleSelect(this)" style="max-width:none">
+    <div class="card-image" style="padding:14px;background:#faf8f3">
+      <div class="phone">
+        <div class="pbar"><div class="greet">你好，旅人 ☀</div><div class="pavatar"></div></div>
+        <div class="btnrow"><div class="tile tileA">✦<br/>AI 规划</div><div class="tile tileB">+<br/>手动新建</div></div>
+        <div class="seclabel"><span>我的行程</span></div>
+        <div class="trip"><div class="tn">京都赏枫 5 日</div><div class="tm">11.20 → 11.24 · 即将出发</div></div>
+        <div class="trip past"><div class="tn">东京跨年</div><div class="tm">已结束</div></div>
+        <div class="seclabel" style="margin-top:14px"><span>精选灵感 <span class="en">EXPLORE</span></span><span class="more">更多 ›</span></div>
+        <div class="grid">
+          <div class="gcard"><div class="gcover c1"><div class="gt">京都 · 红叶狩</div></div><div class="gmeta"><div class="m1">7 天 · 古都漫步</div><div class="m2">行迹编辑部</div></div></div>
+          <div class="gcard"><div class="gcover c2"><div class="gt">冰岛环岛</div></div><div class="gmeta"><div class="m1">9 天 · 极光</div><div class="m2">@阿元</div></div></div>
+          <div class="gcard"><div class="gcover c4"><div class="gt">越南三城</div></div><div class="gmeta"><div class="m1">6 天 · 咖啡</div><div class="m2">@小满</div></div></div>
+          <div class="gcard"><div class="gcover c3"><div class="gt">大阪环球</div></div><div class="gmeta"><div class="m1">4 天 · 亲子</div><div class="m2">@Leo</div></div></div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>F · 行程在上 + 灵感双栏内容墙(在下)</h3>
+      <p>先「我的行程」，下面是「精选灵感」双栏封面墙(像小红书内容流，可一直往下刷)。关键：不是一条细横排，而是有分量的内容版块，往下滑像「看更多好玩的」而非广告。</p>
+    </div>
+  </div>
+
+</div>
+
+<div class="namebox">
+  <h4>顺便定个名字（替代「攻略库」）—— 你倾向哪个？也可自己提</h4>
+  <div class="chips">
+    <span class="chip">精选灵感</span>
+    <span class="chip">灵感</span>
+    <span class="chip">路书</span>
+    <span class="chip">别处</span>
+    <span class="chip">去处</span>
+    <span class="chip">发现</span>
+    <span class="chip">旅人精选</span>
+  </div>
+</div>
+
+<p class="subtitle" style="margin-top:16px">我偏向 <b>F</b>：保住「我的行程」第一优先，灵感用双栏内容墙撑起分量、可无限下刷，既常驻又不抢戏、也不廉价。点 E 或 F，并告诉我名字倾向。</p>

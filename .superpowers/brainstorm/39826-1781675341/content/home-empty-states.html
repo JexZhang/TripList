@@ -1,0 +1,814 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>首页空状态设计对比</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700;900&family=JetBrains+Mono:wght@400;500&display=swap');
+
+    :root {
+      --bg: #FFF4E6;
+      --bg-deep: #F4E6CE;
+      --surface: #FFFFFF;
+      --surface-2: #FFF9F1;
+      --ink: #2B1A10;
+      --ink-2: #5A4338;
+      --ink-3: #9B8378;
+      --line: rgba(43, 26, 16, 0.08);
+      --line-2: rgba(43, 26, 16, 0.14);
+      --accent: #FF7A2E;
+      --accent-2: #FF9A4D;
+      --accent-soft: #FFD3A8;
+      --accent-bg: #FFEBD6;
+      --coral: #FF5B5B;
+      --leaf: #4FB286;
+      --sun: #FFC247;
+      --plum: #6B46C1;
+      --font-display: 'Noto Serif SC', 'Songti SC', serif;
+      --font-body: 'PingFang SC', -apple-system, BlinkMacSystemFont, sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+      --shadow-sm: 0 4rpx 12rpx rgba(58, 36, 25, 0.06);
+      --shadow-md: 0 12rpx 32rpx rgba(58, 36, 25, 0.10);
+      --shadow-lg: 0 20rpx 48rpx rgba(58, 36, 25, 0.14);
+      --r-sm: 12rpx;
+      --r-md: 20rpx;
+      --r-lg: 32rpx;
+      --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font-body);
+      background: linear-gradient(180deg, #f5f5f5 0%, #e8e8e8 100%);
+      min-height: 100vh;
+      padding: 40px 20px;
+    }
+
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    h1 {
+      font-family: var(--font-display);
+      font-size: 36px;
+      font-weight: 700;
+      color: var(--ink);
+      text-align: center;
+      margin-bottom: 12px;
+    }
+
+    .subtitle {
+      text-align: center;
+      color: var(--ink-3);
+      font-size: 16px;
+      margin-bottom: 48px;
+    }
+
+    .designs-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+      gap: 32px;
+      margin-bottom: 64px;
+    }
+
+    .design-card {
+      background: white;
+      border-radius: 24px;
+      overflow: hidden;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.12);
+    }
+
+    .design-header {
+      padding: 20px 24px;
+      border-bottom: 1px solid var(--line);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .design-title {
+      font-family: var(--font-display);
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--ink);
+    }
+
+    .badge {
+      font-size: 12px;
+      padding: 4px 12px;
+      border-radius: 12px;
+      font-weight: 600;
+    }
+
+    .badge-a { background: #E3F2FD; color: #1976D2; }
+    .badge-b { background: #E8F5E9; color: #388E3C; }
+    .badge-c { background: #FFF3E0; color: #F57C00; }
+
+    .phone-frame {
+      width: 375px;
+      height: 812px;
+      margin: 0 auto;
+      background: var(--bg);
+      position: relative;
+      overflow-y: auto;
+      overflow-x: hidden;
+    }
+
+    /* Design A: 极简卡片流（修正版）*/
+    .design-a .page-header {
+      padding: 20px 24px 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: var(--surface);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .design-a .header-title {
+      font-family: var(--font-display);
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--ink);
+    }
+
+    .design-a .avatar-small {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: var(--accent-bg);
+      border: 2px solid var(--accent);
+    }
+
+    .design-a .quick-actions {
+      padding: 16px 24px;
+      display: flex;
+      gap: 12px;
+      background: var(--surface);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .design-a .action-btn {
+      flex: 1;
+      padding: 12px;
+      border-radius: 12px;
+      background: var(--accent-bg);
+      color: var(--accent);
+      text-align: center;
+      font-size: 14px;
+      font-weight: 600;
+      border: none;
+      cursor: pointer;
+    }
+
+    .design-a .action-btn.secondary {
+      background: var(--surface-2);
+      color: var(--ink-2);
+    }
+
+    .design-a .empty-state {
+      text-align: center;
+      padding: 80px 24px 40px;
+    }
+
+    .design-a .empty-icon {
+      font-size: 72px;
+      margin-bottom: 20px;
+      opacity: 0.7;
+    }
+
+    .design-a .empty-title {
+      font-family: var(--font-display);
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--ink);
+      margin-bottom: 12px;
+    }
+
+    .design-a .empty-desc {
+      font-size: 15px;
+      color: var(--ink-3);
+      margin-bottom: 28px;
+      line-height: 1.6;
+    }
+
+    .design-a .template-preview {
+      padding: 0 24px;
+    }
+
+    .design-a .preview-title {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--ink-2);
+      margin-bottom: 16px;
+      text-align: left;
+    }
+
+    .design-a .template-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+    }
+
+    .design-a .template-card {
+      background: var(--surface);
+      border-radius: 12px;
+      padding: 16px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .design-a .template-name {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--ink);
+      margin-bottom: 4px;
+    }
+
+    .design-a .template-city {
+      font-size: 12px;
+      color: var(--ink-3);
+    }
+
+    /* Design B: 分区明确 */
+    .design-b .top-bar {
+      padding: 16px 24px;
+      background: var(--surface);
+      border-bottom: 1px solid var(--line);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .design-b .logo-text {
+      font-family: var(--font-display);
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--ink);
+    }
+
+    .design-b .quick-actions {
+      display: flex;
+      gap: 8px;
+    }
+
+    .design-b .action-btn {
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 600;
+      border: none;
+      cursor: pointer;
+    }
+
+    .design-b .action-btn.ai {
+      background: linear-gradient(135deg, var(--accent), var(--coral));
+      color: white;
+    }
+
+    .design-b .action-btn.new {
+      background: var(--surface-2);
+      color: var(--ink-2);
+      border: 1px solid var(--line);
+    }
+
+    .design-b .empty-hero {
+      background: linear-gradient(135deg, var(--accent-bg), var(--surface-2));
+      border-radius: 16px;
+      padding: 48px 24px;
+      text-align: center;
+      margin: 24px;
+    }
+
+    .design-b .hero-icon {
+      font-size: 56px;
+      margin-bottom: 16px;
+    }
+
+    .design-b .hero-title {
+      font-family: var(--font-display);
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--ink);
+      margin-bottom: 12px;
+    }
+
+    .design-b .hero-desc {
+      font-size: 15px;
+      color: var(--ink-3);
+      margin-bottom: 24px;
+      line-height: 1.6;
+    }
+
+    .design-b .hero-actions {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+    }
+
+    .design-b .hero-btn {
+      padding: 14px 28px;
+      border-radius: 12px;
+      font-size: 15px;
+      font-weight: 600;
+      border: none;
+      cursor: pointer;
+    }
+
+    .design-b .hero-btn.primary {
+      background: var(--accent);
+      color: white;
+    }
+
+    .design-b .hero-btn.secondary {
+      background: white;
+      color: var(--ink);
+      border: 1px solid var(--line);
+    }
+
+    .design-b .section {
+      padding: 24px;
+    }
+
+    .design-b .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+
+    .design-b .section-title {
+      font-family: var(--font-display);
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--ink);
+    }
+
+    .design-b .section-badge {
+      font-size: 12px;
+      padding: 4px 10px;
+      border-radius: 12px;
+      background: var(--accent-bg);
+      color: var(--accent);
+      font-weight: 600;
+    }
+
+    .design-b .trip-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .design-b .trip-item {
+      background: var(--surface);
+      border-radius: 12px;
+      padding: 16px;
+      box-shadow: var(--shadow-sm);
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .design-b .trip-color {
+      width: 8px;
+      height: 48px;
+      border-radius: 4px;
+      flex-shrink: 0;
+    }
+
+    .design-b .trip-info {
+      flex: 1;
+    }
+
+    .design-b .trip-title {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--ink);
+      margin-bottom: 4px;
+    }
+
+    .design-b .trip-detail {
+      font-size: 13px;
+      color: var(--ink-3);
+    }
+
+    /* Design C: 时间线风格 */
+    .design-c .nav-bar {
+      padding: 16px 24px;
+      background: var(--surface);
+      border-bottom: 1px solid var(--line);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .design-c .nav-title {
+      font-family: var(--font-display);
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--ink);
+    }
+
+    .design-c .fab {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: var(--accent);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      box-shadow: var(--shadow-md);
+      border: none;
+      cursor: pointer;
+    }
+
+    .design-c .welcome-card {
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      border-radius: 16px;
+      padding: 40px 24px;
+      color: white;
+      text-align: center;
+      margin: 24px;
+    }
+
+    .design-c .welcome-icon {
+      font-size: 56px;
+      margin-bottom: 16px;
+    }
+
+    .design-c .welcome-title {
+      font-family: var(--font-display);
+      font-size: 26px;
+      font-weight: 700;
+      margin-bottom: 12px;
+    }
+
+    .design-c .welcome-desc {
+      font-size: 15px;
+      opacity: 0.95;
+      margin-bottom: 24px;
+      line-height: 1.6;
+    }
+
+    .design-c .welcome-actions {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+    }
+
+    .design-c .welcome-btn {
+      padding: 14px 28px;
+      border-radius: 12px;
+      font-size: 15px;
+      font-weight: 600;
+      border: none;
+      cursor: pointer;
+    }
+
+    .design-c .welcome-btn.white {
+      background: white;
+      color: var(--accent);
+    }
+
+    .design-c .welcome-btn.outline {
+      background: transparent;
+      color: white;
+      border: 2px solid white;
+    }
+
+    .design-c .timeline {
+      padding: 24px;
+      position: relative;
+    }
+
+    .design-c .timeline::before {
+      content: '';
+      position: absolute;
+      left: 40px;
+      top: 24px;
+      bottom: 24px;
+      width: 2px;
+      background: var(--line);
+    }
+
+    .design-c .timeline-item {
+      position: relative;
+      padding-left: 56px;
+      margin-bottom: 24px;
+    }
+
+    .design-c .timeline-dot {
+      position: absolute;
+      left: 32px;
+      top: 8px;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: var(--accent);
+      border: 3px solid var(--surface);
+      box-shadow: 0 0 0 2px var(--accent);
+    }
+
+    .design-c .timeline-content {
+      background: var(--surface);
+      border-radius: 12px;
+      padding: 16px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .design-c .timeline-date {
+      font-size: 12px;
+      color: var(--ink-3);
+      font-family: var(--font-mono);
+      margin-bottom: 4px;
+    }
+
+    .design-c .timeline-title {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--ink);
+      margin-bottom: 4px;
+    }
+
+    .design-c .timeline-meta {
+      font-size: 13px;
+      color: var(--ink-3);
+    }
+
+    .comparison-section {
+      margin-top: 64px;
+      background: white;
+      border-radius: 24px;
+      padding: 32px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.12);
+    }
+
+    .comparison-title {
+      font-family: var(--font-display);
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--ink);
+      text-align: center;
+      margin-bottom: 32px;
+    }
+
+    .comparison-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .comparison-table th,
+    .comparison-table td {
+      padding: 16px;
+      text-align: left;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .comparison-table th {
+      background: var(--bg);
+      font-weight: 600;
+      color: var(--ink);
+    }
+
+    .comparison-table td {
+      color: var(--ink-2);
+      font-size: 14px;
+    }
+
+    .highlight {
+      background: rgba(255, 122, 46, 0.1);
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-weight: 600;
+      color: var(--accent);
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>首页空状态设计对比</h1>
+    <p class="subtitle">三个方案的空状态展示 + 快捷操作按钮对比</p>
+
+    <div class="designs-grid">
+      <!-- Design A: 极简卡片流（修正版）-->
+      <div class="design-card">
+        <div class="design-header">
+          <span class="design-title">方案 A · 极简卡片流（修正）</span>
+          <span class="badge badge-a">已修正</span>
+        </div>
+        <div class="phone-frame design-a">
+          <div class="page-header">
+            <span class="header-title">我的行程</span>
+            <div class="avatar-small"></div>
+          </div>
+
+          <!-- ✅ 新增快捷操作栏 -->
+          <div class="quick-actions">
+            <button class="action-btn">✨ AI 智能规划</button>
+            <button class="action-btn secondary">➕ 新建行程</button>
+          </div>
+
+          <!-- 空状态 -->
+          <div class="empty-state">
+            <div class="empty-icon">️</div>
+            <div class="empty-title">还没有任何行程</div>
+            <div class="empty-desc">
+              开始记录你的第一次旅行吧<br>
+              让 AI 帮你规划，或从模板开始
+            </div>
+          </div>
+
+          <!-- 热门模板预览 -->
+          <div class="template-preview">
+            <div class="preview-title"> 热门目的地</div>
+            <div class="template-grid">
+              <div class="template-card">
+                <div class="template-name">南京</div>
+                <div class="template-city">金陵四日</div>
+              </div>
+              <div class="template-card">
+                <div class="template-name">哈尔滨</div>
+                <div class="template-city">漠河寻北</div>
+              </div>
+              <div class="template-card">
+                <div class="template-name">九寨沟</div>
+                <div class="template-city">童话之旅</div>
+              </div>
+              <div class="template-card">
+                <div class="template-name">大理</div>
+                <div class="template-city">风花雪月</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Design B: 分区明确 -->
+      <div class="design-card">
+        <div class="design-header">
+          <span class="design-title">方案 B · 分区明确</span>
+          <span class="badge badge-b">清晰</span>
+        </div>
+        <div class="phone-frame design-b">
+          <div class="top-bar">
+            <span class="logo-text">行迹</span>
+            <div class="quick-actions">
+              <button class="action-btn ai">✨ AI规划</button>
+              <button class="action-btn new">➕ 新建</button>
+            </div>
+          </div>
+
+          <!-- 空状态 Hero 卡片 -->
+          <div class="empty-hero">
+            <div class="hero-icon">️</div>
+            <div class="hero-title">开始你的第一次旅行</div>
+            <div class="hero-desc">
+              还没有创建任何行程<br>
+              让 AI 帮你规划，或从模板开始探索
+            </div>
+            <div class="hero-actions">
+              <button class="hero-btn primary">AI 智能规划</button>
+              <button class="hero-btn secondary">浏览模板</button>
+            </div>
+          </div>
+
+          <!-- 热门目的地预览 -->
+          <div class="section">
+            <div class="section-header">
+              <span class="section-title">热门目的地</span>
+              <span class="section-badge">精选</span>
+            </div>
+            
+            <div class="trip-list">
+              <div class="trip-item">
+                <div class="trip-color" style="background: linear-gradient(180deg, #FF7A2E, #FF9A4D);"></div>
+                <div class="trip-info">
+                  <div class="trip-title">南京 · 金陵四日</div>
+                  <div class="trip-detail">4天3晚 · 20个地点</div>
+                </div>
+              </div>
+              <div class="trip-item">
+                <div class="trip-color" style="background: linear-gradient(180deg, #6B46C1, #FF5B5B);"></div>
+                <div class="trip-info">
+                  <div class="trip-title">哈尔滨 · 漠河寻北</div>
+                  <div class="trip-detail">7天6晚 · 32个地点</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Design C: 时间线风格 -->
+      <div class="design-card">
+        <div class="design-header">
+          <span class="design-title">方案 C · 时间线风格</span>
+          <span class="badge badge-c">创意</span>
+        </div>
+        <div class="phone-frame design-c">
+          <div class="nav-bar">
+            <span class="nav-title">行程时间线</span>
+            <button class="fab">+</button>
+          </div>
+
+          <!-- 空状态 Welcome 卡片 -->
+          <div class="welcome-card">
+            <div class="welcome-icon">🎉</div>
+            <div class="welcome-title">欢迎使用行迹</div>
+            <div class="welcome-desc">
+              记录每一次旅行的美好回忆<br>
+              从创建第一个行程开始吧
+            </div>
+            <div class="welcome-actions">
+              <button class="welcome-btn white">AI 帮我规划</button>
+              <button class="welcome-btn outline">手动创建</button>
+            </div>
+          </div>
+
+          <!-- 示例时间线（有行程时）-->
+          <div class="timeline">
+            <div class="timeline-item">
+              <div class="timeline-dot"></div>
+              <div class="timeline-content">
+                <div class="timeline-date">2026.03.15 - 03.18</div>
+                <div class="timeline-title">南京 · 金陵四日</div>
+                <div class="timeline-meta">4天3晚 · 即将出发</div>
+              </div>
+            </div>
+
+            <div class="timeline-item">
+              <div class="timeline-dot" style="background: var(--ink-3); box-shadow: 0 0 0 2px var(--ink-3);"></div>
+              <div class="timeline-content">
+                <div class="timeline-date">2026.02.20 - 02.26</div>
+                <div class="timeline-title">哈尔滨 · 漠河寻北</div>
+                <div class="timeline-meta">7天6晚 · 已完成</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="comparison-section">
+      <h2 class="comparison-title">空状态设计对比表</h2>
+      <table class="comparison-table">
+        <thead>
+          <tr>
+            <th>对比维度</th>
+            <th>方案 A</th>
+            <th>方案 B</th>
+            <th>方案 C</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>快捷操作位置</strong></td>
+            <td>页头下方独立栏（✅ 已修正）</td>
+            <td>顶部导航栏右侧</td>
+            <td>右下角 FAB 浮动按钮</td>
+          </tr>
+          <tr>
+            <td><strong>空状态视觉重心</strong></td>
+            <td>居中图标 + 文案</td>
+            <td>大尺寸 Hero 卡片</td>
+            <td>渐变色 Welcome 卡片</td>
+          </tr>
+          <tr>
+            <td><strong>引导按钮样式</strong></td>
+            <td>两个等宽按钮并排</td>
+            <td>主按钮高亮 + 次按钮边框</td>
+            <td>白色实心 + 描边轮廓</td>
+          </tr>
+          <tr>
+            <td><strong>模板展示方式</strong></td>
+            <td>空状态下方 2×2 网格</td>
+            <td>独立分区列表展示</td>
+            <td>无（需点击按钮跳转）</td>
+          </tr>
+          <tr>
+            <td><strong>首屏信息密度</strong></td>
+            <td><span class="highlight">最高</span>（按钮+空状态+模板）</td>
+            <td>中等（Hero 卡片占比较大）</td>
+            <td>较低（Welcome 卡片为主）</td>
+          </tr>
+          <tr>
+            <td><strong>新用户友好度</strong></td>
+            <td><span class="highlight">高</span>（直接看到模板）</td>
+            <td><span class="highlight">高</span>（强引导文案）</td>
+            <td>中（需主动点击）</td>
+          </tr>
+          <tr>
+            <td><strong>老用户效率</strong></td>
+            <td><span class="highlight">高</span>（按钮固定可见）</td>
+            <td><span class="highlight">高</span>（按钮固定可见）</td>
+            <td>中（FAB 需滚动查找）</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</body>
+</html>

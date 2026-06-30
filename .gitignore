@@ -6,7 +6,7 @@ node_modules/
 .DS_Store
 .swc
 *.local
-.superpowers
+
 
 # Cloud functions
 cloudfunctions/**/node_modules/

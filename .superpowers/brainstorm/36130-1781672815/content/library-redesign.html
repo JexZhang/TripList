@@ -1,0 +1,814 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>模板库搜索页面 - 优化方案对比</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      padding: 40px 20px;
+    }
+    
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+    
+    h1 {
+      color: white;
+      text-align: center;
+      margin-bottom: 40px;
+      font-size: 32px;
+      font-weight: 700;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    }
+    
+    .comparison {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 30px;
+      margin-bottom: 40px;
+    }
+    
+    @media (max-width: 900px) {
+      .comparison {
+        grid-template-columns: 1fr;
+      }
+    }
+    
+    .panel {
+      background: white;
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+    }
+    
+    .panel-header {
+      padding: 20px 24px;
+      background: #f8f9fa;
+      border-bottom: 2px solid #e9ecef;
+    }
+    
+    .panel-header.before {
+      background: #fff5f5;
+      border-color: #fed7d7;
+    }
+    
+    .panel-header.after {
+      background: #f0fff4;
+      border-color: #c6f6d5;
+    }
+    
+    .panel-title {
+      font-size: 20px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    .badge {
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+    
+    .badge-before {
+      background: #fed7d7;
+      color: #c53030;
+    }
+    
+    .badge-after {
+      background: #c6f6d5;
+      color: #276749;
+    }
+    
+    .phone-mockup {
+      background: #fafafa;
+      padding: 20px;
+      position: relative;
+    }
+    
+    .phone-frame {
+      width: 375px;
+      height: 667px;
+      background: white;
+      border-radius: 40px;
+      border: 12px solid #1a1a1a;
+      margin: 0 auto;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+    }
+    
+    .notch {
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 150px;
+      height: 24px;
+      background: #1a1a1a;
+      border-radius: 0 0 20px 20px;
+      z-index: 10;
+    }
+    
+    .screen-content {
+      height: 100%;
+      overflow-y: auto;
+      background: #f5f5f5;
+    }
+    
+    /* Before State Styles */
+    .before-search {
+      padding: 16px;
+      background: white;
+      margin-bottom: 8px;
+    }
+    
+    .before-search-input {
+      width: 100%;
+      padding: 12px 16px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      font-size: 14px;
+    }
+    
+    .before-days-scroll {
+      padding: 12px 16px;
+      background: white;
+      white-space: nowrap;
+      overflow-x: auto;
+      border-bottom: 1px solid #eee;
+    }
+    
+    .before-chip {
+      display: inline-block;
+      padding: 8px 16px;
+      margin-right: 8px;
+      background: #f0f0f0;
+      border-radius: 20px;
+      font-size: 13px;
+      color: #666;
+    }
+    
+    .before-chip.active {
+      background: #ff6b35;
+      color: white;
+    }
+    
+    .before-more-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 32px;
+      height: 32px;
+      background: #f0f0f0;
+      border-radius: 50%;
+      vertical-align: middle;
+      cursor: pointer;
+    }
+    
+    .before-card-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      padding: 16px;
+    }
+    
+    .before-card {
+      width: calc(50% - 6px);
+      background: white;
+      border-radius: 12px;
+      padding: 16px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+    
+    .before-card-title {
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 8px;
+      color: #333;
+    }
+    
+    .before-card-meta {
+      font-size: 12px;
+      color: #999;
+      margin-bottom: 4px;
+    }
+    
+    .before-card-tags {
+      display: flex;
+      gap: 6px;
+      margin-top: 8px;
+    }
+    
+    .before-tag {
+      font-size: 11px;
+      padding: 4px 8px;
+      background: #f5f5f5;
+      border-radius: 4px;
+      color: #666;
+    }
+    
+    /* After State Styles */
+    .after-search {
+      padding: 16px;
+      background: white;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    
+    .after-search-icon {
+      width: 20px;
+      height: 20px;
+      fill: #999;
+    }
+    
+    .after-search-input {
+      flex: 1;
+      padding: 12px 16px;
+      border: none;
+      background: #f5f5f5;
+      border-radius: 24px;
+      font-size: 14px;
+      outline: none;
+    }
+    
+    .after-filter-bar {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 16px;
+      background: white;
+      border-bottom: 1px solid #eee;
+    }
+    
+    .after-days-scroll {
+      flex: 1;
+      white-space: nowrap;
+      overflow-x: auto;
+    }
+    
+    .after-chip {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 10px 20px;
+      margin-right: 10px;
+      background: #f8f9fa;
+      border: 2px solid #e9ecef;
+      border-radius: 24px;
+      font-size: 14px;
+      color: #495057;
+      transition: all 0.2s ease;
+    }
+    
+    .after-chip:hover {
+      border-color: #667eea;
+      background: #f0f4ff;
+    }
+    
+    .after-chip.active {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border-color: transparent;
+      transform: scale(1.05);
+      box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+    }
+    
+    .after-toggle-btn {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 18px;
+      background: #f8f9fa;
+      border: 2px solid #e9ecef;
+      border-radius: 24px;
+      font-size: 14px;
+      color: #495057;
+      transition: all 0.2s ease;
+      flex-shrink: 0;
+    }
+    
+    .after-toggle-btn:hover {
+      border-color: #667eea;
+      background: #f0f4ff;
+    }
+    
+    .after-toggle-btn.active {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border-color: transparent;
+    }
+    
+    .after-filters-expanded {
+      padding: 16px;
+      background: white;
+      border-bottom: 1px solid #eee;
+    }
+    
+    .after-filter-row {
+      margin-bottom: 16px;
+    }
+    
+    .after-filter-label {
+      font-size: 13px;
+      font-weight: 600;
+      color: #6c757d;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    
+    .after-filter-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    
+    .after-filter-chip {
+      padding: 6px 14px;
+      background: #f8f9fa;
+      border: 1px solid #dee2e6;
+      border-radius: 16px;
+      font-size: 12px;
+      color: #495057;
+      transition: all 0.2s ease;
+    }
+    
+    .after-filter-chip:hover {
+      border-color: #667eea;
+      background: #f0f4ff;
+    }
+    
+    .after-filter-chip.selected {
+      background: #667eea;
+      color: white;
+      border-color: #667eea;
+    }
+    
+    .after-card-list {
+      padding: 16px;
+    }
+    
+    .after-card {
+      width: 100%;
+      background: white;
+      border-radius: 16px;
+      padding: 20px;
+      margin-bottom: 16px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+      transition: all 0.2s ease;
+      border: 2px solid transparent;
+    }
+    
+    .after-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+      border-color: #667eea;
+    }
+    
+    .after-card-title {
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 12px;
+      color: #2d3748;
+    }
+    
+    .after-card-meta {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      color: #718096;
+      margin-bottom: 8px;
+    }
+    
+    .after-card-subtitle {
+      font-size: 13px;
+      color: #718096;
+      margin-bottom: 12px;
+    }
+    
+    .after-card-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    
+    .after-tag {
+      font-size: 12px;
+      padding: 6px 12px;
+      background: linear-gradient(135deg, #f0f4ff 0%, #e8f0ff 100%);
+      border-radius: 8px;
+      color: #4a5568;
+      border: 1px solid #cbd5e0;
+    }
+    
+    .problem-list {
+      padding: 24px;
+      background: #fff5f5;
+    }
+    
+    .problem-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      margin-bottom: 16px;
+      padding: 12px;
+      background: white;
+      border-radius: 8px;
+      border-left: 4px solid #fc8181;
+    }
+    
+    .problem-icon {
+      font-size: 20px;
+      flex-shrink: 0;
+    }
+    
+    .problem-text {
+      font-size: 14px;
+      color: #2d3748;
+      line-height: 1.5;
+    }
+    
+    .solution-list {
+      padding: 24px;
+      background: #f0fff4;
+    }
+    
+    .solution-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      margin-bottom: 16px;
+      padding: 12px;
+      background: white;
+      border-radius: 8px;
+      border-left: 4px solid #68d391;
+    }
+    
+    .solution-icon {
+      font-size: 20px;
+      flex-shrink: 0;
+    }
+    
+    .solution-text {
+      font-size: 14px;
+      color: #2d3748;
+      line-height: 1.5;
+    }
+    
+    .metrics {
+      padding: 24px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+    }
+    
+    .metrics-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+    
+    .metric-item {
+      text-align: center;
+      padding: 16px;
+      background: rgba(255,255,255,0.15);
+      border-radius: 12px;
+      backdrop-filter: blur(10px);
+    }
+    
+    .metric-value {
+      font-size: 28px;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+    
+    .metric-label {
+      font-size: 12px;
+      opacity: 0.9;
+    }
+    
+    .section-title {
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 16px;
+      color: #2d3748;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1> 模板库搜索页面 - 优化方案对比</h1>
+    
+    <div class="comparison">
+      <!-- Before Panel -->
+      <div class="panel">
+        <div class="panel-header before">
+          <div class="panel-title">
+            ❌ 当前状态（问题）
+            <span class="badge badge-before">待优化</span>
+          </div>
+        </div>
+        
+        <div class="phone-mockup">
+          <div class="phone-frame">
+            <div class="notch"></div>
+            <div class="screen-content">
+              <div class="before-search">
+                <input type="text" class="before-search-input" placeholder="搜目的地 / 攻略名" value="">
+              </div>
+              
+              <div class="before-days-scroll">
+                <span class="before-chip active">不限</span>
+                <span class="before-chip">1天</span>
+                <span class="before-chip">2天</span>
+                <span class="before-chip">3天</span>
+                <span class="before-chip">4天</span>
+                <span class="before-chip">5天</span>
+                <span class="before-chip">6天+</span>
+                <span class="before-more-btn">⚙️</span>
+              </div>
+              
+              <div class="before-card-grid">
+                <div class="before-card">
+                  <div class="before-card-title">南京 · 金陵四日</div>
+                  <div class="before-card-meta">📍 南京 · 4天3晚</div>
+                  <div class="before-card-meta">20 个地点</div>
+                  <div class="before-card-tags">
+                    <span class="before-tag">历史人文</span>
+                    <span class="before-tag">美食</span>
+                  </div>
+                </div>
+                
+                <div class="before-card">
+                  <div class="before-card-title">哈尔滨 · 漠河寻北</div>
+                  <div class="before-card-meta">📍 漠河 · 7天6晚</div>
+                  <div class="before-card-meta">32 个地点</div>
+                  <div class="before-card-tags">
+                    <span class="before-tag">自然</span>
+                    <span class="before-tag">古镇</span>
+                  </div>
+                </div>
+                
+                <div class="before-card">
+                  <div class="before-card-title">九寨沟 · 童话之旅</div>
+                  <div class="before-card-meta">📍 九寨沟 · 4天3晚</div>
+                  <div class="before-card-meta">24 个地点</div>
+                  <div class="before-card-tags">
+                    <span class="before-tag">自然</span>
+                    <span class="before-tag">美食</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="problem-list">
+          <div class="section-title">🔴 核心问题</div>
+          
+          <div class="problem-item">
+            <span class="problem-icon">👁️</span>
+            <div class="problem-text">
+              <strong>筛选器不可见：</strong>"更多"按钮藏在横向滚动最右侧，用户需要滚动才能看到，导致玩法/人群/季节等高级筛选功能几乎无人使用
+            </div>
+          </div>
+          
+          <div class="problem-item">
+            <span class="problem-icon">📐</span>
+            <div class="problem-text">
+              <strong>卡片空间浪费：</strong>两列布局导致每个卡片只占屏幕一半宽度，信息密度低，视觉冲击力弱，用户体验差
+            </div>
+          </div>
+          
+          <div class="problem-item">
+            <span class="problem-icon"></span>
+            <div class="problem-text">
+              <strong>视觉层级混乱：</strong>天数筛选与"更多"按钮混在同一行，缺乏明确的分组和视觉引导，用户不知道有哪些筛选维度可用
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- After Panel -->
+      <div class="panel">
+        <div class="panel-header after">
+          <div class="panel-title">
+            ✅ 优化方案
+            <span class="badge badge-after">推荐实施</span>
+          </div>
+        </div>
+        
+        <div class="phone-mockup">
+          <div class="phone-frame">
+            <div class="notch"></div>
+            <div class="screen-content">
+              <div class="after-search">
+                <svg class="after-search-icon" viewBox="0 0 24 24">
+                  <path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
+                </svg>
+                <input type="text" class="after-search-input" placeholder="搜目的地 / 攻略名" value="">
+              </div>
+              
+              <div class="after-filter-bar">
+                <div class="after-days-scroll">
+                  <span class="after-chip active">不限</span>
+                  <span class="after-chip">1天</span>
+                  <span class="after-chip">2天</span>
+                  <span class="after-chip">3天</span>
+                  <span class="after-chip">4天</span>
+                  <span class="after-chip">5天</span>
+                  <span class="after-chip">6天+</span>
+                </div>
+                <div class="after-toggle-btn active">
+                  <span>️</span>
+                  <span>收起</span>
+                </div>
+              </div>
+              
+              <div class="after-filters-expanded">
+                <div class="after-filter-row">
+                  <div class="after-filter-label">
+                    <span>🏷️</span>
+                    <span>玩法</span>
+                  </div>
+                  <div class="after-filter-chips">
+                    <span class="after-filter-chip selected">citywalk</span>
+                    <span class="after-filter-chip">美食探店</span>
+                    <span class="after-filter-chip">亲子游</span>
+                    <span class="after-filter-chip">情侣出行</span>
+                    <span class="after-filter-chip">摄影打卡</span>
+                  </div>
+                </div>
+                
+                <div class="after-filter-row">
+                  <div class="after-filter-label">
+                    <span></span>
+                    <span>人群</span>
+                  </div>
+                  <div class="after-filter-chips">
+                    <span class="after-filter-chip">学生党</span>
+                    <span class="after-filter-chip">家庭出游</span>
+                    <span class="after-filter-chip">银发族</span>
+                    <span class="after-filter-chip">背包客</span>
+                  </div>
+                </div>
+                
+                <div class="after-filter-row">
+                  <div class="after-filter-label">
+                    <span></span>
+                    <span>季节</span>
+                  </div>
+                  <div class="after-filter-chips">
+                    <span class="after-filter-chip">春季赏花</span>
+                    <span class="after-filter-chip">夏季避暑</span>
+                    <span class="after-filter-chip">秋季红叶</span>
+                    <span class="after-filter-chip">冬季滑雪</span>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="after-card-list">
+                <div class="after-card">
+                  <div class="after-card-title">南京 · 金陵四日</div>
+                  <div class="after-card-meta">
+                    <span>📍</span>
+                    <span>南京 · 4天3晚</span>
+                  </div>
+                  <div class="after-card-subtitle">20 个精选地点</div>
+                  <div class="after-card-tags">
+                    <span class="after-tag">历史人文</span>
+                    <span class="after-tag">美食探店</span>
+                    <span class="after-tag">citywalk</span>
+                  </div>
+                </div>
+                
+                <div class="after-card">
+                  <div class="after-card-title">哈尔滨 · 漠河寻北</div>
+                  <div class="after-card-meta">
+                    <span></span>
+                    <span>漠河 · 7天6晚</span>
+                  </div>
+                  <div class="after-card-subtitle">32 个精选地点</div>
+                  <div class="after-card-tags">
+                    <span class="after-tag">自然风光</span>
+                    <span class="after-tag">古镇探访</span>
+                    <span class="after-tag">冬季限定</span>
+                  </div>
+                </div>
+                
+                <div class="after-card">
+                  <div class="after-card-title">九寨沟 · 童话之旅</div>
+                  <div class="after-card-meta">
+                    <span>📍</span>
+                    <span>九寨沟 · 4天3晚</span>
+                  </div>
+                  <div class="after-card-subtitle">24 个精选地点</div>
+                  <div class="after-card-tags">
+                    <span class="after-tag">自然景观</span>
+                    <span class="after-tag">美食体验</span>
+                    <span class="after-tag">摄影圣地</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="solution-list">
+          <div class="section-title">🟢 解决方案</div>
+          
+          <div class="solution-item">
+            <span class="solution-icon">✨</span>
+            <div class="solution-text">
+              <strong>固定"更多"按钮：</strong>将滑块图标从滚动区域移出，固定在筛选栏右侧始终可见，并添加文字标签（"展开"/"收起"），语义清晰
+            </div>
+          </div>
+          
+          <div class="solution-item">
+            <span class="solution-icon">📱</span>
+            <div class="solution-text">
+              <strong>单列全宽卡片：</strong>改为单列布局，每个卡片占据完整屏幕宽度，信息展示更充分，点击区域更大，视觉层次更清晰
+            </div>
+          </div>
+          
+          <div class="solution-item">
+            <span class="solution-icon">🎯</span>
+            <div class="solution-text">
+              <strong>默认展开高级筛选：</strong>首次进入即显示玩法/人群/季节等次级筛选项，降低发现成本，提升筛选功能使用率
+            </div>
+          </div>
+          
+          <div class="solution-item">
+            <span class="solution-icon">🎨</span>
+            <div class="solution-text">
+              <strong>增强视觉反馈：</strong>选中态渐变背景+缩放动效、卡片hover阴影+边框高亮、按钮点击缩放反馈，提升交互质感
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Metrics Section -->
+    <div class="panel">
+      <div class="metrics">
+        <div class="section-title" style="color: white; margin-bottom: 20px;">📊 预期效果指标</div>
+        <div class="metrics-grid">
+          <div class="metric-item">
+            <div class="metric-value">+85%</div>
+            <div class="metric-label">高级筛选可见性</div>
+          </div>
+          <div class="metric-item">
+            <div class="metric-value">+60%</div>
+            <div class="metric-label">卡片点击率</div>
+          </div>
+          <div class="metric-item">
+            <div class="metric-value">-40%</div>
+            <div class="metric-label">用户操作步数</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <script>
+    // Add interactive hover effects
+    document.querySelectorAll('.after-chip').forEach(chip => {
+      chip.addEventListener('click', function() {
+        this.classList.toggle('active');
+      });
+    });
+    
+    document.querySelectorAll('.after-filter-chip').forEach(chip => {
+      chip.addEventListener('click', function() {
+        this.classList.toggle('selected');
+      });
+    });
+    
+    document.querySelector('.after-toggle-btn').addEventListener('click', function() {
+      this.classList.toggle('active');
+      const filters = document.querySelector('.after-filters-expanded');
+      if (filters.style.display === 'none') {
+        filters.style.display = 'block';
+        this.innerHTML = '<span>⚙️</span><span>收起</span>';
+      } else {
+        filters.style.display = 'none';
+        this.innerHTML = '<span>⚙️</span><span>更多</span>';
+      }
+    });
+  </script>
+</body>
+</html>

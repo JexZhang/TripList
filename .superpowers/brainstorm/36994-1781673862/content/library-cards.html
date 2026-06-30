@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>模板库卡片方案对比</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700;900&family=JetBrains+Mono:wght@400;500&display=swap');
+
+    :root {
+      --bg: #FFF4E6;
+      --bg-deep: #F4E6CE;
+      --surface: #FFFFFF;
+      --surface-2: #FFF9F1;
+      --ink: #2B1A10;
+      --ink-2: #5A4338;
+      --ink-3: #9B8378;
+      --line: rgba(43, 26, 16, 0.08);
+      --line-2: rgba(43, 26, 16, 0.14);
+      --accent: #FF7A2E;
+      --accent-2: #FF9A4D;
+      --accent-soft: #FFD3A8;
+      --accent-bg: #FFEBD6;
+      --coral: #FF5B5B;
+      --leaf: #4FB286;
+      --sun: #FFC247;
+      --plum: #6B46C1;
+      --font-display: 'Noto Serif SC', 'Songti SC', serif;
+      --font-body: 'PingFang SC', -apple-system, sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+      --shadow-sm: 0 2px 7px rgba(255, 122, 46, 0.10);
+      --shadow-md: 0 6px 16px rgba(58, 36, 25, 0.10);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: var(--font-body);
+      background: #2B1A10;
+      color: var(--ink);
+      min-height: 100vh;
+      padding: 32px 0;
+    }
+
+    .page-title {
+      text-align: center;
+      color: #FFF4E6;
+      font-family: var(--font-display);
+      font-size: 28px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+    .page-sub {
+      text-align: center;
+      color: rgba(255, 244, 230, 0.5);
+      font-size: 14px;
+      margin-bottom: 36px;
+      font-family: var(--font-mono);
+    }
+
+    .plans {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 28px;
+      max-width: 820px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+
+    .plan {
+      background: var(--bg);
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+    }
+
+    .plan-label {
+      padding: 16px 20px 8px;
+      display: flex;
+      align-items: baseline;
+      gap: 8px;
+    }
+    .plan-label h3 {
+      font-family: var(--font-display);
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--ink);
+    }
+    .plan-label span {
+      font-size: 12px;
+      color: var(--ink-3);
+      font-family: var(--font-mono);
+    }
+
+    .plan-desc {
+      padding: 0 20px 12px;
+      font-size: 12px;
+      color: var(--ink-3);
+      line-height: 1.5;
+    }
+
+    /* === Mock phone frame === */
+    .phone {
+      background: var(--bg);
+      margin: 0 8px 8px;
+      border-radius: 16px;
+      padding: 0 0 24px;
+      overflow: hidden;
+    }
+
+    /* === Shared filter bar mock === */
+    .mock-filter {
+      padding: 12px 16px;
+      display: flex;
+      gap: 8px;
+      overflow: hidden;
+    }
+    .mock-chip {
+      padding: 5px 14px;
+      border-radius: 999px;
+      font-size: 12px;
+      white-space: nowrap;
+      border: 1px solid var(--line);
+      color: var(--ink-2);
+      background: var(--surface);
+    }
+    .mock-chip.on {
+      background: var(--accent);
+      color: #fff;
+      border-color: var(--accent);
+    }
+
+    /* === Card grid area === */
+    .mock-cards {
+      padding: 8px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    /* ============================================
+       PLAN A — 侧笔 (Accent Edge)
+       左侧渐变色条 + 衬线标题 + mono 元数据
+    ============================================ */
+    .pa-card {
+      display: flex;
+      background: var(--surface);
+      border-radius: 14px;
+      box-shadow: var(--shadow-md);
+      overflow: hidden;
+      position: relative;
+      transition: transform 0.2s ease;
+    }
+    .pa-card:hover { transform: translateY(-2px); }
+
+    .pa-edge {
+      width: 5px;
+      flex-shrink: 0;
+      border-radius: 14px 0 0 14px;
+    }
+    .pa-edge.g1 { background: linear-gradient(180deg, #FF7A2E, #FF9A4D); }
+    .pa-edge.g2 { background: linear-gradient(180deg, #6B46C1, #FF5B5B); }
+    .pa-edge.g3 { background: linear-gradient(180deg, #4FB286, #FFC247); }
+
+    .pa-body {
+      flex: 1;
+      padding: 14px 16px;
+    }
+
+    .pa-meta {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--ink-3);
+      letter-spacing: 0.5px;
+      margin-bottom: 6px;
+    }
+
+    .pa-name {
+      font-family: var(--font-display);
+      font-size: 17px;
+      font-weight: 700;
+      color: var(--ink);
+      line-height: 1.3;
+      margin-bottom: 10px;
+    }
+
+    .pa-foot {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .pa-spots {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--ink-3);
+    }
+
+    .pa-tags {
+      display: flex;
+      gap: 6px;
+    }
+    .pa-tag {
+      font-size: 10px;
+      padding: 3px 10px;
+      border-radius: 999px;
+      background: var(--accent-bg);
+      color: var(--ink-2);
+      border: 1px solid var(--accent-soft);
+    }
+
+    /* ============================================
+       PLAN B — 墨条 (Ink Bar Top)
+       顶部窄色带 + 编号感 + 信息紧凑排布
+    ============================================ */
+    .pb-card {
+      background: var(--surface);
+      border-radius: 14px;
+      box-shadow: var(--shadow-md);
+      overflow: hidden;
+      position: relative;
+      transition: transform 0.2s ease;
+    }
+    .pb-card:hover { transform: translateY(-2px); }
+
+    .pb-ink {
+      height: 3px;
+      width: 100%;
+    }
+    .pb-ink.g1 { background: linear-gradient(90deg, #FF7A2E, #FF9A4D, transparent); }
+    .pb-ink.g2 { background: linear-gradient(90deg, #6B46C1, #FF5B5B, transparent); }
+    .pb-ink.g3 { background: linear-gradient(90deg, #4FB286, #FFC247, transparent); }
+
+    .pb-body {
+      padding: 14px 16px;
+    }
+
+    .pb-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 10px;
+    }
+
+    .pb-name {
+      font-family: var(--font-display);
+      font-size: 17px;
+      font-weight: 700;
+      color: var(--ink);
+      line-height: 1.3;
+      flex: 1;
+    }
+
+    .pb-days {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--accent);
+      background: var(--accent-bg);
+      padding: 3px 10px;
+      border-radius: 999px;
+      white-space: nowrap;
+      margin-left: 12px;
+      flex-shrink: 0;
+      font-weight: 500;
+    }
+
+    .pb-info {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--ink-3);
+      letter-spacing: 0.5px;
+    }
+    .pb-info-dot {
+      width: 3px;
+      height: 3px;
+      border-radius: 50%;
+      background: var(--line-2);
+    }
+
+    .pb-tags {
+      display: flex;
+      gap: 6px;
+      margin-top: 10px;
+      flex-wrap: wrap;
+    }
+    .pb-tag {
+      font-size: 10px;
+      padding: 3px 10px;
+      border-radius: 6px;
+      background: var(--surface-2);
+      color: var(--ink-3);
+      border: 1px solid var(--line);
+    }
+
+    /* ============================================
+       PLAN C — 印签 (Stamp Seal)
+       右上角天数印章 + 底部宽色带 + 舒展布局
+    ============================================ */
+    .pc-card {
+      background: var(--surface);
+      border-radius: 14px;
+      box-shadow: var(--shadow-md);
+      overflow: hidden;
+      position: relative;
+      transition: transform 0.2s ease;
+    }
+    .pc-card:hover { transform: translateY(-2px); }
+
+    .pc-body {
+      padding: 16px 16px 12px;
+    }
+
+    .pc-stamp {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      border: 2px solid;
+      transform: rotate(-8deg);
+    }
+    .pc-stamp.s1 { border-color: #FF7A2E; color: #FF7A2E; }
+    .pc-stamp.s2 { border-color: #6B46C1; color: #6B46C1; }
+    .pc-stamp.s3 { border-color: #4FB286; color: #4FB286; }
+    .pc-stamp-v {
+      font-family: var(--font-mono);
+      font-size: 13px;
+      font-weight: 700;
+      line-height: 1;
+    }
+    .pc-stamp-u {
+      font-family: var(--font-mono);
+      font-size: 7px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      opacity: 0.7;
+    }
+
+    .pc-name {
+      font-family: var(--font-display);
+      font-size: 17px;
+      font-weight: 700;
+      color: var(--ink);
+      line-height: 1.3;
+      margin-bottom: 8px;
+      padding-right: 48px;
+    }
+
+    .pc-city {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--ink-3);
+      letter-spacing: 0.5px;
+      margin-bottom: 12px;
+    }
+
+    .pc-tags {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+      margin-bottom: 12px;
+    }
+    .pc-tag {
+      font-size: 10px;
+      padding: 3px 10px;
+      border-radius: 999px;
+      background: var(--accent-bg);
+      color: var(--ink-2);
+    }
+
+    .pc-bar {
+      height: 4px;
+      border-radius: 0 0 14px 14px;
+    }
+    .pc-bar.g1 { background: linear-gradient(90deg, #FF7A2E, #FF9A4D); }
+    .pc-bar.g2 { background: linear-gradient(90deg, #6B46C1, #FF5B5B); }
+    .pc-bar.g3 { background: linear-gradient(90deg, #4FB286, #FFC247); }
+
+    .pc-bottom {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .pc-spots {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--ink-3);
+    }
+
+    /* === Responsive === */
+    @media (max-width: 700px) {
+      .plans { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<h1 class="page-title">模板库卡片 · 三种方案</h1>
+<p class="page-sub">library card design · 3 directions</p>
+
+<div class="plans">
+
+  <!-- ============ PLAN A ============ -->
+  <div class="plan">
+    <div class="plan-label">
+      <h3>A. 侧笔</h3>
+      <span>accent edge</span>
+    </div>
+    <p class="plan-desc">左侧渐变色条做视觉引导，类似首页 tegami 卡片的侧边条基因，但更克制。标题用衬线体，元数据用等宽体。标签贴底部右侧。</p>
+    <div class="phone">
+      <div class="mock-filter">
+        <div class="mock-chip on">不限</div>
+        <div class="mock-chip">1天</div>
+        <div class="mock-chip">2天</div>
+        <div class="mock-chip">3天</div>
+        <div class="mock-chip">4天</div>
+      </div>
+      <div class="mock-cards">
+        <div class="pa-card">
+          <div class="pa-edge g1"></div>
+          <div class="pa-body">
+            <div class="pa-meta">南京 · 4天3晚</div>
+            <div class="pa-name">金陵四日 · 六朝古都深度游</div>
+            <div class="pa-foot">
+              <span class="pa-spots">20 spots</span>
+              <div class="pa-tags">
+                <span class="pa-tag">历史人文</span>
+                <span class="pa-tag">美食</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="pa-card">
+          <div class="pa-edge g2"></div>
+          <div class="pa-body">
+            <div class="pa-meta">漠河 · 7天6晚</div>
+            <div class="pa-name">哈尔滨 · 漠河寻北之旅</div>
+            <div class="pa-foot">
+              <span class="pa-spots">32 spots</span>
+              <div class="pa-tags">
+                <span class="pa-tag">自然</span>
+                <span class="pa-tag">古镇</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="pa-card">
+          <div class="pa-edge g3"></div>
+          <div class="pa-body">
+            <div class="pa-meta">九寨沟 · 4天3晚</div>
+            <div class="pa-name">九寨沟 · 童话世界秘境</div>
+            <div class="pa-foot">
+              <span class="pa-spots">24 spots</span>
+              <div class="pa-tags">
+                <span class="pa-tag">自然</span>
+                <span class="pa-tag">美食</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ PLAN B ============ -->
+  <div class="plan">
+    <div class="plan-label">
+      <h3>B. 墨条</h3>
+      <span>ink bar top</span>
+    </div>
+    <p class="plan-desc">顶部渐变色带（3px），右侧天数胶囊。信息紧凑排布，标题和天数在同一行。更偏信息密度，适合快速扫描筛选。</p>
+    <div class="phone">
+      <div class="mock-filter">
+        <div class="mock-chip on">不限</div>
+        <div class="mock-chip">1天</div>
+        <div class="mock-chip">2天</div>
+        <div class="mock-chip">3天</div>
+        <div class="mock-chip">4天</div>
+      </div>
+      <div class="mock-cards">
+        <div class="pb-card">
+          <div class="pb-ink g1"></div>
+          <div class="pb-body">
+            <div class="pb-top">
+              <div class="pb-name">金陵四日 · 六朝古都深度游</div>
+              <div class="pb-days">4天3晚</div>
+            </div>
+            <div class="pb-info">
+              <span>南京</span>
+              <div class="pb-info-dot"></div>
+              <span>20 spots</span>
+            </div>
+            <div class="pb-tags">
+              <span class="pb-tag">历史人文</span>
+              <span class="pb-tag">美食</span>
+              <span class="pb-tag">citywalk</span>
+            </div>
+          </div>
+        </div>
+        <div class="pb-card">
+          <div class="pb-ink g2"></div>
+          <div class="pb-body">
+            <div class="pb-top">
+              <div class="pb-name">哈尔滨 · 漠河寻北之旅</div>
+              <div class="pb-days">7天6晚</div>
+            </div>
+            <div class="pb-info">
+              <span>漠河</span>
+              <div class="pb-info-dot"></div>
+              <span>32 spots</span>
+            </div>
+            <div class="pb-tags">
+              <span class="pb-tag">自然</span>
+              <span class="pb-tag">古镇</span>
+            </div>
+          </div>
+        </div>
+        <div class="pb-card">
+          <div class="pb-ink g3"></div>
+          <div class="pb-body">
+            <div class="pb-top">
+              <div class="pb-name">九寨沟 · 童话世界秘境</div>
+              <div class="pb-days">4天3晚</div>
+            </div>
+            <div class="pb-info">
+              <span>九寨沟</span>
+              <div class="pb-info-dot"></div>
+              <span>24 spots</span>
+            </div>
+            <div class="pb-tags">
+              <span class="pb-tag">自然</span>
+              <span class="pb-tag">美食</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ PLAN C ============ -->
+  <div class="plan">
+    <div class="plan-label">
+      <h3>C. 印签</h3>
+      <span>stamp seal</span>
+    </div>
+    <p class="plan-desc">右上角圆形天数印章（致敬护照主题的印章基因），底部宽色带。布局最舒展，视觉记忆点强。适合品牌调性但信息密度稍低。</p>
+    <div class="phone">
+      <div class="mock-filter">
+        <div class="mock-chip on">不限</div>
+        <div class="mock-chip">1天</div>
+        <div class="mock-chip">2天</div>
+        <div class="mock-chip">3天</div>
+        <div class="mock-chip">4天</div>
+      </div>
+      <div class="mock-cards">
+        <div class="pc-card">
+          <div class="pc-body">
+            <div class="pc-stamp s1">
+              <span class="pc-stamp-v">4</span>
+              <span class="pc-stamp-u">days</span>
+            </div>
+            <div class="pc-name">金陵四日 · 六朝古都深度游</div>
+            <div class="pc-city">南京 · 20 spots</div>
+            <div class="pc-bottom">
+              <div class="pc-tags">
+                <span class="pc-tag">历史人文</span>
+                <span class="pc-tag">美食</span>
+              </div>
+            </div>
+          </div>
+          <div class="pc-bar g1"></div>
+        </div>
+        <div class="pc-card">
+          <div class="pc-body">
+            <div class="pc-stamp s2">
+              <span class="pc-stamp-v">7</span>
+              <span class="pc-stamp-u">days</span>
+            </div>
+            <div class="pc-name">哈尔滨 · 漠河寻北之旅</div>
+            <div class="pc-city">漠河 · 32 spots</div>
+            <div class="pc-bottom">
+              <div class="pc-tags">
+                <span class="pc-tag">自然</span>
+                <span class="pc-tag">古镇</span>
+              </div>
+            </div>
+          </div>
+          <div class="pc-bar g2"></div>
+        </div>
+        <div class="pc-card">
+          <div class="pc-body">
+            <div class="pc-stamp s3">
+              <span class="pc-stamp-v">4</span>
+              <span class="pc-stamp-u">days</span>
+            </div>
+            <div class="pc-name">九寨沟 · 童话世界秘境</div>
+            <div class="pc-city">九寨沟 · 24 spots</div>
+            <div class="pc-bottom">
+              <div class="pc-tags">
+                <span class="pc-tag">自然</span>
+                <span class="pc-tag">美食</span>
+              </div>
+            </div>
+          </div>
+          <div class="pc-bar g3"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ Comparison note ============ -->
+  <div class="plan" style="background: transparent; box-shadow: none;">
+    <div style="padding: 20px; color: rgba(255,244,230,0.7); font-size: 13px; line-height: 1.8;">
+      <h3 style="color: #FF9A4D; font-family: var(--font-display); margin-bottom: 12px;">设计说明</h3>
+      <p><strong style="color:#FF7A2E;">共同基因：</strong></p>
+      <ul style="padding-left: 16px; margin: 8px 0 16px;">
+        <li>衬线体标题 (Noto Serif SC)</li>
+        <li>等宽体元数据 (JetBrains Mono)</li>
+        <li>渐变色系取自 tegami 配色</li>
+        <li>warm surface 白卡 + soft shadow</li>
+        <li>圆角药丸标签</li>
+      </ul>
+      <p><strong style="color:#FF7A2E;">与首页的差异：</strong></p>
+      <ul style="padding-left: 16px; margin: 8px 0 16px;">
+        <li>无微旋转（列表页需整齐）</li>
+        <li>更紧凑间距（搜索场景）</li>
+        <li>色彩更克制（不抢筛选区注意力）</li>
+        <li>独立的信息架构（城市+天数 vs 日期+人数）</li>
+      </ul>
+    </div>
+  </div>
+
+</div>
+
+</body>
+</html>

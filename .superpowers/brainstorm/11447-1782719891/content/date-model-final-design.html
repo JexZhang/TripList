@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>日期调整设计</title>
+  <style>
+    body {
+      margin: 0;
+      background: #E8E0C0;
+      color: #111;
+      font-family: Helvetica, Arial, sans-serif;
+    }
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background-image: radial-gradient(rgba(0,0,0,.12) 1px, transparent 1px);
+      background-size: 8px 8px;
+      opacity: .18;
+    }
+    .page {
+      position: relative;
+      padding: 32px;
+      max-width: 1120px;
+      margin: 0 auto;
+    }
+    h1 {
+      font-family: Times New Roman, Times, serif;
+      font-size: 48px;
+      line-height: .96;
+      margin: 0 0 10px;
+      text-shadow: 3px 0 #FF006E, -3px 0 #00FFCC;
+    }
+    .intro {
+      font-family: Courier New, Courier, monospace;
+      font-size: 14px;
+      line-height: 1.6;
+      max-width: 760px;
+      margin-bottom: 26px;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      align-items: start;
+    }
+    .phone {
+      background: #EDE4CF;
+      border: 2px solid #111;
+      border-radius: 30px;
+      padding: 18px;
+      min-height: 620px;
+      box-shadow: 8px 8px 0 rgba(17,17,17,.22);
+      position: relative;
+      overflow: hidden;
+    }
+    .phone:nth-child(2) {
+      transform: rotate(1.5deg);
+    }
+    .phone:nth-child(3) {
+      transform: rotate(-1.4deg);
+    }
+    .screen-title {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-family: Courier New, Courier, monospace;
+      font-size: 13px;
+      border-bottom: 2px solid #111;
+      padding-bottom: 10px;
+      margin-bottom: 18px;
+    }
+    .trip-title {
+      font-family: Times New Roman, Times, serif;
+      font-size: 30px;
+      font-weight: 700;
+      line-height: 1.05;
+      margin-bottom: 12px;
+    }
+    .date-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      border: 2px solid #111;
+      background: #E8E0C0;
+      padding: 9px 12px;
+      border-radius: 0;
+      font-family: Courier New, Courier, monospace;
+      font-size: 13px;
+      box-shadow: 4px 4px 0 #FF006E;
+      transform: rotate(-1.5deg);
+    }
+    .date-chip button,
+    .plain-button {
+      border: 2px solid #111;
+      background: #fff;
+      color: #111;
+      font: inherit;
+      padding: 5px 8px;
+    }
+    .meta-row {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      flex-wrap: wrap;
+      margin-top: 12px;
+      font-family: Courier New, Courier, monospace;
+      font-size: 13px;
+    }
+    .tabs {
+      display: flex;
+      gap: 9px;
+      margin-top: 24px;
+      overflow: hidden;
+    }
+    .tab {
+      min-width: 72px;
+      border: 2px solid #111;
+      background: #fff;
+      padding: 10px;
+      font-family: Courier New, Courier, monospace;
+      font-size: 12px;
+      text-align: left;
+    }
+    .tab.active {
+      background: #111;
+      color: #EDE4CF;
+    }
+    .sheet {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: #EDE4CF;
+      border-top: 3px solid #111;
+      padding: 18px;
+      box-shadow: 0 -10px 0 rgba(255,0,110,.24);
+    }
+    .sheet h2 {
+      font-family: Times New Roman, Times, serif;
+      font-size: 28px;
+      margin: 0 0 12px;
+    }
+    .field {
+      border: 2px solid #111;
+      background: #fff;
+      padding: 12px;
+      margin: 10px 0;
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      font-family: Courier New, Courier, monospace;
+      font-size: 13px;
+    }
+    .preview {
+      background: #E8E0C0;
+      border: 1px dashed #111;
+      padding: 10px;
+      font-size: 13px;
+      line-height: 1.5;
+      margin: 10px 0 14px;
+    }
+    .actions {
+      display: flex;
+      gap: 10px;
+    }
+    .actions button {
+      flex: 1;
+      border: 2px solid #111;
+      font-size: 15px;
+      padding: 11px 10px;
+      background: #fff;
+    }
+    .actions .primary {
+      background: #111;
+      color: #EDE4CF;
+    }
+    .order-list {
+      display: grid;
+      gap: 10px;
+      margin-top: 12px;
+    }
+    .order-row {
+      display: grid;
+      grid-template-columns: 86px 1fr 56px;
+      gap: 10px;
+      align-items: stretch;
+    }
+    .date-slot {
+      border: 2px solid #111;
+      background: #E8E0C0;
+      padding: 10px 8px;
+      font-family: Courier New, Courier, monospace;
+      font-size: 12px;
+      text-align: center;
+    }
+    .day-card {
+      border: 2px solid #111;
+      background: #fff;
+      padding: 10px;
+      font-size: 13px;
+      transform: rotate(-.8deg);
+    }
+    .day-card strong {
+      display: block;
+      font-family: Times New Roman, Times, serif;
+      font-size: 18px;
+      margin-bottom: 4px;
+    }
+    .drag {
+      border: 2px solid #111;
+      background: #EDE4CF;
+      font-family: Courier New, Courier, monospace;
+      font-size: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .danger {
+      margin-top: 14px;
+      border: 2px solid #111;
+      background: #fff;
+      padding: 10px;
+      font-size: 13px;
+      line-height: 1.45;
+    }
+    @media (max-width: 860px) {
+      .grid { grid-template-columns: 1fr; }
+      h1 { font-size: 38px; }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <h1>日期只顺延，内容可重排</h1>
+    <p class="intro">Lo-Fi 方向：纸质行程单的手感，明确的标准按钮文案。核心视觉是“固定日期轨道 + 可移动 Day 内容卡”，让用户知道日期没有被任意改写。</p>
+
+    <section class="grid">
+      <div class="phone">
+        <div class="screen-title"><span>攻略头部</span><span>菜单</span></div>
+        <div class="trip-title">示例攻略</div>
+        <div class="date-chip">
+          <span>2026-07-12 到 2026-07-15</span>
+          <button>修改</button>
+        </div>
+        <div class="meta-row">
+          <span>4 天</span>
+          <span>2 人</span>
+        </div>
+        <div class="tabs">
+          <div class="tab active">Day 1<br>7/12</div>
+          <div class="tab">Day 2<br>7/13</div>
+          <div class="tab">Day 3<br>7/14</div>
+          <div class="tab">+</div>
+        </div>
+      </div>
+
+      <div class="phone">
+        <div class="screen-title"><span>调整出发日期</span><span>关闭</span></div>
+        <div class="trip-title">示例攻略</div>
+        <div class="date-chip">
+          <span>2026-07-12 到 2026-07-15</span>
+          <button>修改</button>
+        </div>
+        <div class="sheet">
+          <h2>调整出发日期</h2>
+          <div class="field">
+            <span>新出发日</span>
+            <span>2026-08-02</span>
+          </div>
+          <div class="preview">
+            日期将变为 2026-08-02 到 2026-08-05。<br>
+            攻略仍为 4 天，每天的地点和顺序不变。
+          </div>
+          <div class="actions">
+            <button>取消</button>
+            <button class="primary">保存</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="phone">
+        <div class="screen-title"><span>管理日程顺序</span><span>完成</span></div>
+        <div class="trip-title">日期不变，移动每天内容</div>
+        <div class="order-list">
+          <div class="order-row">
+            <div class="date-slot">7/12<br>Day 1</div>
+            <div class="day-card"><strong>第一天安排</strong>3 个地点</div>
+            <div class="drag">拖动</div>
+          </div>
+          <div class="order-row">
+            <div class="date-slot">7/13<br>Day 2</div>
+            <div class="day-card"><strong>第二天安排</strong>5 个地点</div>
+            <div class="drag">拖动</div>
+          </div>
+          <div class="order-row">
+            <div class="date-slot">7/14<br>Day 3</div>
+            <div class="day-card"><strong>第三天安排</strong>0 个地点</div>
+            <div class="drag">拖动</div>
+          </div>
+        </div>
+        <div class="danger">
+          删除某一天会删除这一天的地点、天气和当日记录。至少保留 1 天。
+        </div>
+      </div>
+    </section>
+  </main>
+</body>
+</html>

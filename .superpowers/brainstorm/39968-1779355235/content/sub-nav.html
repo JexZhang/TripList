@@ -1,0 +1,252 @@
+<h2>详情页内 · 三块切换布局</h2>
+<p class="subtitle">点击你最喜欢的方案。这是详情页内"攻略 / 开销 / 清单"切换的视觉。</p>
+
+<style>
+  .phone {
+    width: 280px;
+    height: 480px;
+    background: #f7f1e3;
+    color: #2a2522;
+    border-radius: 28px;
+    border: 8px solid #1a1a1a;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    font-family: -apple-system, 'Helvetica Neue', sans-serif;
+  }
+  .phone-top {
+    padding: 12px 14px 8px;
+    border-bottom: 1px solid rgba(0,0,0,0.08);
+  }
+  .phone-back { font-size: 14px; opacity: 0.65; }
+  .phone-title { font-size: 18px; font-weight: 700; margin-top: 4px; }
+  .phone-meta { font-size: 11px; opacity: 0.55; margin-top: 3px; }
+
+  /* Method A: Segmented */
+  .seg {
+    margin: 12px;
+    display: flex;
+    border: 1px solid #2a2522;
+    border-radius: 6px;
+    overflow: hidden;
+  }
+  .seg-item {
+    flex: 1; text-align: center; padding: 8px 0;
+    font-size: 12px; letter-spacing: 1px;
+    border-right: 1px solid #2a2522;
+  }
+  .seg-item:last-child { border-right: 0; }
+  .seg-item.on { background: #2a2522; color: #f7f1e3; }
+
+  /* Method B: Pills */
+  .pills {
+    margin: 12px;
+    display: flex;
+    gap: 8px;
+  }
+  .pill {
+    flex: 1; text-align: center; padding: 7px 0;
+    font-size: 12px;
+    border: 1px solid #2a2522;
+    border-radius: 999px;
+    opacity: 0.55;
+  }
+  .pill.on { background: #2a2522; color: #f7f1e3; opacity: 1; border-color: #2a2522; }
+
+  /* Method C: Bottom nav with icons */
+  .bottom-nav {
+    margin-top: auto;
+    border-top: 1px solid rgba(0,0,0,0.15);
+    display: flex;
+    background: #f7f1e3;
+  }
+  .bn-item {
+    flex: 1;
+    padding: 10px 0 14px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    opacity: 0.55;
+  }
+  .bn-item.on { opacity: 1; }
+  .bn-icon {
+    width: 22px; height: 22px;
+    border: 1.5px solid currentColor;
+    border-radius: 4px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px;
+  }
+  .bn-label { font-size: 11px; letter-spacing: 1px; }
+
+  /* Method D: Single scroll */
+  .scroll-section {
+    margin: 12px;
+    padding: 10px 12px;
+    border: 1px dashed rgba(0,0,0,0.2);
+    border-radius: 6px;
+  }
+  .scroll-section .label {
+    font-size: 11px;
+    letter-spacing: 3px;
+    font-weight: 700;
+    opacity: 0.5;
+    margin-bottom: 6px;
+  }
+  .scroll-section .body {
+    height: 50px;
+    background: rgba(0,0,0,0.04);
+    border-radius: 4px;
+  }
+
+  /* shared content placeholder */
+  .content-area {
+    flex: 1;
+    padding: 8px 14px;
+    overflow: hidden;
+  }
+  .content-line {
+    height: 14px;
+    background: rgba(0,0,0,0.06);
+    border-radius: 3px;
+    margin-bottom: 8px;
+  }
+  .content-line.short { width: 60%; }
+  .content-line.medium { width: 80%; }
+</style>
+
+<div class="cards" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; padding: 12px 0;">
+
+  <div class="card" data-choice="a" onclick="toggleSelect(this)">
+    <div class="card-image" style="display:flex;justify-content:center;padding:20px 0;background:#222;">
+      <div class="phone">
+        <div class="phone-top">
+          <div class="phone-back">‹ 返回</div>
+          <div class="phone-title">南京 · 金陵四日</div>
+          <div class="phone-meta">05.29 → 06.01 · 4 天 · 4 人</div>
+        </div>
+        <div class="seg">
+          <div class="seg-item on">攻略</div>
+          <div class="seg-item">开销</div>
+          <div class="seg-item">清单</div>
+        </div>
+        <div class="content-area">
+          <div class="content-line medium"></div>
+          <div class="content-line"></div>
+          <div class="content-line short"></div>
+          <div class="content-line medium"></div>
+          <div class="content-line"></div>
+          <div class="content-line short"></div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>A · 顶部 Segmented 段落控件</h3>
+      <p>三段拼接为一条，当前段反色。iOS 原生风，紧凑，节省垂直空间给内容。</p>
+    </div>
+  </div>
+
+  <div class="card" data-choice="b" onclick="toggleSelect(this)">
+    <div class="card-image" style="display:flex;justify-content:center;padding:20px 0;background:#222;">
+      <div class="phone">
+        <div class="phone-top">
+          <div class="phone-back">‹ 返回</div>
+          <div class="phone-title">南京 · 金陵四日</div>
+          <div class="phone-meta">05.29 → 06.01 · 4 天 · 4 人</div>
+        </div>
+        <div class="pills">
+          <div class="pill on">攻略</div>
+          <div class="pill">开销</div>
+          <div class="pill">清单</div>
+        </div>
+        <div class="content-area">
+          <div class="content-line medium"></div>
+          <div class="content-line"></div>
+          <div class="content-line short"></div>
+          <div class="content-line medium"></div>
+          <div class="content-line"></div>
+          <div class="content-line short"></div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>B · 顶部 Pill 标签</h3>
+      <p>三个独立圆角胶囊。视觉更轻，和首页攻略卡片的胶囊风格统一。</p>
+    </div>
+  </div>
+
+  <div class="card" data-choice="c" onclick="toggleSelect(this)">
+    <div class="card-image" style="display:flex;justify-content:center;padding:20px 0;background:#222;">
+      <div class="phone">
+        <div class="phone-top">
+          <div class="phone-back">‹ 返回</div>
+          <div class="phone-title">南京 · 金陵四日</div>
+          <div class="phone-meta">05.29 → 06.01 · 4 天 · 4 人</div>
+        </div>
+        <div class="content-area">
+          <div class="content-line medium"></div>
+          <div class="content-line"></div>
+          <div class="content-line short"></div>
+          <div class="content-line medium"></div>
+          <div class="content-line"></div>
+          <div class="content-line"></div>
+          <div class="content-line short"></div>
+          <div class="content-line medium"></div>
+        </div>
+        <div class="bottom-nav">
+          <div class="bn-item on">
+            <div class="bn-icon">◆</div>
+            <div class="bn-label">攻略</div>
+          </div>
+          <div class="bn-item">
+            <div class="bn-icon">¥</div>
+            <div class="bn-label">开销</div>
+          </div>
+          <div class="bn-item">
+            <div class="bn-icon">✓</div>
+            <div class="bn-label">清单</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>C · 底部 Tab（图标 + 文字）</h3>
+      <p>线条图标 + 文字双行。底部拇指可达，持续可见。代价：少一截内容区。</p>
+    </div>
+  </div>
+
+  <div class="card" data-choice="d" onclick="toggleSelect(this)">
+    <div class="card-image" style="display:flex;justify-content:center;padding:20px 0;background:#222;">
+      <div class="phone">
+        <div class="phone-top">
+          <div class="phone-back">‹ 返回</div>
+          <div class="phone-title">南京 · 金陵四日</div>
+          <div class="phone-meta">05.29 → 06.01 · 4 天 · 4 人</div>
+        </div>
+        <div class="content-area" style="overflow-y:auto;">
+          <div class="scroll-section">
+            <div class="label">攻略 · ITINERARY</div>
+            <div class="body"></div>
+          </div>
+          <div class="scroll-section">
+            <div class="label">开销 · BUDGET</div>
+            <div class="body"></div>
+          </div>
+          <div class="scroll-section">
+            <div class="label">清单 · PACKING</div>
+            <div class="body"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>D · 单页竖向 Scroll</h3>
+      <p>无切换，三段连续阅读。最像"翻册子"，但 10 天攻略滑动太长，编辑也不方便。</p>
+    </div>
+  </div>
+
+</div>
+
+<div class="section" style="margin-top: 24px;">
+  <p class="subtitle"><strong>我推荐 A。</strong>详情页本来就在标题下方需要一条横向元素占位，segmented 控件最干净紧凑，"攻略 / 开销 / 清单"两个字撑得起来。</p>
+</div>

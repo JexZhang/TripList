@@ -1,0 +1,72 @@
+<h2>护照主题 · 印章布局对比</h2>
+<p class="subtitle">现状是 3/行整齐网格，且长名字被截断。要变"乱中有序、有大小变化、长名字也能完整"。</p>
+
+<style>
+  .stamp-row { display: flex; flex-wrap: wrap; gap: 14px; padding: 12px; background: #efe6d4; border-radius: 8px; min-height: 200px; align-items: flex-start; }
+  .stamp { background: #fffdf6; border: 1px dashed #8a6a3a; border-radius: 50%; padding: 14px 10px; text-align: center; font-size: 13px; color: #5a3a14; font-weight: 600; box-shadow: 2px 2px 0 rgba(0,0,0,0.06); }
+  .stamp-sm { width: 70px; height: 70px; display: flex; align-items: center; justify-content: center; }
+  .stamp-md { width: 96px; height: 96px; display: flex; align-items: center; justify-content: center; }
+  .stamp-lg { width: 128px; height: 128px; display: flex; align-items: center; justify-content: center; font-size: 14px; }
+  .stamp-oval { border-radius: 50% / 40%; }
+  .stamp-rect { border-radius: 6px; border-style: solid; }
+  .scatter-area { position: relative; height: 360px; background: #efe6d4; border-radius: 8px; padding: 12px; }
+  .scatter-area .stamp { position: absolute; }
+  .timeline { background: #efe6d4; padding: 12px; border-radius: 8px; position: relative; }
+  .timeline::before { content: ''; position: absolute; left: 50%; top: 12px; bottom: 12px; width: 1px; border-left: 1px dashed #8a6a3a; }
+  .timeline-row { display: flex; align-items: center; min-height: 90px; }
+  .timeline-row .stamp { margin: 6px; }
+  .timeline-row.left { justify-content: flex-end; }
+  .timeline-row.left .stamp { margin-right: calc(50% + 12px); }
+  .timeline-row.right .stamp { margin-left: calc(50% + 12px); }
+</style>
+
+<div class="options" data-multiselect>
+
+  <div class="option" data-choice="a" onclick="toggleSelect(this)">
+    <div class="letter">A</div>
+    <div class="content">
+      <h3>邮票拼贴 · 2-3/行 + 尺寸/形状混搭</h3>
+      <p>固定行布局但每行 2-3 个，每枚印章随机 sm/md/lg + 圆/椭圆/方戳形状，微旋转 -3~3°。长名字进 lg 戳。逻辑简单、性能好、视觉够丰富。</p>
+      <div class="stamp-row" style="margin-top:10px">
+        <div class="stamp stamp-md" style="transform:rotate(-2deg)">南京 · 金陵四日</div>
+        <div class="stamp stamp-lg stamp-oval" style="transform:rotate(3deg)">京都晚秋四日行程</div>
+        <div class="stamp stamp-sm" style="transform:rotate(-4deg)">东京</div>
+        <div class="stamp stamp-md stamp-rect" style="transform:rotate(1deg)">大阪 · 神户两日</div>
+        <div class="stamp stamp-lg" style="transform:rotate(-1deg)">伊豆温泉之旅</div>
+        <div class="stamp stamp-sm stamp-oval" style="transform:rotate(4deg)">三亚</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="option" data-choice="b" onclick="toggleSelect(this)">
+    <div class="letter">B</div>
+    <div class="content">
+      <h3>邮册散落 · 绝对定位随机散点</h3>
+      <p>容器高度由印章数估算，每枚 absolute 定位 + 随机旋转/偏移，更真实的"贴在邮册上"感。可能重叠、首屏密集。需要 collision 简易算法防止严重重叠。</p>
+      <div class="scatter-area" style="margin-top:10px">
+        <div class="stamp stamp-md" style="left:20px;top:20px;transform:rotate(-8deg)">南京 · 金陵四日</div>
+        <div class="stamp stamp-lg stamp-oval" style="left:180px;top:40px;transform:rotate(5deg)">京都晚秋四日行程</div>
+        <div class="stamp stamp-sm" style="left:60px;top:140px;transform:rotate(12deg)">东京</div>
+        <div class="stamp stamp-md stamp-rect" style="left:200px;top:180px;transform:rotate(-6deg)">大阪 · 神户两日</div>
+        <div class="stamp stamp-lg" style="left:30px;top:230px;transform:rotate(3deg)">伊豆温泉之旅</div>
+        <div class="stamp stamp-sm stamp-oval" style="left:230px;top:280px;transform:rotate(-10deg)">三亚</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="option" data-choice="c" onclick="toggleSelect(this)">
+    <div class="letter">C</div>
+    <div class="content">
+      <h3>时光戳印 · 左右交替时间线</h3>
+      <p>中线时间轴，每个印章按创建时间左右交替，尺寸随天数变化（天数越多戳越大）。强叙事性，但每排只有 1 枚，列表会拉很长。</p>
+      <div class="timeline" style="margin-top:10px;height:300px">
+        <div class="timeline-row right"><div class="stamp stamp-md" style="transform:rotate(-2deg)">南京 · 金陵四日</div></div>
+        <div class="timeline-row left"><div class="stamp stamp-lg stamp-oval" style="transform:rotate(3deg)">京都晚秋四日行程</div></div>
+        <div class="timeline-row right"><div class="stamp stamp-sm" style="transform:rotate(-5deg)">东京</div></div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<p class="subtitle" style="margin-top:18px">长名字处理：A 把长名字塞 lg 戳；B 戳上自动换行 2 行；C 大戳能容纳整句。<br/>三个都解决了截断，但成本和视觉差异大。可多选你倾向的（系统会让你点）。</p>

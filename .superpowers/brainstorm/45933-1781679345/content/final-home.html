@@ -1,0 +1,59 @@
+<style>
+  .phone { width:280px; border:2px solid #d8d4cc; border-radius:24px; padding:14px 12px; background:#fffdf9; box-shadow:0 8px 24px rgba(0,0,0,.1); margin:0 auto; }
+  .pbar { display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; }
+  .greet { font-size:13px; color:#8a8478; }
+  .pavatar { width:30px; height:30px; border-radius:50%; background:linear-gradient(135deg,#e7e2d8,#d4cdbf); }
+  .btnrow { display:flex; gap:10px; margin-bottom:18px; }
+  .tile { flex:1; border-radius:15px; padding:16px 8px; text-align:center; font-size:13px; font-weight:700; color:#fff; line-height:1.6; }
+  .tileA { background:linear-gradient(135deg,#FF7A2E,#FF9A4D); box-shadow:0 4px 12px rgba(255,122,46,.3); }
+  .tileB { background:#2b2b2b; }
+  .seclabel { font-size:12.5px; color:#4a4438; font-weight:700; margin:0 0 11px; display:flex; justify-content:space-between; align-items:baseline; }
+  .seclabel .en { font-size:9px; color:#c4b89f; letter-spacing:2px; font-weight:500; margin-left:6px; }
+  .seclabel .more { font-size:11px; color:#c0531c; font-weight:500; }
+  .hrow { display:flex; gap:11px; overflow:hidden; margin-bottom:20px; padding-bottom:2px; }
+  .gcard { min-width:140px; width:140px; border-radius:13px; overflow:hidden; box-shadow:0 4px 12px rgba(0,0,0,.12); }
+  .gcover { height:96px; padding:10px; position:relative; color:#fff; display:flex; flex-direction:column; justify-content:space-between; }
+  .gcover .region { font-size:8.5px; letter-spacing:2px; opacity:.85; text-transform:uppercase; }
+  .gcover .city { font-size:22px; font-weight:800; text-shadow:0 1px 4px rgba(0,0,0,.25); }
+  .gcover .pat { position:absolute; right:-12px; bottom:-12px; width:64px; height:64px; border:2px solid rgba(255,255,255,.22); border-radius:50%; }
+  .gmeta { background:#fff; padding:8px 9px; }
+  .gmeta .nm { font-size:11.5px; font-weight:600; color:#333; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .gmeta .ln { font-size:9.5px; color:#a59f93; margin-top:3px; }
+  .trip { border:1px solid #ece8e0; border-radius:13px; padding:12px 13px; margin-bottom:9px; display:flex; justify-content:space-between; align-items:center; }
+  .trip .tn { font-size:13px; font-weight:600; color:#333; }
+  .trip .tm { font-size:10.5px; color:#a59f93; margin-top:4px; }
+  .trip .chip { font-size:9px; padding:3px 9px; border-radius:11px; background:#fef0e6; color:#c0531c; }
+  .trip.live .chip { background:#e6f6ec; color:#2d8a52; }
+  .trip.past { opacity:.45; }
+  .trip.past .chip { background:#eee; color:#999; }
+</style>
+
+<h2>最终首页骨架（拼合预览）</h2>
+<p class="subtitle">这是四主题共用的结构与信息顺序。下图用暖色近似「手紙」主题；实际四主题各自换皮（色彩 / 字体 / 卡片质感不同），但分区与顺序一致。</p>
+
+<div class="mockup" style="max-width:340px;margin:0 auto">
+  <div class="mockup-header">首页 · 手紙主题示意</div>
+  <div class="mockup-body" style="background:#f3efe7;padding:18px">
+    <div class="phone">
+      <div class="pbar"><div class="greet">你好，旅人 ☀</div><div class="pavatar"></div></div>
+
+      <div class="btnrow">
+        <div class="tile tileA">✦<br/>AI 规划</div>
+        <div class="tile tileB">+<br/>手动新建</div>
+      </div>
+
+      <div class="seclabel"><span>旅人精选<span class="en">EDITORS' PICKS</span></span><span class="more">更多 ›</span></div>
+      <div class="hrow">
+        <div class="gcard"><div class="gcover" style="background:linear-gradient(140deg,#c2410c,#f59e0b)"><div class="pat"></div><div class="region">关西 · 秋</div><div class="city">京都</div></div><div class="gmeta"><div class="nm">红叶狩 · 古都漫步</div><div class="ln">7天6晚 · 21 个地点</div></div></div>
+        <div class="gcard"><div class="gcover" style="background:linear-gradient(140deg,#0e7490,#22d3ee)"><div class="pat"></div><div class="region">冰岛 · 冬</div><div class="city">冰岛</div></div><div class="gmeta"><div class="nm">环岛极光之旅</div><div class="ln">9天8晚 · 16 个地点</div></div></div>
+      </div>
+
+      <div class="seclabel"><span>我的行程</span></div>
+      <div class="trip"><div><div class="tn">京都赏枫 5 日</div><div class="tm">11.20 → 11.24</div></div><div class="chip">即将出发</div></div>
+      <div class="trip live"><div><div class="tn">成都美食周末</div><div class="tm">进行中</div></div><div class="chip">进行中</div></div>
+      <div class="trip past"><div><div class="tn">东京跨年</div><div class="tm">2025.12.30 → 2026.01.02</div></div><div class="chip">已结束</div></div>
+    </div>
+  </div>
+</div>
+
+<p class="subtitle" style="margin-top:16px">看整体感觉对不对。具体的设计说明我写在终端了。</p>

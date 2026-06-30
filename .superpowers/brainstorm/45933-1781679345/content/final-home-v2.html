@@ -1,0 +1,56 @@
+<style>
+  .phone { width:280px; border:2px solid #d8d4cc; border-radius:24px; padding:14px 12px; background:#fffdf9; box-shadow:0 8px 24px rgba(0,0,0,.1); margin:0 auto; }
+  .pbar { display:flex; justify-content:flex-end; align-items:center; margin-bottom:16px; }
+  .pavatar { width:30px; height:30px; border-radius:50%; background:linear-gradient(135deg,#e7e2d8,#d4cdbf); }
+  .btnrow { display:flex; gap:10px; margin-bottom:18px; }
+  .tile { flex:1; border-radius:15px; padding:16px 8px; text-align:center; font-size:13px; font-weight:700; color:#fff; line-height:1.6; }
+  .tileA { background:linear-gradient(135deg,#FF7A2E,#FF9A4D); box-shadow:0 4px 12px rgba(255,122,46,.3); }
+  .tileB { background:#2b2b2b; }
+  .seclabel { font-size:12.5px; color:#4a4438; font-weight:700; margin:0 0 11px; display:flex; justify-content:space-between; align-items:baseline; }
+  .seclabel .en { font-size:9px; color:#c4b89f; letter-spacing:2px; font-weight:500; margin-left:6px; }
+  .seclabel .more { font-size:11px; color:#c0531c; font-weight:500; }
+  .hrow { display:flex; gap:11px; overflow:hidden; margin-bottom:20px; padding-bottom:2px; }
+  .gcard { min-width:140px; width:140px; border-radius:13px; overflow:hidden; box-shadow:0 4px 12px rgba(0,0,0,.12); }
+  .gcover { height:96px; padding:10px; position:relative; color:#fff; display:flex; flex-direction:column; justify-content:space-between; }
+  .gcover .region { font-size:8.5px; letter-spacing:2px; opacity:.85; }
+  .gcover .city { font-size:22px; font-weight:800; text-shadow:0 1px 4px rgba(0,0,0,.25); }
+  .gcover .pat { position:absolute; right:-12px; bottom:-12px; width:64px; height:64px; border:2px solid rgba(255,255,255,.22); border-radius:50%; }
+  .gmeta { background:#fff; padding:8px 9px; }
+  .gmeta .nm { font-size:11.5px; font-weight:600; color:#333; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .gmeta .ln { font-size:9.5px; color:#a59f93; margin-top:3px; }
+  .trip { border:1px solid #ece8e0; border-radius:13px; padding:12px 13px; margin-bottom:9px; display:flex; justify-content:space-between; align-items:center; }
+  .trip .tn { font-size:13px; font-weight:600; color:#333; }
+  .trip .tm { font-size:10.5px; color:#a59f93; margin-top:4px; }
+  .trip .chip { font-size:9px; padding:3px 9px; border-radius:11px; background:#e6f6ec; color:#2d8a52; }
+  .trip.past { opacity:.45; }
+</style>
+
+<h2>最终首页骨架 v2（已按反馈修正）</h2>
+<p class="subtitle">改动：左上留空（无问候语）· 仅「进行中」显示标签 · 示例全部中国大陆 · 按时间排序、已结束淡化沉底。四主题共用此结构，各自换皮。</p>
+
+<div class="mockup" style="max-width:340px;margin:0 auto">
+  <div class="mockup-header">首页 · 手紙主题示意</div>
+  <div class="mockup-body" style="background:#f3efe7;padding:18px">
+    <div class="phone">
+      <div class="pbar"><div class="pavatar"></div></div>
+
+      <div class="btnrow">
+        <div class="tile tileA">✦<br/>AI 规划</div>
+        <div class="tile tileB">+<br/>手动新建</div>
+      </div>
+
+      <div class="seclabel"><span>旅人精选<span class="en">EDITORS' PICKS</span></span><span class="more">更多 ›</span></div>
+      <div class="hrow">
+        <div class="gcard"><div class="gcover" style="background:linear-gradient(140deg,#b45309,#f59e0b)"><div class="pat"></div><div class="region">四川 · 秋</div><div class="city">成都</div></div><div class="gmeta"><div class="nm">川西环线 · 美食</div><div class="ln">6天5晚 · 18 个地点</div></div></div>
+        <div class="gcard"><div class="gcover" style="background:linear-gradient(140deg,#0e7490,#22c55e)"><div class="pat"></div><div class="region">云南 · 春</div><div class="city">大理</div></div><div class="gmeta"><div class="nm">苍山洱海慢游</div><div class="ln">5天4晚 · 14 个地点</div></div></div>
+      </div>
+
+      <div class="seclabel"><span>我的行程</span></div>
+      <div class="trip"><div><div class="tn">成都美食周末</div><div class="tm">11.15 → 11.17</div></div><div class="chip">进行中</div></div>
+      <div class="trip"><div><div class="tn">厦门鼓浪屿 4 日</div><div class="tm">12.20 → 12.23</div></div></div>
+      <div class="trip past"><div><div class="tn">北京初雪三日</div><div class="tm">2025.11.28 → 2025.11.30</div></div></div>
+    </div>
+  </div>
+</div>
+
+<p class="subtitle" style="margin-top:16px">注意看：进行中的「成都美食周末」有绿色标签；即将出发的「厦门」无标签；已结束的「北京」淡化沉底、也无标签。整体感觉对的话，我就落成正式 spec。</p>

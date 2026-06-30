@@ -1,0 +1,77 @@
+<h2>A 方向细化：更直观、更贴合四主题</h2>
+<p class="subtitle">三种都以“点头部日期范围 → 选择新出发日 → 全部 Day 自动顺延”为核心，只是视觉表达不同。</p>
+
+<div class="cards">
+  <div class="card" data-choice="editable-date-chip" onclick="toggleSelect(this)">
+    <div class="card-image">
+      <div style="width:230px;margin:auto;border:1px solid #ddd;border-radius:24px;padding:14px;background:#fff9ef">
+        <div style="display:flex;justify-content:space-between;font-size:13px"><span>返回</span><span>⋯</span></div>
+        <div style="margin-top:18px;font-size:22px;font-weight:800">京都慢行 4 日</div>
+        <div style="display:flex;align-items:center;gap:8px;margin-top:12px;flex-wrap:wrap">
+          <div style="border:1px solid #d78b45;background:#fff;border-radius:999px;padding:7px 10px;font-family:monospace;font-size:12px;color:#8a4c17">
+            06/30 → 07/03 ✎
+          </div>
+          <div style="font-family:monospace;font-size:12px;color:#7b6b5a">4 天 · 2 人 ▾</div>
+        </div>
+        <div style="margin-top:16px;background:#fff;border:1px solid #ecd7bf;border-radius:16px;padding:10px;font-size:12px;color:#755">
+          点击日期可重新选择出发日
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>A1. 可编辑日期胶囊</h3>
+      <p>把日期范围做成小胶囊，右侧用铅笔符号暗示可编辑。最直观、最轻量，也能很好嵌入 tegami / magazine / minimal 的 meta 行。</p>
+    </div>
+  </div>
+
+  <div class="card" data-choice="depart-return-fields" onclick="toggleSelect(this)">
+    <div class="card-image">
+      <div style="width:230px;margin:auto;border:1px dashed #b79a72;border-radius:10px;padding:14px;background:#fffaf0">
+        <div style="display:flex;justify-content:space-between;align-items:center;border-bottom:1px dashed #cbb896;padding-bottom:8px;font-size:12px">
+          <span>‹ 返回</span><span>VISA / 签证</span><span>⋯</span>
+        </div>
+        <div style="margin-top:16px;font-size:20px;font-weight:800">京都慢行 4 日</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px">
+          <div style="border:1px solid #dcc7a1;border-radius:8px;padding:9px;background:#fff">
+            <div style="font-size:10px;color:#9d8b70;letter-spacing:2px">出发</div>
+            <div style="font-size:14px;font-weight:700;color:#2b1d13">06/30 ✎</div>
+          </div>
+          <div style="border:1px solid #dcc7a1;border-radius:8px;padding:9px;background:#fff">
+            <div style="font-size:10px;color:#9d8b70;letter-spacing:2px">返回</div>
+            <div style="font-size:14px;font-weight:700;color:#2b1d13">07/03</div>
+          </div>
+        </div>
+        <div style="margin-top:12px;border:2px solid #d7723c;border-radius:50%;width:72px;height:72px;display:flex;align-items:center;justify-content:center;color:#d7723c;font-weight:800;transform:rotate(-10deg);font-size:12px">改签</div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>A2. 出发/返回字段化</h3>
+      <p>尤其适合 postcard；把“出发”字段做成可点，返回日自动跟随。信息最清晰，但在其他主题里可能比现有 meta 行重一点。</p>
+    </div>
+  </div>
+
+  <div class="card" data-choice="date-sheet-preview" onclick="toggleSelect(this)">
+    <div class="card-image">
+      <div style="width:230px;margin:auto;border:1px solid #ddd;border-radius:24px;padding:14px;background:#fafafa;position:relative;overflow:hidden">
+        <div style="display:flex;justify-content:space-between;font-size:13px"><span>←</span><span>⋯</span></div>
+        <div style="margin-top:18px;font-size:21px;font-weight:800">京都慢行 4 日</div>
+        <div style="margin-top:8px;font-family:monospace;font-size:12px;color:#666">06/30 → 07/03  ·  4 天</div>
+        <div style="margin-top:14px;border-radius:10px;background:#111;color:white;padding:10px;font-size:12px;text-align:center">改出发日</div>
+        <div style="position:absolute;left:0;right:0;bottom:0;background:white;border-top:1px solid #ddd;border-radius:18px 18px 0 0;padding:12px;box-shadow:0 -8px 20px rgba(0,0,0,.12)">
+          <div style="font-weight:800;font-size:14px">调整日期</div>
+          <div style="display:flex;justify-content:space-between;margin-top:8px;font-size:12px;color:#555"><span>新出发日</span><span>2026-07-12 ▾</span></div>
+          <div style="margin-top:8px;font-size:11px;color:#888">将变为 07/12 → 07/15，共 4 天</div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>A3. 日期动作 + 预览弹层</h3>
+      <p>入口可以是胶囊或文字按钮；弹层里清楚显示“改前/改后”。反馈最强，适合避免用户担心会改乱已有日程。</p>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <h3>推荐组合</h3>
+  <p>我建议用 A1 + A3：头部日期范围做成主题化可编辑胶囊；点击后弹出“调整日期”底部面板，选择新出发日，并预览新的起止日期。postcard 主题用 A2 的字段化外观表达同一个动作。</p>
+</div>

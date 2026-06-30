@@ -1,0 +1,150 @@
+<h2>完整交互：日期胶囊作为唯一常驻入口</h2>
+<p class="subtitle">页面不新增“管理”按钮；日期胶囊承载日期调整，长按 Day 只作为快捷入口。</p>
+
+<div class="split">
+  <div class="mockup">
+    <div class="mockup-header">1. 攻略页常态</div>
+    <div class="mockup-body">
+      <div style="width:230px;margin:auto;border:1px solid #ddd;border-radius:24px;padding:14px;background:#fff9ef">
+        <div style="display:flex;justify-content:space-between;font-size:13px"><span>返回</span><span>⋯</span></div>
+        <div style="margin-top:16px;font-size:22px;font-weight:800;line-height:1.15">京都慢行 4 日</div>
+        <div style="margin-top:10px;display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+          <span style="border:1px solid #d58a45;border-radius:999px;padding:6px 9px;font-size:12px;background:white;color:#8a4c17">06/30 → 07/03 ✎</span>
+          <span style="font-size:12px;color:#777">4 天 · 2 人 ▾</span>
+        </div>
+        <div style="display:flex;gap:8px;margin-top:18px;overflow:hidden">
+          <div style="background:#111;color:white;border-radius:10px;padding:10px 12px;font-size:12px">D1<br>6/30</div>
+          <div style="background:white;border:1px solid #ddd;border-radius:10px;padding:10px 12px;font-size:12px">D2<br>7/1</div>
+          <div style="background:white;border:1px solid #ddd;border-radius:10px;padding:10px 12px;font-size:12px">D3<br>7/2</div>
+          <div style="background:white;border:1px solid #ddd;border-radius:10px;padding:10px 12px;font-size:12px">+</div>
+        </div>
+        <div style="margin-top:18px;background:white;border:1px solid #ead8be;border-radius:14px;padding:12px">
+          <div style="font-weight:700;font-size:13px">伏见稻荷大社</div>
+          <div style="font-size:11px;color:#777;margin-top:4px">09:30 · 景点 · 预计 2 小时</div>
+        </div>
+      </div>
+      <p style="font-size:12px;color:#666;margin-top:12px">点击日期胶囊进入“调整日期”。长按 D 卡片也可进入整理模式，但不展示旧菜单。</p>
+    </div>
+  </div>
+
+  <div class="mockup">
+    <div class="mockup-header">2. 调整日期面板</div>
+    <div class="mockup-body">
+      <div style="width:230px;margin:auto;border:1px solid #ddd;border-radius:24px;padding:14px;background:#fafafa;position:relative;overflow:hidden;min-height:330px">
+        <div style="display:flex;justify-content:space-between;font-size:13px"><span>返回</span><span>⋯</span></div>
+        <div style="margin-top:16px;font-size:21px;font-weight:800">京都慢行 4 日</div>
+        <div style="margin-top:8px;font-size:12px;color:#666">06/30 → 07/03 · 4 天</div>
+        <div style="position:absolute;left:0;right:0;bottom:0;background:white;border-top:1px solid #ddd;border-radius:18px 18px 0 0;padding:14px;box-shadow:0 -8px 20px rgba(0,0,0,.12)">
+          <div style="display:flex;justify-content:space-between;align-items:center">
+            <div style="font-weight:800;font-size:15px">调整日期</div>
+            <div style="font-size:12px;color:#999">取消</div>
+          </div>
+          <div style="margin-top:12px;border:1px solid #eee;border-radius:12px;padding:10px">
+            <div style="font-size:11px;color:#888">出发日期</div>
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-top:5px">
+              <span style="font-size:15px;font-weight:700">2026-07-12</span>
+              <span style="font-size:12px;color:#8a4c17">选择 ▾</span>
+            </div>
+          </div>
+          <div style="font-size:12px;color:#666;margin-top:10px;background:#fff7ec;border-radius:10px;padding:8px">
+            将变为 07/12 → 07/15，共 4 天。每天内容不变，只整体顺延。
+          </div>
+          <div style="margin-top:12px;border-top:1px solid #eee;padding-top:10px">
+            <div style="display:flex;justify-content:space-between;align-items:center">
+              <div>
+                <div style="font-size:13px;font-weight:700">每天安排</div>
+                <div style="font-size:11px;color:#888;margin-top:2px">调整顺序或删除某天</div>
+              </div>
+              <div style="border:1px solid #ccc;border-radius:999px;padding:6px 9px;font-size:12px">整理</div>
+            </div>
+          </div>
+          <div style="margin-top:12px;background:#111;color:white;border-radius:12px;text-align:center;padding:9px;font-size:13px">确认顺延</div>
+        </div>
+      </div>
+      <p style="font-size:12px;color:#666;margin-top:12px">这里不改天数。天数由“+ 添加”和整理模式里的删除决定。</p>
+    </div>
+  </div>
+</div>
+
+<div class="split">
+  <div class="mockup">
+    <div class="mockup-header">3. 整理每天安排</div>
+    <div class="mockup-body">
+      <div style="width:230px;margin:auto;border:1px solid #ddd;border-radius:24px;padding:14px;background:#fff">
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <span style="font-size:13px;color:#777">取消</span>
+          <span style="font-size:15px;font-weight:800">整理每天安排</span>
+          <span style="font-size:13px;color:#8a4c17">完成</span>
+        </div>
+        <div style="margin-top:10px;font-size:11px;color:#777;text-align:center">拖动调整内容顺序，日期不会改变</div>
+        <div style="margin-top:14px;display:flex;flex-direction:column;gap:9px">
+          <div style="border:1px solid #ddd;border-radius:12px;padding:10px;background:#fafafa;display:flex;align-items:center;gap:9px">
+            <span style="font-size:17px;color:#999">☰</span>
+            <div style="flex:1">
+              <div style="font-size:13px;font-weight:700">Day 1 · 06/30</div>
+              <div style="font-size:11px;color:#777;margin-top:2px">3 个地点 · 伏见稻荷大社</div>
+            </div>
+            <span style="font-size:12px;color:#c43d3d">删除</span>
+          </div>
+          <div style="border:1px solid #d58a45;border-radius:12px;padding:10px;background:#fff7ec;display:flex;align-items:center;gap:9px">
+            <span style="font-size:17px;color:#999">☰</span>
+            <div style="flex:1">
+              <div style="font-size:13px;font-weight:700">Day 2 · 07/01</div>
+              <div style="font-size:11px;color:#777;margin-top:2px">5 个地点 · 岚山</div>
+            </div>
+            <span style="font-size:12px;color:#c43d3d">删除</span>
+          </div>
+          <div style="border:1px solid #ddd;border-radius:12px;padding:10px;background:#fafafa;display:flex;align-items:center;gap:9px">
+            <span style="font-size:17px;color:#999">☰</span>
+            <div style="flex:1">
+              <div style="font-size:13px;font-weight:700">Day 3 · 07/02</div>
+              <div style="font-size:11px;color:#777;margin-top:2px">2 个地点 · 清水寺</div>
+            </div>
+            <span style="font-size:12px;color:#c43d3d">删除</span>
+          </div>
+          <div style="border:1px solid #ddd;border-radius:12px;padding:10px;background:#fafafa;display:flex;align-items:center;gap:9px">
+            <span style="font-size:17px;color:#999">☰</span>
+            <div style="flex:1">
+              <div style="font-size:13px;font-weight:700">Day 4 · 07/03</div>
+              <div style="font-size:11px;color:#777;margin-top:2px">空白日</div>
+            </div>
+            <span style="font-size:12px;color:#c43d3d">删除</span>
+          </div>
+        </div>
+      </div>
+      <p style="font-size:12px;color:#666;margin-top:12px">长按 Day 2 进入时，高亮 Day 2。拖拽移动的是“当天内容”，日期槽位保持连续。</p>
+    </div>
+  </div>
+
+  <div class="mockup">
+    <div class="mockup-header">4. 删除某天确认</div>
+    <div class="mockup-body">
+      <div style="width:230px;margin:auto;border:1px solid #ddd;border-radius:24px;padding:14px;background:#f8f8f8;position:relative;min-height:315px;overflow:hidden">
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <span style="font-size:13px;color:#777">取消</span>
+          <span style="font-size:15px;font-weight:800">整理每天安排</span>
+          <span style="font-size:13px;color:#8a4c17">完成</span>
+        </div>
+        <div style="margin-top:18px;opacity:.35">
+          <div style="height:48px;background:white;border:1px solid #ddd;border-radius:12px;margin-bottom:8px"></div>
+          <div style="height:48px;background:white;border:1px solid #ddd;border-radius:12px;margin-bottom:8px"></div>
+          <div style="height:48px;background:white;border:1px solid #ddd;border-radius:12px"></div>
+        </div>
+        <div style="position:absolute;left:16px;right:16px;top:90px;background:white;border:1px solid #ddd;border-radius:16px;padding:14px;box-shadow:0 12px 30px rgba(0,0,0,.18)">
+          <div style="font-size:16px;font-weight:800">删除 Day 2？</div>
+          <div style="font-size:12px;color:#666;line-height:1.5;margin-top:8px">这一天有 5 个地点。删除后这些安排会一并移除，剩余日期将保持连续。</div>
+          <div style="display:flex;gap:8px;margin-top:14px">
+            <div style="flex:1;border:1px solid #ddd;border-radius:10px;text-align:center;padding:8px;font-size:12px">取消</div>
+            <div style="flex:1;background:#c43d3d;color:white;border-radius:10px;text-align:center;padding:8px;font-size:12px">删除</div>
+          </div>
+        </div>
+      </div>
+      <p style="font-size:12px;color:#666;margin-top:12px">如果只剩 1 天，隐藏删除或提示“至少保留一天”。空白日可轻确认。</p>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <h3>交互规则总结</h3>
+  <p>点击日期胶囊：只改出发日期，整体顺延，不增不删。日期栏 +：追加一天。长按 Day：快捷进入整理模式。旧长按 action sheet 删除。整理模式：拖拽重排每天内容、删除某天、完成保存。</p>
+</div>

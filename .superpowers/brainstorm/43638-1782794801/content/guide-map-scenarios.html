@@ -1,0 +1,378 @@
+<style>
+  .gm-board {
+    display: grid;
+    gap: 18px;
+  }
+  .gm-hero {
+    display: grid;
+    grid-template-columns: minmax(280px, 1fr) minmax(360px, 1.35fr);
+    gap: 18px;
+    align-items: stretch;
+  }
+  .gm-note {
+    border: 1px solid #e6ded0;
+    background: #fffaf2;
+    padding: 18px;
+    border-radius: 8px;
+  }
+  .gm-note h2 {
+    margin: 0 0 8px;
+    letter-spacing: 0;
+  }
+  .gm-note p {
+    margin: 8px 0;
+    color: #665b4e;
+    line-height: 1.55;
+  }
+  .gm-asset {
+    border: 1px solid #ddd3c3;
+    background: #f7efe3;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 12px 28px rgba(57, 44, 28, .12);
+  }
+  .gm-asset img {
+    width: 100%;
+    display: block;
+  }
+  .gm-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 16px;
+  }
+  .gm-card {
+    border: 1px solid #e2d8ca;
+    border-radius: 8px;
+    background: #fffdf8;
+    overflow: hidden;
+    cursor: pointer;
+  }
+  .gm-card:hover {
+    border-color: #94785a;
+  }
+  .gm-card .gm-top {
+    min-height: 420px;
+    background: #f5efe5;
+    padding: 14px;
+  }
+  .gm-phone {
+    width: 226px;
+    height: 390px;
+    margin: 0 auto;
+    border: 1px solid #2e2a24;
+    border-radius: 26px;
+    background: #fbf7ef;
+    overflow: hidden;
+    box-shadow: 0 10px 28px rgba(34, 29, 22, .14);
+  }
+  .gm-phone-head {
+    height: 38px;
+    padding: 12px 14px 0;
+    font-size: 12px;
+    color: #7b6b5a;
+  }
+  .gm-phone-title {
+    padding: 0 14px 8px;
+    font-weight: 650;
+    font-size: 17px;
+    color: #2f2922;
+  }
+  .gm-tab {
+    display: flex;
+    gap: 8px;
+    padding: 0 14px 10px;
+  }
+  .gm-tab span {
+    font-size: 11px;
+    padding: 5px 8px;
+    border-radius: 999px;
+    background: #e9dfd0;
+    color: #675847;
+  }
+  .gm-tab .on {
+    background: #345b47;
+    color: #fff;
+  }
+  .gm-mini-map {
+    margin: 0 12px;
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1px solid #dfd1bf;
+    background: #eee3d2;
+  }
+  .gm-mini-map img {
+    width: 100%;
+    height: 132px;
+    object-fit: cover;
+    display: block;
+  }
+  .gm-panel {
+    margin: 12px;
+    padding: 12px;
+    border: 1px solid #e0d5c6;
+    border-radius: 8px;
+    background: #fffaf2;
+  }
+  .gm-panel strong {
+    display: block;
+    font-size: 14px;
+    margin-bottom: 6px;
+    color: #312b24;
+  }
+  .gm-panel p {
+    margin: 0;
+    font-size: 11px;
+    line-height: 1.45;
+    color: #6d6154;
+  }
+  .gm-btn {
+    margin-top: 10px;
+    height: 34px;
+    border-radius: 999px;
+    background: #2f5b47;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: 600;
+  }
+  .gm-library {
+    padding: 12px;
+    display: grid;
+    gap: 10px;
+  }
+  .gm-cover {
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1px solid #e1d3bf;
+    background: #f4eadb;
+  }
+  .gm-cover img {
+    width: 100%;
+    height: 118px;
+    object-fit: cover;
+    display: block;
+  }
+  .gm-cover-text {
+    padding: 10px;
+    background: #fffaf2;
+  }
+  .gm-cover-text b {
+    font-size: 14px;
+    display: block;
+  }
+  .gm-cover-text span {
+    font-size: 11px;
+    color: #776a5b;
+  }
+  .gm-share {
+    margin: 12px;
+    border-radius: 14px;
+    overflow: hidden;
+    border: 1px solid #d9c9b8;
+    background: white;
+  }
+  .gm-share img {
+    width: 100%;
+    height: 150px;
+    object-fit: cover;
+    display: block;
+  }
+  .gm-share-copy {
+    padding: 12px;
+  }
+  .gm-share-copy b {
+    display: block;
+    font-size: 15px;
+  }
+  .gm-share-copy span {
+    color: #6e6358;
+    font-size: 11px;
+  }
+  .gm-body {
+    padding: 14px;
+  }
+  .gm-body h3 {
+    margin: 0 0 8px;
+    font-size: 18px;
+    letter-spacing: 0;
+  }
+  .gm-body p {
+    margin: 0 0 10px;
+    line-height: 1.45;
+    color: #63584d;
+  }
+  .gm-list {
+    margin: 0;
+    padding-left: 18px;
+    color: #4e463e;
+    line-height: 1.55;
+  }
+  .gm-meter {
+    display: grid;
+    grid-template-columns: 74px 1fr;
+    gap: 8px;
+    align-items: center;
+    margin-top: 10px;
+    font-size: 12px;
+    color: #675c51;
+  }
+  .gm-bar {
+    height: 7px;
+    border-radius: 999px;
+    background: #eadfce;
+    overflow: hidden;
+  }
+  .gm-bar span {
+    display: block;
+    height: 100%;
+    background: #8b5e3c;
+  }
+  .gm-flow {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 10px;
+  }
+  .gm-step {
+    border: 1px solid #e2d8ca;
+    background: #fffdf8;
+    padding: 12px;
+    border-radius: 8px;
+  }
+  .gm-step b {
+    display: block;
+    margin-bottom: 6px;
+    color: #312a23;
+  }
+  .gm-step span {
+    font-size: 12px;
+    color: #6d6156;
+    line-height: 1.4;
+  }
+  @media (max-width: 980px) {
+    .gm-hero, .gm-grid, .gm-flow {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
+
+<div class="gm-board">
+  <div class="gm-hero">
+    <div class="gm-note">
+      <h2>导览图作为高价值资产</h2>
+      <p>同一张导览图只生成一次，但可以被三个场景反复使用：个人攻略页、旅人精选封面、微信分享卡片。</p>
+      <p>核心原则：交互地图负责查路线和导航；导览图负责收藏、传播和模板质感。</p>
+      <p>下面三张卡可以点击选择。你可以多选，表示这几个方向都值得保留，但我们会决定第一期的主入口。</p>
+    </div>
+    <div class="gm-asset">
+      <img src="guide-map.png" alt="成都导览图">
+    </div>
+  </div>
+
+  <div class="gm-grid" data-multiselect>
+    <div class="gm-card" data-choice="personal" onclick="toggleSelect(this)">
+      <div class="gm-top">
+        <div class="gm-phone">
+          <div class="gm-phone-head">行迹 · 我的攻略</div>
+          <div class="gm-phone-title">麻麻生日之旅</div>
+          <div class="gm-tab"><span>攻略</span><span class="on">地图</span><span>开销</span><span>清单</span></div>
+          <div class="gm-mini-map"><img src="guide-map.png" alt=""></div>
+          <div class="gm-panel">
+            <strong>城市导览图</strong>
+            <p>已为成都生成一张导览图，可保存、重生成或加入分享。</p>
+            <div class="gm-btn">查看导览图</div>
+          </div>
+          <div class="gm-panel">
+            <strong>生成消耗</strong>
+            <p>一次生成对应一个城市。行程点位变化后提示“需要更新”。</p>
+          </div>
+        </div>
+      </div>
+      <div class="gm-body">
+        <h3>A. 个人行程纪念图</h3>
+        <p>从攻略详情页进入，用户主动生成。最符合“图很珍贵”的心智。</p>
+        <ul class="gm-list">
+          <li>适合保存到相册、行程完成回顾</li>
+          <li>和现有交互地图互补</li>
+          <li>第一期边界最容易控</li>
+        </ul>
+        <div class="gm-meter"><span>推荐优先级</span><div class="gm-bar"><span style="width: 92%"></span></div></div>
+      </div>
+    </div>
+
+    <div class="gm-card" data-choice="template" onclick="toggleSelect(this)">
+      <div class="gm-top">
+        <div class="gm-phone">
+          <div class="gm-phone-head">行迹 · 旅人精选</div>
+          <div class="gm-phone-title">成都亲友慢游</div>
+          <div class="gm-library">
+            <div class="gm-cover">
+              <img src="guide-map.png" alt="">
+              <div class="gm-cover-text">
+                <b>麻麻生日之旅 · 成都</b>
+                <span>5天 · 成都/黄龙/九寨沟 · 适合长辈</span>
+              </div>
+            </div>
+            <div class="gm-panel">
+              <strong>模板导览图</strong>
+              <p>平台预生成，作为精选攻略的核心视觉。用户复制模板时可一并带走。</p>
+              <div class="gm-btn">复制这份攻略</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="gm-body">
+        <h3>B. 精选模板封面</h3>
+        <p>让旅人精选从“数据列表”变成“可感知的攻略作品”。生成成本由平台承担。</p>
+        <ul class="gm-list">
+          <li>显著提升模板库质感</li>
+          <li>适合人工审核后发布</li>
+          <li>不适合对所有普通行程自动生成</li>
+        </ul>
+        <div class="gm-meter"><span>推荐优先级</span><div class="gm-bar"><span style="width: 78%"></span></div></div>
+      </div>
+    </div>
+
+    <div class="gm-card" data-choice="share" onclick="toggleSelect(this)">
+      <div class="gm-top">
+        <div class="gm-phone">
+          <div class="gm-phone-head">微信分享预览</div>
+          <div class="gm-share">
+            <img src="guide-map.png" alt="">
+            <div class="gm-share-copy">
+              <b>送你一份「麻麻生日之旅」攻略</b>
+              <span>成都导览图已生成 · 打开查看路线和清单</span>
+            </div>
+          </div>
+          <div class="gm-panel">
+            <strong>分享增强</strong>
+            <p>如果已有导览图，分享优先使用；没有图时仍回退到当前分享卡片。</p>
+            <div class="gm-btn">发送给朋友</div>
+          </div>
+        </div>
+      </div>
+      <div class="gm-body">
+        <h3>C. 分享增强</h3>
+        <p>传播效果最好，但不应每次分享都触发生成，否则成本和等待都不可控。</p>
+        <ul class="gm-list">
+          <li>已有图时效果很强</li>
+          <li>适合做复用出口，不适合做首个生成入口</li>
+          <li>需要清晰 fallback</li>
+        </ul>
+        <div class="gm-meter"><span>推荐优先级</span><div class="gm-bar"><span style="width: 70%"></span></div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h3>我建议的生成与复用链路</h3>
+    <div class="gm-flow">
+      <div class="gm-step"><b>1. 选择城市</b><span>从行程有坐标的点位中按城市拆分，避免一张图跨太大范围。</span></div>
+      <div class="gm-step"><b>2. 预览点位</b><span>合并或保留重复点位，用户确认哪些点进入导览图。</span></div>
+      <div class="gm-step"><b>3. 异步生成</b><span>后端管线生成 GIS 草稿和风格化图，前端显示排队/生成中。</span></div>
+      <div class="gm-step"><b>4. 存成资产</b><span>图片、POI 快照、生成配置和版本号写回 trip 或 template。</span></div>
+      <div class="gm-step"><b>5. 多处复用</b><span>攻略页查看、模板封面、分享卡片都引用同一张已生成图。</span></div>
+    </div>
+  </div>
+</div>

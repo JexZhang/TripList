@@ -1,0 +1,84 @@
+<h2>管理日程顺序：入口怎么做更直观？</h2>
+<p class="subtitle">目标：删除原长按菜单；用户能看懂“这是管理每天内容，不是改日期”。</p>
+
+<div class="cards">
+  <div class="card" data-choice="visible-manage-button" onclick="toggleSelect(this)">
+    <div class="card-image">
+      <div style="width:236px;margin:auto;border:1px solid #ddd;border-radius:24px;padding:14px;background:#fafafa">
+        <div style="display:flex;justify-content:space-between;font-size:13px"><span>返回</span><span>⋯</span></div>
+        <div style="margin-top:16px;font-size:21px;font-weight:800">京都慢行 4 日</div>
+        <div style="margin-top:8px;display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+          <span style="border:1px solid #d58a45;border-radius:999px;padding:6px 9px;font-size:12px;background:white">06/30 → 07/03 ✎</span>
+          <span style="font-size:12px;color:#777">4 天</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-top:16px">
+          <div style="display:flex;gap:7px">
+            <div style="background:#111;color:white;border-radius:10px;padding:10px 12px;font-size:12px">D1<br>6/30</div>
+            <div style="background:white;border:1px solid #ddd;border-radius:10px;padding:10px 12px;font-size:12px">D2<br>7/1</div>
+            <div style="background:white;border:1px solid #ddd;border-radius:10px;padding:10px 12px;font-size:12px">+</div>
+          </div>
+        </div>
+        <div style="margin-top:12px;border:1px solid #ccc;border-radius:999px;padding:8px 10px;font-size:12px;text-align:center;background:white">
+          管理每天顺序
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>A. 可见“管理每天顺序”按钮</h3>
+      <p>放在日期条下方或右侧。最直观，完全不依赖长按发现；缺点是页面多一个控件。</p>
+    </div>
+  </div>
+
+  <div class="card" data-choice="edit-mode-toggle" onclick="toggleSelect(this)">
+    <div class="card-image">
+      <div style="width:236px;margin:auto;border:1px solid #ddd;border-radius:24px;padding:14px;background:#fafafa">
+        <div style="display:flex;justify-content:space-between;font-size:13px"><span>返回</span><span>⋯</span></div>
+        <div style="margin-top:16px;font-size:21px;font-weight:800">京都慢行 4 日</div>
+        <div style="margin-top:8px;font-size:12px;color:#666">06/30 → 07/03 · 4 天</div>
+        <div style="margin-top:16px;display:flex;gap:8px;overflow:hidden">
+          <div style="background:#111;color:white;border-radius:10px;padding:10px 12px;font-size:12px">D1<br>6/30</div>
+          <div style="background:white;border:1px solid #ddd;border-radius:10px;padding:10px 12px;font-size:12px">D2<br>7/1</div>
+          <div style="background:white;border:1px solid #ddd;border-radius:10px;padding:10px 12px;font-size:12px">+</div>
+          <div style="background:#f3eadf;border:1px solid #d4b894;border-radius:10px;padding:10px 12px;font-size:12px">整理</div>
+        </div>
+        <div style="margin-top:12px;background:white;border:1px solid #ddd;border-radius:14px;padding:10px">
+          <div style="display:flex;justify-content:space-between;font-size:12px;padding:6px 0"><span>☰ Day 1 · 6/30</span><span>3 地点</span></div>
+          <div style="display:flex;justify-content:space-between;font-size:12px;padding:6px 0"><span>☰ Day 2 · 7/1</span><span>5 地点</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>B. 日期条末尾“整理”模式</h3>
+      <p>把管理入口做成日期条的一部分，语义像“整理这排 Day”。比长按明显，但横向滚动时可能不总在首屏。</p>
+    </div>
+  </div>
+
+  <div class="card" data-choice="action-sheet-entry" onclick="toggleSelect(this)">
+    <div class="card-image">
+      <div style="width:236px;margin:auto;border:1px solid #ddd;border-radius:24px;padding:14px;background:#fafafa;position:relative;overflow:hidden">
+        <div style="display:flex;justify-content:space-between;font-size:13px"><span>返回</span><span style="background:#111;color:white;border-radius:50%;width:24px;text-align:center">⋯</span></div>
+        <div style="margin-top:16px;font-size:21px;font-weight:800">京都慢行 4 日</div>
+        <div style="margin-top:8px;font-size:12px;color:#666">06/30 → 07/03 · 4 天</div>
+        <div style="margin-top:16px;display:flex;gap:8px">
+          <div style="background:#111;color:white;border-radius:10px;padding:10px 12px;font-size:12px">D1<br>6/30</div>
+          <div style="background:white;border:1px solid #ddd;border-radius:10px;padding:10px 12px;font-size:12px">D2<br>7/1</div>
+        </div>
+        <div style="position:absolute;left:0;right:0;bottom:0;background:white;border-top:1px solid #ddd;border-radius:18px 18px 0 0;padding:12px;box-shadow:0 -8px 20px rgba(0,0,0,.12)">
+          <div style="font-weight:800;font-size:14px;margin-bottom:8px">京都慢行 4 日</div>
+          <div style="font-size:12px;padding:7px 0;border-bottom:1px solid #eee">修改出发日期</div>
+          <div style="font-size:12px;padding:7px 0;border-bottom:1px solid #eee">管理每天顺序</div>
+          <div style="font-size:12px;padding:7px 0">分享</div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>C. 右上菜单放“管理每天顺序”</h3>
+      <p>页面最干净，也符合低频操作；但发现性比 A 弱，需要配合首次引导或日期条提示。</p>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <h3>我的推荐</h3>
+  <p>优先 A：给一个可见但轻量的“管理每天顺序”入口。长按可以作为快捷手势，但不要只靠长按。进入后是独立管理面板：拖拽排序、删除某天、完成。</p>
+</div>
